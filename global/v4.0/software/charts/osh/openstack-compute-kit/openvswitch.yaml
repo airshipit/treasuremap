@@ -1,0 +1,62 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openvswitch
+  layeringDefinition:
+    abstract: false
+    layer: global
+  labels:
+    name: openvswitch-global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.openvswitch
+      dest:
+        path: .source
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh.openvswitch
+      dest:
+        path: .values.images.tags
+    # External Interface
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .openvswitch.external_iface
+      dest:
+        path: .values.network.interface.external
+        pattern: 'EXTERNAL_INTERFACE'
+data:
+  chart_name: openvswitch
+  release: openvswitch
+  namespace: openstack
+  wait:
+    timeout: 900
+    labels:
+      release_group: openvswitch
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: openvswitch
+  values:
+    labels:
+      ovs:
+        node_selector_key: openvswitch
+        node_selector_value: enabled
+    network:
+      external_bridge: br-bond1
+      interface:
+        external: 'EXTERNAL_INTERFACE'
+  dependencies:
+    - osh-helm-toolkit

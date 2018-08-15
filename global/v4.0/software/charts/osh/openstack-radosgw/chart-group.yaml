@@ -1,0 +1,13 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-radosgw
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: Deploy Radosgw
+  chart_group:
+    - radosgw

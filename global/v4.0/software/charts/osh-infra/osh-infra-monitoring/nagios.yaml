@@ -1,0 +1,129 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nagios
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.nagios
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh_infra.nagios
+      dest:
+        path: .values.images.tags
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.nagios
+      dest:
+        path: .values.endpoints.nagios
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.monitoring
+      dest:
+        path: .values.endpoints.monitoring
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.ldap
+      dest:
+        path: .values.endpoints.ldap
+
+    # Accounts
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_infra_service_accounts
+        path: .osh_infra.nagios.admin
+      dest:
+        path: .values.endpoints.nagios.auth.admin
+
+    # Secrets
+    - dest:
+        path: .values.endpoints.nagios.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_infra_nagios_admin_password
+        path: .
+
+    # LDAP Details
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_infra_service_accounts
+        path: .osh_infra.ldap.admin
+      dest:
+        path: .values.endpoints.ldap.auth.admin
+    - dest:
+        path: .values.endpoints.ldap.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_keystone_ldap_password
+        path: .
+
+data:
+  chart_name: nagios
+  release: nagios
+  namespace: osh-infra
+  wait:
+    timeout: 900
+    labels:
+      release_group: nagios
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: nagios
+      create: []
+    post:
+      create: []
+  values:
+    conf:
+      apache:
+        host: |
+          <VirtualHost *:80>
+            <Location />
+                ProxyPass http://localhost:{{ tuple "nagios" "internal" "nagios" . | include "helm-toolkit.endpoints.endpoint_port_lookup" }}/
+                ProxyPassReverse http://localhost:{{ tuple "nagios" "internal" "nagios" . | include "helm-toolkit.endpoints.endpoint_port_lookup" }}/
+            </Location>
+            <Proxy *>
+                AuthName "Nagios"
+                AuthType Basic
+                AuthBasicProvider file ldap
+                AuthUserFile /usr/local/apache2/conf/.htpasswd
+                AuthLDAPBindDN {{ .Values.endpoints.ldap.auth.admin.bind }}
+                AuthLDAPBindPassword {{ .Values.endpoints.ldap.auth.admin.password }}
+                AuthLDAPURL {{ tuple "ldap" "public" "ldap" . | include "helm-toolkit.endpoints.keystone_endpoint_uri_lookup" }}
+                Require valid-user
+            </Proxy>
+          </VirtualHost>
+    labels:
+      nagios:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    pod:
+      replicas:
+        nagios: 3
+  dependencies:
+    - osh-infra-helm-toolkit
+...

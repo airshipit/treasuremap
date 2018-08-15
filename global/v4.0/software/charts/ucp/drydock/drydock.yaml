@@ -1,0 +1,191 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-drydock
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.drydock
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.drydock
+      dest:
+        path: .values.images.tags
+
+    # Endpoints
+
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ucp.identity
+      dest:
+        path: .values.endpoints.identity
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ucp.postgresql
+      dest:
+        path: .values.endpoints.postgresql
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ucp.physicalprovisioner
+      dest:
+        path: .values.endpoints.physicalprovisioner
+
+    # Drydock IPs
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .node_ports.drydock_api
+      dest:
+        path: .values.network.drydock.node_port.port
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .node_ports.drydock_api
+      dest:
+        path: .values.endpoints.physicalprovisioner.port.api.nodeport
+
+    # MaaS IPs
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .genesis.ip
+      dest:
+        path: .values.conf.drydock.maasdriver.maas_api_url
+        pattern: 'MAAS_IP'
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .node_ports.maas_api
+      dest:
+        path: .values.conf.drydock.maasdriver.maas_api_url
+        pattern: 'MAAS_PORT'
+
+    # Credentials
+
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.postgres.admin
+      dest:
+        path: .values.endpoints.postgresql.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.drydock.postgres
+      dest:
+        path: .values.endpoints.postgresql.auth.user
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.drydock.postgres.database
+      dest:
+        path: .values.endpoints.postgresql.path
+        pattern: DB_NAME
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.drydock.keystone
+      dest:
+        path: .values.endpoints.identity.auth.user
+
+    # Secrets
+    - dest:
+        path: .values.endpoints.identity.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_keystone_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.postgresql.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_postgres_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.user.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_drydock_keystone_password
+        path: .
+    - dest:
+        path: .values.endpoints.postgresql.auth.user.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_drydock_postgres_password
+        path: .
+
+data:
+  chart_name: drydock
+  release: drydock
+  namespace: ucp
+  wait:
+    timeout: 600
+    labels:
+      release_group: drydock
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: drydock
+  values:
+    labels:
+      node_selector_key: ucp-control-plane
+      node_selector_value: enabled
+    network:
+      drydock:
+        node_port:
+          enabled: true
+    conf:
+      drydock:
+        database:
+          pool_size: 200
+        maasdriver:
+          maas_api_url: http://MAAS_IP:MAAS_PORT/MAAS/api/2.0/
+        plugins:
+          ingester: drydock_provisioner.ingester.plugins.deckhand.DeckhandIngester
+  dependencies:
+    - drydock-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: drydock-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.drydock-htk
+      dest:
+        path: .source
+data:
+  chart_name: drydock-htk
+  release: drydock-htk
+  namespace: drydock-htk
+  values: {}
+  dependencies: []
+...

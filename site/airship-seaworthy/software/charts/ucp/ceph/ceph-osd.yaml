@@ -1,0 +1,75 @@
+---
+# The purpose of this file is to define environment-specific parameters for
+# ceph-osd
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-ceph-osd
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-ceph-osd-global
+    actions:
+      - method: replace
+        path: .values.conf.storage.osd
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      storage:
+        # NEWSITE-CHANGEME: The OSD count and configuration here should not need
+        # to change if your HW matches the HW used in this environment.
+        # Otherwise you may need to add or subtract disks to this list.
+        osd:
+          - data:
+              type: block-logical
+              location: /dev/sdc
+            journal:
+              type: directory
+              location: /var/lib/ceph/cp/journal-sdc
+          - data:
+              type: block-logical
+              location: /dev/sdd
+            journal:
+              type: directory
+              location: /var/lib/ceph/cp/journal-sdd
+          - data:
+              type: block-logical
+              location: /dev/sde
+            journal:
+              type: directory
+              location: /var/lib/ceph/cp/journal-sde
+          - data:
+              type: block-logical
+              location: /dev/sdf
+            journal:
+              type: directory
+              location: /var/lib/ceph/cp/journal-sdf
+          - data:
+              type: block-logical
+              location: /dev/sdg
+            journal:
+              type: directory
+              location: /var/lib/ceph/cp/journal-sdg
+          - data:
+              type: block-logical
+              location: /dev/sdh
+            journal:
+              type: directory
+              location: /var/lib/ceph/cp/journal-sdh
+          - data:
+              type: block-logical
+              location: /dev/sdi
+            journal:
+              type: directory
+              location: /var/lib/ceph/cp/journal-sdi
+          - data:
+              type: block-logical
+              location: /dev/sdj
+            journal:
+              type: directory
+              location: /var/lib/ceph/cp/journal-sdj
+...

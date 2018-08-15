@@ -1,0 +1,25 @@
+---
+schema: promenade/Kubelet/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubelet
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.pause
+      dest:
+        path: .images.pause
+data:
+  arguments:
+    - --cni-bin-dir=/opt/cni/bin
+    - --cni-conf-dir=/etc/cni/net.d
+    - --eviction-max-pod-grace-period=-1
+    - --network-plugin=cni
+    - --node-status-update-frequency=5s
+    - --max-pods=200
+    - --pods-per-core=10

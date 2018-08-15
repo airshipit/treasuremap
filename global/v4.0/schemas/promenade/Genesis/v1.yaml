@@ -1,0 +1,141 @@
+---
+schema: deckhand/DataSchema/v1
+metadata:
+  schema: metadata/Control/v1
+  name: promenade/Genesis/v1
+  labels:
+    application: promenade
+data:
+  $schema: http://json-schema.org/schema#
+  definitions:
+    abs_path:
+      type: string
+      pattern: '^/.+$'
+    hostname:
+      type: string
+      pattern: '^[a-z][a-z0-9-]+$'
+    file:
+      properties:
+        path:
+          $ref: '#/definitions/abs_path'
+        content:
+          type: string
+        mode:
+          type: integer
+          minimum: 0
+        tar_url:
+          $ref: '#/definitions/url'
+        tar_path:
+          $ref: '#/definitions/rel_path'
+
+      requried:
+        - mode
+        - path
+      oneOf:
+        - type: object
+          required:
+            - content
+        - type: object
+          allOf:
+            - type: object
+              required:
+                - tar_url
+                - tar_path
+      additionalProperties: false
+    image:
+      type: string
+      # XXX add regex
+    ip_address:
+      type: string
+      pattern: '^(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))$'
+    kubernetes_label:
+      type: string
+      # XXX add regex
+    rel_path:
+      type: string
+      # XXX add regex
+
+  type: object
+  properties:
+    armada:
+      type: object
+      properties:
+        target_manifest:
+          type: string
+      additionalProperties: false
+
+    apiserver:
+      type: object
+      properties:
+        command_prefix:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
+
+    files:
+      type: array
+      items:
+        $ref: '#/definitions/file'
+
+    hostname:
+      $ref: '#/definitions/hostname'
+
+    ip:
+      $ref: '#/definitions/ip_address'
+
+    labels:
+      properties:
+        static:
+          type: array
+          items:
+            $ref: '#/definitions/kubernetes_label'
+        dynamic:
+          type: array
+          items:
+            $ref: '#/definitions/kubernetes_label'
+      additionalProperties: false
+
+    images:
+      type: object
+      properties:
+        armada:
+          $ref: '#/definitions/image'
+        helm:
+          type: object
+          properties:
+            tiller:
+              $ref: '#/definitions/image'
+          required:
+            - tiller
+          additionalProperties: false
+        kubernetes:
+          type: object
+          properties:
+            apiserver:
+              $ref: '#/definitions/image'
+            controller-manager:
+              $ref: '#/definitions/image'
+            etcd:
+              $ref: '#/definitions/image'
+            scheduler:
+              $ref: '#/definitions/image'
+          required:
+            - apiserver
+            - controller-manager
+            - etcd
+            - scheduler
+          additionalProperties: false
+      required:
+        - armada
+        - helm
+        - kubernetes
+      additionalProperties: false
+
+  required:
+    - hostname
+    - ip
+    - images
+    - labels
+  additionalProperties: false
+...

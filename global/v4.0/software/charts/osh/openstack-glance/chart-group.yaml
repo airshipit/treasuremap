@@ -1,0 +1,14 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-glance
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: Deploy Glance
+  chart_group:
+    - glance-rabbitmq
+    - glance

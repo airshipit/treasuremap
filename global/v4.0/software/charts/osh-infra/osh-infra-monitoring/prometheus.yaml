@@ -1,0 +1,80 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: prometheus
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.prometheus
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh_infra.prometheus
+      dest:
+        path: .values.images.tags
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.monitoring
+      dest:
+        path: .values.endpoints.monitoring
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.alerts
+      dest:
+        path: .values.endpoints.alerts
+
+data:
+  chart_name: prometheus
+  release: prometheus
+  namespace: osh-infra
+  wait:
+    timeout: 900
+    labels:
+      release_group: prometheus
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: prometheus
+      create: []
+    post:
+      create: []
+  values:
+    manifests:
+      ingress: false
+      service_ingress: false
+    labels:
+      prometheus:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    pod:
+      replicas:
+        prometheus: 3
+    storage:
+      requests:
+        storage: 500Gi
+  dependencies:
+    - osh-infra-helm-toolkit
+...

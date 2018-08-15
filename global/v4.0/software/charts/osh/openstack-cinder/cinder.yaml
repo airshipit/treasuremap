@@ -1,0 +1,287 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: cinder
+  labels:
+    component: cinder
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.cinder
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh.cinder
+      dest:
+        path: .values.images.tags
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.identity
+      dest:
+        path: .values.endpoints.identity
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.image
+      dest:
+        path: .values.endpoints.image
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.image_registry
+      dest:
+        path: .values.endpoints.image_registry
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.volume
+      dest:
+        path: .values.endpoints.volume
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.volumev2
+      dest:
+        path: .values.endpoints.volumev2
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.volumev3
+      dest:
+        path: .values.endpoints.volumev3
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.oslo_db
+      dest:
+        path: .values.endpoints.oslo_db
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.cinder_oslo_messaging
+      dest:
+        path: .values.endpoints.oslo_messaging
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.oslo_cache
+      dest:
+        path: .values.endpoints.oslo_cache
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.fluentd
+      dest:
+        path: .values.endpoints.fluentd
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.keystone.admin
+      dest:
+        path: .values.endpoints.identity.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.cinder.cinder
+      dest:
+        path: .values.endpoints.identity.auth.cinder
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.cinder.oslo_messaging.admin
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.cinder.oslo_messaging.cinder
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.cinder
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.cinder.oslo_db
+      dest:
+        path: .values.endpoints.oslo_db.auth.cinder
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.cinder.oslo_db.database
+      dest:
+        path: .values.endpoints.oslo_db.path
+        pattern: DB_NAME
+
+    # Secrets
+    - dest:
+        path: .values.endpoints.identity.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_keystone_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.cinder.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_cinder_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_messaging.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_cinder_oslo_messaging_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_messaging.auth.cinder.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_cinder_oslo_messaging_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_db.auth.cinder.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_cinder_oslo_db_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_db.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_oslo_db_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_cache.auth.memcache_secret_key
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_oslo_cache_secret_key
+        path: .
+data:
+  chart_name: cinder
+  release: cinder
+  namespace: openstack
+  wait:
+    timeout: 900
+    labels:
+      release_group: cinder
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: cinder
+    post:
+      create: []
+  values:
+    pod:
+      replicas:
+        api: 2
+        volume: 2
+        scheduler: 2
+        backup: 2
+    labels:
+      api:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      backup:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      scheduler:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      test:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      volume:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    conf:
+      logging:
+        loggers:
+          keys:
+            - root
+            - cinder
+        handlers:
+          keys:
+            - stdout
+            - stderr
+            - "null"
+            - fluent
+        formatters:
+          keys:
+            - context
+            - default
+            - fluent
+        logger_root:
+          level: WARNING
+          handlers: null
+        logger_cinder:
+          level: INFO
+          handlers:
+            - stdout
+            - stderr
+            - fluent
+          qualname: cinder
+        logger_amqp:
+          level: WARNING
+          handlers: stderr
+          qualname: amqp
+        logger_amqplib:
+          level: WARNING
+          handlers: stderr
+          qualname: amqplib
+        logger_eventletwsgi:
+          level: WARNING
+          handlers: stderr
+          qualname: eventlet.wsgi.server
+        logger_sqlalchemy:
+          level: WARNING
+          handlers: stderr
+          qualname: sqlalchemy
+        logger_boto:
+          level: WARNING
+          handlers: stderr
+          qualname: boto
+        handler_null:
+          class: logging.NullHandler
+          formatter: default
+          args: ()
+        handler_stdout:
+          class: StreamHandler
+          args: (sys.stdout,)
+          formatter: context
+        handler_stderr:
+          class: StreamHandler
+          args: (sys.stderr,)
+          formatter: context
+        handler_fluent:
+          class: fluent.handler.FluentHandler
+          args: ('openstack.cinder', 'fluentd-logging.osh-infra', 24224)
+          formatter: fluent
+        formatter_fluent:
+          class: oslo_log.formatters.FluentFormatter
+        formatter_context:
+          class: oslo_log.formatters.ContextFormatter
+        formatter_default:
+          format: "%(message)s"
+  dependencies:
+    - osh-helm-toolkit
+...

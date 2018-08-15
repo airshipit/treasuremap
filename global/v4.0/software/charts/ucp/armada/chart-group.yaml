@@ -1,0 +1,15 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-armada
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: Armada
+  sequenced: true
+  chart_group:
+    - ucp-tiller
+    - ucp-armada

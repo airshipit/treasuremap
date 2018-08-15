@@ -1,0 +1,43 @@
+---
+schema: deckhand/DataSchema/v1
+metadata:
+  schema: metadata/Control/v1
+  name: promenade/PKICatalog/v1
+  labels:
+    application: promenade
+data:
+  $schema: http://json-schema.org/schema#
+  certificate_authorities:
+    type: array
+    items:
+      type: object
+      properties:
+        description:
+          type: string
+        certificates:
+          type: array
+          items:
+            type: object
+            properties:
+              document_name:
+                type: string
+              description:
+                type: string
+              common_name:
+                type: string
+              hosts:
+                type: array
+                items: string
+              groups:
+                type: array
+                items: string
+  keypairs:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+...

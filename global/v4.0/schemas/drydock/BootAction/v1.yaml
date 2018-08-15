@@ -1,0 +1,93 @@
+---
+schema: 'deckhand/DataSchema/v1'
+metadata:
+  schema: metadata/Control/v1
+  name: drydock/BootAction/v1
+  labels:
+    application: drydock
+data:
+  $schema: 'http://json-schema.org/schema#'
+  type: 'object'
+  additionalProperties: false
+  properties:
+    signaling:
+      type: 'boolean'
+    assets:
+      type: 'array'
+      items:
+        type: 'object'
+        additionalProperties: false
+        properties:
+          path:
+            type: 'string'
+            pattern: '^/.+'
+          location:
+            type: 'string'
+          type:
+            type: 'string'
+            enum:
+              - 'unit'
+              - 'file'
+              - 'pkg_list'
+          data:
+            type: 'string'
+          location_pipeline:
+            type: 'array'
+            items:
+              type: 'string'
+              enum:
+                - 'template'
+          data_pipeline:
+            type: 'array'
+            items:
+              type: 'string'
+              enum:
+                - 'base64_encode'
+                - 'template'
+                - 'base64_decode'
+                - 'utf8_encode'
+                - 'utf8_decode'
+          permissions:
+            type: 'string'
+            pattern: '\d{3}'
+        required:
+          - 'type'
+    node_filter:
+      type: 'object'
+      additionalProperties: false
+      properties:
+        filter_set_type:
+          type: 'string'
+          enum:
+            - 'intersection'
+            - 'union'
+        filter_set:
+          type: 'array'
+          items:
+            type: 'object'
+            additionalProperties: false
+            properties:
+              filter_type:
+                type: 'string'
+                enum:
+                  - 'intersection'
+                  - 'union'
+              node_names:
+                type: 'array'
+                items:
+                  type: 'string'
+              node_tags:
+                type: 'array'
+                items:
+                  type: 'string'
+              node_labels:
+                type: 'object'
+                additionalProperties: true
+              rack_names:
+                type: 'array'
+                items:
+                  type: 'string'
+              rack_labels:
+                type: 'object'
+                additionalProperties: true
+...

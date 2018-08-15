@@ -1,0 +1,114 @@
+---
+schema: promenade/Genesis/v1
+metadata:
+  schema: metadata/Document/v1
+  name: genesis-global
+  layeringDefinition:
+    abstract: true
+    layer: global
+  labels:
+    name: genesis-global
+  storagePolicy: cleartext
+  substitutions:
+    # Software versions for bootstrapping phase
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.armada.api
+      dest:
+        path: .images.armada
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.armada.tiller
+      dest:
+        path: .images.helm.tiller
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.apiserver.apiserver
+      dest:
+        path: .images.kubernetes.apiserver
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.controller-manager.controller_manager
+      dest:
+        path: .images.kubernetes.controller-manager
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.etcd.etcd
+      dest:
+        path: .images.kubernetes.etcd
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.scheduler.scheduler
+      dest:
+        path: .images.kubernetes.scheduler
+
+    # Site-specific configuration
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .genesis.hostname
+      dest:
+        path: .hostname
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .genesis.ip
+      dest:
+        path: .ip
+
+    # Command prefix
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.service_cidr
+      dest:
+        path: .apiserver.command_prefix[1]
+        pattern: SERVICE_CIDR
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.service_node_port_range
+      dest:
+        path: .apiserver.command_prefix[2]
+        pattern: SERVICE_NODE_PORT_RANGE
+
+data:
+  apiserver:
+    command_prefix:
+      - /apiserver
+      - --service-cluster-ip-range=SERVICE_CIDR
+      - --service-node-port-range=SERVICE_NODE_PORT_RANGE
+      - --authorization-mode=Node,RBAC
+      - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds
+      - --endpoint-reconciler-type=lease
+  armada:
+    target_manifest: cluster-bootstrap
+  labels:
+    dynamic:
+      - beta.kubernetes.io/fluentd-ds-ready=true
+      - calico-etcd=enabled
+      - ceph-mds=enabled
+      - ceph-mon=enabled
+      - ceph-osd=enabled
+      - ceph-rgw=enabled
+      - ceph-mgr=enabled
+      - kube-dns=enabled
+      - kube-ingress=enabled
+      - kubernetes-apiserver=enabled
+      - kubernetes-controller-manager=enabled
+      - kubernetes-etcd=enabled
+      - kubernetes-scheduler=enabled
+      - promenade-genesis=enabled
+      - ucp-control-plane=enabled
+      - maas-control-plane=enabled
+      - node-exporter=enabled
+  files:
+    - path: /var/lib/anchor/calico-etcd-bootstrap
+      content: "# placeholder for triggering calico etcd bootstrapping\n# this file will be deleted"
+      mode: 0644

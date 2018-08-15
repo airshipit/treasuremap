@@ -1,0 +1,93 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-scheduler
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.scheduler
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.scheduler
+      dest:
+        path: .values.images.tags
+
+    # CA
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: kubernetes
+        path: .
+      dest:
+        path: .values.secrets.tls.ca
+
+    # Certificates
+    - src:
+        schema: deckhand/Certificate/v1
+        name: scheduler
+        path: .
+      dest:
+        path: .values.secrets.tls.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: scheduler
+        path: .
+      dest:
+        path: .values.secrets.tls.key
+
+data:
+  chart_name: scheduler
+  release: kubernetes-scheduler
+  namespace: kube-system
+  protected:
+    continue_processing: true
+  wait:
+    timeout: 600
+    labels:
+      release_group: kubernetes-scheduler
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: kubernetes-scheduler
+  values:
+    network:
+      kubernetes_netloc: 127.0.0.1:6553
+  dependencies:
+    - kubernetes-scheduler-htk
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-scheduler-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.scheduler-htk
+      dest:
+        path: .source
+data:
+  chart_name: kubernetes-scheduler-htk
+  release: kubernetes-scheduler-htk
+  namespace: kubernetes-scheduler-htk
+  values: {}
+  dependencies: []
+...

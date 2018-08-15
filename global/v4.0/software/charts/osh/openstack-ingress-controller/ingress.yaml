@@ -1,0 +1,55 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-ingress-controller
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.ingress
+      dest:
+        path: .source
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh.ingress
+      dest:
+        path: .values.images.tags
+data:
+  chart_name: openstack-ingress-controller
+  release: openstack-ingress-controller
+  namespace: openstack
+  wait:
+    timeout: 900
+    labels:
+      release_group: openstack-ingress-controller
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: openstack-ingress-controller
+  values:
+    labels:
+      server:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      error_server:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    pod:
+      replicas:
+        ingress: 2
+        error_page: 2
+  dependencies:
+    - osh-helm-toolkit

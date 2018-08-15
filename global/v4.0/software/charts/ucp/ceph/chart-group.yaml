@@ -1,0 +1,18 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-ceph
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: Ceph Storage
+  sequenced: true
+  chart_group:
+    - ucp-ceph-ingress
+    - ucp-ceph-mon
+    - ucp-ceph-osd
+    - ucp-ceph-client
+...

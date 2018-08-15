@@ -1,0 +1,33 @@
+---
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: promjoin-systemd-unit
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: global
+  labels:
+    application: 'drydock'
+data:
+  signaling: false
+  assets:
+    - path: /etc/systemd/system/promjoin.service
+      type: unit
+      permissions: '444'
+      data: |
+        [Unit]
+        Description=Promenade Initialization Service
+        After=network-online.target local-fs.target cloud-init.target
+        ConditionPathExists=!/var/lib/prom.done
+
+        [Service]
+        Type=oneshot
+        ExecStart=/opt/promjoin.sh
+
+        [Install]
+        WantedBy=airship.target
+
+      data_pipeline:
+        - utf8_decode
+...
