@@ -1,0 +1,434 @@
+// Pipeline expects genesis to be setup according to the documentation
+// including networks, disks, ntp, ip rules, etc.. manually.
+// https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html#genesis-node
+
+// shared libaries used within the pipeline
+// https://github.com/att-comdev/cicd/blob/master/vars
+
+
+import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.DumperOptions;
+
+import groovy.json.JsonSlurperClassic
+import groovy.json.JsonOutput
+
+PEGLEG_IMAGE = 'quay.io/airshipit/pegleg:73fbf264ca99b1a80c9e29e21048451716b630e7'
+
+KEYSTONE_URL = 'http://iam.airship-seaworthy.atlantafoundry.com/v3/auth/tokens'
+SHIPYARD_URL = 'http://shipyard.airship-seaworthy.atlantafoundry.com/api/v1.0'
+
+SITE_NAME='airship-seaworthy'
+IPMI_CREDS = 'airship-seaworthy-ipmi'
+
+GENESIS_IP = '10.23.21.11'
+GENESIS_CREDS = 'airship-seaworthy-key'
+
+GENESIS_IPMI_IP = '10.23.104.11'
+GENESIS_CEPH_DISKS = ['c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
+
+IPMI_IPS = ['10.23.104.12',
+            '10.23.104.13',
+            '10.23.104.14',
+            '10.23.104.17',
+            '10.23.104.19']
+
+AIRSHIP_MANIFESTS_REPO = 'https://git.openstack.org/openstack/airship-treasuremap'
+
+if (env.GERRIT_REFSPEC) {
+    AIRSHIP_MANIFESTS_REF = GERRIT_REFSPEC
+}
+
+ARTF_PATH="cicd/${JOB_BASE_NAME}/${BUILD_NUMBER}"
+
+
+//// git utils
+
+def clone(String url, String ref){
+
+    def refspec = ''
+
+    // override refspec if patchset provided
+    if (ref.contains('refs')) {
+        refspec = "${ref}:${ref}"
+    }
+
+    checkout poll: false,
+    scm: [$class: 'GitSCM',
+         branches: [[name: ref]],
+         doGenerateSubmoduleConfigurations: false,
+         extensions: [[$class: 'CleanBeforeCheckout']],
+         submoduleCfg: [],
+         userRemoteConfigs: [[refspec: refspec,
+         url: url ]]]
+}
+
+//// ssh utils
+
+def ssh_cmd = { cmd ->
+
+    withCredentials([sshUserPrivateKey(credentialsId: GENESIS_CREDS,
+            keyFileVariable: 'SSH_KEY',
+            usernameVariable: 'SSH_USER')]) {
+
+        sh "ssh -i ${SSH_KEY} ${SSH_USER}@${GENESIS_IP} ${cmd}"
+    }
+}
+
+def scp_put = { src, dst ->
+
+    withCredentials([sshUserPrivateKey(credentialsId: GENESIS_CREDS,
+            keyFileVariable: 'SSH_KEY',
+            usernameVariable: 'SSH_USER')]) {
+
+        sh "scp -i ${SSH_KEY} ${src} ${SSH_USER}@${GENESIS_IP}:${dst}"
+    }
+}
+
+def scp_get = { src, dst ->
+
+    withCredentials([sshUserPrivateKey(credentialsId: GENESIS_CREDS,
+            keyFileVariable: 'SSH_KEY',
+            usernameVariable: 'SSH_USER')]) {
+
+        sh "scp -i ${SSH_KEY} ${SSH_USER}@${GENESIS_IP}:${src} ${dst}"
+    }
+}
+
+def gen_wait = {
+    timeout (12) {
+        retry (12) {
+            try {
+                ssh_cmd ('-o StrictHostKeyChecking=no hostname')
+            } catch (err) {
+                sleep 60
+                error(err)
+            }
+        }
+    }
+}
+
+
+//// bare-metal utils
+
+def reset_bare_metal = {
+    stage ('Bare-Metal Reset') {
+
+        withCredentials([usernamePassword(credentialsId: IPMI_CREDS,
+                                      usernameVariable: 'IUSER',
+                                      passwordVariable: 'IPASS')]) {
+
+            sh "ipmitool -I lanplus -H ${GENESIS_IPMI_IP} -U \$IUSER -P \$IPASS chassis power off && sleep 11"
+            sh "ipmitool -I lanplus -H ${GENESIS_IPMI_IP} -U \$IUSER -P \$IPASS chassis power on"
+
+            IPMI_IPS.each() {
+                sh "ipmitool -I lanplus -H ${it} -U \$IUSER -P \$IPASS chassis power off"
+            }
+        }
+    }
+}
+
+
+//// manifest utils
+
+def resolve_versions = {
+
+    def versions = readYaml file: 'global/software/config/versions.yaml'
+    PROMENADE_IMAGE = versions.data.images.ucp.promenade.promenade
+
+    def shipyard = readYaml file: "site/${SITE_NAME}/secrets/passphrases/ucp_shipyard_keystone_password.yaml"
+    SHIPYARD_PASSWD = shipyard.data
+}
+
+def pegleg_site_collect = {
+    stage('Pegleg Site Collect') {
+
+        configFileProvider([configFile(fileId: '04fefa7d-a12a-4308-be65-6776ad19bfbd',
+            targetLocation: 'site/airship-seaworthy/site-definition.yaml')]) {
+        }
+
+        withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-attcomdev-key',
+                keyFileVariable: 'SSH_KEY',
+                usernameVariable: 'SSH_USER')]) {
+
+            sh "cp ${SSH_KEY} ssh-key"
+
+            auth = "-u ${SSH_USER} -k /target/ssh-key"
+            cmd = "pegleg site ${auth} -r /target collect airship-seaworthy -s /target/airship-seaworthy_yaml"
+            sh "sudo docker run --rm -t -v \$(pwd):/target ${PEGLEG_IMAGE} ${cmd}"
+        }
+
+        sh "tar czf site-config.tar.gz airship-seaworthy_yaml"
+        artifactory.upload('site-config.tar.gz', "${ARTF_PATH}/")
+    }
+}
+
+def prom_config_gen = {
+    stage ("Promenade Config Gen") {
+
+        sh "mkdir -p promenade-bundle"
+
+        opts = '--rm -t -w /target -v $(pwd):/target'
+        cmd = "promenade build-all --validators -o promenade-bundle airship-seaworthy_yaml/*.yaml"
+        sh "sudo docker run ${opts} ${PROMENADE_IMAGE} ${cmd}"
+
+        sh 'tar czf promenade-bundle.tar.gz promenade-bundle'
+        artifactory.upload('promenade-bundle.tar.gz', "${ARTF_PATH}/")
+    }
+}
+
+
+//// genesis utils
+
+def genesis_cleanup = {
+    stage('Genesis Cleanup') {
+
+        ssh_cmd 'rm -rf \\*'
+
+        ssh_cmd 'git clone https://git.openstack.org/openstack/airship-promenade'
+        ssh_cmd 'sudo -S airship-promenade/tools/cleanup.sh -f'
+
+        GENESIS_CEPH_DISKS.each() {
+            ssh_cmd "sudo parted -s /dev/sd${it} mklabel msdos"
+        }
+        ssh_cmd 'sudo rm -rf /var/lib/ceph/cp'
+    }
+}
+
+def debug_report = {
+    ssh_cmd ('sudo debug-report.sh')
+
+    scp_get ('debug-cab23-r720-11.tgz', '.')
+    artifactory.upload("debug-cab23-r720-11.tgz", "${ARTF_PATH}/")
+}
+
+def genesis_deploy = {
+    stage('Genesis Deploy') {
+
+        try {
+            scp_put('promenade-bundle.tar.gz', '')
+            ssh_cmd('tar xvzf promenade-bundle.tar.gz')
+
+            timeout (90) {
+                ssh_cmd 'sudo promenade-bundle/genesis.sh'
+                ssh_cmd 'sudo -S promenade-bundle/validate-genesis.sh'
+            }
+
+            sleep 47 // wait for k8s to calm down
+
+        } catch (err) {
+            debug_report()
+            error(err)
+        }
+    }
+}
+
+
+//// keystone utils
+
+def keystone_token = {
+
+    def req = ['auth': [
+               'identity': [
+                 'methods': ['password'],
+                 'password': [
+                   'user': ['name': 'shipyard',
+                            'domain': ['id': 'default'],
+                            'password': SHIPYARD_PASSWD]]]]]
+
+    def jreq = new JsonOutput().toJson(req)
+
+    def res
+
+    retry (3) {
+        res = httpRequest (url: KEYSTONE_URL,
+                           contentType: 'APPLICATION_JSON',
+                           httpMode: 'POST',
+                           requestBody: jreq)
+    }
+
+    return res.getHeaders()['X-Subject-Token'][0]
+}
+
+
+//// shipyard utils
+
+def shipyard_config_upload = {
+
+    def token = keystone_token()
+
+    stage('Shipyard Config Create') {
+
+        def manifests = ''
+        files = findFiles(glob: 'airship-seaworthy_yaml/')
+
+        files.each {
+            print "Reading file -> ${it}"
+            manifests += readFile it.path
+        }
+
+        def res = httpRequest (url: "${SHIPYARD_URL}/configdocs/${SITE_NAME}?buffermode=replace",
+                               httpMode: 'POST',
+                               customHeaders: [[name: 'Content-Type', value: 'application/x-yaml'],
+                                               [name: 'X-Auth-Token', value: token]],
+                               requestBody: manifests)
+
+        if (res.status != 201) {
+            error("Failed to upload configdocs: ${res.status}")
+        }
+        print res.content
+    }
+
+    stage('Shipyard Config Commit') {
+        def res = httpRequest (url: "${SHIPYARD_URL}/commitconfigdocs", httpMode: 'POST',
+                               customHeaders: [[name: 'X-Auth-Token', value: token]])
+        if (res.status != 200) {
+            error("Failed to commit configdocs: ${res.status}")
+        }
+        print res.content
+    }
+}
+
+
+def shipyard_steps_get = { action ->
+
+    def res = httpRequest (url: "${SHIPYARD_URL}/actions/${action}",
+                           contentType: 'APPLICATION_JSON',
+                           httpMode: 'GET',
+                           customHeaders: [[name: 'X-Auth-Token', value: keystone_token()]])
+
+    if (res.status != 200) {
+        error("Failed to get Shypyard action steps: ${res.status}")
+    }
+
+    def cont = new JsonSlurperClassic().parseText(res.content)
+    print cont
+
+    return cont.steps
+}
+
+
+def shipyard_step_wait = { systep, interval ->
+
+    print ">> Waiting on Shipyard step: ${systep}"
+
+    def String state = systep.state
+    def res
+
+    while (state == null || state == 'running' || state == 'queued' || state == 'scheduled') {
+        sleep interval
+
+        // relax waiting on shipyard tasks
+        // requests may fail when new nodes join
+        retry (3) {
+            res = httpRequest (url: "${SHIPYARD_URL}${systep.url}",
+                               contentType: 'APPLICATION_JSON',
+                               httpMode: 'GET',
+                               customHeaders: [[name: 'X-Auth-Token',
+                                                value: keystone_token()]])
+
+           if (!res) {
+               error("httpRequest returned null - likely library issue")
+           }
+
+           if (res.status != 200) {
+               error("Failed to get Shipyard step info: ${res.status}")
+           }
+
+           if (!res.content) {
+               error("Shypyard returned null content")
+           }
+        }
+
+        def cont = new JsonSlurperClassic().parseText(res.content)
+        print cont
+        state = cont.state
+    }
+
+    if (state != 'success' && state != 'skipped') {
+        error("Failed Shipyard task ${systep.id}: ${res.status}, ${res.content}")
+    }
+}
+
+def shipyard_steps_wait = { action ->
+
+    def systeps = shipyard_steps_get(action)
+
+    systeps.each() {
+        // add explicit stage for steps taking long time
+        if (it.id == 'drydock_build' || it.id == 'armada_build') {
+            stage ("Shipyard (${it.id})") {
+               shipyard_step_wait(it, 240)
+            }
+        } else {
+            shipyard_step_wait(it, 4)
+        }
+    }
+}
+
+def shipyard_action_create = { action ->
+
+    def req = [ 'name': action ]
+    def jreq = new JsonOutput().toJson(req)
+
+    res = httpRequest (url: "${SHIPYARD_URL}/actions",
+                       contentType: 'APPLICATION_JSON',
+                       httpMode: 'POST',
+                       customHeaders: [[name: 'X-Auth-Token', value: keystone_token()]],
+                       requestBody: jreq)
+
+    if (res.status != 201) {
+        error("Failed to create Shypyard action: ${res.status}")
+    }
+
+    def cont = new JsonSlurperClassic().parseText(res.content)
+    print cont
+
+    shipyard_steps_wait(cont.id)
+}
+
+def shipyard_deploy = { action ->
+    try {
+
+        shipyard_config_upload()
+        shipyard_action_create(action)
+
+    } catch (err) {
+        debug_report()
+        error(err)
+    }
+
+    sh 'sudo kubectl get pods --all-namespaces -o wide -a=false'
+}
+
+
+//// main flow
+
+vm2() {
+
+    // wait and make sure genesis is up, and remove docker
+    // this ensures no containers are running after reboot
+    gen_wait()
+    ssh_cmd('sudo apt-get remove docker-engine -y')
+
+    sh 'sudo apt-get update'
+    sh 'sudo apt-get install docker.io ipmitool -y'
+
+    reset_bare_metal()
+
+    clone(AIRSHIP_MANIFESTS_REPO, AIRSHIP_MANIFESTS_REF)
+
+    resolve_versions()
+
+    pegleg_site_collect()
+    prom_config_gen()
+
+    stage ('Genesis Wait') {
+        gen_wait()
+    }
+
+    genesis_cleanup()
+    genesis_deploy()
+
+    shipyard_deploy('deploy_site')
+}
+
