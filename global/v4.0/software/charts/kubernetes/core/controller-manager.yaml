@@ -91,14 +91,14 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: kubernetes-controller-manager
+      release_group: airship-kubernetes-controller-manager
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: kubernetes-controller-manager
+            release_group: airship-kubernetes-controller-manager
   values:
     command_prefix:
       - /controller-manager

@@ -10,107 +10,107 @@ metadata:
     abstract: false
     layer: site
   storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .ucp.identity.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .ucp.shipyard.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .ceph.object_store.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .ceph.ceph_object_store.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .ceph.object_store.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .ceph.object_store.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .ceph.object_store.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .ceph.ceph_object_store.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .ceph.ceph_object_store.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .ceph.ceph_object_store.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .ucp.identity.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .ucp.identity.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .ucp.identity.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .ucp.shipyard.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .ucp.shipyard.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .ucp.shipyard.host_fqdn_override.public.tls.key
+  # substitutions:
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .ucp.identity.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .ucp.shipyard.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .ceph.object_store.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .ceph.ceph_object_store.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .ceph.object_store.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .ceph.object_store.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .ceph.object_store.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .ceph.ceph_object_store.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .ceph.ceph_object_store.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .ceph.ceph_object_store.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .ucp.identity.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .ucp.identity.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .ucp.identity.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .ucp.shipyard.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .ucp.shipyard.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .ucp.shipyard.host_fqdn_override.public.tls.key
 data:
   ucp:
     identity:
@@ -121,19 +121,19 @@ data:
         public: keystone
       host_fqdn_override:
         default: null
-        public:
-          host: iam.DOMAIN
+        # public:
+        #   host: iam.DOMAIN
       path:
         default: /v3
       scheme:
         default: http
-        public: https
+        # public: https
       port:
         admin:
           default: 35357
         api:
           default: 80
-          public: 443
+          public: 80
     armada:
       name: armada
       hosts:
@@ -281,16 +281,16 @@ data:
       port:
         api:
           default: 9000
-          public: 443
+          public: 80
       path:
         default: /api/v1.0
       scheme:
         default: http
-        public: https
+        # public: https
       host_fqdn_override:
         default: null
-        public:
-          host: shipyard.DOMAIN
+        # public:
+        #   host: shipyard.DOMAIN
     airflow_web:
       name: airflow-web
       hosts:
@@ -327,8 +327,8 @@ data:
         public: radosgw
       host_fqdn_override:
         default: null
-        public:
-          host: object-store.DOMAIN
+        # public:
+        #   host: object-store.DOMAIN
       path:
         default: /swift/v1
       scheme:
@@ -337,7 +337,7 @@ data:
       port:
         api:
           default: 8088
-          public: 443
+          # public: 443
     ceph_object_store:
       name: radosgw
       namespace: ceph
@@ -346,8 +346,8 @@ data:
         public: radosgw
       host_fqdn_override:
         default: null
-        public:
-          host: object-store.DOMAIN
+        # public:
+        #   host: object-store.DOMAIN
       path:
         default: /auth/v1.0
       scheme:
@@ -356,7 +356,7 @@ data:
       port:
         api:
           default: 8088
-          public: 443
+          # public: 443
     ceph_mon:
       namespace: ceph
       hosts:

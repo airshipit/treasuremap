@@ -229,7 +229,7 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: ucp-shipyard
+      release_group: airship-ucp-shipyard
   install:
     no_hooks: false
   upgrade:
@@ -238,7 +238,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: ucp-shipyard
+            release_group: airship-ucp-shipyard
   values:
     endpoints:
       postgresql_airflow_db:

@@ -111,7 +111,7 @@ data:
   wait:
     timeout: 1800
     labels:
-      release_group: ucp-ceph-mon
+      release_group: airship-ucp-ceph-mon
   install:
     no_hooks: false
   upgrade:
@@ -120,7 +120,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: ucp-ceph-mon
+            release_group: airship-ucp-ceph-mon
   values:
     logging:
       fluentd: true

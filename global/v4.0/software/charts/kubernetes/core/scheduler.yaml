@@ -55,14 +55,14 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: kubernetes-scheduler
+      release_group: airship-kubernetes-scheduler
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: kubernetes-scheduler
+            release_group: airship-kubernetes-scheduler
   values:
     network:
       kubernetes_netloc: 127.0.0.1:6553

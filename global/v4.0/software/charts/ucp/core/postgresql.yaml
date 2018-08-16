@@ -53,7 +53,7 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: ucp-postgresql
+      release_group: airship-ucp-postgresql
   install:
     no_hooks: false
   upgrade:
@@ -62,7 +62,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: ucp-postgresql
+            release_group: airship-ucp-postgresql
       create: []
     post:
       create: []

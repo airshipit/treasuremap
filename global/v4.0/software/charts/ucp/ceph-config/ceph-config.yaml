@@ -97,9 +97,9 @@ data:
   release: ucp-ceph-config
   namespace: ucp
   wait:
-    timeout: 3600
+    timeout: 900
     labels:
-      release_group: ucp-ceph-config
+      release_group: airship-ucp-ceph-config
   install:
     no_hooks: false
   upgrade:
@@ -108,7 +108,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: ucp-ceph-config
+            release_group: airship-ucp-ceph-config
   values:
     labels:
       job:

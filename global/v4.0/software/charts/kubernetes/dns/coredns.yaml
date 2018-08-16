@@ -86,14 +86,14 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: coredns
+      release_group: airship-coredns
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: coredns
+            release_group: airship-coredns
   values:
     conf:
       coredns:

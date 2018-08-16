@@ -138,7 +138,7 @@ data:
   wait:
     timeout: 300
     labels:
-      release_group: ucp-barbican
+      release_group: airship-ucp-barbican
   install:
     no_hooks: false
   upgrade:
@@ -147,7 +147,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: ucp-barbican
+            release_group: airship-ucp-barbican
     post:
       create: []
   values:

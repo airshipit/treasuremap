@@ -78,7 +78,7 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: ucp-promenade
+      release_group: airship-ucp-promenade
   install:
     no_hooks: false
   upgrade:
@@ -87,7 +87,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: ucp-promenade
+            release_group: airship-ucp-promenade
   values:
     pod:
       replicas:

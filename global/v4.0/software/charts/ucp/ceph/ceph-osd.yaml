@@ -111,7 +111,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: ucp-ceph-osd
+      release_group: airship-ucp-ceph-osd
   install:
     no_hooks: false
   upgrade:

@@ -41,7 +41,7 @@ data:
               fstype: 'ext4'
               mount_options: 'defaults'
           - name: 'var'
-            size: '>300g'
+            size: '>100g'
             filesystem:
               mountpoint: '/var'
               fstype: 'ext4'
