@@ -21,7 +21,7 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: osh-helm-toolkit
+      release_group: airship-osh-helm-toolkit
   upgrade:
     no_hooks: true
   values: {}

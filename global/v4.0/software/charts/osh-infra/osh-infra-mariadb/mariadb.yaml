@@ -54,7 +54,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: osh-infra-mariadb
+      release_group: airship-osh-infra-mariadb
   install:
     no_hooks: false
   upgrade:
@@ -63,7 +63,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: osh-infra-mariadb
+            release_group: airship-osh-infra-mariadb
   values:
     labels:
       server:

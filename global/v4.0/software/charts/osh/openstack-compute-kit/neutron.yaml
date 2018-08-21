@@ -198,7 +198,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: neutron
+            release_group: airship-neutron
     post:
       create: []
   values:
@@ -323,12 +323,12 @@ data:
             type_drivers: vlan,flat,vxlan
             tenant_network_types: vxlan
           ml2_type_vlan:
-            network_vlan_ranges: bond1
+            network_vlan_ranges: bond0
         openvswitch_agent:
           agent:
             tunnel_types: vxlan
           ovs:
-            bridge_mappings: bond1:br-bond1
+            bridge_mappings: bond0:br-bond0
   dependencies:
     - osh-helm-toolkit
 ...

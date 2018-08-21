@@ -37,7 +37,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: libvirt
+            release_group: airship-libvirt
   values:
     labels:
       agent:

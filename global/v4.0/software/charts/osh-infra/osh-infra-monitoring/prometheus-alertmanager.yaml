@@ -39,7 +39,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: prometheus-alertmanager
+      release_group: airship-prometheus-alertmanager
   install:
     no_hooks: false
   upgrade:
@@ -48,7 +48,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: prometheus-alertmanager
+            release_group: airship-prometheus-alertmanager
       create: []
     post:
       create: []

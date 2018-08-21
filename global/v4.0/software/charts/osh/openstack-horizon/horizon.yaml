@@ -95,14 +95,14 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: horizon
+      release_group: airship-horizon
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: horizon
+            release_group: airship-horizon
     post:
       create: []
   values:

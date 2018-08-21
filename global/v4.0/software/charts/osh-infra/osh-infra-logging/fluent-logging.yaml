@@ -68,7 +68,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: fluent-logging
+      release_group: airship-fluent-logging
   install:
     no_hooks: false
   upgrade:
@@ -77,7 +77,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: fluent-logging
+            release_group: airship-fluent-logging
       create: []
     post:
       create: []
