@@ -1,0 +1,105 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-postgresql
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.postgresql
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.postgresql
+      dest:
+        path: .values.images.tags
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ucp.postgresql
+      dest:
+        path: .values.endpoints.postgresql
+    # Credentials
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.postgres.admin
+      dest:
+        path: .values.endpoints.postgresql.auth.admin
+
+    # Secrets
+    - dest:
+        path: .values.endpoints.postgresql.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_postgres_admin_password
+        path: .
+data:
+  chart_name: ucp-postgresql
+  release: ucp-postgresql
+  namespace: ucp
+  wait:
+    timeout: 600
+    labels:
+      release_group: ucp-postgresql
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: ucp-postgresql
+      create: []
+    post:
+      create: []
+  values:
+    conf:
+      postgresql:
+        max_connections: 1000
+        shared_buffers: 2GB
+    development:
+      enabled: false
+    labels:
+      server:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+  dependencies:
+    - postgres-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: postgres-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.postgresql-htk
+      dest:
+        path: .source
+data:
+  chart_name: postgres-htk
+  release: postgres-htk
+  namespace: postgres-htk
+  values: {}
+  dependencies: []
+...

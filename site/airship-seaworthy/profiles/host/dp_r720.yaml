@@ -1,0 +1,90 @@
+---
+# The data plane host profile for Airship for DELL R720s, and should
+# not need to be altered if you are using matching HW. The host profile is setup
+# for cpu isolation (for nova pinning), hugepages, and sr-iov.
+schema: drydock/HostProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: dp_r720
+  storagePolicy: cleartext
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      hosttype: dp-global
+    actions:
+      - method: replace
+        path: .interfaces
+      - method: replace
+        path: .storage
+      - method: merge
+        path: .
+data:
+  # TODO: fixup proper HW profiles
+  hardware_profile: DELL_HP_Generic
+
+  primary_network: oam
+  interfaces:
+    pxe:
+      device_link: pxe
+      slaves:
+        - eno1
+      networks:
+        - pxe
+    bond0:
+      device_link: gp
+      slaves:
+        - enp67s0f0
+        - enp67s0f1
+        - enp68s0f0
+        - enp68s0f1
+      networks:
+        - oam
+        - storage
+        - overlay
+        - calico
+
+  storage:
+    physical_devices:
+      sda:
+        labels:
+          bootdrive: 'true'
+        partitions:
+          - name: 'root'
+            size: '30g'
+            bootable: true
+            filesystem:
+              mountpoint: '/'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'boot'
+            size: '1g'
+            filesystem:
+              mountpoint: '/boot'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var_log'
+            size: '100g'
+            filesystem:
+              mountpoint: '/var/log'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var'
+            size: '>300g'
+            filesystem:
+              mountpoint: '/var'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+      sdb:
+        partitions:
+          - name: 'nova'
+            size: '>100g'
+            filesystem:
+              mountpoint: '/var/lib/nova'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+  platform:
+    kernel: 'hwe-16.04'
+    kernel_params:
+      console: 'ttyS1,115200n8'
+...

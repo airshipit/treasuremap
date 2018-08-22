@@ -1,0 +1,14 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-keystone
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: UCP Keystone components
+  chart_group:
+    - ucp-keystone-memcached
+    - ucp-keystone

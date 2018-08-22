@@ -1,0 +1,39 @@
+---
+# The global deployment strategy assumes nodes are marked with node_tags
+# of masters and workers.
+schema: shipyard/DeploymentStrategy/v1
+metadata:
+  schema: metadata/Document/v1
+  name: deployment-strategy
+  layeringDefinition:
+      abstract: false
+      layer: global
+  labels:
+    name: deployment-strategy-global
+  storagePolicy: cleartext
+data:
+  groups:
+    - name: masters
+      critical: true
+      depends_on: []
+      selectors:
+        - node_names: []
+          node_labels: []
+          node_tags:
+            - masters
+          rack_names: []
+      success_criteria:
+        percent_successful_nodes: 100
+    - name: workers
+      critical: true
+      depends_on:
+        - masters
+      selectors:
+        - node_names: []
+          node_labels: []
+          node_tags:
+            - workers
+          rack_names: []
+      success_criteria:
+        percent_successful_nodes: 60
+...

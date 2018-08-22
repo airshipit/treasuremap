@@ -1,0 +1,137 @@
+---
+schema: deckhand/DataSchema/v1
+metadata:
+  schema: metadata/Control/v1
+  name: promenade/HostSystem/v1
+  labels:
+    application: promenade
+data:
+  $schema: http://json-schema.org/schema#
+  definitions:
+    abs_path:
+      type: string
+      pattern: '^/.+$'
+    apt_source_line:
+      type: string
+      # XXX add regex
+    file:
+      properties:
+        path:
+          $ref: '#/definitions/abs_path'
+        content:
+          type: string
+        mode:
+          type: integer
+          minimum: 0
+        tar_url:
+          $ref: '#/definitions/url'
+        tar_path:
+          $ref: '#/definitions/rel_path'
+
+      requried:
+        - mode
+        - path
+      oneOf:
+        - type: object
+          required:
+            - content
+        - type: object
+          allOf:
+            - type: object
+              required:
+                - tar_url
+                - tar_path
+      additionalProperties: false
+
+    image:
+      type: string
+      # XXX add regex
+    package:
+      type: string
+      # XXX add regex
+    public_key:
+      type: string
+      # XXX add regex
+    rel_path:
+      type: string
+      # XXX add regex
+    url:
+      type: string
+      # XXX add regex
+
+  type: object
+
+  properties:
+    files:
+      type: array
+      items:
+        type: object
+        items:
+          $ref: '#/definitions/file'
+    images:
+      type: object
+      properties:
+        haproxy:
+          $ref: '#/definitions/image'
+        coredns:
+          $ref: '#/definitions/image'
+        helm:
+          type: object
+          properties:
+            helm:
+              $ref: '#/definitions/image'
+          required:
+            - helm
+          additionalProperties: false
+        kubernetes:
+          type: object
+          properties:
+            kubectl:
+              $ref: '#/definitions/image'
+          required:
+            - kubectl
+          additionalProperties: false
+      required:
+        - haproxy
+        - coredns
+        - helm
+        - kubernetes
+      additionalProperties: false
+
+    packages:
+      type: object
+      properties:
+        additional:
+          type: array
+          items:
+            $ref: '#/definitions/package'
+        keys:
+          type: array
+          items:
+            $ref: '#/definitions/public_key'
+
+        required:
+          type: object
+          properties:
+            docker:
+              $ref: '#/definitions/package'
+            socat:
+              $ref: '#/definitions/package'
+          required:
+            - docker
+            - socat
+          additionalProperties: false
+
+        repositories:
+          type: array
+          items:
+            $ref: '#/definitions/apt_source_line'
+
+      required:
+        - required
+      additionalProperties: false
+
+  required:
+    - images
+    - packages
+  additionalProperties: false

@@ -1,0 +1,73 @@
+---
+schema: 'deckhand/DataSchema/v1'
+metadata:
+  schema: metadata/Control/v1
+  name: shipyard/DeploymentStrategy/v1
+  labels:
+    application: shipyard
+data:
+  $schema: 'http://json-schema.org/schema#'
+  type: 'object'
+  required:
+    - groups
+  properties:
+    groups:
+      type: 'array'
+      minItems: 0
+      items:
+        type: 'object'
+        required:
+          - name
+          - critical
+          - depends_on
+          - selectors
+        properties:
+          name:
+            type: 'string'
+            minLength: 1
+          critical:
+            type: 'boolean'
+          depends_on:
+            type: 'array'
+            minItems: 0
+            items:
+              type: 'string'
+          selectors:
+            type: 'array'
+            minItems: 0
+            items:
+              type: 'object'
+              minProperties: 1
+              properties:
+                node_names:
+                  type: 'array'
+                  items:
+                    type: 'string'
+                node_labels:
+                  type: 'array'
+                  items:
+                    type: 'string'
+                node_tags:
+                  type: 'array'
+                  items:
+                    type: 'string'
+                rack_names:
+                  type: 'array'
+                  items:
+                    type: 'string'
+              additionalProperties: false
+          success_criteria:
+            type: 'object'
+            minProperties: 1
+            properties:
+              percent_successful_nodes:
+                type: 'integer'
+                minimum: 0
+                maximum: 100
+              minimum_successful_nodes:
+                type: 'integer'
+                minimum: 0
+              maximum_failed_nodes:
+                type: 'integer'
+                minimum: 0
+            additionalProperties: false

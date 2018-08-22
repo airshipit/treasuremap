@@ -1,0 +1,109 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: haproxy
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.haproxy
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.haproxy
+      dest:
+        path: .values.images.tags
+
+    # Kubernetes configuration
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.api_service_ip
+      dest:
+        path: .values.conf.anchor.kubernetes_url
+        pattern: KUBERNETES_IP
+
+data:
+  chart_name: haproxy
+  release: haproxy
+  namespace: kube-system
+  protected:
+    continue_processing: true
+  wait:
+    timeout: 600
+    labels:
+      release_group: haproxy
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: haproxy
+  values:
+    conf:
+      anchor:
+        kubernetes_url: https://KUBERNETES_IP:443
+        services:
+          default:
+            kubernetes:
+              server_opts: "check port 6443"
+              conf_parts:
+                frontend:
+                  - mode tcp
+                  - option tcpka
+                  - bind *:6553
+                backend:
+                  - mode tcp
+                  - option tcpka
+                  - option tcp-check
+                  - option redispatch
+          kube-system:
+            kubernetes-etcd:
+              server_opts: "check port 2379"
+              conf_parts:
+                frontend:
+                  - mode tcp
+                  - option tcpka
+                  - bind *:2378
+                backend:
+                  - mode tcp
+                  - option tcpka
+                  - option tcp-check
+                  - option redispatch
+  dependencies:
+    - haproxy-htk
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: haproxy-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.haproxy-htk
+      dest:
+        path: .source
+data:
+  chart_name: haproxy-htk
+  release: haproxy-htk
+  namespace: haproxy-htk
+  values: {}
+  dependencies: []
+...

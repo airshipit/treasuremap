@@ -1,0 +1,14 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: osh-infra-logging
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: OSH Infra Logging
+  chart_group:
+    - elasticsearch
+    - fluent-logging

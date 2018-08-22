@@ -1,0 +1,110 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-rabbitmq
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.rabbitmq
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.rabbitmq
+      dest:
+        path: .values.images.tags
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ucp.oslo_messaging
+      dest:
+        path: .values.endpoints.oslo_messaging
+
+    # Credentials
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.oslo_messaging.admin
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.user
+
+    # Secrets
+
+    - src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_rabbitmq_erlang_cookie
+        path: .
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.erlang_cookie
+    - src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_oslo_messaging_password
+        path: .
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.user.password
+data:
+  chart_name: ucp-rabbitmq
+  release: ucp-rabbitmq
+  namespace: ucp
+  wait:
+    timeout: 300
+    labels:
+      release_group: ucp-rabbitmq
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: ucp-rabbitmq
+  values:
+    pod:
+      replicas:
+        server: 1
+    labels:
+      server:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+      prometheus_rabbitmq_exporter:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+  dependencies:
+    - ucp-rabbitmq-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-rabbitmq-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.rabbitmq-htk
+      dest:
+        path: .source
+data:
+  chart_name: ucp-rabbitmq-htk
+  release: ucp-rabbitmq-htk
+  namespace: ucp-rabbitmq-htk
+  values: {}
+  dependencies: []
+...

@@ -1,0 +1,128 @@
+---
+schema: pegleg/Script/v1
+metadata:
+  schema: metadata/Document/v1
+  name: configure-ip-rules
+  storagePolicy: cleartext
+  layeringDefinition:
+    abstract: false
+    layer: global
+data: |-
+  #!/bin/bash
+  set -ex
+
+  function usage() {
+      cat <<EOU
+  Options are:
+
+    -c POD_CIDR     The pod CIDR for the Kubernetes cluster, e.g. 10.97.0.0/16
+    -i INTERFACE    (optional) The interface for internal pod traffic, e.g.
+                    bond0.22.  Used to auto-detect the service gateway.
+                    Exclusive with -g.
+    -g SERVICE_GW   (optional) The service gateway/VRR IP for routing pod
+                    traffic.  Exclusive with -i.
+    -o OVERLAP_CIDR (optional) This CIDR will be routed via the VRRP IP on
+                    INTERFACE.  It is used to provide a work around when
+                    complete Calico routes cannot be received via BGP.
+                    e.g. 10.96.0.0/15.  NOTE: This must include the POD_CIDR.
+    -s SERVICE_CIDR (optional) A routable CIDR to configure for ingress, maas,
+                    e.g. 10.23.22.192/29
+  EOU
+  }
+
+  SERVICE_CIDR=
+  OVERLAP_CIDR=
+
+  while getopts ":c:g:hi:o:s:" o; do
+      case "${o}" in
+          c)
+              POD_CIDR=${OPTARG}
+              ;;
+          g)
+              SERVICE_GW=${OPTARG}
+              ;;
+          h)
+              usage
+              exit 0
+              ;;
+          i)
+              INTERFACE=${OPTARG}
+              ;;
+          o)
+              OVERLAP_CIDR=${OPTARG}
+              ;;
+          s)
+              SERVICE_CIDR=${OPTARG}
+              ;;
+          \?)
+              echo "Unknown option: -${OPTARG}" >&2
+              exit 1
+              ;;
+          :)
+              echo "Missing argument for option: -${OPTARG}" >&2
+              exit 1
+              ;;
+          *)
+              echo "Unimplemented option: -${OPTARG}" >&2
+              exit 1
+              ;;
+      esac
+  done
+  shift $((OPTIND-1))
+
+  if [ "x$POD_CIDR" == "x" ]; then
+      echo "Missing pod CIDR, e.g -c 10.97.0.0/16" >&2
+      usage
+      exit 1
+  fi
+
+  if [ "x$INTERFACE" != "x" ]; then
+      while ! ip route list dev "${INTERFACE}" > /dev/null; do
+          echo Waiting for device "${INTERFACE}" to be ready. >&2
+          sleep 5
+      done
+  fi
+
+  intra_vrrp_ip=
+  if [ "x${SERVICE_GW}" == "x" ]; then
+      intra_vrrp_ip=$(ip route list dev "${INTERFACE}" | awk '($2~/via/){print $3}' | head -n 1)
+  else
+      intra_vrrp_ip=${SERVICE_GW}
+  fi
+
+  TABLE="1500"
+
+  if [ "x${intra_vrrp_ip}" == "x" ]; then
+      echo "Either INTERFACE or SERVICE_GW is required: e.g. either -i bond0.22 or -g 10.23.22.1"
+      usage
+      exit 1
+  fi
+
+  # Setup a routing table for traffic from service IPs
+  ip route flush table "${TABLE}"
+  ip route add default via "${intra_vrrp_ip}" table "${TABLE}"
+
+  # Setup arp_announce adjustment on interface facing gateway
+  arp_intf=$(ip route get ${intra_vrrp_ip} | grep dev | awk '{print $3}')
+  echo 2 > /proc/sys/net/ipv4/conf/${arp_intf}/arp_announce
+
+
+  if [ "x$OVERLAP_CIDR" != "x" ]; then
+      # NOTE: This is a work-around for nodes not receiving complete
+      # routes via BGP.
+      ip route add "${OVERLAP_CIDR}" via "${intra_vrrp_ip}"
+  fi
+
+  if [ "x$SERVICE_CIDR" != "x" ]; then
+      # Traffic from the service IPs to pods should use the pod network.
+      ip rule add \
+          from "${SERVICE_CIDR}" \
+          to "${POD_CIDR}" \
+          lookup main \
+          pref 10000
+      # Other traffic from service IPs should only use the VRRP IP
+      ip rule add \
+          from "${SERVICE_CIDR}" \
+          lookup "${TABLE}" \
+          pref 10100
+  fi

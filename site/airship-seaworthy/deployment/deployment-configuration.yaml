@@ -1,0 +1,41 @@
+---
+# The purpose of this file is to provide shipyard related deployment config
+# parameters. This should not require modification for a new site. However,
+# shipyard deployment strategies can be very useful in getting around certain
+# failures, like misbehaving nodes that hold up the deployment. See more at
+# https://github.com/openstack/airship-shipyard/blob/master/docs/source/site-definition-documents.rst#using-a-deployment-strategy
+schema: shipyard/DeploymentConfiguration/v1
+metadata:
+  schema: metadata/Document/v1
+  name: deployment-configuration
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  physical_provisioner:
+    deployment_strategy: deployment-strategy
+    deploy_interval: 30
+    deploy_timeout: 3600
+    destroy_interval: 30
+    destroy_timeout: 900
+    join_wait: 120
+    prepare_node_interval: 30
+    prepare_node_timeout: 1800
+    prepare_site_interval: 10
+    prepare_site_timeout: 300
+    verify_interval: 10
+    verify_timeout: 60
+  kubernetes_provisioner:
+    drain_timeout: 3600
+    drain_grace_period: 1800
+    clear_labels_timeout: 1800
+    remove_etcd_timeout: 1800
+    etcd_ready_timeout: 600
+  armada:
+    get_releases_timeout: 300
+    get_status_timeout: 300
+    manifest: 'full-site'
+    post_apply_timeout: 2700
+    validate_design_timeout: 600
+...

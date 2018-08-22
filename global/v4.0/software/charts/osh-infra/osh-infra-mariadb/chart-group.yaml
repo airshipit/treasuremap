@@ -1,0 +1,13 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: osh-infra-mariadb
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: OpenStack-Infra MariaDB
+  chart_group:
+    - osh-infra-mariadb

@@ -1,0 +1,86 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: global-ingress-kube-system
+  labels:
+    ingress: kube-system
+  layeringDefinition:
+    abstract: true
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.ingress
+      dest:
+        path: .source
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.ingress
+      dest:
+        path: .values.images.tags
+data:
+  chart_name: ingress-kube-system
+  release: ingress-kube-system
+  namespace: kube-system
+  wait:
+    timeout: 300
+    labels:
+      release_group: ingress-kube-system
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: ingress-kube-system
+  values:
+    labels:
+      server:
+        node_selector_key: kube-ingress
+        node_selector_value: enabled
+      error_server:
+        node_selector_key: kube-ingress
+        node_selector_value: enabled
+    deployment:
+      mode: cluster
+      type: DaemonSet
+    network:
+      host_namespace: true
+      ingress:
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-read-timeout: "603"
+    pod:
+      replicas:
+        error_page: 2
+  dependencies:
+    - ingress-kube-system-htk
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ingress-kube-system-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.ingress-htk
+      dest:
+        path: .source
+data:
+  chart_name: ingress-kube-system-htk
+  release: ingress-kube-system-htk
+  namespace: ingress-kube-system-htk
+  values: {}
+  dependencies: []

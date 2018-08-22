@@ -1,0 +1,163 @@
+---
+schema: 'deckhand/DataSchema/v1'
+metadata:
+  schema: metadata/Control/v1
+  name: drydock/BaremetalNode/v1
+  labels:
+    application: drydock
+data:
+  $schema: 'http://json-schema.org/schema#'
+  type: 'object'
+  properties:
+    addressing:
+      type: 'array'
+      items:
+        type: 'object'
+        properties:
+          address:
+            type: 'string'
+          network:
+            type: 'string'
+    oob:
+      type: 'object'
+      properties:
+        type:
+          type: 'string'
+        network:
+          type: 'string'
+        account:
+          type: 'string'
+        credetial:
+          type: 'string'
+      additionalProperties: true
+    storage:
+      type: 'object'
+      properties:
+        physical_devices:
+          type: 'object'
+          additionalProperties:
+            type: 'object'
+            properties:
+              labels:
+                type: 'object'
+                additionalProperties:
+                  type: 'string'
+              volume_group:
+                type: 'string'
+              partitions:
+                type: 'array'
+                items:
+                  type: 'object'
+                  properties:
+                    name:
+                      type: 'string'
+                    size:
+                      type: 'string'
+                    part_uuid:
+                      type: 'string'
+                    volume_group:
+                      type: 'string'
+                    labels:
+                      type: 'object'
+                      additionalProperties:
+                        type: 'string'
+                    bootable:
+                      type: 'boolean'
+                    volume_group:
+                      type: 'string'
+                    filesystem:
+                      type: 'object'
+                      properties:
+                        mountpoint:
+                          type: 'string'
+                        fstype:
+                          type: 'string'
+                        mount_options:
+                          type: 'string'
+                        fs_uuid:
+                          type: 'string'
+                        fs_label:
+                          type: 'string'
+                      additionalProperties: false
+                  additionalProperties: false
+        volume_groups:
+          type: 'object'
+          additionalProperties:
+            type: 'object'
+            properties:
+              vg_uuid:
+                type: 'string'
+              logical_volumes:
+                type: 'array'
+                items:
+                  type: 'object'
+                  properties:
+                    name:
+                      type: 'string'
+                    lv_uuid:
+                      type: 'string'
+                    size:
+                      type: 'string'
+                    filesystem:
+                      type: 'object'
+                      properties:
+                        mountpoint:
+                          type: 'string'
+                        fstype:
+                          type: 'string'
+                        mount_options:
+                          type: 'string'
+                        fs_uuid:
+                          type: 'string'
+                        fs_label:
+                          type: 'string'
+    platform:
+      type: 'object'
+      properties:
+        image:
+          type: 'string'
+        kernel:
+          type: 'string'
+        kernel_params:
+          type: 'object'
+          additionalProperties: true
+      additionalProperties: false
+    metadata:
+      type: 'object'
+      properties:
+        tags:
+          type: 'array'
+          items:
+            type: 'string'
+        owner_data:
+          type: 'object'
+          additionalProperties:
+            type: 'string'
+        rack:
+          type: 'string'
+        boot_mac:
+          type: 'string'
+      additionalProperties: false
+    host_profile:
+      type: 'string'
+    hardware_profile:
+      type: 'string'
+    primary_network:
+      type: 'string'
+    interfaces:
+      type: 'object'
+      additionalProperties:
+        type: 'object'
+        properties:
+          device_link:
+           type: 'string'
+          slaves:
+            type: 'array'
+            items:
+              type: 'string'
+          networks:
+            type: 'array'
+            items:
+              type: 'string'
+  additionalProperties: false
+...

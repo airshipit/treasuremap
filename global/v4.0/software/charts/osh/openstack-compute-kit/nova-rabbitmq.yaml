@@ -1,0 +1,95 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nova-rabbitmq
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.rabbitmq
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh.rabbitmq
+      dest:
+        path: .values.images.tags
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.nova_oslo_messaging
+      dest:
+        path: .values.endpoints.oslo_messaging
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.nova_rabbitmq_exporter
+      dest:
+        path: .values.endpoints.prometheus_rabbitmq_exporter
+    # Credentials
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.nova.oslo_messaging.admin
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.user
+
+    # Secrets
+
+    - src:
+        schema: deckhand/Passphrase/v1
+        name: osh_nova_rabbitmq_erlang_cookie
+        path: .
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.erlang_cookie
+    - src:
+        schema: deckhand/Passphrase/v1
+        name: osh_nova_oslo_messaging_admin_password
+        path: .
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.user.password
+data:
+  chart_name: nova-rabbitmq
+  release: nova-rabbitmq
+  namespace: openstack
+  wait:
+    timeout: 900
+    labels:
+      release_group: nova-rabbitmq
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: nova-rabbitmq
+  values:
+    pod:
+      replicas:
+        server: 1    
+    labels:
+      server:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      prometheus_rabbitmq_exporter:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    monitoring:
+      prometheus:
+        enabled: true
+  dependencies:
+    - osh-helm-toolkit
+...

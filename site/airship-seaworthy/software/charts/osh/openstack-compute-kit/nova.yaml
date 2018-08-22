@@ -1,0 +1,25 @@
+---
+# This file defines hardware-specific settings for nova. If you use the same
+# hardware profile as this environment, you should not need to change this file.
+# Otherwise, you should review the settings here and adjust for your hardware.
+# In particular:
+# 1. vcpu_pin_set will change if the number of logical CPUs on the hardware
+#    changes.
+# 2. pci alias / passthrough_whitelist could change if the NIC type or NIC
+#    slotting changes.
+# TODO: Should move to global layer and become tied to the hardware profile
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nova
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: nova-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data: {}
+...

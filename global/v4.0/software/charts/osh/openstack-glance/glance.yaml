@@ -1,0 +1,296 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: glance
+  labels:
+    component: glance
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.glance
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh.glance
+      dest:
+        path: .values.images.tags
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.identity
+      dest:
+        path: .values.endpoints.identity
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.image
+      dest:
+        path: .values.endpoints.image
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.image_registry
+      dest:
+        path: .values.endpoints.image_registry
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.oslo_db
+      dest:
+        path: .values.endpoints.oslo_db
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.glance_oslo_messaging
+      dest:
+        path: .values.endpoints.oslo_messaging
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.oslo_cache
+      dest:
+        path: .values.endpoints.oslo_cache
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.ceph_object_store
+      dest:
+        path: .values.endpoints.ceph_object_store
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.object_store
+      dest:
+        path: .values.endpoints.object_store
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.fluentd
+      dest:
+        path: .values.endpoints.fluentd
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.keystone.admin
+      dest:
+        path: .values.endpoints.identity.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.glance.glance
+      dest:
+        path: .values.endpoints.identity.auth.glance
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.glance.oslo_messaging.admin
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.glance.oslo_messaging.glance
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.glance
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.glance.oslo_db
+      dest:
+        path: .values.endpoints.oslo_db.auth.glance
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.glance.oslo_db.database
+      dest:
+        path: .values.endpoints.oslo_db.path
+        pattern: DB_NAME
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.glance.ceph_object_store
+      dest:
+        path: .values.endpoints.ceph_object_store.auth.glance
+
+    # Secrets
+    - dest:
+        path: .values.endpoints.identity.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_keystone_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.glance.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_glance_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_messaging.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_glance_oslo_messaging_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_messaging.auth.glance.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_glance_oslo_messaging_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_db.auth.glance.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_glance_oslo_db_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_db.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_oslo_db_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_cache.auth.memcache_secret_key
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_oslo_cache_secret_key
+        path: .
+    - dest:
+        path: .values.endpoints.object_store.auth.glance.tmpurlkey
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ceph_swift_keystone_password
+        path: .
+    - dest:
+        path: .values.endpoints.ceph_object_store.auth.glance.tmpurlkey
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ceph_swift_keystone_password
+        path: .
+    - dest:
+        path: .values.endpoints.ceph_object_store.auth.glance.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_glance_password
+        path: .
+data:
+  chart_name: glance
+  release: glance
+  namespace: openstack
+  wait:
+    timeout: 900
+    labels:
+      release_group: glance
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: glance
+    post:
+      create: []
+  values:
+    pod:
+      replicas:
+        api: 2
+        registry: 2
+    labels:
+      api:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      registry:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    manifests:
+      job_bootstrap: false
+    conf:
+      logging:
+        loggers:
+          keys:
+            - root
+            - glance
+        handlers:
+          keys:
+            - stdout
+            - stderr
+            - "null"
+            - fluent
+        formatters:
+          keys:
+            - context
+            - default
+            - fluent
+        logger_root:
+          level: WARNING
+          handlers: null
+        logger_glance:
+          level: INFO
+          handlers:
+            - stdout
+            - stderr
+            - fluent
+          qualname: glance
+        logger_amqp:
+          level: WARNING
+          handlers: stderr
+          qualname: amqp
+        logger_amqplib:
+          level: WARNING
+          handlers: stderr
+          qualname: amqplib
+        logger_eventletwsgi:
+          level: WARNING
+          handlers: stderr
+          qualname: eventlet.wsgi.server
+        logger_sqlalchemy:
+          level: WARNING
+          handlers: stderr
+          qualname: sqlalchemy
+        logger_boto:
+          level: WARNING
+          handlers: stderr
+          qualname: boto
+        handler_null:
+          class: logging.NullHandler
+          formatter: default
+          args: ()
+        handler_stdout:
+          class: StreamHandler
+          args: (sys.stdout,)
+          formatter: context
+        handler_stderr:
+          class: StreamHandler
+          args: (sys.stderr,)
+          formatter: context
+        handler_fluent:
+          class: fluent.handler.FluentHandler
+          args: ('openstack.glance', 'fluentd-logging.osh-infra', 24224)
+          formatter: fluent
+        formatter_fluent:
+          class: oslo_log.formatters.FluentFormatter
+        formatter_context:
+          class: oslo_log.formatters.ContextFormatter
+        formatter_default:
+          format: "%(message)s"
+  dependencies:
+    - osh-helm-toolkit
+...

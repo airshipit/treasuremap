@@ -1,0 +1,15 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-container-networking
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: Container networking via Calico
+  sequenced: true
+  chart_group:
+    - kubernetes-calico-etcd
+    - kubernetes-calico

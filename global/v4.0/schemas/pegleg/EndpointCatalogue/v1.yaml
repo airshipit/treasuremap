@@ -1,0 +1,143 @@
+---
+schema: 'deckhand/DataSchema/v1'
+metadata:
+  schema: metadata/Control/v1
+  name: pegleg/EndpointCatalogue/v1
+data:
+  $schema: 'http://json-schema.org/schema#'
+  type: 'object'
+  # Namespace the list of endpoints
+  additionalProperties:
+    type: 'object'
+    additionalProperties:
+      type: 'object'
+      properties:
+        namespace:
+          oneOf:
+            - type: string
+            - type: "null"
+        name:
+          type: string
+        auth:
+          type: object
+        hosts:
+          type: object
+          properties:
+            data:
+              type: string
+            default:
+              type: string
+            discovery:
+              type: string
+            public:
+              type: string
+            internal:
+              type: string
+          additionalProperties:
+            type: string
+        host_fqdn_override:
+          oneOf:
+            - type: object
+              properties:
+                default:
+                  oneOf:
+                    - type: string
+                    - type: "null"
+                    - type: object
+                      properties:
+                        host:
+                          type: string
+                        tls:
+                          type: object
+                          properties:
+                            crt:
+                              type: string
+                            ca:
+                              type: string
+                            key:
+                              type: string
+                      additionalProperties:
+                        type: string
+                public:
+                  oneOf:
+                    - type: string
+                    - type: "null"
+                    - type: object
+                      properties:
+                        host:
+                          type: string
+                        tls:
+                          type: object
+                          properties:
+                            crt:
+                              type: string
+                            ca:
+                              type: string
+                            key:
+                              type: string
+                      additionalProperties:
+                        type: string
+                internal:
+                  oneOf:
+                    - type: string
+                    - type: "null"
+                    - type: object
+                      properties:
+                        host:
+                          type: string
+                        tls:
+                          type: object
+                          properties:
+                            crt:
+                              type: string
+                            ca:
+                              type: string
+                            key:
+                              type: string
+                      additionalProperties:
+                        type: string
+              additionalProperties:
+                type: string
+            - type: "null"
+        path:
+          oneOf:
+            - type: object
+              properties:
+                default:
+                  oneOf:
+                    - type: string
+                    - type: "null"
+                public:
+                  type: string
+                internal:
+                  type: string
+              additionalProperties:
+                type: string
+            - type: string
+        scheme:
+          oneOf:
+            - type: object
+              properties:
+                default:
+                  type: string
+                public:
+                  type: string
+                internal:
+                  type: string
+              additionalProperties:
+                type: string
+            - type: string
+        port:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              default:
+                type: number
+              public:
+                type: number
+              internal:
+                type: number
+            additionalProperties:
+              type: number
+...

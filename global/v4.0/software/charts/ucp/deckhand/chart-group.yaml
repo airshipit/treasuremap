@@ -1,0 +1,16 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-deckhand
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: Deckhand
+  chart_group:
+    # NOTE: Find and add the dogtag chart
+    # - ucp-dogtag
+    - ucp-barbican
+    - ucp-deckhand

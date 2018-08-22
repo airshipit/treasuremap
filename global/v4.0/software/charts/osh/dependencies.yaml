@@ -1,0 +1,28 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: osh-helm-toolkit
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.helm_toolkit
+      dest:
+        path: .source
+data:
+  chart_name: helm-toolkit
+  release: osh-helm-toolkit
+  namespace: osh-helm-toolkit
+  wait:
+    timeout: 600
+    labels:
+      release_group: osh-helm-toolkit
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []

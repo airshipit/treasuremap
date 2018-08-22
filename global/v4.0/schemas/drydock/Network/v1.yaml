@@ -1,0 +1,70 @@
+---
+schema: 'deckhand/DataSchema/v1'
+metadata:
+  schema: metadata/Control/v1
+  name: drydock/Network/v1
+  labels:
+    application: drydock
+data:
+  $schema: 'http://json-schema.org/schema#'
+  type: 'object'
+  properties:
+    cidr:
+      type: 'string'
+    ranges:
+      type: 'array'
+      items:
+        type: 'object'
+        properties:
+          type:
+            type: 'string'
+          start:
+            type: 'string'
+            format: 'ipv4'
+          end:
+            type: 'string'
+            format: 'ipv4'
+        additionalProperties: false
+    dns:
+      type: 'object'
+      properties:
+        domain:
+          type: 'string'
+        servers:
+          type: 'string'
+      additionalProperties: false
+    dhcp_relay:
+      type: 'object'
+      properties:
+        self_ip:
+          type: 'string'
+          format: 'ipv4'
+        upstream_target:
+          type: 'string'
+          format: 'ipv4'
+      additionalProperties: false
+    mtu:
+      type: 'number'
+    vlan:
+      type: 'string'
+    routedomain:
+      type: 'string'
+    routes:
+      type: 'array'
+      items:
+        type: 'object'
+        properties:
+          subnet:
+            type: 'string'
+          gateway:
+            type: 'string'
+            format: 'ipv4'
+          metric:
+            type: 'number'
+          routedomain:
+            type: 'string'
+        additionalProperties: false
+    labels:
+      type: 'object'
+      additionalProperties: true
+  additionalProperties: false

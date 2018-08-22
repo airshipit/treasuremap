@@ -1,0 +1,186 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: elasticsearch-global
+  labels:
+    hosttype: elasticsearch-global
+  layeringDefinition:
+    abstract: true
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.elasticsearch
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh_infra.elasticsearch
+      dest:
+        path: .values.images.tags
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.elasticsearch
+      dest:
+        path: .values.endpoints.elasticsearch
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.prometheus_elasticsearch_exporter
+      dest:
+        path: .values.endpoints.prometheus_elasticsearch_exporter
+
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.ldap
+      dest:
+        path: .values.endpoints.ldap
+
+    # Accounts
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_infra_service_accounts
+        path: .osh_infra.elasticsearch.admin
+      dest:
+        path: .values.endpoints.elasticsearch.auth.admin
+
+    # Secrets
+    - dest:
+        path: .values.endpoints.elasticsearch.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_infra_elasticsearch_admin_password
+        path: .
+
+    # LDAP Details
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_infra_service_accounts
+        path: .osh_infra.ldap.admin
+      dest:
+        path: .values.endpoints.ldap.auth.admin
+    - dest:
+        path: .values.endpoints.ldap.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_keystone_ldap_password
+        path: .
+data:
+  chart_name: elasticsearch
+  release: elasticsearch
+  namespace: osh-infra
+  wait:
+    timeout: 900
+    labels:
+      release_group: elasticsearch
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: elasticsearch
+      create: []
+    post:
+      create: []
+  values:
+    labels:
+      elasticsearch:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    monitoring:
+      prometheus:
+        enabled: true
+    conf:
+      apache:
+        host: |
+          <VirtualHost *:80>
+            <Location />
+                ProxyPass http://localhost:{{ tuple "elasticsearch" "internal" "client" . | include "helm-toolkit.endpoints.endpoint_port_lookup" }}/
+                ProxyPassReverse http://localhost:{{ tuple "elasticsearch" "internal" "client" . | include "helm-toolkit.endpoints.endpoint_port_lookup" }}/
+            </Location>
+            <Proxy *>
+                AuthName "Elasticsearch"
+                AuthType Basic
+                AuthBasicProvider file ldap
+                AuthUserFile /usr/local/apache2/conf/.htpasswd
+                AuthLDAPBindDN {{ .Values.endpoints.ldap.auth.admin.bind }}
+                AuthLDAPBindPassword {{ .Values.endpoints.ldap.auth.admin.password }}
+                AuthLDAPURL {{ tuple "ldap" "public" "ldap" . | include "helm-toolkit.endpoints.keystone_endpoint_uri_lookup" }}
+                Require valid-user
+            </Proxy>
+          </VirtualHost>
+      elasticsearch:
+        env:
+          java_opts: "-Xms5g -Xmx5g"
+      curator:
+        #run every 6th hour
+        schedule:  "0 */6 * * *"
+        action_file:
+          # Remember, leave a key empty if there is no value.  None will be a string,
+          # not a Python "NoneType"
+          #
+          # Also remember that all examples have 'disable_action' set to True.  If you
+          # want to use this action as a template, be sure to set this to False after
+          # copying it.
+          actions:
+            1:
+              action: delete_indices
+              description: >-
+                "Delete indices older than 7 days"
+              options:
+                timeout_override:
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: logstash-
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 7
+            2:
+              action: delete_indices
+              description: >-
+                "Delete indices by age if available disk space is
+                 less than 80% total disk"
+              options:
+                timeout_override: 600
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: logstash-
+              - filtertype: space
+                source: creation_date
+                use_age: True
+                disk_space: 1200
+    storage:
+      elasticsearch:
+        requests:
+          storage: 500Gi
+  dependencies:
+    - osh-infra-helm-toolkit
+...

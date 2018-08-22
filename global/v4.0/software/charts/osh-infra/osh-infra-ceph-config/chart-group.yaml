@@ -1,0 +1,13 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: osh-infra-ceph-config
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: Ceph config for OpenStack-Infra namespace(s)
+  chart_group:
+    - osh-infra-ceph-config

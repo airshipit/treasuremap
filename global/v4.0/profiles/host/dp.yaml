@@ -1,0 +1,60 @@
+---
+schema: drydock/HostProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: dp-global
+  labels:
+    hosttype: dp-global
+  layeringDefinition:
+    abstract: true
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - dest:
+        path: .oob.credential
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ipmi_admin_password
+        path: .
+data:
+  oob:
+    type: 'ipmi'
+    network: 'oob'
+    account: 'root'
+  storage:
+    physical_devices:
+      sda:
+        labels:
+          bootdrive: 'true'
+        partitions:
+          - name: 'root'
+            size: '30g'
+            bootable: true
+            filesystem:
+              mountpoint: '/'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'boot'
+            size: '1g'
+            filesystem:
+              mountpoint: '/boot'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var'
+            size: '>300g'
+            filesystem:
+              mountpoint: '/var'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+  platform:
+    image: 'xenial'
+    kernel: 'hwe-16.04'
+  metadata:
+    owner_data:
+      openstack-nova-compute: enabled
+      openvswitch: enabled
+      contrail-vrouter: kernel
+      openstack-libvirt: kernel
+      beta.kubernetes.io/fluentd-ds-ready: 'true'
+      node-exporter: enabled
+...

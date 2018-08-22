@@ -1,0 +1,18 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-compute-kit
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: Deploy Nova, Neutron, Openvswitch, and Libvirt
+  chart_group:
+    - libvirt
+    - openvswitch
+    - neutron-rabbitmq
+    - nova-rabbitmq
+    - neutron
+    - nova

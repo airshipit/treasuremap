@@ -1,0 +1,103 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-divingbell-global
+  layeringDefinition:
+    abstract: true
+    layer: global
+  labels:
+    name: ucp-divingbell-global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.divingbell
+      dest:
+        path: .source
+    # Image Source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.divingbell
+      dest:
+        path: .values.images
+data:
+  chart_name: ucp-divingbell
+  release: ucp-divingbell
+  namespace: ucp
+  wait:
+    timeout: 300
+    labels:
+      release_group: ucp-divingbell
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: ucp-divingbell
+  values:
+    conf:
+      sysctl:
+        # Larger connection tracking table
+        net.nf_conntrack_max: '1048576'
+        # Reboot the node 60 seconds after a kernel panic, instead of default
+        # value of 0 (i.e. never reboot)
+        kernel.panic: '60'
+        # Accept gratuitous ARP to support failover scenarios
+        # https://bugs.launchpad.net/fuel/+bug/1456272
+        net.ipv4.conf.default.arp_accept: '1'
+        net.ipv4.conf.all.arp_accept: '1'
+        # Increased network backlog to optimize performance on fast networks
+        net.core.netdev_max_backlog: '261144'
+        # Optimizations for RabbitMQ failover
+        # https://bugs.launchpad.net/oslo.messaging/+bug/856764/comments/19
+        net.ipv4.tcp_keepalive_intvl: '3'
+        net.ipv4.tcp_keepalive_time: '30'
+        net.ipv4.tcp_keepalive_probes: '8'
+        net.ipv4.tcp_retries2: '5'
+        # Larger thresholds
+        # "Neighbour table overflow" errors that filled kernel logs
+        net.ipv4.neigh.default.gc_thresh1: '4096'
+        net.ipv4.neigh.default.gc_thresh2: '8192'
+        net.ipv4.neigh.default.gc_thresh3: '16384'
+        # It was necessary to set rp_filter to zero to support certain
+        # multi-homed storage backends
+        net.ipv4.conf.default.rp_filter: '0'
+        # Enable byte/packet count for new connections to enable creation of
+        # rules for the connbytes netfilter module
+        net.netfilter.nf_conntrack_acct: '1'
+        # Added in response to error messages seen on genesis host when services
+        # were restarted. "Failed to add /run/systemd/ask-password to directory
+        # watch: No space left on device". https://bit.ly/2Mj5qn2 TDP bug 427616
+        fs.inotify.max_user_watches: '1048576'
+  dependencies:
+    - ucp-divingbell-htk
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-divingbell-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.divingbell-htk
+      dest:
+        path: .source
+data:
+  chart_name: ucp-divingbell-htk
+  release: ucp-divingbell-htk
+  namespace: ucp-divingbell-htk
+  values: {}
+  dependencies: []
+...

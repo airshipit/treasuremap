@@ -1,0 +1,297 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: heat
+  labels:
+    name: heat-global
+    component: heat
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.heat
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh.heat
+      dest:
+        path: .values.images.tags
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.identity
+      dest:
+        path: .values.endpoints.identity
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.orchestration
+      dest:
+        path: .values.endpoints.orchestration
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.cloudformation
+      dest:
+        path: .values.endpoints.cloudformation
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.cloudwatch
+      dest:
+        path: .values.endpoints.cloudwatch
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.oslo_db
+      dest:
+        path: .values.endpoints.oslo_db
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.heat_oslo_messaging
+      dest:
+        path: .values.endpoints.oslo_messaging
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.oslo_cache
+      dest:
+        path: .values.endpoints.oslo_cache
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.fluentd
+      dest:
+        path: .values.endpoints.fluentd
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.keystone.admin
+      dest:
+        path: .values.endpoints.identity.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.heat.heat
+      dest:
+        path: .values.endpoints.identity.auth.heat
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.heat.heat_trustee
+      dest:
+        path: .values.endpoints.identity.auth.heat_trustee
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.heat.heat_stack_user
+      dest:
+        path: .values.endpoints.identity.auth.heat_stack_user
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.heat.oslo_messaging.admin
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.heat.oslo_messaging.heat
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.heat
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.heat.oslo_db
+      dest:
+        path: .values.endpoints.oslo_db.auth.heat
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.heat.oslo_db.database
+      dest:
+        path: .values.endpoints.oslo_db.path
+        pattern: DB_NAME
+
+    # Secrets
+    - dest:
+        path: .values.endpoints.identity.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_keystone_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.heat.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_heat_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.heat_trustee.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_heat_trustee_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.heat_stack_user.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_heat_stack_user_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_messaging.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_heat_oslo_messaging_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_messaging.auth.heat.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_heat_oslo_messaging_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_db.auth.heat.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_heat_oslo_db_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_db.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_oslo_db_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_cache.auth.memcache_secret_key
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_oslo_cache_secret_key
+        path: .
+data:
+  chart_name: heat
+  release: heat
+  namespace: openstack
+  wait:
+    timeout: 900
+    labels:
+      release_group: heat
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: heat
+    post:
+      create: []
+  values:
+    pod:
+      replicas:
+        api: 1
+        cfn: 1
+        cloudwatch: 1
+        engine: 2
+    labels:
+      api:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      cfn:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      cloudwatch:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      engine:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    conf:
+      logging:
+        loggers:
+          keys:
+            - root
+            - heat
+        handlers:
+          keys:
+            - stdout
+            - stderr
+            - "null"
+            - fluent
+        formatters:
+          keys:
+            - context
+            - default
+            - fluent
+        logger_root:
+          level: WARNING
+          handlers: null
+        logger_heat:
+          level: INFO
+          handlers:
+            - stdout
+            - stderr
+            - fluent
+          qualname: heat
+        logger_amqp:
+          level: WARNING
+          handlers: stderr
+          qualname: amqp
+        logger_amqplib:
+          level: WARNING
+          handlers: stderr
+          qualname: amqplib
+        logger_eventletwsgi:
+          level: WARNING
+          handlers: stderr
+          qualname: eventlet.wsgi.server
+        logger_sqlalchemy:
+          level: WARNING
+          handlers: stderr
+          qualname: sqlalchemy
+        logger_boto:
+          level: WARNING
+          handlers: stderr
+          qualname: boto
+        handler_null:
+          class: logging.NullHandler
+          formatter: default
+          args: ()
+        handler_stdout:
+          class: StreamHandler
+          args: (sys.stdout,)
+          formatter: context
+        handler_stderr:
+          class: StreamHandler
+          args: (sys.stderr,)
+          formatter: context
+        handler_fluent:
+          class: fluent.handler.FluentHandler
+          args: ('openstack.heat', 'fluentd-logging.osh-infra', 24224)
+          formatter: fluent
+        formatter_fluent:
+          class: oslo_log.formatters.FluentFormatter
+        formatter_context:
+          class: oslo_log.formatters.ContextFormatter
+        formatter_default:
+          format: "%(message)s"
+  dependencies:
+    - osh-helm-toolkit
+...
