@@ -163,7 +163,7 @@ data:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm-infra
         subpath: prometheus-openstack-exporter
-        reference: c0c5199fb20335b3e8839163129372059a876ce8
+        reference: 59d74756ef2fdd0279f59f199879cc985cfef47d
       nagios:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm-infra
@@ -174,77 +174,77 @@ data:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm-infra
         subpath: helm-toolkit
-        reference: c0c5199fb20335b3e8839163129372059a876ce8
+        reference: 5ae782ff52a2604fb1f392d77a018896f29dae49
       barbican:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
         subpath: barbican
-        reference: fbfcb51c31e21331ceb20b6108b739c5e2ad48f5
+        reference: 332a3da0054e154c003256107a0907774531df79
       cinder:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
         subpath: cinder
-        reference: fbfcb51c31e21331ceb20b6108b739c5e2ad48f5
+        reference: 332a3da0054e154c003256107a0907774531df79
       glance:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
         subpath: glance
-        reference: fbfcb51c31e21331ceb20b6108b739c5e2ad48f5
+        reference: 332a3da0054e154c003256107a0907774531df79
       heat:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
         subpath: heat
-        reference: fbfcb51c31e21331ceb20b6108b739c5e2ad48f5
+        reference: 332a3da0054e154c003256107a0907774531df79
       horizon:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
         subpath: horizon
-        reference: fbfcb51c31e21331ceb20b6108b739c5e2ad48f5
+        reference: 332a3da0054e154c003256107a0907774531df79
       ingress:
         type: git
-        location: https://git.openstack.org/openstack/openstack-helm-infra
+        location: https://git.openstack.org/openstack/openstack-helm
         subpath: ingress
-        reference: c0c5199fb20335b3e8839163129372059a876ce8
+        reference: 332a3da0054e154c003256107a0907774531df79
       keystone:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
         subpath: keystone
-        reference: fbfcb51c31e21331ceb20b6108b739c5e2ad48f5
+        reference: 332a3da0054e154c003256107a0907774531df79
       libvirt:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
         subpath: libvirt
-        reference: fbfcb51c31e21331ceb20b6108b739c5e2ad48f5
+        reference: 82d99e8f7a7c892555d97adc08b01b8e8cc1ff81
       mariadb:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
         subpath: mariadb
-        reference: fbfcb51c31e21331ceb20b6108b739c5e2ad48f5
+        reference: 332a3da0054e154c003256107a0907774531df79
       memcached:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
         subpath: memcached
-        reference: fbfcb51c31e21331ceb20b6108b739c5e2ad48f5
+        reference: 332a3da0054e154c003256107a0907774531df79
       neutron:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
         subpath: neutron
-        reference: fbfcb51c31e21331ceb20b6108b739c5e2ad48f5
+        reference: 332a3da0054e154c003256107a0907774531df79
       nova:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
         subpath: nova
-        reference: fbfcb51c31e21331ceb20b6108b739c5e2ad48f5
+        reference: 332a3da0054e154c003256107a0907774531df79
       openvswitch:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
         subpath: openvswitch
-        reference: fbfcb51c31e21331ceb20b6108b739c5e2ad48f5
+        reference: 20d863ce9d18203f2c6a1d679d0cec2bd4fa550d
       rabbitmq:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
         subpath: rabbitmq
-        reference: fbfcb51c31e21331ceb20b6108b739c5e2ad48f5
+        reference: 332a3da0054e154c003256107a0907774531df79
     ucp:
       armada:
         type: git

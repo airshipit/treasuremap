@@ -66,7 +66,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: neutron-rabbitmq
+      release_group: airship-neutron-rabbitmq
   install:
     no_hooks: false
   upgrade:
@@ -75,11 +75,11 @@ data:
       delete:
         - type: job
           labels:
-            release_group: neutron-rabbitmq
+            release_group: airship-neutron-rabbitmq
   values:
     pod:
       replicas:
-        server: 1    
+        server: 1
     labels:
       server:
         node_selector_key: openstack-control-plane

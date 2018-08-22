@@ -333,7 +333,7 @@ data:
         default: /swift/v1
       scheme:
         default: http
-        public: "https"
+        # public: "https"
       port:
         api:
           default: 8088
@@ -352,7 +352,7 @@ data:
         default: /auth/v1.0
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         api:
           default: 8088
@@ -388,357 +388,357 @@ metadata:
     abstract: false
     layer: site
   storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.object_store.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.ceph_object_store.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.object_store.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.object_store.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.object_store.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.ceph_object_store.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.ceph_object_store.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.ceph_object_store.host_fqdn_override.public.tls.key
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.image.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.cloudformation.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.orchestration.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.compute.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.compute_novnc_proxy.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.placement.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.network.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.identity.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.dashboard.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.volume.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.volumev2.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh.volumev3.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.identity.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.identity.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.identity.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.orchestration.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.orchestration.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.orchestration.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.cloudformation.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.cloudformation.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.cloudformation.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.dashboard.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.dashboard.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.dashboard.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.image.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.image.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.image.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.volume.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.volume.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.volume.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.volumev2.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.volumev2.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.volumev2.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.volumev3.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.volumev3.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.volumev3.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.compute.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.compute.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.compute.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.placement.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.placement.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.placement.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh.network.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh.network.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh.network.host_fqdn_override.public.tls.key
+  # substitutions:
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.object_store.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.ceph_object_store.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.object_store.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.object_store.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.object_store.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.ceph_object_store.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.ceph_object_store.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.ceph_object_store.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.image.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.cloudformation.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.orchestration.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.compute.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.compute_novnc_proxy.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.placement.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.network.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.identity.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.dashboard.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.volume.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.volumev2.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh.volumev3.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.identity.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.identity.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.identity.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.orchestration.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.orchestration.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.orchestration.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.cloudformation.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.cloudformation.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.cloudformation.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.dashboard.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.dashboard.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.dashboard.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.image.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.image.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.image.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.volume.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.volume.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.volume.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.volumev2.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.volumev2.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.volumev2.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.volumev3.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.volumev3.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.volumev3.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.compute.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.compute.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.compute.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.placement.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.placement.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.placement.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh.network.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh.network.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh.network.host_fqdn_override.public.tls.key
 data:
   osh:
     object_store:
@@ -749,17 +749,17 @@ data:
         public: radosgw
       host_fqdn_override:
         default: null
-        public:
-          host: object-store.DOMAIN
+        # public:
+        #   host: object-store.DOMAIN
       path:
         default: /swift/v1/KEY_$(tenant_id)s
       scheme:
         default: http
-        public: "https"
+        # public: "https"
       port:
         api:
           default: 8088
-          public: 443
+          # public: 443
     ceph_object_store:
       name: radosgw
       namespace: ceph
@@ -768,17 +768,17 @@ data:
         public: radosgw
       host_fqdn_override:
         default: null
-        public:
-          host: object-store.DOMAIN
+        # public:
+        #   host: object-store.DOMAIN
       path:
         default: /auth/v1.0
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         api:
           default: 8088
-          public: 443
+          # public: 443
     oslo_db:
       hosts:
         default: mariadb
@@ -835,19 +835,19 @@ data:
         public: keystone
       host_fqdn_override:
         default: null
-        public:
-          host: identity.DOMAIN
+        # public:
+        #   host: identity.DOMAIN
       path:
         default: /v3
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         admin:
           default: 35357
         api:
           default: 80
-          public: 443
+          # public: 443
     glance_oslo_messaging:
       namespace: openstack
       hosts:
@@ -881,17 +881,17 @@ data:
         public: glance
       host_fqdn_override:
         default: null
-        public:
-          host: image.DOMAIN
+        # public:
+        #   host: image.DOMAIN
       path:
         default: null
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         api:
           default: 9292
-          public: 443
+          # public: 443
     image_registry:
       name: glance-registry
       hosts:
@@ -940,17 +940,17 @@ data:
         public: cinder
       host_fqdn_override:
         default: null
-        public:
-          host: volume.DOMAIN
+        # public:
+        #   host: volume.DOMAIN
       path:
         default: "/v1/%(tenant_id)s"
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         api:
           default: 8776
-          public: 443
+          # public: 443
     volumev2:
       name: cinderv2
       hosts:
@@ -958,17 +958,17 @@ data:
         public: cinder
       host_fqdn_override:
         default: null
-        public:
-          host: volume.DOMAIN
+        # public:
+        #   host: volume.DOMAIN
       path:
         default: "/v2/%(tenant_id)s"
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         api:
           default: 8776
-          public: 443
+          # public: 443
     volumev3:
       name: cinderv3
       hosts:
@@ -976,17 +976,17 @@ data:
         public: cinder
       host_fqdn_override:
         default: null
-        public:
-          host: volume.DOMAIN
+        # public:
+        #   host: volume.DOMAIN
       path:
         default: "/v3/%(tenant_id)s"
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         api:
           default: 8776
-          public: 443
+          # public: 443
     heat_oslo_messaging:
       namespace: openstack
       hosts:
@@ -1020,17 +1020,17 @@ data:
         public: heat
       host_fqdn_override:
         default: null
-        public:
-          host: orchestration.DOMAIN
+        # public:
+        #   host: orchestration.DOMAIN
       path:
         default: "/v1/%(project_id)s"
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         api:
           default: 8004
-          public: 443
+          # public: 443
     cloudformation:
       name: heat-cfn
       hosts:
@@ -1038,17 +1038,17 @@ data:
         public: cloudformation
       host_fqdn_override:
         default: null
-        public:
-          host: cloudformation.DOMAIN
+        # public:
+        #   host: cloudformation.DOMAIN
       path:
         default: /v1
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         api:
           default: 8000
-          public: 443
+          # public: 443
     cloudwatch:
       name: heat-cloudwatch
       hosts:
@@ -1098,17 +1098,17 @@ data:
         public: neutron
       host_fqdn_override:
         default: null
-        public:
-          host: network.DOMAIN
+        # public:
+        #   host: network.DOMAIN
       path:
         default: null
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         api:
           default: 9696
-          public: 443
+          # public: 443
     nova_oslo_messaging:
       namespace: openstack
       hosts:
@@ -1142,17 +1142,17 @@ data:
         public: nova
       host_fqdn_override:
         default: null
-        public:
-          host: compute.DOMAIN
+        # public:
+        #   host: compute.DOMAIN
       path:
         default: "/v2/%(tenant_id)s"
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         api:
           default: 8774
-          public: 443
+          # public: 443
         novncproxy:
           default: 443
     compute_metadata:
@@ -1177,17 +1177,17 @@ data:
         public: novncproxy
       host_fqdn_override:
         default: null
-        public:
-          host: nova-novncproxy.DOMAIN
+        # public:
+        #   host: nova-novncproxy.DOMAIN
       path:
         default: /vnc_auto.html
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         novnc_proxy:
           default: 6080
-          public: 443
+          # public: 443
     compute_spice_proxy:
       name: nova
       hosts:
@@ -1208,17 +1208,17 @@ data:
         public: placement
       host_fqdn_override:
         default: null
-        public:
-          host: placement.DOMAIN
+        # public:
+        #   host: placement.DOMAIN
       path:
         default: /
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         api:
           default: 8778
-          public: 443
+          # public: 443
     dashboard:
       name: horizon
       hosts:
@@ -1226,17 +1226,17 @@ data:
         public: horizon
       host_fqdn_override:
         default: null
-        public:
-          host: dashboard.DOMAIN
+        # public:
+        #   host: dashboard.DOMAIN
       path:
         default: null
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         web:
           default: 80
-          public: 443
+          # public: 443
 ...
 ---
 schema: pegleg/EndpointCatalogue/v1
@@ -1247,97 +1247,97 @@ metadata:
     abstract: false
     layer: site
   storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh_infra.kibana.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh_infra.grafana.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.ingress_domain
-      dest:
-        path: .osh_infra.nagios.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh_infra.kibana.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh_infra.kibana.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh_infra.kibana.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh_infra.grafana.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh_infra.grafana.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh_infra.grafana.host_fqdn_override.public.tls.key
-    - src:
-        schema: deckhand/Certificate/v1
-        name: ingress-crt
-        path: .
-      dest:
-        path: .osh_infra.nagios.host_fqdn_override.public.tls.crt
-    - src:
-        schema: deckhand/CertificateAuthority/v1
-        name: ingress-ca
-        path: .
-      dest:
-        path: .osh_infra.nagios.host_fqdn_override.public.tls.ca
-    - src:
-        schema: deckhand/CertificateKey/v1
-        name: ingress-key
-        path: .
-      dest:
-        path: .osh_infra.nagios.host_fqdn_override.public.tls.key
-        path: .osh_infra.nagios.host_fqdn_override.public.tls.key
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .ldap.base_url
-      dest:
-        path:  .osh_infra.ldap.host_fqdn_override.public.host
-        pattern: DOMAIN
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .ldap.auth_path
-      dest:
-        path:  .osh_infra.ldap.path.default
-        pattern: AUTH_PATH
+  # substitutions:
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh_infra.kibana.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh_infra.grafana.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .dns.ingress_domain
+  #     dest:
+  #       path: .osh_infra.nagios.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh_infra.kibana.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh_infra.kibana.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh_infra.kibana.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh_infra.grafana.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh_infra.grafana.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh_infra.grafana.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: deckhand/Certificate/v1
+  #       name: ingress-crt
+  #       path: .
+  #     dest:
+  #       path: .osh_infra.nagios.host_fqdn_override.public.tls.crt
+  #   - src:
+  #       schema: deckhand/CertificateAuthority/v1
+  #       name: ingress-ca
+  #       path: .
+  #     dest:
+  #       path: .osh_infra.nagios.host_fqdn_override.public.tls.ca
+  #   - src:
+  #       schema: deckhand/CertificateKey/v1
+  #       name: ingress-key
+  #       path: .
+  #     dest:
+  #       path: .osh_infra.nagios.host_fqdn_override.public.tls.key
+  #       path: .osh_infra.nagios.host_fqdn_override.public.tls.key
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .ldap.base_url
+  #     dest:
+  #       path:  .osh_infra.ldap.host_fqdn_override.public.host
+  #       pattern: DOMAIN
+  #   - src:
+  #       schema: pegleg/CommonAddresses/v1
+  #       name: common-addresses
+  #       path: .ldap.auth_path
+  #     dest:
+  #       path:  .osh_infra.ldap.path.default
+  #       pattern: AUTH_PATH
 data:
   osh_infra:
     elasticsearch:
@@ -1418,17 +1418,17 @@ data:
         public: grafana
       host_fqdn_override:
         default: null
-        public:
-          host: grafana.DOMAIN
+        # public:
+        #   host: grafana.DOMAIN
       path:
         default: null
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         grafana:
           default: 3000
-          public: 443
+          # public: 443
     monitoring:
       name: prometheus
       namespace: osh-infra
@@ -1453,17 +1453,17 @@ data:
         public: kibana
       host_fqdn_override:
         default: null
-        public:
-          host: kibana.DOMAIN
+        # public:
+        #   host: kibana.DOMAIN
       path:
         default: null
       scheme:
         default: "http"
-        public: "https"
+        # public: "https"
       port:
         kibana:
           default: 5601
-          public: 443
+          # public: 443
     alerts:
       name: alertmanager
       namespace: osh-infra
@@ -1542,17 +1542,17 @@ data:
         public: nagios
       host_fqdn_override:
         default: null
-        public:
-          host: nagios.DOMAIN
+        # public:
+        #   host: nagios.DOMAIN
       path:
         default: null
       scheme:
         default: http
-        public: https
+        # public: https
       port:
         http:
           default: 80
-          public: 443
+          # public: 443
     ldap:
       hosts:
         default: ldap

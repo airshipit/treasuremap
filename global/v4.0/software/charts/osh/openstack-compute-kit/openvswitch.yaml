@@ -39,7 +39,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: openvswitch
+      release_group: airship-openvswitch
   install:
     no_hooks: false
   upgrade:
@@ -48,14 +48,14 @@ data:
       delete:
         - type: job
           labels:
-            release_group: openvswitch
+            release_group: airship-openvswitch
   values:
     labels:
       ovs:
         node_selector_key: openvswitch
         node_selector_value: enabled
     network:
-      external_bridge: br-bond1
+      external_bridge: br-bond0
       interface:
         external: 'EXTERNAL_INTERFACE'
   dependencies:

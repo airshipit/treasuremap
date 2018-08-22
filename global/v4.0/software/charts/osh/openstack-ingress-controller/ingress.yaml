@@ -29,7 +29,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: openstack-ingress-controller
+      release_group: airship-openstack-ingress-controller
   install:
     no_hooks: false
   upgrade:
@@ -38,7 +38,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: openstack-ingress-controller
+            release_group: airship-openstack-ingress-controller
   values:
     labels:
       server:

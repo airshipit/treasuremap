@@ -175,7 +175,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: cinder
+      release_group: airship-cinder
   install:
     no_hooks: false
   upgrade:
@@ -184,7 +184,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: cinder
+            release_group: airship-cinder
     post:
       create: []
   values:

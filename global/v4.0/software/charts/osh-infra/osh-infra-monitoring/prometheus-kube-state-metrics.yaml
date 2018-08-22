@@ -51,7 +51,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: prometheus-kube-state-metrics
+      release_group: airship-prometheus-kube-state-metrics
   install:
     no_hooks: false
   upgrade:
@@ -60,7 +60,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: prometheus-kube-state-metrics
+            release_group: airship-prometheus-kube-state-metrics
       create: []
     post:
       create: []

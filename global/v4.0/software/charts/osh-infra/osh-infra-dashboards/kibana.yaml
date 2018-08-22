@@ -79,7 +79,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: kibana
+      release_group: airship-kibana
   install:
     no_hooks: false
   upgrade:
@@ -88,7 +88,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: kibana
+            release_group: airship-kibana
       create: []
     post:
       create: []

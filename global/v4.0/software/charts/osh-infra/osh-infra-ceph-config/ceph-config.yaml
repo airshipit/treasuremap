@@ -99,7 +99,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: osh-infra-ceph-config
+      release_group: airship-osh-infra-ceph-config
   install:
     no_hooks: false
   upgrade:
@@ -108,7 +108,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: osh-infra-ceph-config
+            release_group: airship-osh-infra-ceph-config
   values:
     labels:
       job:
