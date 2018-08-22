@@ -47,14 +47,14 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: kubernetes-proxy
+      release_group: airship-kubernetes-proxy
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: kubernetes-proxy
+            release_group: airship-kubernetes-proxy
   values:
     command_prefix:
       - /proxy

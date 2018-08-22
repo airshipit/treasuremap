@@ -31,7 +31,7 @@ data:
   wait:
     timeout: 100
     labels:
-      release_group: ucp-tiller
+      release_group: airship-ucp-tiller
   install:
     no_hooks: false
   upgrade:
@@ -40,7 +40,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: ucp-tiller
+            release_group: airship-ucp-tiller
   values: {}
   dependencies:
     - tiller-htk

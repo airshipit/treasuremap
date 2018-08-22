@@ -61,7 +61,7 @@ data:
   wait:
     timeout: 300
     labels:
-      release_group: ucp-rabbitmq
+      release_group: airship-ucp-rabbitmq
   install:
     no_hooks: false
   upgrade:
@@ -70,7 +70,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: ucp-rabbitmq
+            release_group: airship-ucp-rabbitmq
   values:
     pod:
       replicas:

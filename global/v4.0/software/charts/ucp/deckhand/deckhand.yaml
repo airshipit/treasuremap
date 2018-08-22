@@ -121,7 +121,7 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: ucp-deckhand
+      release_group: airship-ucp-deckhand
   install:
     no_hooks: false
   upgrade:
@@ -130,7 +130,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: ucp-deckhand
+            release_group: airship-ucp-deckhand
     post:
       create: []
   values:

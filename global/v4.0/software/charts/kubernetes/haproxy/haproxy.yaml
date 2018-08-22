@@ -43,14 +43,14 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: haproxy
+      release_group: airship-haproxy
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: haproxy
+            release_group: airship-haproxy
   values:
     conf:
       anchor:

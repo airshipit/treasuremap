@@ -82,14 +82,14 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: kubernetes-calico
+      release_group: airship-kubernetes-calico
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: kubernetes-calico
+            release_group: airship-kubernetes-calico
   values:
     conf:
       cni_network_config:

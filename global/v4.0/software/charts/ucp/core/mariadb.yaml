@@ -54,7 +54,7 @@ data:
   wait:
     timeout: 300
     labels:
-      release_group: ucp-mariadb
+      release_group: airship-ucp-mariadb
   install:
     no_hooks: false
   upgrade:
@@ -63,7 +63,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: ucp-mariadb
+            release_group: airship-ucp-mariadb
   values:
     labels:
       server:

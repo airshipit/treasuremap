@@ -31,7 +31,7 @@ data:
   wait:
     timeout: 300
     labels:
-      release_group: ingress-kube-system
+      release_group: airship-ingress-kube-system
   install:
     no_hooks: false
   upgrade:
@@ -40,7 +40,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: ingress-kube-system
+            release_group: airship-ingress-kube-system
   values:
     labels:
       server:

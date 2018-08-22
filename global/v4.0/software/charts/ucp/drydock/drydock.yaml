@@ -137,7 +137,7 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: drydock
+      release_group: airship-drydock
   install:
     no_hooks: false
   upgrade:
@@ -146,7 +146,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: drydock
+            release_group: airship-drydock
   values:
     labels:
       node_selector_key: ucp-control-plane

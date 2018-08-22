@@ -106,6 +106,11 @@ data:
   # NEWSITE-CHANGEME: Update with the site's PXE network CIDR
   # NOTE: The CIDR minimum size = (number of nodes * 2) + 10
   cidr: 10.23.20.0/24
+  routes:
+    - subnet: 0.0.0.0/0
+      # NEWSITE-CHANGEME: Set the OAM network gateway IP address
+      gateway: 10.23.20.1
+      metric: 100
   # NOTE: The first 10 IPs in the subnet are reserved for network infrastructure.
   # The remainder of the range is divided between two subnets of equal size:
   # one static, and one DHCP.
@@ -129,12 +134,21 @@ data:
     - type: dhcp
       start: 10.23.20.121
       end: 10.23.20.131
+  dns:
+    # NEWSITE-CHANGEME: FQDN for bare metal nodes.
+    # Choose FQDN according to the node FQDN naming conventions at the top of
+    # this document.
+    domain: airship-seaworthy.atlantafoundry.com
+    # List of upstream DNS forwards. Verify you can reach them from your
+    # environment. If so, you should not need to change them.
+    # TODO: This should be populated via substitution from common-addresses
+    servers: '8.8.8.8,8.8.4.4,208.67.222.222'
 ...
 ---
 schema: 'drydock/NetworkLink/v1'
 metadata:
   schema: 'metadata/Document/v1'
-  name: gp
+  name: data
   layeringDefinition:
     abstract: false
     layer: site

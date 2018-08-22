@@ -31,7 +31,7 @@ data:
   wait:
     timeout: 300
     labels:
-      release_group: ucp-divingbell
+      release_group: airship-ucp-divingbell
   install:
     no_hooks: false
   upgrade:
@@ -40,7 +40,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: ucp-divingbell
+            release_group: airship-ucp-divingbell
   values:
     conf:
       sysctl:

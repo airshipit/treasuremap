@@ -109,14 +109,14 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: kubernetes-apiserver
+      release_group: airship-kubernetes-apiserver
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: kubernetes-apiserver
+            release_group: airship-kubernetes-apiserver
   values:
     apiserver:
       etcd:

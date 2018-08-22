@@ -157,7 +157,7 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: maas
+      release_group: airship-maas
   install:
     no_hooks: false
   upgrade:
@@ -166,7 +166,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: maas
+            release_group: airship-maas
   values:
     labels:
       rack:

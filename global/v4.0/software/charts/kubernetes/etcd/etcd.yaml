@@ -83,14 +83,14 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: kubernetes-etcd
+      release_group: airship-kubernetes-etcd
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: kubernetes-etcd
+            release_group: airship-kubernetes-etcd
   values:
     labels:
       anchor:

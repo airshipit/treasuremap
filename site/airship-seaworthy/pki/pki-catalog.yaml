@@ -84,20 +84,20 @@ data:
             - 10.23.22.14
           groups:
             - system:nodes
-        - document_name: kubelet-cab23-r720-15
-          common_name: system:node:cab23-r720-15
+        - document_name: kubelet-cab23-r720-17
+          common_name: system:node:cab23-r720-17
           hosts:
-            - cab23-r720-15
-            - 10.23.21.15
-            - 10.23.22.15
+            - cab23-r720-17
+            - 10.23.21.17
+            - 10.23.22.17
           groups:
             - system:nodes
-        - document_name: kubelet-cab23-r720-16
-          common_name: system:node:cab23-r720-16
+        - document_name: kubelet-cab23-r720-19
+          common_name: system:node:cab23-r720-19
           hosts:
-            - cab23-r720-16
-            - 10.23.21.16
-            - 10.23.22.16
+            - cab23-r720-19
+            - 10.23.21.19
+            - 10.23.22.19
           groups:
             - system:nodes
         # End node list
@@ -153,6 +153,7 @@ data:
             - 127.0.0.1
             - localhost
             - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
         - document_name: kubernetes-etcd-cab23-r720-11
           common_name: kubernetes-etcd-cab23-r720-11
           hosts:
@@ -162,6 +163,7 @@ data:
             - 127.0.0.1
             - localhost
             - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
         - document_name: kubernetes-etcd-cab23-r720-12
           common_name: kubernetes-etcd-cab23-r720-12
           hosts:
@@ -171,6 +173,7 @@ data:
             - 127.0.0.1
             - localhost
             - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
         - document_name: kubernetes-etcd-cab23-r720-13
           common_name: kubernetes-etcd-cab23-r720-13
           hosts:
@@ -180,6 +183,7 @@ data:
             - 127.0.0.1
             - localhost
             - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
         - document_name: kubernetes-etcd-cab23-r720-14
           common_name: kubernetes-etcd-cab23-r720-14
           hosts:
@@ -189,6 +193,7 @@ data:
             - 127.0.0.1
             - localhost
             - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
         # End node list
     kubernetes-etcd-peer:
       certificates:
@@ -203,6 +208,7 @@ data:
             - 127.0.0.1
             - localhost
             - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
         - document_name: kubernetes-etcd-cab23-r720-11-peer
           common_name: kubernetes-etcd-cab23-r720-11-peer
           hosts:
@@ -212,6 +218,7 @@ data:
             - 127.0.0.1
             - localhost
             - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
         - document_name: kubernetes-etcd-cab23-r720-12-peer
           common_name: kubernetes-etcd-cab23-r720-12-peer
           hosts:
@@ -221,6 +228,7 @@ data:
             - 127.0.0.1
             - localhost
             - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
         - document_name: kubernetes-etcd-cab23-r720-13-peer
           common_name: kubernetes-etcd-cab23-r720-13-peer
           hosts:
@@ -230,6 +238,7 @@ data:
             - 127.0.0.1
             - localhost
             - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
         - document_name: kubernetes-etcd-cab23-r720-14-peer
           common_name: kubernetes-etcd-cab23-r720-14-peer
           hosts:
@@ -239,6 +248,7 @@ data:
             - 127.0.0.1
             - localhost
             - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
         # End node list
     calico-etcd:
       description: Certificates for Calico etcd client traffic

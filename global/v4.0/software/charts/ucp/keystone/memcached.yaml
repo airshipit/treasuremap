@@ -37,7 +37,7 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: ucp-keystone-memcached
+      release_group: airship-ucp-keystone-memcached
   install:
     no_hooks: false
   upgrade:
@@ -46,7 +46,7 @@ data:
       delete:
           - type: job
             labels:
-              release_group: ucp-keystone-memcached
+              release_group: airship-ucp-keystone-memcached
   values:
     labels:
       server:

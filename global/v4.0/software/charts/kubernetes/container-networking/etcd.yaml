@@ -78,14 +78,14 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: kubernetes-calico-etcd
+      release_group: airship-kubernetes-calico-etcd
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: kubernetes-calico-etcd
+            release_group: airship-kubernetes-calico-etcd
   values:
     labels:
       anchor:
