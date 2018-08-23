@@ -21,24 +21,23 @@ metadata:
       - method: merge
         path: .
 data:
-  # TODO: fixup proper HW profiles
-  hardware_profile: DELL_HP_Generic
+  hardware_profile: dell_r720
 
   primary_network: oam
   interfaces:
     pxe:
       device_link: pxe
       slaves:
-        - eno1
+        - pxe_nic01
       networks:
         - pxe
     bond0:
       device_link: data
       slaves:
-        - enp67s0f0
-        - enp67s0f1
-        - enp68s0f0
-        - enp68s0f1
+        - data_nic01
+        - data_nic02
+        - data_nic03
+        - data_nic04
       networks:
         - oam
         - storage
@@ -47,7 +46,7 @@ data:
 
   storage:
     physical_devices:
-      sda:
+      bootdisk:
         labels:
           bootdrive: 'true'
         partitions:
@@ -76,7 +75,7 @@ data:
               mountpoint: '/var'
               fstype: 'ext4'
               mount_options: 'defaults'
-      sdb:
+      cephjournal:
         partitions:
           - name: 'cephj'
             size: '100g'
@@ -115,24 +114,23 @@ metadata:
       - method: merge
         path: .
 data:
-  # TODO: fixup proper HW profiles
-  hardware_profile: DELL_HP_Generic
+  hardware_profile: dell_r720
 
   primary_network: oam
   interfaces:
     pxe:
       device_link: pxe
       slaves:
-        - eno1
+        - pxe_nic01
       networks:
         - pxe
     bond0:
       device_link: data
       slaves:
-        - enp67s0f0
-        - enp67s0f1
-        - enp68s0f0
-        - enp68s0f1
+        - data_nic01
+        - data_nic02
+        - data_nic03
+        - data_nic04
       networks:
         - oam
         - storage
@@ -141,7 +139,7 @@ data:
 
   storage:
     physical_devices:
-      sda:
+      bootdisk:
         labels:
           bootdrive: 'true'
         partitions:
@@ -170,7 +168,7 @@ data:
               mountpoint: '/var'
               fstype: 'ext4'
               mount_options: 'defaults'
-      sdb:
+      cephjournal:
         partitions:
           - name: 'cephj'
             size: '100g'
