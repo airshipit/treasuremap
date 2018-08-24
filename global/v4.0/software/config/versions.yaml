@@ -17,102 +17,102 @@ data:
           type: git
           location: https://git.openstack.org/openstack/airship-promenade
           subpath: charts/etcd
-          reference: 7a06bef72c0bfd799c2353b8213627f6a0826251
+          reference: f60f6d7a8569c5006d32c44c27f4584f10ffe57a
         etcd-htk:
           type: git
           location: https://git.openstack.org/openstack/openstack-helm-infra
           subpath: helm-toolkit
-          reference: c0c5199fb20335b3e8839163129372059a876ce8
+          reference: a514f76530c580d293ccefcb9bb58984098ff8b2
         calico:
           type: git
           location: https://git.openstack.org/openstack/openstack-helm-infra
           subpath: calico
-          reference: c0c5199fb20335b3e8839163129372059a876ce8
+          reference: a514f76530c580d293ccefcb9bb58984098ff8b2
         calico-htk:
           type: git
           location: https://git.openstack.org/openstack/openstack-helm-infra
           subpath: helm-toolkit
-          reference: c0c5199fb20335b3e8839163129372059a876ce8
+          reference: a514f76530c580d293ccefcb9bb58984098ff8b2
       apiserver:
         type: git
         location: https://git.openstack.org/openstack/airship-promenade
         subpath: charts/apiserver
-        reference: 7a06bef72c0bfd799c2353b8213627f6a0826251
+        reference: f60f6d7a8569c5006d32c44c27f4584f10ffe57a
       apiserver-htk:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm-infra
         subpath: helm-toolkit
-        reference: c0c5199fb20335b3e8839163129372059a876ce8
+        reference: a514f76530c580d293ccefcb9bb58984098ff8b2
       controller-manager:
         type: git
         location: https://git.openstack.org/openstack/airship-promenade
         subpath: charts/controller_manager
-        reference: 7a06bef72c0bfd799c2353b8213627f6a0826251
+        reference: f60f6d7a8569c5006d32c44c27f4584f10ffe57a
       controller-manager-htk:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm-infra
         subpath: helm-toolkit
-        reference: c0c5199fb20335b3e8839163129372059a876ce8
+        reference: a514f76530c580d293ccefcb9bb58984098ff8b2
       coredns:
         type: git
         location: https://git.openstack.org/openstack/airship-promenade
         subpath: charts/coredns
-        reference: 7a06bef72c0bfd799c2353b8213627f6a0826251
+        reference: f60f6d7a8569c5006d32c44c27f4584f10ffe57a
       coredns-htk:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm-infra
         subpath: helm-toolkit
-        reference: c0c5199fb20335b3e8839163129372059a876ce8
+        reference: a514f76530c580d293ccefcb9bb58984098ff8b2
       haproxy:
         type: git
         location: https://git.openstack.org/openstack/airship-promenade
         subpath: charts/haproxy
-        reference: 7a06bef72c0bfd799c2353b8213627f6a0826251
+        reference: f60f6d7a8569c5006d32c44c27f4584f10ffe57a
       haproxy-htk:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm-infra
         subpath: helm-toolkit
-        reference: c0c5199fb20335b3e8839163129372059a876ce8
+        reference: a514f76530c580d293ccefcb9bb58984098ff8b2
       etcd:
         type: git
         location: https://git.openstack.org/openstack/airship-promenade
         subpath: charts/etcd
-        reference: 7a06bef72c0bfd799c2353b8213627f6a0826251
+        reference: f60f6d7a8569c5006d32c44c27f4584f10ffe57a
       etcd-htk:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm-infra
         subpath: helm-toolkit
-        reference: c0c5199fb20335b3e8839163129372059a876ce8
+        reference: a514f76530c580d293ccefcb9bb58984098ff8b2
       ingress:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm-infra
         subpath: ingress
-        reference: c0c5199fb20335b3e8839163129372059a876ce8
+        reference: a514f76530c580d293ccefcb9bb58984098ff8b2
       ingress-htk:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm-infra
         subpath: helm-toolkit
-        reference: c0c5199fb20335b3e8839163129372059a876ce8
+        reference: a514f76530c580d293ccefcb9bb58984098ff8b2
       proxy:
         type: git
         location: https://git.openstack.org/openstack/airship-promenade
         subpath: charts/proxy
-        reference: 7a06bef72c0bfd799c2353b8213627f6a0826251
+        reference: f60f6d7a8569c5006d32c44c27f4584f10ffe57a
       proxy-htk:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm-infra
         subpath: helm-toolkit
-        reference: c0c5199fb20335b3e8839163129372059a876ce8
+        reference: a514f76530c580d293ccefcb9bb58984098ff8b2
       scheduler:
         type: git
         location: https://git.openstack.org/openstack/airship-promenade
         subpath: charts/scheduler
-        reference: 7a06bef72c0bfd799c2353b8213627f6a0826251
+        reference: f60f6d7a8569c5006d32c44c27f4584f10ffe57a
       scheduler-htk:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm-infra
         subpath: helm-toolkit
-        reference: c0c5199fb20335b3e8839163129372059a876ce8
+        reference: a514f76530c580d293ccefcb9bb58984098ff8b2
     osh_infra:
       helm_toolkit:
         type: git
@@ -340,12 +340,12 @@ data:
         type: git
         location: https://git.openstack.org/openstack/airship-promenade
         subpath: charts/promenade
-        reference: 7a06bef72c0bfd799c2353b8213627f6a0826251
+        reference: f60f6d7a8569c5006d32c44c27f4584f10ffe57a
       promenade-htk:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm-infra
         subpath: helm-toolkit
-        reference: 59d74756ef2fdd0279f59f199879cc985cfef47d
+        reference: a514f76530c580d293ccefcb9bb58984098ff8b2
       keystone:
         type: git
         location: https://git.openstack.org/openstack/openstack-helm
@@ -460,7 +460,7 @@ data:
         helm: docker.io/lachlanevenson/k8s-helm:v2.9.1
         tiller: gcr.io/kubernetes-helm/tiller:v2.9.1
       promenade:
-        promenade: quay.io/airshipit/promenade:7a06bef72c0bfd799c2353b8213627f6a0826251
+        promenade: quay.io/airshipit/promenade:f60f6d7a8569c5006d32c44c27f4584f10ffe57a
         ks_user: docker.io/openstackhelm/heat:ocata
         ks_service: docker.io/openstackhelm/heat:ocata
         ks_endpoints: docker.io/openstackhelm/heat:ocata
@@ -795,31 +795,30 @@ data:
         dep_check: *dep_check
         <<: *ref_keystone
         image_repo_sync: docker.io/docker:17.07.0
+
     kubernetes:
       apiserver:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.10.2
         apiserver: gcr.io/google-containers/hyperkube-amd64:v1.10.2
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       controller-manager:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.10.2
         controller_manager: gcr.io/google-containers/hyperkube-amd64:v1.10.2
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       coredns:
         coredns: docker.io/coredns/coredns:1.1.2
         test: docker.io/coredns/coredns:1.1.2
       haproxy:
+        anchor: gcr.io/google_containers/hyperkube-amd64:v1.10.2
         haproxy: docker.io/haproxy:1.8.3
-        anchor: gcr.io/google-containers/hyperkube-amd64:v1.10.2
         test: docker.io/python:3.6
       etcd:
-        # quay.io/coreos/etcd:v3.2.14
         etcd: quay.io/coreos/etcd:v3.2.14
         etcdctl: quay.io/coreos/etcd:v3.2.14
       ingress:
-        entrypoint: *dep_check
+        entrypoint: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
-        error_pages: gcr.io/google-containers/defaultbackend:1.0
-        dep_check: *dep_check
+        error_pages: gcr.io/google_containers/defaultbackend:1.0
+        keepalived: docker.io/osixia/keepalived:1.4.5
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         image_repo_sync: docker.io/docker:17.07.0
 
       kubectl: gcr.io/google-containers/hyperkube-amd64:v1.10.2
