@@ -261,7 +261,6 @@ data:
           level: INFO
           handlers:
             - stdout
-            - stderr
             - fluent
           qualname: neutron
         logger_amqp:

@@ -237,7 +237,6 @@ data:
           level: INFO
           handlers:
             - stdout
-            - stderr
             - fluent
           qualname: cinder
         logger_amqp:

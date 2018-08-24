@@ -247,7 +247,6 @@ data:
           level: INFO
           handlers:
             - stdout
-            - stderr
             - fluent
           qualname: heat
         logger_amqp:

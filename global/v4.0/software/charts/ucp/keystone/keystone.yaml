@@ -158,7 +158,6 @@ data:
           level: INFO
           handlers:
             - stdout
-            - stderr
             - fluent
           qualname: keystone
         logger_amqp:

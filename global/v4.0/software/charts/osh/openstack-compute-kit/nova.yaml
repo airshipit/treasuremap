@@ -353,7 +353,6 @@ data:
           level: INFO
           handlers:
             - stdout
-            - stderr
             - fluent
           qualname: nova
         logger_amqp:

@@ -175,7 +175,6 @@ data:
           level: INFO
           handlers:
             - stdout
-            - stderr
             - fluent
           qualname: barbican
         logger_amqp:

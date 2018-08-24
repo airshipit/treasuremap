@@ -246,7 +246,6 @@ data:
           level: INFO
           handlers:
             - stdout
-            - stderr
             - fluent
           qualname: glance
         logger_amqp:
