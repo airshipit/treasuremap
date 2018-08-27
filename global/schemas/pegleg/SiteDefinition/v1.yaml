@@ -1,0 +1,29 @@
+---
+schema: deckhand/DataSchema/v1
+metadata:
+  schema: metadata/Control/v1
+  name: pegleg/SiteDefinition/v1
+data:
+  $schema: http://json-schema.org/schema#
+
+  type: object
+  properties:
+    repositories:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          revision:
+            type: string
+          url:
+            type: string
+        required:
+          - revision
+          - url
+
+    site_type:
+      type: string
+  required:
+    - site_type
+  additionalProperties: false
+...
