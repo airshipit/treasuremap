@@ -10,8 +10,6 @@ metadata:
   name: airship-seaworthy
   storagePolicy: cleartext
 data:
-  # Deprecated revision system, will be removed later. Do not modify.
-  revision: v4.0
   # The type layer this site will delpoy with. Type layer is found in the
   # type folder.
   site_type: foundry
