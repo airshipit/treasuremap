@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Utility to execute OpenStack CLI using Heat container.
+# This is an example, and should be adjusted to ones needs.
+#
+# Usage: openstack endpoint list
+
+set -e
+
+OS_CLOUD_CFG=${HOME}/.openstack/clouds.yaml
+
+if [ ! -f $OS_CLOUD_CFG ]; then
+    echo " => Creating OpenStack client config"
+    mkdir -p ~/.openstack
+    tee $OS_CLOUD_CFG << EOF
+clouds:
+ openstack_helm:
+   region_name: 'airship-seaworthy'
+   identity_api_version: 3
+   auth:
+     username: 'admin'
+     password: 'password123'
+     project_name: 'admin'
+     project_domain_name: 'default'
+     user_domain_name: 'default'
+     auth_url: 'http://keystone-api.openstack.svc.cluster.local:80/v3'
+EOF
+fi
+
+exec sudo docker run --rm -it --net host \
+   -v $(pwd):/target \
+   -v ${OS_CLOUD_CFG}:/etc/openstack/clouds.yaml:ro \
+   -e OS_CLOUD=openstack_helm \
+   docker.io/openstackhelm/heat:ocata openstack $*
+
