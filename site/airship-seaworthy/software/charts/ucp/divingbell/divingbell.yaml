@@ -17,6 +17,8 @@ metadata:
     actions:
       - method: merge
         path: .
+  labels:
+    name: ucp-divingbell-site
   storagePolicy: cleartext
   substitutions:
     - dest:
