@@ -8,3 +8,5 @@ data:
     - global
     - type
     - site
+    - cicd  # overrides for pipeline automation
+...
