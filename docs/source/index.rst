@@ -22,3 +22,10 @@ from the Openstack approach.
 
    authoring_and_deployment
    seaworthy
+
+Architecture
+------------
+
+The diagram below illustrates Airship's architecture:
+
+.. image:: diagrams/architecture.png
