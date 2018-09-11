@@ -25,13 +25,14 @@ metadata:
       dest:
         path: .values.images.tags
     # External Interface
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .openvswitch.external_iface
-      dest:
-        path: .values.network.interface.external
-        pattern: 'EXTERNAL_INTERFACE'
+    # kskels fixme: Fix proper override for external bridge
+    # - src:
+    #     schema: pegleg/CommonAddresses/v1
+    #     name: common-addresses
+    #     path: .openvswitch.external_iface
+    #   dest:
+    #     path: .values.network.interface.external
+    #     pattern: 'EXTERNAL_INTERFACE'
 data:
   chart_name: openvswitch
   release: openvswitch
@@ -55,8 +56,9 @@ data:
         node_selector_key: openvswitch
         node_selector_value: enabled
     network:
-      external_bridge: br-bond0
-      interface:
-        external: 'EXTERNAL_INTERFACE'
+      auto_bridge_add:
+        # kskels fixme: set external bridge properly
+        br-bond0: bond0
   dependencies:
     - osh-helm-toolkit
+...

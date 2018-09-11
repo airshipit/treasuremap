@@ -140,24 +140,14 @@ data:
         namespace: ceph
     deployment:
       ceph: true
-      client_secrets: false
-      rbd_provisioner: true
-      cephfs_provisioner: true
-      rgw_keystone_user_and_endpoints: false
     bootstrap:
       enabled: true
     pod:
       replicas:
         mds: 2
         mgr: 2
-        rgw: 2
 
     conf:
-      rgw_ks:
-        enabled: true
-        config:
-          #NOTE (portdirect): See http://tracker.ceph.com/issues/21226
-          rgw_keystone_token_cache_size: '0'
       pool:
 
         # NOTE(alanmeadows) spport 4.x 16.04 kernels (non-HWE)

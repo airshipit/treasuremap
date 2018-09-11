@@ -220,8 +220,6 @@ data:
       registry:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-    manifests:
-      job_bootstrap: false
     conf:
       logging:
         loggers:
@@ -232,7 +230,7 @@ data:
           keys:
             - stdout
             - stderr
-            - "null"
+            - 'null'
             - fluent
         formatters:
           keys:
@@ -241,7 +239,7 @@ data:
             - fluent
         logger_root:
           level: WARNING
-          handlers: null
+          handlers: 'null'
         logger_glance:
           level: INFO
           handlers:

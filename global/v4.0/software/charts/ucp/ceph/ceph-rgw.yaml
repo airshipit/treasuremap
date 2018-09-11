@@ -2,26 +2,25 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: ucp-ceph-client-global
+  name: ucp-ceph-rgw
   layeringDefinition:
-    abstract: true
+    abstract: false
     layer: global
   storagePolicy: cleartext
-  labels:
-    name: ucp-ceph-client-global
   substitutions:
     # Chart source
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .charts.ucp.ceph-client
+        path: .charts.ucp.ceph-rgw
       dest:
         path: .source
+
     # Images
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .images.ceph.ceph-client
+        path: .images.ceph.ceph-rgw
       dest:
         path: .values.images.tags
 
@@ -38,6 +37,8 @@ metadata:
         path: .storage.ceph.cluster_cidr
       dest:
         path: .values.network.cluster
+
+    # Endpoints
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: osh_endpoints
@@ -62,13 +63,14 @@ metadata:
         path: .ceph.ceph_mgr
       dest:
         path: .values.endpoints.ceph_mgr
+
+    # Credentials
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
         path: .osh.keystone.admin
       dest:
         path: .values.endpoints.identity.auth.admin
-
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
@@ -89,23 +91,15 @@ metadata:
         schema: deckhand/Passphrase/v1
         name: ceph_swift_keystone_password
         path: .
-    - dest:
-       path: .values.conf.ceph.global.fsid
-      src:
-        schema: deckhand/Passphrase/v1
-        name: ceph_fsid
-        path: .
 
 data:
-  chart_name: ucp-ceph-client
-  release: ucp-ceph-client
+  chart_name: ucp-ceph-rgw
+  release: ucp-ceph-rgw
   namespace: ceph
-  protected:
-    continue_processing: true
   wait:
     timeout: 900
     labels:
-      release_group: airship-ucp-ceph-client
+      release_group: airship-ucp-ceph-rgw
   install:
     no_hooks: false
   upgrade:
@@ -114,23 +108,14 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-ceph-client
+            release_group: airship-ucp-ceph-rgw
   values:
     labels:
       job:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-      provisioner:
-        node_selector_key: ucp-control-plane
-        node_selector_value: enabled
-      mds:
-        node_selector_key: ceph-mds
-        node_selector_value: enabled
       rgw:
         node_selector_key: ceph-rgw
-        node_selector_value: enabled
-      mgr:
-        node_selector_key: ceph-mgr
         node_selector_value: enabled
     endpoints:
       identity:
@@ -141,41 +126,23 @@ data:
         namespace: ceph
     deployment:
       ceph: true
+      client_secrets: false
+      rbd_provisioner: false
+      cephfs_provisioner: false
+      rgw_keystone_user_and_endpoints: false
     bootstrap:
-      enabled: true
+      enabled: false
     pod:
       replicas:
-        mds: 1
-        mgr: 1
-        rgw: 1
-
+        rgw: 2
     conf:
-      pool:
-
-        # NOTE(alanmeadows) spport 4.x 16.04 kernels (non-HWE)
-        crush:
-          tunables: 'hammer'
-
-        # NOTE(alanmeadows): This is required ATM for bootstrapping a Ceph
-        # cluster with only one OSD.  Depending on OSD targeting & site
-        # configuration this can be changed.
-        target:
-          osd: 1
-          pg_per_osd: 100
-
-        default:
-          # NOTE(alanmeadows): This is required ATM for bootstrapping a Ceph
-          # cluster with only one OSD.  Depending on OSD targeting & site
-          # configuration this can be changed.
-          crush_rule: same_host
-
-      ceph:
-        global:
-          # NOTE: This is required ATM for bootstrapping a Ceph
-          # cluster with only one OSD.  Depending on OSD targeting & site
-          # configuration this can be changed.
-          osd_pool_default_size: 1
-
+      rgw_ks:
+        enabled: true
+      config:
+          #NOTE (portdirect): See http://tracker.ceph.com/issues/21226
+          rgw_keystone_token_cache_size: '0'
+    ceph_client:
+      configmap: ceph-client-keys-etc
   dependencies:
     - ceph-htk
 ...

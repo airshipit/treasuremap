@@ -549,6 +549,28 @@ data:
                   type: string
                 reference:
                   type: string
+            ceph-provisioners:
+              type: object
+              properties:
+                type:
+                  type: string
+                location:
+                  type: string
+                subpath:
+                  type: string
+                reference:
+                  type: string
+            ceph-rgw:
+              type: object
+              properties:
+                type:
+                  type: string
+                location:
+                  type: string
+                subpath:
+                  type: string
+                reference:
+                  type: string
             deckhand:
               type: object
               properties:
@@ -952,6 +974,41 @@ data:
                 ceph_cephfs_provisioner:
                   type: string
                 image_repo_sync:
+                  type: string
+            ceph-provisioners:
+              type: object
+              properties:
+                ceph_bootstrap:
+                  type: string
+                ceph_cephfs_provisioner:
+                  type: string
+                ceph_config_helper:
+                  type: string
+                ceph_rbd_provisioner:
+                  type: string
+                dep_check:
+                  type: string
+                  type: string
+                image_repo_sync:
+                  type: string
+            ceph-rgw:
+              type: object
+              properties:
+                ceph_config_helper:
+                  type: string
+                ceph_rgw:
+                  type: string
+                dep_check:
+                  type: string
+                image_repo_sync:
+                  type: string
+                rgw_s3_admin:
+                  type: string
+                ks_endpoints:
+                  type: string
+                ks_service:
+                  type: string
+                ks_user:
                   type: string
         kubernetes:
           type: object

@@ -2,26 +2,26 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: ucp-ceph-client-global
+  name: ucp-ceph-provisioners
   layeringDefinition:
-    abstract: true
+    abstract: false
     layer: global
   storagePolicy: cleartext
   labels:
-    name: ucp-ceph-client-global
+    name: ucp-ceph-provisioners
   substitutions:
     # Chart source
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .charts.ucp.ceph-client
+        path: .charts.ucp.ceph-provisioners
       dest:
         path: .source
     # Images
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .images.ceph.ceph-client
+        path: .images.ceph.ceph-provisioners
       dest:
         path: .values.images.tags
 
@@ -97,15 +97,15 @@ metadata:
         path: .
 
 data:
-  chart_name: ucp-ceph-client
-  release: ucp-ceph-client
+  chart_name: ucp-ceph-provisioners
+  release: ucp-ceph-provisioners
   namespace: ceph
   protected:
     continue_processing: true
   wait:
     timeout: 900
     labels:
-      release_group: airship-ucp-ceph-client
+      release_group: airship-ucp-ceph-provisioners
   install:
     no_hooks: false
   upgrade:
@@ -114,7 +114,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-ceph-client
+            release_group: airship-ucp-ceph-provisioners
   values:
     labels:
       job:
@@ -122,15 +122,6 @@ data:
         node_selector_value: enabled
       provisioner:
         node_selector_key: ucp-control-plane
-        node_selector_value: enabled
-      mds:
-        node_selector_key: ceph-mds
-        node_selector_value: enabled
-      rgw:
-        node_selector_key: ceph-rgw
-        node_selector_value: enabled
-      mgr:
-        node_selector_key: ceph-mgr
         node_selector_value: enabled
     endpoints:
       identity:
@@ -141,41 +132,24 @@ data:
         namespace: ceph
     deployment:
       ceph: true
+      client_secrets: true
+      rbd_provisioner: true
+      cephfs_provisioner: true
     bootstrap:
       enabled: true
     pod:
       replicas:
-        mds: 1
-        mgr: 1
-        rgw: 1
+        cephfs_provisioner: 2
+        rbd_provisioner: 2
 
     conf:
-      pool:
-
-        # NOTE(alanmeadows) spport 4.x 16.04 kernels (non-HWE)
-        crush:
-          tunables: 'hammer'
-
-        # NOTE(alanmeadows): This is required ATM for bootstrapping a Ceph
-        # cluster with only one OSD.  Depending on OSD targeting & site
-        # configuration this can be changed.
-        target:
-          osd: 1
-          pg_per_osd: 100
-
-        default:
-          # NOTE(alanmeadows): This is required ATM for bootstrapping a Ceph
-          # cluster with only one OSD.  Depending on OSD targeting & site
-          # configuration this can be changed.
-          crush_rule: same_host
-
       ceph:
         global:
-          # NOTE: This is required ATM for bootstrapping a Ceph
-          # cluster with only one OSD.  Depending on OSD targeting & site
-          # configuration this can be changed.
-          osd_pool_default_size: 1
-
+          osd_mkfs_type: xfs
+    storageclass:
+      rbd:
+        ceph_configmap_name: ceph-client-keys-etc
+        user_secret_name: pvc-ceph-client-key
   dependencies:
     - ceph-htk
 ...

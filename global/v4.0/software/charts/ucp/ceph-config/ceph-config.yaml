@@ -12,7 +12,7 @@ metadata:
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .charts.ucp.ceph-client
+        path: .charts.ucp.ceph-provisioners
       dest:
         path: .source
 
@@ -20,7 +20,7 @@ metadata:
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .images.ceph.ceph-client
+        path: .images.ceph.ceph-provisioners
       dest:
         path: .values.images.tags
 
@@ -137,7 +137,10 @@ data:
     conf:
       rgw_ks:
         enabled: true
-
+    storageclass:
+      rbd:
+        ceph_configmap_name: ceph-etc
+        user_secret_name: pvc-ceph-client-key
   dependencies:
     - ceph-htk
 ...

@@ -144,7 +144,7 @@ data:
           keys:
             - stdout
             - stderr
-            - "null"
+            - 'null'
             - fluent
         formatters:
           keys:
@@ -153,7 +153,7 @@ data:
             - fluent
         logger_root:
           level: WARNING
-          handlers: null
+          handlers: 'null'
         logger_keystone:
           level: INFO
           handlers:

@@ -118,7 +118,8 @@ data:
         admin:
           default: 35357
         api:
-          default: 80
+          default: 5000
+          # public: 443
           public: 80
     armada:
       name: armada
@@ -204,7 +205,7 @@ data:
         default: rabbitmq
       host_fqdn_override:
         default: null
-      path: /openstack
+      path: /keystone
       scheme: rabbit
       port:
         amqp:
@@ -755,6 +756,8 @@ data:
       hosts:
         default: keystone-api
         public: keystone
+        admin: keystone-api
+        internal: keystone-api
       host_fqdn_override:
         default: null
         public:
@@ -768,8 +771,9 @@ data:
         admin:
           default: 35357
         api:
-          default: 80
+          default: 5000
           # public: 443
+          public: 80
     glance_oslo_messaging:
       namespace: openstack
       hosts:
