@@ -1,0 +1,47 @@
+---
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: apparmor-profiles
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/AppArmorProfile/v1
+        name: airship-default
+        path: .savePath
+      dest:
+        path: .assets[0].path
+    - src:
+        schema: pegleg/AppArmorProfile/v1
+        name: airship-default
+        path: .content
+      dest:
+        path: .assets[0].data
+    - src:
+        schema: pegleg/AppArmorProfile/v1
+        name: airship-apparmor-loader
+        path: .savePath
+      dest:
+        path: .assets[1].path
+    - src:
+        schema: pegleg/AppArmorProfile/v1
+        name: airship-apparmor-loader
+        path: .content
+      dest:
+        path: .assets[1].data
+
+data:
+  signaling: false
+  assets:
+    - type: file
+      permissions: '600'
+      data_pipeline:
+        - utf8_decode
+    - type: file
+      permissions: '600'
+      data_pipeline:
+        - utf8_decode
+...
