@@ -14,6 +14,13 @@ metadata:
         path: .images.kubernetes.pause
       dest:
         path: .images.pause
+    - src:
+        schema: pegleg/SeccompProfile/v1
+        name: seccomp-default
+        path: .seccompDirPath
+      dest:
+        path: .arguments[7]
+        pattern: SECCOMP_PROFILE_ROOT
 data:
   arguments:
     - --cni-bin-dir=/opt/cni/bin
@@ -23,3 +30,4 @@ data:
     - --node-status-update-frequency=5s
     - --max-pods=200
     - --pods-per-core=10
+    - --seccomp-profile-root=SECCOMP_PROFILE_ROOT

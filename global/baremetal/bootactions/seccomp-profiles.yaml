@@ -1,0 +1,31 @@
+---
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: seccomp-profiles
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SeccompProfile/v1
+        name: seccomp-default
+        path: .savePath
+      dest:
+        path: .assets[0].path
+    - src:
+        schema: pegleg/SeccompProfile/v1
+        name: seccomp-default
+        path: .content
+      dest:
+        path: .assets[0].data
+
+data:
+  signaling: false
+  assets:
+    - type: file
+      permissions: '600'
+      data_pipeline:
+        - utf8_decode
+...
