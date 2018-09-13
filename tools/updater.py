@@ -23,12 +23,18 @@
 #   2) tags of container images listed in dict `image_repo_git_url` in the
 #      code below
 #
+# In addition to that, the tool verifies that container images with
+# specific tags equal to the HEAD git commit id's we reference, do really
+# exist on quay.io repository and are available for download.
+#
 
 from functools import reduce
 import argparse
+import datetime
 import logging
 import operator
 import os
+import requests
 import sys
 
 try:
@@ -54,7 +60,8 @@ image_repo_git_url = {
     'quay.io/airshipit/airflow': 'https://git.openstack.org/openstack/airship-shipyard',
     'quay.io/airshipit/armada': 'https://git.openstack.org/openstack/airship-armada',
     'quay.io/airshipit/deckhand': 'https://git.openstack.org/openstack/airship-deckhand',
-    'quay.io/airshipit/divingbell': 'https://git.openstack.org/openstack/airship-divingbell',
+    # yes, divingbell image is just Ubuntu 16.04 image, and we don't check it's tag
+    #'docker.io/ubuntu': 'https://git.openstack.org/openstack/airship-divingbell',
     'quay.io/airshipit/drydock': 'https://git.openstack.org/openstack/airship-drydock',
     # maas-{rack,region}-controller images are built from airship-maas repository
     'quay.io/airshipit/maas-rack-controller': 'https://git.openstack.org/openstack/airship-maas',
@@ -64,16 +71,31 @@ image_repo_git_url = {
     'quay.io/airshipit/shipyard': 'https://git.openstack.org/openstack/airship-shipyard',
     # sstream-cache image is built from airship-maas repository
     'quay.io/airshipit/sstream-cache': 'https://git.openstack.org/openstack/airship-maas',
-    'quay.io/attcomdev/nagios': 'https://github.com/att-comdev/nagios'
-    # Disabled by Kaspars: https://review.openstack.org/#/c/596909/21/tools/updater.py@53
-    #'quay.io/attcomdev/prometheus-openstack-exporter': 'https://github.com/att-comdev/prometheus-openstack-exporter'
+    'quay.io/attcomdev/nagios': 'https://github.com/att-comdev/nagios',
+    'quay.io/attcomdev/prometheus-openstack-exporter': 'https://github.com/att-comdev/prometheus-openstack-exporter'
 }
 
 logging.basicConfig(level=logging.INFO)
 
 # Temporary dict of git url's and cached commit id's: {'git_url': 'commit_id'}
+global git_url_commit_ids
 git_url_commit_ids = {}
+# Temporary dict of image repo's and status of image on quay.io
+global image_repo_status
+image_repo_status = {}
 dict_path = None
+
+
+def inverse_dict(dic):
+    """Accepts dictionary, returns dictionary where keys become values,
+    and values become keys"""
+    new_dict = {}
+    for k, v in dic.items():
+        new_dict[v] = k
+    return new_dict
+
+
+git_url_image_repo = inverse_dict(image_repo_git_url)
 
 
 # https://stackoverflow.com/a/35585837
@@ -92,12 +114,90 @@ def get_commit_id(url):
     # If we don't have this git url in our url's dictionary,
     # fetch latest commit ID and add new dictionary entry
     logging.debug('git_url_commit_ids: %s', git_url_commit_ids)
+    logging.debug('image_repo_status: %s', image_repo_status)
     if url not in git_url_commit_ids:
         logging.debug('git url: ' + url +
                       ' is not in git_url_commit_ids dict;' +
                       ' adding it with HEAD commit id')
         git_url_commit_ids[url] = lsremote(url, 'HEAD')
+    if url in git_url_image_repo:
+        if git_url_image_repo[url] not in image_repo_status:
+            image_repo_status[git_url_image_repo[url]] = \
+            verify_image_tag(git_url_image_repo[url], git_url_commit_ids[url])
+        else:
+            logging.debug('We checked image ' + git_url_image_repo[url] +
+                          ' on quay.io already, skipping')
     return git_url_commit_ids[url]
+
+
+def verify_image_tag(image, git_commit_id):
+    """Verify if image with certain tag exists on quay.io,
+    returns 0 (image not hosted on quay.io), True, or False
+    """
+    if not image.startswith('quay.io/'):
+        logging.info('Unable to verify if image ' + image + ':' +
+                     git_commit_id + ' with this specific tag exists' +
+                     ' in containers repository: only quay.io is' +
+                     ' supported at the moment')
+        return 0
+
+    logging.info('Verifying if image ' + image + ':' + git_commit_id +
+                 ' with this specific tag exists on quay.io...')
+
+    retries = 0
+    max_retries = 5
+
+    payload = {'specificTag': git_commit_id}
+    hash_image = image.split('/')
+    url = 'https://quay.io/api/v1/repository/' + \
+    hash_image[1] + '/' + hash_image[2] + '/tag/'
+
+    while retries <= max_retries:
+        retries = retries +1
+        try:
+            res = requests.get(url, params = payload, timeout = 5)
+        except requests.exceptions.Timeout:
+            logging.warning("Failed to fetch url %s" % res.url)
+            sleep(1)
+    if retries == max_retries:
+        logging.error("Failed to connect to quay.io")
+        return 0
+
+    if res.status_code != 200:
+        logging.error('Image %s is not available on quay.io or it' +
+                      ' requires authentication', image)
+        return 0
+
+    try:
+        res = res.json()
+    except json.decoder.JSONDecodeError:
+        logging.error('Unable to parse response from quay.io (%s)' % res.url)
+        return 0
+
+    try:
+        for tag in res['tags']:
+            # Normally there should be only one tag description
+            if tag['name'] == git_commit_id:
+                if 'end_ts' not in tag:
+                    # Active image tag
+                    logging.info('Image ' + image + ':' + git_commit_id +
+                                 ' with this specific tag corresponding to the' +
+                                 ' commit id of the git HEAD exists on quay.io,' +
+                                 ' last modified on ' +
+                                 datetime.datetime.fromtimestamp(tag['start_ts']).isoformat() +
+                                 ' UTC')
+                    return True
+                else:
+                    # Tag used to exist
+                    logging.error('Image ' + image + ':' + git_commit_id +
+                                 ' with this specific tag no longer exists on quay.io')
+                    return False
+    except KeyError:
+        logging.error('Unable to parse response from quay.io (%s)' % res.url)
+        return 0
+    logging.error('There is no image ' + image + ':' + git_commit_id +
+                 ' with this specific tag on quay.io or it requires authentication')
+    return False
 
 
 # https://stackoverflow.com/a/14692747
