@@ -120,18 +120,12 @@ def get_commit_id(url):
                       ' is not in git_url_commit_ids dict;' +
                       ' adding it with HEAD commit id')
         git_url_commit_ids[url] = lsremote(url, 'HEAD')
-    if url in git_url_image_repo:
-        if git_url_image_repo[url] not in image_repo_status:
-            image_repo_status[git_url_image_repo[url]] = \
-            verify_image_tag(git_url_image_repo[url], git_url_commit_ids[url])
-        else:
-            logging.debug('We checked image ' + git_url_image_repo[url] +
-                          ' on quay.io already, skipping')
+
     return git_url_commit_ids[url]
 
 
-def verify_image_tag(image, git_commit_id):
-    """Verify if image with certain tag exists on quay.io,
+def get_image_tag(image):
+    """Get latest image tag from quay.io,
     returns 0 (image not hosted on quay.io), True, or False
     """
     if not image.startswith('quay.io/'):
@@ -141,32 +135,30 @@ def verify_image_tag(image, git_commit_id):
                      ' supported at the moment')
         return 0
 
-    logging.info('Verifying if image ' + image + ':' + git_commit_id +
-                 ' with this specific tag exists on quay.io...')
+    logging.info('Getting latest tag for image %s' % image)
 
     retries = 0
     max_retries = 5
 
-    payload = {'specificTag': git_commit_id}
     hash_image = image.split('/')
     url = 'https://quay.io/api/v1/repository/' + \
-    hash_image[1] + '/' + hash_image[2] + '/tag/'
+    hash_image[1] + '/' + hash_image[2] + '/tag'
 
     while retries <= max_retries:
         retries = retries +1
         try:
-            res = requests.get(url, params = payload, timeout = 5)
+            res = requests.get(url, timeout = 5)
         except requests.exceptions.Timeout:
             logging.warning("Failed to fetch url %s" % res.url)
             sleep(1)
+
     if retries == max_retries:
         logging.error("Failed to connect to quay.io")
         return 0
 
     if res.status_code != 200:
-        logging.error('Image %s is not available on quay.io or it' +
-                      ' requires authentication', image)
-        return 0
+        logging.error('Image %s is not available on quay.io or ' +
+                      'requires authentication', image)
 
     try:
         res = res.json()
@@ -176,28 +168,15 @@ def verify_image_tag(image, git_commit_id):
 
     try:
         for tag in res['tags']:
-            # Normally there should be only one tag description
-            if tag['name'] == git_commit_id:
-                if 'end_ts' not in tag:
-                    # Active image tag
-                    logging.info('Image ' + image + ':' + git_commit_id +
-                                 ' with this specific tag corresponding to the' +
-                                 ' commit id of the git HEAD exists on quay.io,' +
-                                 ' last modified on ' +
-                                 datetime.datetime.fromtimestamp(tag['start_ts']).isoformat() +
-                                 ' UTC')
-                    return True
-                else:
-                    # Tag used to exist
-                    logging.error('Image ' + image + ':' + git_commit_id +
-                                 ' with this specific tag no longer exists on quay.io')
-                    return False
+            if 'end_ts' not in tag:
+                if tag['name'] != 'master' and tag['name'] != 'latest':
+                    return tag['name']
     except KeyError:
         logging.error('Unable to parse response from quay.io (%s)' % res.url)
         return 0
-    logging.error('There is no image ' + image + ':' + git_commit_id +
-                 ' with this specific tag on quay.io or it requires authentication')
-    return False
+
+    logging.error("Image with end_ts in path %s not found" % image)
+    return 0
 
 
 # https://stackoverflow.com/a/14692747
@@ -269,7 +248,7 @@ def traverse(obj, dict_path=None):
         # Searching for container image repositories, we are only intrested in
         # strings; there could also be booleans or other types we are not interested in.
         if isinstance(v, str):
-            for image_repo, git_url in image_repo_git_url.items():
+            for image_repo in image_repo_git_url:
                 if image_repo in v:
                     logging.debug('image_repo %s is in %s string', image_repo, v)
 
@@ -277,23 +256,24 @@ def traverse(obj, dict_path=None):
                     # Note: 'image' below could contain not just image, but also
                     # '&ref host.domain/path/image'
                     hash_v = v.split(":")
-                    image, old_git_commit_id = hash_v
+                    image, old_image_tag = hash_v
 
-                    new_git_commit_id = get_commit_id(git_url)
+                    new_image_tag = get_image_tag(image)
+                    if new_image_tag == 0:
+                        logging.error("Failed to get image tag for %s" % image)
+                        sys.exit(1)
 
                     # Update git commit id in tag of container image
-                    if old_git_commit_id != new_git_commit_id:
-                        logging.info('Updating git commit id in' +
-                                     ' tag of container image %s from %s to' +
-                                     ' %s (%s)',
-                                     image, old_git_commit_id,
-                                     new_git_commit_id, git_url)
-                        set_by_path(versions_data_dict, dict_path, image + ':' + new_git_commit_id)
+                    if old_image_tag != new_image_tag:
+                        logging.info('Updating git commit id in ' +
+                                     'tag of container image %s from %s to %s',
+                                     image, old_image_tag, new_image_tag)
+                        set_by_path(versions_data_dict, dict_path, image + ':' + new_image_tag)
 
                     else:
                         logging.info('Git tag %s for container ' +
-                                     'image %s is already up to date (%s)',
-                                     old_git_commit_id, image, git_url)
+                                     'image %s is already up to date',
+                                     old_image_tag, image)
                 else:
                     logging.debug('image_repo %s is not in %s string, skipping', image_repo, v)
         else:
@@ -303,13 +283,13 @@ def traverse(obj, dict_path=None):
 if __name__ == '__main__':
     """Small Main program"""
 
-    parser.add_argument('--in-file', default = 'versions.yaml', help = '/path/to/versions.yaml file')
+    parser.add_argument('--in-file', default = 'versions.yaml',
+            help = '/path/to/versions.yaml file')
     args = parser.parse_args()
 
     in_file = args.in_file
 
     if os.path.isfile(in_file):
-        out_file = os.path.join(os.path.dirname(os.path.abspath(in_file)), 'versions.new.yaml')
         with open(in_file, 'r') as f:
             f_old = f.read()
             versions_data_dict = yaml.safe_load(f_old)
@@ -321,9 +301,11 @@ if __name__ == '__main__':
     # Traverse loaded yaml and change it
     traverse(versions_data_dict)
 
+    out_file = os.path.join(os.path.dirname(os.path.abspath(in_file)), 'versions.new.yaml')
     with open(out_file, 'w') as f:
         f.write(yaml.safe_dump(versions_data_dict,
-                               default_flow_style=False, default_style='\"',
+                               default_flow_style=False,
                                explicit_end=True, explicit_start=True,
                                width=4096))
         logging.info('New versions.yaml created as %s' % out_file)
+
