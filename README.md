@@ -6,4 +6,4 @@ open-source tools.
 
 
 ## Architecture
-To get started, see [architecture](https://treasuremap.readthedocs.io/en/latest/index.html).
+To get started, see [architecture](https://airship-treasuremap.readthedocs.io/en/latest/index.html).
