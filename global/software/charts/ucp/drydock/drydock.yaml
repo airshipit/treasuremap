@@ -102,7 +102,7 @@ metadata:
         name: ucp_service_accounts
         path: .ucp.drydock.keystone
       dest:
-        path: .values.endpoints.identity.auth.user
+        path: .values.endpoints.identity.auth.drydock
 
     # Secrets
     - dest:
