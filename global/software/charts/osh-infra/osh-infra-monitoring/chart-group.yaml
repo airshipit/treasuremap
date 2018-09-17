@@ -13,5 +13,6 @@ data:
     - prometheus
     - prometheus-alertmanager
     - prometheus-node-exporter
+    - prometheus-process-exporter
     - prometheus-kube-state-metrics
     - nagios

@@ -2,7 +2,7 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: osh-infra-mariadb
+  name: ucp-prometheus-openstack-exporter
   layeringDefinition:
     abstract: false
     layer: global
@@ -12,7 +12,7 @@ metadata:
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .charts.osh.mariadb
+        path: .charts.osh_infra.prometheus_openstack_exporter
       dest:
         path: .source
 
@@ -20,59 +20,59 @@ metadata:
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .images.osh.mariadb
+        path: .images.osh_infra.prometheus_openstack_exporter
       dest:
         path: .values.images.tags
 
     # Endpoints
     - src:
         schema: pegleg/EndpointCatalogue/v1
-        name: osh_infra_endpoints
-        path: .osh_infra.oslo_db
+        name: ucp_endpoints
+        path: .ucp.prometheus_openstack_exporter
       dest:
-        path: .values.endpoints.olso_db
+        path: .values.endpoints.prometheus_openstack_exporter
     - src:
         schema: pegleg/EndpointCatalogue/v1
-        name: osh_infra_endpoints
-        path: .osh_infra.prometheus_mysql_exporter
+        name: ucp_endpoints
+        path: .ucp.identity
       dest:
-        path: .values.endpoints.prometheus_mysql_exporter
+        path: .values.endpoints.identity
 
     # Accounts
     - src:
         schema: pegleg/AccountCatalogue/v1
-        name: osh_infra_service_accounts
-        path: .osh_infra.oslo_db.admin
+        name: ucp_service_accounts
+        path: .ucp.keystone.admin
       dest:
-        path: .values.endpoints.oslo_db.auth.admin
+        path: .values.endpoints.identity.auth.admin
     - src:
         schema: pegleg/AccountCatalogue/v1
-        name: osh_infra_service_accounts
-        path: .osh_infra.prometheus_mysql_exporter.user
+        name: ucp_service_accounts
+        path: .ucp.prometheus_openstack_exporter.user
       dest:
-        path: .values.endpoints.prometheus_mysql_exporter.auth.user
+        path: .values.endpoints.identity.auth.user
 
     # Secrets
     - dest:
-        path: .values.endpoints.oslo_db.auth.admin.password
+        path: .values.endpoints.identity.auth.admin.password
       src:
         schema: deckhand/Passphrase/v1
-        name: osh_infra_oslo_db_admin_password
+        name: ucp_keystone_admin_password
         path: .
     - dest:
-        path: .values.endpoints.oslo_db.auth.exporter.password
+        path: .values.endpoints.identity.auth.user.password
       src:
         schema: deckhand/Passphrase/v1
-        name: osh_infra_oslo_db_exporter_password
+        name: ucp_openstack_exporter_keystone_password
         path: .
 data:
-  chart_name: osh-infra-mariadb
-  release: osh-infra-mariadb
-  namespace: osh-infra
+  chart_name: ucp-prometheus-openstack-exporter
+  release: ucp-prometheus-openstack-exporter
+  namespace: ucp
   wait:
     timeout: 900
     labels:
-      release_group: airship-osh-infra-mariadb
+      release_group: airship-ucp-prometheus-openstack-exporter
   install:
     no_hooks: false
   upgrade:
@@ -81,18 +81,15 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-osh-infra-mariadb
+            release_group: airship-ucp-prometheus-openstack-exporter
   values:
     labels:
-      server:
+      openstack_exporter:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-      prometheus_mysql_exporter:
+      job:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-    monitoring:
-      prometheus:
-        enabled: true
   dependencies:
-    - osh-helm-toolkit
+    - osh-infra-helm-toolkit
 ...

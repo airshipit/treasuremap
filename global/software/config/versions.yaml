@@ -230,6 +230,11 @@ data:
         reference: 6ef48d37060e81cc6ffc283644bcd2df6c7ef80e
         subpath: prometheus-node-exporter
         type: git
+      prometheus_process_exporter:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 922d7d3d26b15d1d25e40ba1528337002ae15b0c
+        subpath: prometheus-process-exporter
+        type: git
       prometheus_openstack_exporter:
         location: https://git.openstack.org/openstack/openstack-helm-infra
         reference: 6ef48d37060e81cc6ffc283644bcd2df6c7ef80e
@@ -528,6 +533,7 @@ data:
       prometheus_kube_state_metrics: {}
       prometheus_node_exporter: {}
       prometheus_openstack_exporter: {}
+      prometheus_process_exporter: {}
     ucp:
       armada:
         api: quay.io/airshipit/armada:32baf9851e9cd29f4b8670e73a9409a0e7a59e35

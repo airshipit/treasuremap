@@ -130,8 +130,6 @@ data:
         namespace: ceph
       ceph_mon:
         namespace: ceph
-      fluentd:
-        namespace: osh-infra
     deployment:
       ceph: true
       storage_secrets: true

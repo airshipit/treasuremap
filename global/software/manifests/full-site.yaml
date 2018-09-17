@@ -29,6 +29,7 @@ data:
     - ucp-drydock
     - ucp-promenade
     - ucp-shipyard
+    - ucp-prometheus-openstack-exporter
     - osh-infra-ingress-controller
     - osh-infra-ceph-config
     - osh-infra-radosgw

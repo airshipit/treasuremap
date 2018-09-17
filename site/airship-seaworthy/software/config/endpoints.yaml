@@ -260,6 +260,19 @@ data:
         default: "http"
       host_fqdn_override:
         default: null
+    prometheus_openstack_exporter:
+      namespace: ucp
+      hosts:
+        default: openstack-metrics
+      host_fqdn_override:
+        default: null
+      path:
+        default: null
+      scheme:
+        default: "http"
+      port:
+        exporter:
+          default: 9103
   ceph:
     object_store:
       name: swift
@@ -499,6 +512,19 @@ data:
           default: 3306
         wsrep:
           default: 4567
+    prometheus_mysql_exporter:
+      namespace: openstack
+      hosts:
+        default: mysql-exporter
+      host_fqdn_override:
+        default: null
+      path:
+        default: /metrics
+      scheme:
+        default: 'http'
+      port:
+        metrics:
+          default: 9104
     keystone_oslo_messaging:
       namespace: openstack
       hosts:
@@ -1098,6 +1124,19 @@ data:
       port:
         mysql:
           default: 3306
+    prometheus_mysql_exporter:
+      namespace: osh-infra
+      hosts:
+        default: mysql-exporter
+      host_fqdn_override:
+        default: null
+      path:
+        default: /metrics
+      scheme:
+        default: 'http'
+      port:
+        metrics:
+          default: 9104
     grafana:
       name: grafana
       namespace: osh-infra
@@ -1132,7 +1171,8 @@ data:
       port:
         api:
           default: 9090
-          public: 80
+        http:
+          default: 80
     kibana:
       name: kibana
       namespace: osh-infra
@@ -1209,6 +1249,19 @@ data:
           default: 9100
         prometheus_port:
           default: 9100
+    process_exporter_metrics:
+      namespace: kube-system
+      hosts:
+        default: process-exporter
+      host_fqdn_override:
+        default: null
+      path:
+        default: null
+      scheme:
+        default: "http"
+      port:
+        metrics:
+          default: 9256
     prometheus_openstack_exporter:
       namespace: openstack
       hosts:

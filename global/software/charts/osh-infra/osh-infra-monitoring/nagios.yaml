@@ -40,6 +40,12 @@ metadata:
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: osh_infra_endpoints
+        path: .osh_infra.elasticsearch
+      dest:
+        path: .values.endpoints.elasticsearch
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
         path: .osh_infra.ldap
       dest:
         path: .values.endpoints.ldap
@@ -51,6 +57,18 @@ metadata:
         path: .osh_infra.nagios.admin
       dest:
         path: .values.endpoints.nagios.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_infra_service_accounts
+        path: .osh_infra.prometheus.admin
+      dest:
+        path: .values.endpoints.monitoring.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_infra_service_accounts
+        path: .osh_infra.elasticsearch.admin
+      dest:
+        path: .values.endpoints.elasticsearch.auth.admin
 
     # Secrets
     - dest:
@@ -58,6 +76,18 @@ metadata:
       src:
         schema: deckhand/Passphrase/v1
         name: osh_infra_nagios_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.elasticsearch.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_infra_elasticsearch_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.monitoring.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_infra_prometheus_admin_password
         path: .
 
     # LDAP Details
