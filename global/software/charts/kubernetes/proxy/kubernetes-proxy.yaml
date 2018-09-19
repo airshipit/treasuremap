@@ -85,6 +85,9 @@ data:
   chart_name: kubernetes-proxy-htk
   release: kubernetes-proxy-htk
   namespace: kubernetes-proxy-htk
-  values: {}
+  values:
+    livenessProbe:
+      whitelist:
+        - tiller-deploy
   dependencies: []
 ...
