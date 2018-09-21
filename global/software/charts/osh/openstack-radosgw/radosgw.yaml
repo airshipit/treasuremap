@@ -128,9 +128,6 @@ data:
         node_selector_value: enabled
     deployment:
       ceph: false
-      client_secrets: false
-      rbd_provisioner: false
-      cephfs_provisioner: false
       rgw_keystone_user_and_endpoints: true
     bootstrap:
       enabled: false
