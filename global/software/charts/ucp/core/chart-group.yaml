@@ -8,7 +8,7 @@ metadata:
     layer: global
   storagePolicy: cleartext
 data:
-  description: Common UCP Components
+  description: Common Airship Components
   chart_group:
     - ucp-ingress
     - ucp-mariadb
