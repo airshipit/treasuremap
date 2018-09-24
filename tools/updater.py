@@ -18,24 +18,24 @@
 # versions.yaml file updater tool
 #
 # Being run in directory with versions.yaml, will create versions.new.yaml,
-# with updated git commit id's to the latest HEAD in:
-#   1) references of all charts
-#   2) tags of container images listed in dict `image_repo_git_url` in the
-#      code below
+# with updated git commit id's to the latest HEAD in references of all
+# charts.
 #
-# In addition to that, the tool verifies that container images with
-# specific tags equal to the HEAD git commit id's we reference, do really
-# exist on quay.io repository and are available for download.
+# In addition to that, the tool updates references to the container images
+# with the tag, equal to the latest image which exists on quay.io
+# repository and is available for download.
 #
 
-from functools import reduce
 import argparse
 import datetime
+from functools import reduce
+import json
 import logging
 import operator
 import os
 import requests
 import sys
+import time
 
 try:
     import git
@@ -44,17 +44,23 @@ except ImportError as e:
     sys.exit("Failed to import git/yaml libraries needed to run" +
              "this tool %s" % str(e))
 
-descr_text="Process versions.yaml and create versions.new.yaml with \
-           updated git commit id\'s to the latest HEAD in: \
-           1) references of all charts \
-           2) tags of container images listed in dict \
-           `image_repo_git_url` in the code."
+descr_text="Being run in directory with versions.yaml, will create \
+            versions.new.yaml, with updated git commit id's to the \
+            latest HEAD in references of all charts. In addition to \
+            that, the tool updates references to the container images \
+            with the tag, equal to the latest image which exists on \
+            quay.io repository and is available for download."
 parser = argparse.ArgumentParser(description=descr_text)
 
 # Dictionary containing container image repository url to git url mapping
 #
 # We expect that each image in container image repository has image tag which
-# equals to the git commit id of the HEAD in corresponding git repository
+# equals to the git commit id of the HEAD in corresponding git repository.
+#
+# NOTE(roman_g): currently this is not the case, and image is built/tagged not
+# on every merge, and there could be a few hours delay between merge and image
+# re-built and published due to the OpenStack Foundation Zuul infrastructure
+# being overloaded.
 image_repo_git_url = {
     # airflow image is built from airship-shipyard repository
     'quay.io/airshipit/airflow': 'https://git.openstack.org/openstack/airship-shipyard',
@@ -129,9 +135,8 @@ def get_image_tag(image):
     returns 0 (image not hosted on quay.io), True, or False
     """
     if not image.startswith('quay.io/'):
-        logging.info('Unable to verify if image ' + image + ':' +
-                     git_commit_id + ' with this specific tag exists' +
-                     ' in containers repository: only quay.io is' +
+        logging.info('Unable to verify if image ' + image +
+                     ' is in containers repository: only quay.io is' +
                      ' supported at the moment')
         return 0
 
@@ -144,14 +149,15 @@ def get_image_tag(image):
     url = 'https://quay.io/api/v1/repository/' + \
     hash_image[1] + '/' + hash_image[2] + '/tag'
 
-    while retries <= max_retries:
-        retries = retries +1
+    while retries < max_retries:
+        retries = retries + 1
         try:
             res = requests.get(url, timeout = 5)
+            if res.ok:
+                break
         except requests.exceptions.Timeout:
             logging.warning("Failed to fetch url %s" % res.url)
-            sleep(1)
-
+            time.sleep(1)
     if retries == max_retries:
         logging.error("Failed to connect to quay.io")
         return 0
@@ -162,7 +168,7 @@ def get_image_tag(image):
 
     try:
         res = res.json()
-    except json.decoder.JSONDecodeError:
+    except json.decoder.JSONDecodeError: # pylint: disable=no-member
         logging.error('Unable to parse response from quay.io (%s)' % res.url)
         return 0
 
@@ -283,13 +289,18 @@ def traverse(obj, dict_path=None):
 if __name__ == '__main__':
     """Small Main program"""
 
-    parser.add_argument('--in-file', default = 'versions.yaml',
-            help = '/path/to/versions.yaml file')
-    args = parser.parse_args()
+    parser.add_argument('--in-file', default='versions.yaml',
+    help='/path/to/versions.yaml input file; default - "./versions.yaml"')
 
+    parser.add_argument('--out-file', default='versions.yaml',
+    help='name of output file; default - "versions.yaml" (overwrite existing)')
+
+    args = parser.parse_args()
     in_file = args.in_file
+    out_file = args.out_file
 
     if os.path.isfile(in_file):
+        out_file = os.path.join(os.path.dirname(os.path.abspath(in_file)), out_file)
         with open(in_file, 'r') as f:
             f_old = f.read()
             versions_data_dict = yaml.safe_load(f_old)
@@ -301,8 +312,9 @@ if __name__ == '__main__':
     # Traverse loaded yaml and change it
     traverse(versions_data_dict)
 
-    out_file = os.path.join(os.path.dirname(os.path.abspath(in_file)), 'versions.new.yaml')
     with open(out_file, 'w') as f:
+        if os.path.samefile(in_file, out_file):
+            logging.info('Overwriting %s' % in_file)
         f.write(yaml.safe_dump(versions_data_dict,
                                default_flow_style=False,
                                explicit_end=True, explicit_start=True,
