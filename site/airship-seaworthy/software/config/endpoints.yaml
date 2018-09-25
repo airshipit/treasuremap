@@ -18,6 +18,8 @@ metadata:
       dest:
         - path: .ucp.identity.host_fqdn_override.public.host
           pattern: DOMAIN
+        - path: .ucp.identity.host_fqdn_override.admin.host
+          pattern: DOMAIN
         - path: .ucp.shipyard.host_fqdn_override.public.host
           pattern: DOMAIN
         - path: .ceph.object_store.host_fqdn_override.public.host
@@ -109,18 +111,18 @@ data:
         default: null
         public:
           host: iam.DOMAIN
+        admin:
+          host: iam.DOMAIN
       path:
         default: /v3
       scheme:
         default: http
         # public: https
       port:
-        admin:
-          default: 35357
         api:
-          default: 5000
+          default: 80
           # public: 443
-          public: 80
+          internal: 5000
     armada:
       name: armada
       hosts:
@@ -400,6 +402,8 @@ metadata:
         - path: .osh.network.host_fqdn_override.public.host
           pattern: DOMAIN
         - path: .osh.identity.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .osh.identity.host_fqdn_override.admin.host
           pattern: DOMAIN
         - path: .osh.dashboard.host_fqdn_override.public.host
           pattern: DOMAIN
@@ -762,18 +766,18 @@ data:
         default: null
         public:
           host: identity.DOMAIN
+        admin:
+          host: identity.DOMAIN
       path:
         default: /v3
       scheme:
         default: "http"
         # public: "https"
       port:
-        admin:
-          default: 35357
         api:
-          default: 5000
+          default: 80
           # public: 443
-          public: 80
+          internal: 5000
     glance_oslo_messaging:
       namespace: openstack
       hosts:
