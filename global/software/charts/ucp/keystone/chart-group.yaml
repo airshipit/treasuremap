@@ -8,7 +8,7 @@ metadata:
     layer: global
   storagePolicy: cleartext
 data:
-  description: UCP Keystone components
+  description: Airship Keystone components
   chart_group:
     - ucp-keystone-memcached
     - ucp-keystone

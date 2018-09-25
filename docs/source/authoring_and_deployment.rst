@@ -193,7 +193,7 @@ folder) from unique site elements (i.e., ``site`` folder).
 
 To gain a full understanding of the pegleg strutcure, it is highly
 recommended to read pegleg documentation on this
-`here <https://airship-pegleg.readthedocs.io/en/latest/>`__.
+`here <https://airship-pegleg.readthedocs.io/>`__.
 
 The ``airship-seaworthy`` site may be used as reference site. It is the
 principal pipeline for integration and continuous deployment testing of Airship.

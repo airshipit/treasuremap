@@ -200,6 +200,6 @@ Process Flows
 .. _Kubernetes Homepage: https://kubernetes.io/
 .. _Openstack: https://www.openstack.org/
 .. _Openstack Helm: https://github.com/openstack/openstack-helm
-.. _Treasuremap: https://github.com/att-comdev/treasuremap
+.. _Treasuremap: https://github.com/openstack/airship-treasuremap
 .. _yaml: http://yaml.org/
 
