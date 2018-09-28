@@ -63,6 +63,9 @@ data:
     kube_service:
       host: 127.0.0.1
       port: 6553
+    livenessProbe:
+      whitelist:
+        - tiller-deploy
   dependencies:
     - kubernetes-proxy-htk
 ---
@@ -85,9 +88,5 @@ data:
   chart_name: kubernetes-proxy-htk
   release: kubernetes-proxy-htk
   namespace: kubernetes-proxy-htk
-  values:
-    livenessProbe:
-      whitelist:
-        - tiller-deploy
   dependencies: []
 ...
