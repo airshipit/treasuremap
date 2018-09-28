@@ -105,7 +105,7 @@ Hardware Prep
 -------------
 
 Disk
-^^^^
+~~~~
 
 1. Control plane server disks:
 
@@ -120,7 +120,7 @@ Disk
      for each given server (e.g., RAID-10).
 
 BIOS and IPMI
-^^^^^^^^^^^^^
+~~~~~~~~~~~~~
 
 1. Virtualization enabled in BIOS
 2. IPMI enabled in server BIOS (e.g., IPMI over LAN option enabled)
@@ -132,7 +132,7 @@ BIOS and IPMI
 4. Set PXE as first boot device and ensure the correct NIC is selected for PXE
 
 Network
-^^^^^^^
+~~~~~~~
 
 1. You have a network you can successfully PXE boot with your network topology
    and bonding settings (dedicated PXE interace on untagged/native VLAN in this
