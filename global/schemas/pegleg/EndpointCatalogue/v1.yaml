@@ -77,6 +77,25 @@ data:
                               type: string
                       additionalProperties:
                         type: string
+                admin:
+                  oneOf:
+                    - type: string
+                    - type: "null"
+                    - type: object
+                      properties:
+                        host:
+                          type: string
+                        tls:
+                          type: object
+                          properties:
+                            crt:
+                              type: string
+                            ca:
+                              type: string
+                            key:
+                              type: string
+                      additionalProperties:
+                        type: string
                 internal:
                   oneOf:
                     - type: string
