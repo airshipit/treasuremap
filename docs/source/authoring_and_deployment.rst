@@ -191,7 +191,7 @@ In its current form, pegleg provides an organized structure for YAML
 elements, in order to separate common site elements (i.e., ``global``
 folder) from unique site elements (i.e., ``site`` folder).
 
-To gain a full understanding of the pegleg strutcure, it is highly
+To gain a full understanding of the pegleg structure, it is highly
 recommended to read pegleg documentation on this
 `here <https://airship-pegleg.readthedocs.io/>`__.
 
