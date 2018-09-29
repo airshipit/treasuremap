@@ -102,7 +102,7 @@ metadata:
         name: ucp_service_accounts
         path: .ucp.drydock.keystone
       dest:
-        path: .values.endpoints.identity.auth.user
+        path: .values.endpoints.identity.drydock.user
 
     # Secrets
     - dest:
@@ -118,7 +118,7 @@ metadata:
         name: ucp_postgres_admin_password
         path: .
     - dest:
-        path: .values.endpoints.identity.auth.user.password
+        path: .values.endpoints.identity.auth.drydock.password
       src:
         schema: deckhand/Passphrase/v1
         name: ucp_drydock_keystone_password
@@ -152,8 +152,8 @@ data:
       node_selector_key: ucp-control-plane
       node_selector_value: enabled
     network:
-      drydock:
-        node_port:
+      api:
+        nodeport:
           enabled: true
     conf:
       drydock:
