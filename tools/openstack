@@ -9,6 +9,9 @@ set -e
 
 OS_CLOUD_CFG=${HOME}/.openstack/clouds.yaml
 
+: ${TERM_OPTS:=-it}
+
+
 if [ ! -f $OS_CLOUD_CFG ]; then
     echo " => Creating OpenStack client config"
     mkdir -p ~/.openstack
@@ -23,13 +26,13 @@ clouds:
      project_name: 'admin'
      project_domain_name: 'default'
      user_domain_name: 'default'
-     auth_url: 'http://keystone-api.openstack.svc.cluster.local:80/v3'
+     auth_url: 'http://identity.airship-seaworthy.atlantafoundry.com/v3'
 EOF
 fi
 
-exec sudo docker run --rm -it --net host \
+exec sudo docker run --rm ${TERM_OPTS} --net host \
    -v $(pwd):/target \
    -v ${OS_CLOUD_CFG}:/etc/openstack/clouds.yaml:ro \
    -e OS_CLOUD=openstack_helm \
-   docker.io/openstackhelm/heat:ocata openstack $*
+   docker.io/openstackhelm/heat:ocata openstack "$@"
 
