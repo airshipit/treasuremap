@@ -203,7 +203,6 @@ data:
       openstack-neutron: enabled
       openvswitch: enabled
       ucp-barbican: enabled
-      ceph-bootstrap: enabled
       # ceph-mon: enabled
       ceph-mgr: enabled
       ceph-osd: enabled
