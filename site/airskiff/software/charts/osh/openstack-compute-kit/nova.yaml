@@ -1,0 +1,47 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nova
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: nova-global
+      component: nova
+    actions:
+      - method: replace
+        path: .values.labels.agent
+      - method: delete
+        path: .values.ceph_client
+      - method: merge
+        path: .values.conf
+      - method: replace
+        path: .values.pod
+  storagePolicy: cleartext
+data:
+  values:
+    labels:
+      agent:
+        compute:
+          node_selector_key: openstack-compute-node
+          node_selector_value: enabled
+        compute_ironic:
+          node_selector_key: openstack-compute-node
+          node_selector_value: enabled
+    conf:
+      ceph:
+        enabled: false
+      nova:
+        libvirt:
+          virt_type: qemu
+    pod:
+      replicas:
+        api_metadata: 1
+        placement: 1
+        osapi: 1
+        conductor: 1
+        consoleauth: 1
+        scheduler: 1
+        novncproxy: 1
+...

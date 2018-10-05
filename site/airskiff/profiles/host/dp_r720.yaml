@@ -1,0 +1,105 @@
+---
+# NOTE: This file is ignored by Airskiff and is copied from the seaworthy site.
+
+# The data plane host profile for Airship for DELL R720s, and should
+# not need to be altered if you are using matching HW. The host profile is setup
+# for cpu isolation (for nova pinning), hugepages, and sr-iov.
+schema: drydock/HostProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: dp_r720
+  storagePolicy: cleartext
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      hosttype: dp-global
+    actions:
+      - method: replace
+        path: .interfaces
+      - method: replace
+        path: .storage
+      - method: merge
+        path: .
+data:
+  hardware_profile: dell_r720
+
+  primary_network: oam
+  interfaces:
+    pxe:
+      device_link: pxe
+      slaves:
+        - pxe_nic01
+      networks:
+        - pxe
+    bond0:
+      device_link: data
+      slaves:
+        - data_nic01
+        - data_nic02
+        - data_nic03
+        - data_nic04
+      networks:
+        - oam
+        - storage
+        - overlay
+        - calico
+
+  storage:
+    physical_devices:
+      bootdisk:
+        labels:
+          bootdrive: 'true'
+        partitions:
+          - name: 'root'
+            size: '30g'
+            bootable: true
+            filesystem:
+              mountpoint: '/'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'boot'
+            size: '1g'
+            filesystem:
+              mountpoint: '/boot'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var_log'
+            size: '100g'
+            filesystem:
+              mountpoint: '/var/log'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var'
+            size: '>100g'
+            filesystem:
+              mountpoint: '/var'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+
+      cephjournal1:
+        partitions:
+          - name: 'ceph-j1'
+            size: '10g'
+          - name: 'ceph-j2'
+            size: '10g'
+      cephjournal2:
+        partitions:
+          - name: 'ceph-j3'
+            size: '10g'
+          - name: 'ceph-j4'
+            size: '10g'
+
+      ephemeral:
+        partitions:
+          - name: 'nova'
+            size: '99%'
+            filesystem:
+              mountpoint: '/var/lib/nova'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+  platform:
+    kernel: 'hwe-16.04'
+    kernel_params:
+      console: 'ttyS1,115200n8'
+...

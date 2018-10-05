@@ -1,0 +1,23 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-mariadb-airskiff
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-mariadb-global
+      component: mariadb
+    actions:
+      - method: merge
+        path: .values.pod
+      - method: delete
+        path: .values.labels.prometheus_mysql_exporter
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        server: 1
+...

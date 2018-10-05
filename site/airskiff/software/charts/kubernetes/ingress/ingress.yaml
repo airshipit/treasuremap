@@ -1,0 +1,20 @@
+---
+# NOTE: This file is ignored by Airskiff and is copied from the seaworthy site.
+
+# The purpose of this file is to define the environment-specific public-facing
+# VIP for the ingress controller
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ingress-kube-system
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      ingress: kube-system
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data: {}
+...

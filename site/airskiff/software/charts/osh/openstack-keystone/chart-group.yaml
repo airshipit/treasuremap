@@ -1,0 +1,22 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-keystone-airskiff
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-keystone-chart-group-global
+      component: keystone
+    actions:
+      - method: merge
+        path: .sequenced
+      - method: replace
+        path: .chart_group
+  storagePolicy: cleartext
+data:
+  sequenced: true
+  chart_group:
+    - keystone-rabbitmq-airskiff
+    - keystone-airskiff

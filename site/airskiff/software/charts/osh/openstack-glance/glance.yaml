@@ -1,0 +1,31 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: glance-airskiff
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: glance-global
+      component: glance
+    actions:
+      - method: merge
+        path: .
+      - method: replace
+        path: .values.pod
+      - method: delete
+        path: .values.ceph_client
+  storagePolicy: cleartext
+data:
+  test:
+    enabled: false
+  values:
+    bootstrap:
+      enabled: false
+    pod:
+      replicas:
+        api: 1
+        registry: 1
+    storage: pvc
+...

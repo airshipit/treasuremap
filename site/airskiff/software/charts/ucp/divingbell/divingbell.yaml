@@ -1,0 +1,55 @@
+---
+# NOTE: This file is ignored by Airskiff and is copied from the seaworthy site.
+
+# The purpose of this file is to define site-specific parameters to the
+# UAM-lite portion of the divingbell chart:
+# 1. User accounts to create on bare metal
+# 2. SSH public key for operationg system access to the bare metal
+# 3. Passwords for operating system access via iDrac/iLo console. SSH password-
+#    based auth is disabled.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-divingbell
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-divingbell-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: ucp-divingbell-site
+  storagePolicy: cleartext
+  substitutions:
+    - dest:
+        path: .values.conf.uamlite.users[0].user_sshkeys[0]
+      src:
+        schema: deckhand/PublicKey/v1
+        name: airship_ssh_public_key
+        path: .
+    - dest:
+        path: .values.conf.uamlite.users[0].user_crypt_passwd
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ubuntu_crypt_password
+        path: .
+    - dest:
+        path: .values.conf.uamlite.users[1].user_sshkeys[0]
+      src:
+        schema: deckhand/PublicKey/v1
+        name: airship_ssh_public_key
+        path: .
+data:
+  values:
+    conf:
+      uamlite:
+        users:
+          - user_name: ubuntu
+            user_sudo: true
+            user_sshkeys: []
+          - user_name: airship
+            user_sudo: true
+            user_sshkeys: []
+...

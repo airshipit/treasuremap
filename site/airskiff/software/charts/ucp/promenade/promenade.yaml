@@ -1,0 +1,52 @@
+---
+# NOTE: This file is ignored by Airskiff and is copied from the seaworthy site.
+
+# The purpose of this file is to provide site-specific parameters for the ucp-
+# promenade chart.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-promenade
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-promenade-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      env:
+        promenade_api: []
+          # NEWSITE-CHANGEME: If your site uses an http proxy, enter it here.
+          # Otherwise comment out these lines.
+          # - name: http_proxy
+          #   value: http://proxy.example.com:8080
+          # NEWSITE-CHANGEME: If your site uses an https proxy, enter it here.
+          # Otherwise comment out these lines.
+          # - name: https_proxy
+          #   value: http://proxy.example.com:8080
+          # NEWSITE-CHANGEME: If your site uses an http/https proxy, enter the
+          # IPs / domain names which the proxy should not be used for (i.e. the
+          # cluster domain and kubernetes service_cidr defined in common-addresses)
+          # Otherwise comment out these lines.
+          # - name: no_proxy
+          #   value: 10.36.0.1,.cluster.local
+          # NEWSITE-CHANGEME: If your site uses an http proxy, enter it here.
+          # Otherwise comment out these lines.
+          # - name: HTTP_PROXY
+          #   value: http://proxy.example.com:8080
+          # NEWSITE-CHANGEME: If your site uses an https proxy, enter it here.
+          # Otherwise comment out these lines.
+          # - name: HTTPS_PROXY
+          #   value: http://proxy.example.com:8080
+          # NEWSITE-CHANGEME: If your site uses an http/https proxy, enter the
+          # IPs / domain names which the proxy should not be used for (i.e. the
+          # cluster domain and kubernetes service_cidr defined in common-addresses)
+          # Otherwise comment out these lines.
+          # - name: NO_PROXY
+          #   value: 10.36.0.1,.cluster.local
+...

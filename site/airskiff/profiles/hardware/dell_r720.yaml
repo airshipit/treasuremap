@@ -1,0 +1,78 @@
+---
+# NOTE: This file is ignored by Airskiff and is copied from the seaworthy site.
+
+schema: 'drydock/HardwareProfile/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: dell_r720
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  # Vendor of the server chassis
+  vendor: DELL
+  # Generation of the chassis model
+  generation: '8'
+  # Version of the chassis model within its generation - not version of the hardware definition
+  hw_version: '3'
+  # The certified version of the chassis BIOS
+  bios_version: '2.2.3'
+  # Mode of the default boot of hardware - bios, uefi
+  boot_mode: bios
+  # Protocol of boot of the hardware - pxe, usb, hdd
+  bootstrap_protocol: pxe
+  # Which interface to use for network booting within the OOB manager, not OS device
+  pxe_interface: 0
+  # Map hardware addresses to aliases/roles to allow a mix of hardware configs
+  # in a site to result in a consistent configuration
+  device_aliases:
+    ## network
+    # eno1
+    pxe_nic01:
+      address: '0000:01:00.0'
+      # type could identify expected hardware - used for hardware manifest validation
+      dev_type: 'I350 Gigabit Network Connection'
+      bus_type: 'pci'
+    # enp67s0f0
+    data_nic01:
+      address: '0000:43:00.0'
+      dev_type: 'Ethernet 10G 2P X520 Adapter'
+      bus_type: 'pci'
+    # enp67s0f1
+    data_nic02:
+      address: '0000:43:00.1'
+      dev_type: 'Ethernet 10G 2P X520 Adapter'
+      bus_type: 'pci'
+    # enp68s0f0
+    data_nic03:
+      address: '0000:44:00.0'
+      dev_type: 'Ethernet 10G 2P X520 Adapter'
+      bus_type: 'pci'
+    # enp68s0f1
+    data_nic04:
+      address: '0000:44:00.1'
+      dev_type: 'Ethernet 10G 2P X520 Adapter'
+      bus_type: 'pci'
+    ## storage
+    # /dev/sda
+    bootdisk:
+      address: '0:2.0.0'
+      dev_type: 'PERC H710P'
+      bus_type: 'scsi'
+    # /dev/sdb
+    cephjournal1:
+      address: '0:2.1.0'
+      dev_type: 'PERC H710P'
+      bus_type: 'scsi'
+    # /dev/sdc
+    cephjournal2:
+      address: '0:2.2.0'
+      dev_type: 'PERC H710P'
+      bus_type: 'scsi'
+    # /dev/sdc
+    ephemeral:
+      address: '0:2.3.0'
+      dev_type: 'PERC H710P'
+      bus_type: 'scsi'
+...

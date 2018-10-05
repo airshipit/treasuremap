@@ -1,0 +1,30 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: neutron-rabbitmq-airskiff
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: neutron-rabbitmq-global
+      component: neutron
+    actions:
+      - method: merge
+        path: .values.pod
+      - method: delete
+        path: .values.labels.prometheus_rabbitmq_exporter
+      - method: replace
+        path: .values.monitoring
+  storagePolicy: cleartext
+data:
+  test:
+    enabled: false
+  values:
+    pod:
+      replicas:
+        server: 1
+    monitoring:
+      prometheus:
+        enabled: false
+...

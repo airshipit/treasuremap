@@ -1,0 +1,302 @@
+---
+# NOTE: This file is ignored by Airskiff and is copied from the seaworthy site.
+
+# The purpose of this file is to define all of the NetworkLinks (i.e. layer 1
+# devices) and Networks (i.e. layer 3 configurations). The following is standard
+# for the logical networks in Airship:
+#
+# +----------+-----------------------------------+----------------+--------------+----------------------------------------------------+-----------------+
+# | Network  |                                   | Per-rack or    |              |                                                    |   VLAN tagged   |
+# |   Name   |             Purpose               | per-site CIDR? | Has gateway? |                    Bond                            |  or untagged?   |
+# +----------+-----------------------------------+----------------+--------------+----------------------------------------------------+-----------------+
+# |   oob    | Out of Band devices (iDrac/iLo)   | per-site CIDR  | Has gateway  |                No bond, N/A                        | Untagged/Native |
+# |   pxe    | PXE boot network                  | per-site CIDR  | No gateway   | No bond, no LACP fallback. Dedicated PXE interface | Untagged/Native |
+# |   oam    | management network                | per-site CIDR  | Has gateway  |               member of bond0                      |     tagged      |
+# | storage  | storage network                   | per-site CIDR  | No gateway   |               member of bond0                      |     tagged      |
+# |  calico  | underlay calico net; k8s traffic  | per-site CIDR  | No gateway   |               member of bond0                      |     tagged      |
+# | overlay  | overlay network for openstack SDN | per-site CIDR  | No gateway   |               member of bond0                      |     tagged      |
+# +----------+-----------------------------------+----------------+--------------+----------------------------------------------------+-----------------+
+#
+# For standard Airship deployments, you should not need to modify the number of
+# NetworkLinks and Networks in this file. Only the IP addresses and CIDRs should
+# need editing.
+#
+# TODO: Given that we expect all network broadcast domains to span all racks in
+# Airship, we should choose network names that do not include the rack number.
+#
+# TODO: FQDN naming standards for hosts
+#
+schema: 'drydock/NetworkLink/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: oob
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  # MaaS doesnt own this network like it does the others, so the noconfig label
+  # is specified.
+  labels:
+    noconfig: enabled
+  bonding:
+    mode: disabled
+  mtu: 1500
+  linkspeed: auto
+  trunking:
+    mode: disabled
+    default_network: oob
+  allowed_networks:
+    - oob
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: oob
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Update with the site's out-of-band CIDR
+  cidr: 10.23.104.0/24
+  routes:
+    # NEWSITE-CHANGEME: Update with the site's out-of-band gateway IP
+    - subnet: '0.0.0.0/0'
+      gateway: 10.23.104.1
+      metric: 100
+  # NEWSITE-CHANGEME: Update with the site's out-of-band IP allocation range
+  # FIXME: Is this IP range actually used/allocated for anything? The HW already
+  # has its OOB IPs assigned. None of the Ubuntu OS's should need IPs on OOB
+  # network either, as they should be routable via the default gw on OAM network
+  ranges:
+    - type: static
+      start: 10.23.104.11
+      end: 10.23.104.21
+...
+---
+schema: 'drydock/NetworkLink/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: pxe
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  bonding:
+    mode: disabled
+  mtu: 1500
+  linkspeed: auto
+  trunking:
+    mode: disabled
+    default_network: pxe
+  allowed_networks:
+    - pxe
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: pxe
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Update with the site's PXE network CIDR
+  # NOTE: The CIDR minimum size = (number of nodes * 2) + 10
+  cidr: 10.23.20.0/24
+  routes:
+    - subnet: 0.0.0.0/0
+      # NEWSITE-CHANGEME: Set the OAM network gateway IP address
+      gateway: 10.23.20.1
+      metric: 100
+  # NOTE: The first 10 IPs in the subnet are reserved for network infrastructure.
+  # The remainder of the range is divided between two subnets of equal size:
+  # one static, and one DHCP.
+  # The DHCP addresses are used when nodes perform a PXE boot (DHCP address gets
+  # assigned), and when a node is commissioning in MaaS (also uses DHCP to get
+  # its IP address). However, when MaaS installs the operating system
+  # ("Deploying/Deployed" states), it will write a static IP assignment to
+  # /etc/network/interfaces[.d] with IPs from the "static" subnet defined here.
+  ranges:
+    # NEWSITE-CHANGEME: Update to the first 10 IPs in the CIDR
+    - type: reserved
+      start: 10.23.20.1
+      end: 10.23.20.10
+    # NEWSITE-CHANGEME: Update to the first half of the remaining range after
+    # excluding the 10 reserved IPs.
+    - type: static
+      start: 10.23.20.11
+      end: 10.23.20.21
+    # NEWSITE-CHANGEME: Update to the second half of the remaining range after
+    # excluding the 10 reserved IPs.
+    - type: dhcp
+      start: 10.23.20.40
+      end: 10.23.20.80
+  dns:
+    # NEWSITE-CHANGEME: FQDN for bare metal nodes.
+    # Choose FQDN according to the node FQDN naming conventions at the top of
+    # this document.
+    domain: atlantafoundry.com
+    # List of upstream DNS forwards. Verify you can reach them from your
+    # environment. If so, you should not need to change them.
+    # TODO: This should be populated via substitution from common-addresses
+    servers: '8.8.8.8,8.8.4.4,208.67.222.222'
+...
+---
+schema: 'drydock/NetworkLink/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: data
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  bonding:
+    mode: 802.3ad
+    hash: layer3+4
+    peer_rate: fast
+    mon_rate: 100
+    up_delay: 1000
+    down_delay: 3000
+  # NEWSITE-CHANGEME: Ensure the network switches in the environment are
+  # configured for this MTU or greater. Even if switches are configured for or
+  # can support a slightly higher MTU, there is no need (and negliable benefit)
+  # to squeeze every last byte into the MTU (e.g., 9216 vs 9100). Leave MTU at
+  # 9100 for maximum compatibility.
+  mtu: 9100
+  linkspeed: auto
+  trunking:
+    mode: 802.1q
+  allowed_networks:
+    - oam
+    - storage
+    - overlay
+    - calico
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: oam
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Set the VLAN ID which the OAM network is on
+  vlan: '21'
+  mtu: 9100
+  # NEWSITE-CHANGEME: Set the CIDR for the OAM network
+  # NOTE: The CIDR minimum size = number of nodes + 10
+  cidr: 10.23.21.0/24
+  routes:
+    - subnet: 0.0.0.0/0
+      # NEWSITE-CHANGEME: Set the OAM network gateway IP address
+      gateway: 10.23.21.1
+      metric: 100
+  ranges:
+    # NEWSITE-CHANGEME: Update to the first 10 IPs in the CIDR
+    - type: reserved
+      start: 10.23.21.1
+      end: 10.23.21.10
+    # NEWSITE-CHANGEME: Update to the remaining range after excluding the 10
+    # 10 reserved IPs.
+    - type: static
+      start: 10.23.21.11
+      end: 10.23.21.21
+  dns:
+    # NEWSITE-CHANGEME: FQDN for bare metal nodes.
+    # Choose FQDN according to the node FQDN naming conventions at the top of
+    # this document.
+    domain: atlantafoundry.com
+    # List of upstream DNS forwards. Verify you can reach them from your
+    # environment. If so, you should not need to change them.
+    # TODO: This should be populated via substitution from common-addresses
+    servers: '8.8.8.8,8.8.4.4,208.67.222.222'
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: storage
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Set the VLAN ID which the storage network is on
+  vlan: '23'
+  mtu: 9100
+  # NEWSITE-CHANGEME: Set the CIDR for the storage network
+  # NOTE: The CIDR minimum size = number of nodes + 10
+  cidr: 10.23.23.0/24
+  ranges:
+    # NEWSITE-CHANGEME: Update to the first 10 IPs in the CIDR
+    - type: reserved
+      start: 10.23.23.1
+      end: 10.23.23.10
+    # NEWSITE-CHANGEME: Update to the remaining range after excluding the 10
+    # 10 reserved IPs.
+    - type: static
+      start: 10.23.23.11
+      end: 10.23.23.21
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: overlay
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Set the VLAN ID which the overlay network is on
+  vlan: '24'
+  mtu: 9100
+  # NEWSITE-CHANGEME: Set the CIDR for the overlay network
+  # NOTE: The CIDR minimum size = number of nodes + 10
+  cidr: 10.23.24.0/24
+  ranges:
+    # NEWSITE-CHANGEME: Update to the first 10 IPs in the CIDR
+    - type: reserved
+      start: 10.23.24.1
+      end: 10.23.24.10
+    # NEWSITE-CHANGEME: Update to the remaining range after excluding the 10
+    # 10 reserved IPs.
+    - type: static
+      start: 10.23.24.11
+      end: 10.23.24.21
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: calico
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Set the VLAN ID which the calico network is on
+  vlan: '22'
+  mtu: 9100
+  # NEWSITE-CHANGEME: Set the CIDR for the calico network
+  # NOTE: The CIDR minimum size = number of nodes + 10
+  cidr: 10.23.22.0/24
+  ranges:
+    # NEWSITE-CHANGEME: Update to the first 10 IPs in the CIDR
+    - type: reserved
+      start: 10.23.22.1
+      end: 10.23.22.10
+    # NEWSITE-CHANGEME: Update to the remaining range after excluding the 10
+    # 10 reserved IPs.
+    - type: static
+      start: 10.23.22.11
+      end: 10.23.22.21
+...

@@ -1,0 +1,22 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-glance-airskiff
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-glance-chart-group-global
+      component: glance
+    actions:
+      - method: merge
+        path: .sequenced
+      - method: replace
+        path: .chart_group
+  storagePolicy: cleartext
+data:
+  sequenced: true
+  chart_group:
+    - glance-rabbitmq-airskiff
+    - glance-airskiff
