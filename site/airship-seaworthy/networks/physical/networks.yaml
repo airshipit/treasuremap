@@ -132,8 +132,8 @@ data:
     # NEWSITE-CHANGEME: Update to the second half of the remaining range after
     # excluding the 10 reserved IPs.
     - type: dhcp
-      start: 10.23.20.121
-      end: 10.23.20.131
+      start: 10.23.20.40
+      end: 10.23.20.80
   dns:
     # NEWSITE-CHANGEME: FQDN for bare metal nodes.
     # Choose FQDN according to the node FQDN naming conventions at the top of

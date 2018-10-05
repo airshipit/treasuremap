@@ -15,12 +15,12 @@ data:
       calico:
         calico:
           location: https://git.openstack.org/openstack/openstack-helm-infra
-          reference: 7d228ef280ad4a9a7ee8757e816c81f5fb963994
+          reference: 26e1b9cde63a3d5a55417d25f05cf8787b03256d
           subpath: calico
           type: git
         calico-htk:
           location: https://git.openstack.org/openstack/openstack-helm-infra
-          reference: 7d228ef280ad4a9a7ee8757e816c81f5fb963994
+          reference: 26e1b9cde63a3d5a55417d25f05cf8787b03256d
           subpath: helm-toolkit
           type: git
         etcd:
@@ -398,7 +398,7 @@ data:
         type: git
       shipyard:
         location: https://git.openstack.org/openstack/airship-shipyard
-        reference: 0a14e7e80fb7b7bd41b29e9690f231229c1e95ca
+        reference: 124de57262b3f0e60720ce377424d3be99f46f61
         subpath: charts/shipyard
         type: git
       shipyard-htk:
@@ -421,14 +421,11 @@ data:
   images:
     calico:
       calico:
-        calico_cni: quay.io/calico/cni:v1.11.5
-        calico_ctl: quay.io/calico/ctl:v1.6.4
-        calico_etcd: quay.io/coreos/etcd:v3.2.14
-        calico_kube_policy_controller: quay.io/calico/kube-policy-controller:v0.7.0
-        calico_node: quay.io/calico/node:v2.6.9
-        calico_settings: quay.io/calico/ctl:v1.6.4
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        image_repo_sync: docker.io/docker:17.07.0
+        calico_cni: quay.io/calico/cni:v3.2.1
+        calico_ctl: calico/ctl:release-v3.2-amd64
+        calico_kube_controllers: quay.io/calico/kube-controllers:v3.2.1
+        calico_node: quay.io/calico/node:v3.2.1
+        calico_settings: calico/ctl:release-v3.2-amd64
       etcd:
         etcd: quay.io/coreos/etcd:v3.2.14
         etcdctl: quay.io/coreos/etcd:v3.2.14
@@ -818,17 +815,17 @@ data:
         rabbitmq: docker.io/rabbitmq:3.7.4
         scripted_test: docker.io/rabbitmq:3.7-management
       shipyard:
-        airflow: quay.io/airshipit/airflow:0a14e7e80fb7b7bd41b29e9690f231229c1e95ca
+        airflow: quay.io/airshipit/airflow:124de57262b3f0e60720ce377424d3be99f46f61
         airflow_db_init: docker.io/postgres:9.5
-        airflow_db_sync: quay.io/airshipit/airflow:0a14e7e80fb7b7bd41b29e9690f231229c1e95ca
+        airflow_db_sync: quay.io/airshipit/airflow:124de57262b3f0e60720ce377424d3be99f46f61
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         image_repo_sync: docker.io/docker:17.07.0
         ks_endpoints: docker.io/openstackhelm/heat:ocata
         ks_service: docker.io/openstackhelm/heat:ocata
         ks_user: docker.io/openstackhelm/heat:ocata
-        shipyard: quay.io/airshipit/shipyard:0a14e7e80fb7b7bd41b29e9690f231229c1e95ca
+        shipyard: quay.io/airshipit/shipyard:124de57262b3f0e60720ce377424d3be99f46f61
         shipyard_db_init: docker.io/postgres:9.5
-        shipyard_db_sync: quay.io/airshipit/shipyard:0a14e7e80fb7b7bd41b29e9690f231229c1e95ca
+        shipyard_db_sync: quay.io/airshipit/shipyard:124de57262b3f0e60720ce377424d3be99f46f61
       tiller:
         tiller: gcr.io/kubernetes-helm/tiller:v2.10.0
   images_refs:
