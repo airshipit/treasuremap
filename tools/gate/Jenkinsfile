@@ -14,8 +14,8 @@ import groovy.json.JsonOutput
 
 PEGLEG_IMAGE = 'quay.io/airshipit/pegleg:73fbf264ca99b1a80c9e29e21048451716b630e7'
 
-KEYSTONE_URL = 'http://iam.atlantafoundry.com/v3/auth/tokens'
-SHIPYARD_URL = 'http://shipyard.atlantafoundry.com/api/v1.0'
+KEYSTONE_URL = 'https://iam.atlantafoundry.com/v3/auth/tokens'
+SHIPYARD_URL = 'https://shipyard.atlantafoundry.com/api/v1.0'
 
 SITE_NAME='airship-seaworthy'
 IPMI_CREDS = 'airship-seaworthy-ipmi'
