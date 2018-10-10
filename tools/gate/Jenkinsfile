@@ -52,6 +52,10 @@ def clone(String url, String ref){
         refspec = "${ref}:${ref}"
     }
 
+    if (ref == 'latest') {
+        ref = 'master'
+    }
+
     checkout poll: false,
     scm: [$class: 'GitSCM',
          branches: [[name: ref]],
@@ -191,6 +195,10 @@ def genesis_cleanup = {
             ssh_cmd "sudo parted -s /dev/sd${it} mklabel msdos"
         }
         ssh_cmd 'sudo rm -rf /var/lib/ceph/cp'
+
+        ssh_cmd 'sudo rm -rf /var/lib/docker'
+        ssh_cmd 'sudo rm -rf /var/lib/kubelet'
+        ssh_cmd 'sudo rm -rf /var/lib/openstack-helm'
     }
 }
 
@@ -210,10 +218,13 @@ def genesis_deploy = {
 
             timeout (90) {
                 ssh_cmd 'sudo promenade-bundle/genesis.sh'
-                ssh_cmd 'sudo -S promenade-bundle/validate-genesis.sh'
+
+                retry(3) {
+                    ssh_cmd 'sudo -S promenade-bundle/validate-genesis.sh'
+                }
             }
 
-            sleep 47 // wait for k8s to calm down
+            sleep 120 // wait for k8s to calm down
 
         } catch (err) {
             debug_report()
@@ -240,10 +251,15 @@ def keystone_token = {
     def res
 
     retry (3) {
-        res = httpRequest (url: KEYSTONE_URL,
+        try {
+            res = httpRequest (url: KEYSTONE_URL,
                            contentType: 'APPLICATION_JSON',
                            httpMode: 'POST',
                            requestBody: jreq)
+        } catch (err) {
+            sleep 120
+            error(err)
+        }
     }
 
     return res.getHeaders()['X-Subject-Token'][0]
@@ -266,11 +282,19 @@ def shipyard_config_upload = {
             manifests += readFile it.path
         }
 
-        def res = httpRequest (url: "${SHIPYARD_URL}/configdocs/${SITE_NAME}?buffermode=replace",
+        def res
+        retry(3) {
+            try {
+                res = httpRequest (url: "${SHIPYARD_URL}/configdocs/${SITE_NAME}?buffermode=replace",
                                httpMode: 'POST',
                                customHeaders: [[name: 'Content-Type', value: 'application/x-yaml'],
                                                [name: 'X-Auth-Token', value: token]],
                                requestBody: manifests)
+            } catch (err) {
+                sleep 120
+                error(err)
+            }
+        }
 
         if (res.status != 201) {
             error("Failed to upload configdocs: ${res.status}")
@@ -388,7 +412,6 @@ def shipyard_action_create = { action ->
 
 def shipyard_deploy = { action ->
     try {
-
         shipyard_config_upload()
         shipyard_action_create(action)
 
@@ -397,14 +420,74 @@ def shipyard_deploy = { action ->
         error(err)
     }
 
-    sh 'sudo kubectl get pods --all-namespaces -o wide -a=false'
+    ssh_cmd 'sudo kubectl get pods --all-namespaces -o wide -a=false'
+    ssh_cmd 'sudo kubectl get pods --all-namespaces -o wide -a=false |grep kubernetes-proxy'
+}
+
+
+//// uplift utils
+
+def uplift_versions = {
+
+    sh 'sudo apt-get install python3-yaml python3-git -y'
+
+    sh 'tools/updater.py --in-file global/software/config/versions.yaml'
+    sh 'git diff'
+}
+
+def uplift_review = {
+    withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-uplifter-key',
+            keyFileVariable: 'SSH_KEY',
+            usernameVariable: 'SSH_USER')]) {
+
+        sh 'sudo apt-get install git-review -y'
+
+        sh "cp ${SSH_KEY} ~/.ssh/id_rsa"
+
+        sh "ssh-keyscan -p 29418 review.openstack.org >> ~/.ssh/known_hosts"
+
+        sh "git clone ssh://${SSH_USER}@review.openstack.org:29418/openstack/airship-treasuremap"
+        sh "scp -p -P 29418 ${SSH_USER}@review.openstack.org:hooks/commit-msg airship-treasuremap/.git/hooks/"
+
+        sh "cp global/software/config/versions.yaml airship-treasuremap/global/software/config/versions.yaml"
+
+        dir ('airship-treasuremap') {
+            sh "git config --global user.name 'Jenkins Uplifter'"
+            sh "git config --global user.email ${SSH_USER}@gmail.com"
+            sh "git config --global gitreview.username ${SSH_USER}"
+
+            sh 'git checkout -b versions/uplift'
+
+            sh 'git add global/software/config/versions.yaml'
+            sh 'git status'
+            sh 'git commit -m "Auto chart/image uplift to latest"'
+
+            sh 'git review -s'
+            sh 'git review'
+        }
+    }
+}
+
+
+//// test utils
+
+def sanity_tests = {
+    stage('Sanity Tests') {
+
+        sh 'sudo apt-get install nmap -y'
+
+        withEnv(['TERM_OPTS=-i',
+                 'OSH_EXT_SUBNET=',
+                 'OSH_BR_EX_ADDR=']) {
+            sh 'tools/tests.sh'
+        }
+    }
 }
 
 
 //// main flow
 
 vm2() {
-
     // wait and make sure genesis is up, and remove docker
     // this ensures no containers are running after reboot
     gen_wait()
@@ -416,6 +499,11 @@ vm2() {
     reset_bare_metal()
 
     clone(AIRSHIP_MANIFESTS_REPO, AIRSHIP_MANIFESTS_REF)
+
+    // use updater tool to pull latest charts/images
+    if (AIRSHIP_MANIFESTS_REF == 'latest') {
+        uplift_versions()
+    }
 
     resolve_versions()
 
@@ -429,6 +517,14 @@ vm2() {
     genesis_cleanup()
     genesis_deploy()
 
-    shipyard_deploy('deploy_site')
+    timeout(240) {
+        shipyard_deploy('deploy_site')
+    }
+
+    sanity_tests()
+
+    if (AIRSHIP_MANIFESTS_REF == 'latest') {
+        uplift_review()
+    }
 }
 
