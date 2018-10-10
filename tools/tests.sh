@@ -97,7 +97,7 @@ ssh -i ${OSH_VM_KEY_STACK} cirros@${FLOATING_IP} ping -q -c 1 -W 2 ${OSH_EXT_GAT
 ssh -i ${OSH_VM_KEY_STACK} cirros@${FLOATING_IP} curl --verbose --connect-timeout 5 169.254.169.254
 
 # Check the VM can reach the keystone server
-ssh -i ${OSH_VM_KEY_STACK} cirros@${FLOATING_IP} curl --verbose --connect-timeout 5 identity.airship-seaworthy.atlantafoundry.com
+ssh -i ${OSH_VM_KEY_STACK} cirros@${FLOATING_IP} curl --verbose --connect-timeout 5 identity.atlantafoundry.com
 
 # Check to see if cinder has been deployed, if it has then perform a volume attach.
 if tools/openstack service list -f value -c Type | grep -q "^volume"; then

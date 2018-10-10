@@ -138,7 +138,7 @@ data:
     # NEWSITE-CHANGEME: FQDN for bare metal nodes.
     # Choose FQDN according to the node FQDN naming conventions at the top of
     # this document.
-    domain: airship-seaworthy.atlantafoundry.com
+    domain: atlantafoundry.com
     # List of upstream DNS forwards. Verify you can reach them from your
     # environment. If so, you should not need to change them.
     # TODO: This should be populated via substitution from common-addresses
@@ -211,7 +211,7 @@ data:
     # NEWSITE-CHANGEME: FQDN for bare metal nodes.
     # Choose FQDN according to the node FQDN naming conventions at the top of
     # this document.
-    domain: airship-seaworthy.atlantafoundry.com
+    domain: atlantafoundry.com
     # List of upstream DNS forwards. Verify you can reach them from your
     # environment. If so, you should not need to change them.
     # TODO: This should be populated via substitution from common-addresses

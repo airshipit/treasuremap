@@ -26,7 +26,7 @@ clouds:
      project_name: 'admin'
      project_domain_name: 'default'
      user_domain_name: 'default'
-     auth_url: 'http://identity.airship-seaworthy.atlantafoundry.com/v3'
+     auth_url: 'http://identity.atlantafoundry.com/v3'
 EOF
 fi
 

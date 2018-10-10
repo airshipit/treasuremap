@@ -85,7 +85,7 @@ data:
         type: git
       proxy:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: 6133b489d4605d70874a68791c7f27b77bf9e024
+        reference: 9f2e6b89e1882560273caa380fd7e49b4cff05e2
         subpath: charts/proxy
         type: git
       proxy-htk:
