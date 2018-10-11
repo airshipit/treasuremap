@@ -633,14 +633,6 @@ Then use the container ID returned from the last command as follows:
     sudo docker start sstream
     sudo docker exec -it sstream /bin/bash
 
-In the container, install the ``file`` package. Define any proxy
-environment variables needed for your environment to reach public ubuntu
-package repos, then run:
-
-::
-
-    apt -y install file
-
 In the container, ``cd`` to the following location (substituting for the
 platform image and platform kernel identified in the host profile
 previously, and choosing the folder corresponding to the most current
@@ -658,9 +650,10 @@ This will produce the complete kernel version. E.g.:
 
     Linux kernel x86 boot executable bzImage, version 4.13.0-43-generic (buildd@lcy01-amd64-029) #48~16.04.1-Ubuntu S, RO-rootFS, swap_dev 0x7, Normal VGA
 
-In this example, the kernel version is ``4.13.0-43-generic``. Now
-install the matching kernel on the Genesis host (make sure to run on
-Genesis host, not the build host):
+In this example, the kernel version is ``4.13.0-43-generic``. Define any proxy
+environment variables needed for your environment to reach public ubuntu
+package repos, and install the matching kernel on the Genesis host (make sure
+to run on Genesis host, not on the build host):
 
 ::
 
