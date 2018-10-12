@@ -75,6 +75,10 @@ data:
       ceph-osd: enabled
       ceph-mds: enabled
       ceph-rgw: enabled
+      tenant-ceph-control-plane: enabled
+      tenant-ceph-mon: enabled
+      tenant-ceph-rgw: enabled
+      tenant-ceph-mgr: enabled
       ucp-maas: enabled
       kube-dns: enabled
       kubernetes-apiserver: enabled

@@ -98,6 +98,10 @@ data:
       - ceph-osd=enabled
       - ceph-rgw=enabled
       - ceph-mgr=enabled
+      - tenant-ceph-control-plane=enabled
+      - tenant-ceph-mon=enabled
+      - tenant-ceph-rgw=enabled
+      - tenant-ceph-mgr=enabled
       - kube-dns=enabled
       - kube-ingress=enabled
       - kubernetes-apiserver=enabled

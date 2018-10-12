@@ -21,6 +21,6 @@ data:
         target:
           # NEWSITE-CHANGEME: Total number of OSDs. Does not need to change if
           # your HW matches this site's HW. Verify for your environment.
-          # 8 OSDs per node x 4 nodes = 32
-          osd: 32
+          # 8 OSDs per node x 3 nodes = 24
+          osd: 24
 ...

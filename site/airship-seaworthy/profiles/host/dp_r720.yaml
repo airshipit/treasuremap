@@ -74,14 +74,20 @@ data:
               mountpoint: '/var'
               fstype: 'ext4'
               mount_options: 'defaults'
-      cephjournal:
+
+      cephjournal1:
         partitions:
-          - name: 'cephj'
-            size: '100g'
-            filesystem:
-              mountpoint: '/var/lib/ceph/dp'
-              fstype: 'xfs'
-              mount_options: 'defaults'
+          - name: 'ceph-j1'
+            size: '10g'
+          - name: 'ceph-j2'
+            size: '10g'
+      cephjournal2:
+        partitions:
+          - name: 'ceph-j3'
+            size: '10g'
+          - name: 'ceph-j4'
+            size: '10g'
+
       ephemeral:
         partitions:
           - name: 'nova'

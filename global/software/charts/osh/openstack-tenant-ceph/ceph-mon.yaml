@@ -2,17 +2,19 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: tenant-ceph-rgw
+  name: tenant-ceph-mon
   layeringDefinition:
     abstract: false
     layer: global
   storagePolicy: cleartext
+  labels:
+    name: tenant-ceph-mon
   substitutions:
     # Chart source
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .charts.ucp.tenant-ceph-rgw
+        path: .charts.ucp.tenant-ceph-mon
       dest:
         path: .source
 
@@ -20,7 +22,7 @@ metadata:
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .images.ceph.tenant-ceph-rgw
+        path: .images.ceph.tenant-ceph-mon
       dest:
         path: .values.images.tags
 
@@ -37,8 +39,6 @@ metadata:
         path: .storage.ceph.cluster_cidr
       dest:
         path: .values.network.cluster
-
-    # Endpoints
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: osh_endpoints
@@ -59,12 +59,16 @@ metadata:
         path: .values.endpoints.ceph_mon
     - src:
         schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.fluentd
+      dest:
+        path: .values.endpoints.fluentd
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
         name: ucp_endpoints
         path: .ceph.tenant_ceph_mgr
       dest:
         path: .values.endpoints.ceph_mgr
-
-    # Credentials
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
@@ -91,15 +95,23 @@ metadata:
         schema: deckhand/Passphrase/v1
         name: ceph_swift_keystone_password
         path: .
+    - dest:
+       path: .values.conf.ceph.global.fsid
+      src:
+        schema: deckhand/Passphrase/v1
+        name: tenant_ceph_fsid
+        path: .
 
 data:
-  chart_name: tenant-ceph-rgw
-  release: tenant-ceph-rgw
-  namespace: openstack
+  chart_name: tenant-ceph-mon
+  release: tenant-ceph-mon
+  namespace: tenant-ceph
+  protected:
+    continue_processing: true
   wait:
-    timeout: 900
+    timeout: 1800
     labels:
-      release_group: airship-tenant-ceph-rgw
+      release_group: airship-tenant-ceph-mon
   install:
     no_hooks: false
   upgrade:
@@ -108,14 +120,16 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-tenant-ceph-rgw
+            release_group: airship-tenant-ceph-mon
   values:
+    logging:
+      fluentd: true
     labels:
       job:
         node_selector_key: tenant-ceph-control-plane
         node_selector_value: enabled
-      rgw:
-        node_selector_key: tenant-ceph-rgw
+      mon:
+        node_selector_key: tenant-ceph-mon
         node_selector_value: enabled
     endpoints:
       identity:
@@ -124,28 +138,25 @@ data:
         namespace: openstack
       ceph_mon:
         namespace: tenant-ceph
+      ceph_mgr:
+        namespace: tenant-ceph
+      fluentd:
+        namespace: osh-infra
+    monitoring:
+      ceph_mgr:
+        port: 9284
+    conf:
+      storage:
+        mon:
+          directory: /var/lib/openstack-helm/tenant-ceph/mon
+    storageclass:
+      rbd:
+        admin_secret_namespace: tenant-ceph
     deployment:
       ceph: true
-      client_secrets: false
-      rbd_provisioner: false
-      cephfs_provisioner: false
-      rgw_keystone_user_and_endpoints: true
+      storage_secrets: true
     bootstrap:
-      enabled: false
-    pod:
-      replicas:
-        rgw: 2
-    conf:
-      rgw_ks:
-        enabled: true
-      config:
-          #NOTE (portdirect): See http://tracker.ceph.com/issues/21226
-          rgw_keystone_token_cache_size: '0'
-    ceph_client:
-      configmap: tenant-ceph-etc
-    secrets:
-      keyrings:
-        admin: pvc-tceph-client-key
+      enabled: true
   dependencies:
     - tenant-ceph-htk
 ...

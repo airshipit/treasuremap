@@ -175,13 +175,13 @@ data:
       address: 10.23.22.14
   # NEWSITE-CHANGEME: The next node's host profile
   # This is the third "primary" control plane profile after genesis
-  host_profile: cp_r740-secondary
+  host_profile: dp_r720
   metadata:
     # NEWSITE-CHANGEME: The next node's rack designation
     rack: cab23
     # NEWSITE-CHANGEME: The next node's role desigatnion
     tags:
-      - 'masters'
+      - 'workers'
 ...
 ---
 schema: 'drydock/BaremetalNode/v1'

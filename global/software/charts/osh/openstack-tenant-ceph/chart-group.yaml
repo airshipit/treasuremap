@@ -1,0 +1,19 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-tenant-ceph
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: Ceph Storage
+  sequenced: true
+  chart_group:
+    - tenant-ceph-ingress
+    - tenant-ceph-mon
+    - tenant-ceph-osd
+    - tenant-ceph-client
+    - tenant-ceph-config
+...

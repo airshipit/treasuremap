@@ -1,0 +1,64 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: tenant-ceph-ingress
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.ingress
+      dest:
+        path: .source
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.ingress
+      dest:
+        path: .values.images.tags
+data:
+  chart_name: tenant-ceph-ingress
+  release: tenant-ceph-ingress
+  namespace: tenant-ceph
+  wait:
+    timeout: 300
+    labels:
+      release_group: airship-tenant-ceph-ingress
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: airship-tenant-ceph-ingress
+  values:
+    conf:
+      ingress:
+        proxy-body-size: 20m
+    labels:
+      server:
+        node_selector_key: tenant-ceph-control-plane
+        node_selector_value: enabled
+      error_server:
+        node_selector_key: tenant-ceph-control-plane
+        node_selector_value: enabled
+    pod:
+      replicas:
+        ingress: 2
+        error_page: 2
+    network:
+      ingress:
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-body-size: 20m
+          nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+  dependencies:
+    - ucp-ingress-htk
+...

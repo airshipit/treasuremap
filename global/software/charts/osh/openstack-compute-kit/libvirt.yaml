@@ -44,5 +44,8 @@ data:
         libvirt:
           node_selector_key: openstack-libvirt
           node_selector_value: kernel
+    ceph_client:
+      configmap: tenant-ceph-etc
+      user_secret_name: pvc-tceph-client-key
   dependencies:
     - osh-helm-toolkit

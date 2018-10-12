@@ -37,6 +37,7 @@ data:
     - osh-infra-dashboards
     - openstack-ingress-controller
     - openstack-ceph-config
+    - openstack-tenant-ceph
     - openstack-mariadb
     - openstack-memcached
     - openstack-compute-services

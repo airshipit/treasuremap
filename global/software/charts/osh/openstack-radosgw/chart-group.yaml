@@ -10,4 +10,5 @@ metadata:
 data:
   description: Deploy Radosgw
   chart_group:
-    - radosgw
+    - tenant-ceph-rgw
+...

@@ -2,7 +2,7 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: tenant-ceph-rgw
+  name: tenant-ceph-config
   layeringDefinition:
     abstract: false
     layer: global
@@ -12,7 +12,7 @@ metadata:
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .charts.ucp.tenant-ceph-rgw
+        path: .charts.ucp.tenant-ceph-provisioners
       dest:
         path: .source
 
@@ -20,7 +20,7 @@ metadata:
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .images.ceph.tenant-ceph-rgw
+        path: .images.ceph.tenant-ceph-provisioners
       dest:
         path: .values.images.tags
 
@@ -93,13 +93,13 @@ metadata:
         path: .
 
 data:
-  chart_name: tenant-ceph-rgw
-  release: tenant-ceph-rgw
+  chart_name: tenant-ceph-config
+  release: tenant-ceph-config
   namespace: openstack
   wait:
     timeout: 900
     labels:
-      release_group: airship-tenant-ceph-rgw
+      release_group: airship-tenant-ceph-config
   install:
     no_hooks: false
   upgrade:
@@ -108,44 +108,40 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-tenant-ceph-rgw
+            release_group: airship-tenant-ceph-config
   values:
     labels:
       job:
         node_selector_key: tenant-ceph-control-plane
         node_selector_value: enabled
+      provisioner:
+        node_selector_key: tenant-ceph-control-plane
+        node_selector_value: enabled
+      mds:
+        node_selector_key: tenant-ceph-mds
+        node_selector_value: enabled
       rgw:
         node_selector_key: tenant-ceph-rgw
         node_selector_value: enabled
-    endpoints:
-      identity:
-        namespace: openstack
-      object_store:
-        namespace: openstack
-      ceph_mon:
-        namespace: tenant-ceph
+      mgr:
+        node_selector_key: tenant-ceph-mgr
+        node_selector_value: enabled
     deployment:
-      ceph: true
-      client_secrets: false
+      ceph: false
+      client_secrets: true
       rbd_provisioner: false
       cephfs_provisioner: false
-      rgw_keystone_user_and_endpoints: true
+      rgw_keystone_user_and_endpoints: false
     bootstrap:
       enabled: false
-    pod:
-      replicas:
-        rgw: 2
     conf:
       rgw_ks:
         enabled: true
-      config:
-          #NOTE (portdirect): See http://tracker.ceph.com/issues/21226
-          rgw_keystone_token_cache_size: '0'
-    ceph_client:
-      configmap: tenant-ceph-etc
-    secrets:
-      keyrings:
-        admin: pvc-tceph-client-key
+    storageclass:
+      rbd:
+        ceph_configmap_name: tenant-ceph-etc
+        user_secret_name: pvc-tceph-client-key
+        admin_secret_namespace: tenant-ceph
   dependencies:
     - tenant-ceph-htk
 ...

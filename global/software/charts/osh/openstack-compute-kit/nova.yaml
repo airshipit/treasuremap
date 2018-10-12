@@ -329,6 +329,9 @@ data:
         consoleauth: 1
         scheduler: 1
         novncproxy: 1
+    ceph_client:
+      configmap: tenant-ceph-etc
+      user_secret_name: pvc-tceph-client-key
     conf:
       logging:
         loggers:

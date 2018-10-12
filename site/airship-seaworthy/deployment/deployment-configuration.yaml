@@ -36,6 +36,6 @@ data:
     get_releases_timeout: 300
     get_status_timeout: 300
     manifest: 'full-site'
-    post_apply_timeout: 2700
+    post_apply_timeout: 7200
     validate_design_timeout: 600
 ...

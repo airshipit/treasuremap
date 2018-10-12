@@ -256,6 +256,36 @@ data:
         reference: 922d7d3d26b15d1d25e40ba1528337002ae15b0c
         subpath: helm-toolkit
         type: git
+      tenant-ceph-client:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 922d7d3d26b15d1d25e40ba1528337002ae15b0c
+        subpath: ceph-client
+        type: git
+      tenant-ceph-htk:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 922d7d3d26b15d1d25e40ba1528337002ae15b0c
+        subpath: helm-toolkit
+        type: git
+      tenant-ceph-mon:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 922d7d3d26b15d1d25e40ba1528337002ae15b0c
+        subpath: ceph-mon
+        type: git
+      tenant-ceph-osd:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 922d7d3d26b15d1d25e40ba1528337002ae15b0c
+        subpath: ceph-osd
+        type: git
+      tenant-ceph-provisioners:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 922d7d3d26b15d1d25e40ba1528337002ae15b0c
+        subpath: ceph-provisioners
+        type: git
+      tenant-ceph-rgw:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 922d7d3d26b15d1d25e40ba1528337002ae15b0c
+        subpath: ceph-rgw
+        type: git
       ceph-client:
         location: https://git.openstack.org/openstack/openstack-helm-infra
         reference: 922d7d3d26b15d1d25e40ba1528337002ae15b0c
@@ -430,44 +460,16 @@ data:
         etcd: quay.io/coreos/etcd:v3.2.14
         etcdctl: quay.io/coreos/etcd:v3.2.14
     ceph:
-      ceph-client:
-        ceph_bootstrap: docker.io/ceph/daemon:tag-build-master-luminous-ubuntu-16.04
-        ceph_config_helper: docker.io/port/ceph-config-helper:v1.10.2
-        ceph_mds: docker.io/ceph/daemon:tag-build-master-luminous-ubuntu-16.04
-        ceph_mgr: docker.io/ceph/daemon:tag-build-master-luminous-ubuntu-16.04
-        ceph_rbd_pool: docker.io/port/ceph-config-helper:v1.10.2
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        image_repo_sync: docker.io/docker:17.07.0
-      ceph-mon:
-        ceph_bootstrap: docker.io/ceph/daemon:tag-build-master-luminous-ubuntu-16.04
-        ceph_config_helper: docker.io/port/ceph-config-helper:v1.10.2
-        ceph_mon: docker.io/ceph/daemon:tag-build-master-luminous-ubuntu-16.04
-        ceph_mon_check: docker.io/port/ceph-config-helper:v1.10.2
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        fluentbit: docker.io/fluent/fluent-bit:0.12.14
-        image_repo_sync: docker.io/docker:17.07.0
-      ceph-osd:
-        ceph_bootstrap: docker.io/ceph/daemon:tag-build-master-luminous-ubuntu-16.04
-        ceph_osd: docker.io/ceph/daemon:tag-build-master-luminous-ubuntu-16.04
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        fluentbit: docker.io/fluent/fluent-bit:0.12.14
-        image_repo_sync: docker.io/docker:17.07.0
-      ceph-provisioners:
-        ceph_bootstrap: docker.io/ceph/daemon:tag-build-master-luminous-ubuntu-16.04
-        ceph_cephfs_provisioner: quay.io/external_storage/cephfs-provisioner:v0.1.1
-        ceph_config_helper: docker.io/port/ceph-config-helper:v1.10.2
-        ceph_rbd_provisioner: quay.io/external_storage/rbd-provisioner:v0.1.1
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        image_repo_sync: docker.io/docker:17.07.0
-      ceph-rgw:
-        ceph_config_helper: docker.io/port/ceph-config-helper:v1.10.2
-        ceph_rgw: docker.io/ceph/daemon:tag-build-master-luminous-ubuntu-16.04
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        image_repo_sync: docker.io/docker:17.07.0
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
-        rgw_s3_admin: docker.io/port/ceph-config-helper:v1.10.2
+      ceph-client: {}
+      ceph-mon: {}
+      ceph-osd: {}
+      ceph-provisioners: {}
+      ceph-rgw: {}
+      tenant-ceph-client: {}
+      tenant-ceph-mon: {}
+      tenant-ceph-osd: {}
+      tenant-ceph-provisioners: {}
+      tenant-ceph-rgw: {}
     kubernetes:
       apiserver:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.10.2

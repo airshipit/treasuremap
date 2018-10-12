@@ -320,6 +320,29 @@ data:
           default: 7000
       scheme:
         default: "http"
+    tenant_ceph_mon:
+      namespace: tenant-ceph
+      hosts:
+        default: ceph-mon
+        discovery: ceph-mon-discovery
+      host_fqdn_override:
+        default: null
+      port:
+        mon:
+          default: 6790
+    tenant_ceph_mgr:
+      namespace: tenant-ceph
+      hosts:
+        default: ceph-mgr
+      host_fqdn_override:
+        default: null
+      port:
+        mgr:
+          default: 7001
+        metrics:
+          default: 9284
+      scheme:
+        default: http
 ...
 ---
 schema: pegleg/EndpointCatalogue/v1
@@ -427,7 +450,7 @@ data:
   osh:
     object_store:
       name: swift
-      namespace: ceph
+      namespace: openstack
       hosts:
         default: ceph-rgw
         public: radosgw
@@ -446,7 +469,7 @@ data:
           public: 443
     ceph_object_store:
       name: radosgw
-      namespace: ceph
+      namespace: openstack
       hosts:
         default: ceph-rgw
         public: radosgw

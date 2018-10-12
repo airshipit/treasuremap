@@ -1,0 +1,23 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: tenant-ceph-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.tenant-ceph-htk
+      dest:
+        path: .source
+data:
+  chart_name: tenant-ceph-htk
+  release: tenant-ceph-htk
+  namespace: tenant-ceph-htk
+  values: {}
+  dependencies: []
+...

@@ -220,6 +220,9 @@ data:
       registry:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
+    ceph_client:
+      configmap: tenant-ceph-etc
+      user_secret_name: pvc-tceph-client-key
     conf:
       logging:
         loggers:

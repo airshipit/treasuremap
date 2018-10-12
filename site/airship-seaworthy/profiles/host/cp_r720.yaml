@@ -75,14 +75,27 @@ data:
               mountpoint: '/var'
               fstype: 'ext4'
               mount_options: 'defaults'
-      cephjournal:
+
+      cephjournal1:
         partitions:
-          - name: 'cephj'
-            size: '100g'
-            filesystem:
-              mountpoint: '/var/lib/ceph/cp'
-              fstype: 'xfs'
-              mount_options: 'defaults'
+          - name: 'ceph-j1'
+            size: '10g'
+          - name: 'ceph-j2'
+            size: '10g'
+          - name: 'ceph-j3'
+            size: '10g'
+          - name: 'ceph-j4'
+            size: '10g'
+      cephjournal2:
+        partitions:
+          - name: 'ceph-j5'
+            size: '10g'
+          - name: 'ceph-j6'
+            size: '10g'
+          - name: 'ceph-j7'
+            size: '10g'
+          - name: 'ceph-j8'
+            size: '10g'
 
   platform:
     kernel: 'hwe-16.04'
@@ -168,14 +181,27 @@ data:
               mountpoint: '/var'
               fstype: 'ext4'
               mount_options: 'defaults'
-      cephjournal:
+
+      cephjournal1:
         partitions:
-          - name: 'cephj'
-            size: '100g'
-            filesystem:
-              mountpoint: '/var/lib/ceph/cp'
-              fstype: 'xfs'
-              mount_options: 'defaults'
+          - name: 'ceph-j1'
+            size: '10g'
+          - name: 'ceph-j2'
+            size: '10g'
+          - name: 'ceph-j3'
+            size: '10g'
+          - name: 'ceph-j4'
+            size: '10g'
+      cephjournal2:
+        partitions:
+          - name: 'ceph-j5'
+            size: '10g'
+          - name: 'ceph-j6'
+            size: '10g'
+          - name: 'ceph-j7'
+            size: '10g'
+          - name: 'ceph-j8'
+            size: '10g'
 
   platform:
     kernel: 'hwe-16.04'
@@ -210,6 +236,10 @@ data:
       ceph-rgw: enabled
       ucp-maas: enabled
       kube-dns: enabled
+      tenant-ceph-control-plane: enabled
+      # tenant-ceph-mon: enabled
+      tenant-ceph-rgw: enabled
+      tenant-ceph-mgr: enabled
       kubernetes-apiserver: enabled
       kubernetes-controller-manager: enabled
       # kubernetes-etcd: enabled

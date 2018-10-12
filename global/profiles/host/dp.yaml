@@ -52,6 +52,7 @@ data:
   metadata:
     owner_data:
       openstack-nova-compute: enabled
+      tenant-ceph-osd: enabled
       openvswitch: enabled
       contrail-vrouter: kernel
       openstack-libvirt: kernel

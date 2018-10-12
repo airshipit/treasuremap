@@ -59,13 +59,18 @@ data:
       dev_type: 'PERC H710P'
       bus_type: 'scsi'
     # /dev/sdb
-    cephjournal:
+    cephjournal1:
       address: '0:2.1.0'
       dev_type: 'PERC H710P'
       bus_type: 'scsi'
     # /dev/sdc
-    ephemeral:
+    cephjournal2:
       address: '0:2.2.0'
+      dev_type: 'PERC H710P'
+      bus_type: 'scsi'
+    # /dev/sdc
+    ephemeral:
+      address: '0:2.3.0'
       dev_type: 'PERC H710P'
       bus_type: 'scsi'
 ...
