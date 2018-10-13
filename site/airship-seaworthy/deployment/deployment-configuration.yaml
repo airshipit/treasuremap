@@ -19,7 +19,7 @@ data:
     deploy_timeout: 3600
     destroy_interval: 30
     destroy_timeout: 900
-    join_wait: 120
+    join_wait: 0
     prepare_node_interval: 30
     prepare_node_timeout: 1800
     prepare_site_interval: 10
