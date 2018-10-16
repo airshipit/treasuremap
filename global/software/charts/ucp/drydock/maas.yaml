@@ -155,7 +155,7 @@ data:
   release: maas
   namespace: ucp
   wait:
-    timeout: 600
+    timeout: 1800
     labels:
       release_group: airship-maas
   install:
@@ -179,6 +179,10 @@ data:
       proxy:
         node_port:
           enabled: true
+    jobs:
+      import_boot_resources:
+        timeout: 1800
+
     conf:
       cache:
         enabled: true
