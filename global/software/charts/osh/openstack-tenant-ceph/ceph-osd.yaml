@@ -59,12 +59,6 @@ metadata:
         path: .values.endpoints.ceph_mon
     - src:
         schema: pegleg/EndpointCatalogue/v1
-        name: osh_infra_endpoints
-        path: .osh_infra.fluentd
-      dest:
-        path: .values.endpoints.fluentd
-    - src:
-        schema: pegleg/EndpointCatalogue/v1
         name: ucp_endpoints
         path: .ceph.tenant_ceph_mgr
       dest:
@@ -117,8 +111,6 @@ data:
   upgrade:
     no_hooks: false
   values:
-    logging:
-      fluentd: true
     labels:
       osd:
         node_selector_key: tenant-ceph-osd

@@ -13,7 +13,7 @@ data:
   chart_group:
     - ucp-ceph-ingress
     - ucp-ceph-mon
-    - ucp-ceph-osd-update
+    - ucp-ceph-osd
     - ucp-ceph-client-update
     - ucp-ceph-provisioners
     - ucp-ceph-rgw

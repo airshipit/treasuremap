@@ -18,10 +18,6 @@ metadata:
   storagePolicy: cleartext
 data:
   values:
-    labels:
-      osd:
-        node_selector_key: ceph-bootstrap
-        node_selector_value: enabled
     conf:
       storage:
         # NEWSITE-CHANGEME: The OSD count and configuration here should not need
