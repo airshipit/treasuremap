@@ -1,0 +1,19 @@
+---
+schema: 'deckhand/DataSchema/v1'
+metadata:
+  schema: metadata/Control/v1
+  name: pegleg/SeccompProfile/v1
+  labels:
+    application: pegleg
+data:
+  $schema: 'http://json-schema.org/schema#'
+  type: 'object'
+  additionalProperties: false
+  properties:
+    seccompDirPath:
+      type: 'string'
+    savePath:
+      type: 'string'
+    content:
+      type: 'string'
+  required: ['seccompDirPath', 'savePath', 'content']
