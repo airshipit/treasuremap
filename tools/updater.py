@@ -92,6 +92,26 @@ image_repo_status = {}
 dict_path = None
 
 
+def __represent_multiline_yaml_str():
+    """Compel ``yaml`` library to use block style literals for multi-line
+    strings to prevent unwanted multiple newlines.
+
+    """
+
+    yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str
+
+    def repr_str(dumper, data):
+        if '\n' in data:
+            return dumper.represent_scalar(
+                'tag:yaml.org,2002:str', data, style='|')
+        return dumper.org_represent_str(data)
+
+    yaml.add_representer(str, repr_str, Dumper=yaml.SafeDumper)
+
+
+__represent_multiline_yaml_str()
+
+
 def inverse_dict(dic):
     """Accepts dictionary, returns dictionary where keys become values,
     and values become keys"""
