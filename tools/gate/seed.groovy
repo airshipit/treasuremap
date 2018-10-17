@@ -4,9 +4,13 @@ pipelineJob('airship-seaworthy') {
     displayName('Airship Seaworthy')
     description('Bare-metal continuous deployment pipeline')
 
+    logRotator {
+        daysToKeep(30)
+    }
+
     parameters {
         string {
-            defaultValue("master")
+            defaultValue("uplift")
             description("Reference to airship-treasuremap, e.g. refs/changes/12/12345/12")
             name("AIRSHIP_MANIFESTS_REF")
             trim(true)
@@ -19,6 +23,8 @@ pipelineJob('airship-seaworthy') {
     triggers {
         gerritTrigger {
             serverName('OS-CommunityGerrit')
+            silentMode(true)
+
             gerritProjects {
                 gerritProject {
                     compareType('PLAIN')
@@ -47,6 +53,7 @@ pipelineJob('airship-seaworthy') {
                     }
                 }
             }
+
             triggerOnEvents {
                 patchsetCreated {
                     excludeDrafts(false)
@@ -57,6 +64,8 @@ pipelineJob('airship-seaworthy') {
                     commentAddedCommentContains('recheck')
                 }
             }
+
+            cron('H H * * *')
         }
 
         definition {

@@ -24,7 +24,7 @@ GENESIS_IP = '10.23.21.11'
 GENESIS_CREDS = 'airship-seaworthy-key'
 
 GENESIS_IPMI_IP = '10.23.104.11'
-GENESIS_CEPH_DISKS = ['c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
+GENESIS_CEPH_DISKS = ['d', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
 
 IPMI_IPS = ['10.23.104.12',
             '10.23.104.13',
@@ -32,13 +32,19 @@ IPMI_IPS = ['10.23.104.12',
             '10.23.104.17',
             '10.23.104.19']
 
+ARTF_PATH="cicd/${JOB_BASE_NAME}/${BUILD_NUMBER}"
+
 AIRSHIP_MANIFESTS_REPO = 'https://git.openstack.org/openstack/airship-treasuremap'
+DISPLAY_NAME = 'manual'
 
 if (env.GERRIT_REFSPEC) {
     AIRSHIP_MANIFESTS_REF = GERRIT_REFSPEC
+    DISPLAY_NAME = GERRIT_EVENT_TYPE
+} else if (AIRSHIP_MANIFESTS_REF == 'uplift') {
+    DISPLAY_NAME = 'uplift'
 }
 
-ARTF_PATH="cicd/${JOB_BASE_NAME}/${BUILD_NUMBER}"
+currentBuild.displayName = "#${BUILD_NUMBER} ${DISPLAY_NAME}"
 
 
 //// git utils
@@ -52,7 +58,8 @@ def clone(String url, String ref){
         refspec = "${ref}:${ref}"
     }
 
-    if (ref == 'latest') {
+    // base uplift on latest master
+    if (ref == 'uplift') {
         ref = 'master'
     }
 
@@ -66,51 +73,6 @@ def clone(String url, String ref){
          url: url ]]]
 }
 
-//// ssh utils
-
-def ssh_cmd = { cmd ->
-
-    withCredentials([sshUserPrivateKey(credentialsId: GENESIS_CREDS,
-            keyFileVariable: 'SSH_KEY',
-            usernameVariable: 'SSH_USER')]) {
-
-        sh "ssh -i ${SSH_KEY} ${SSH_USER}@${GENESIS_IP} ${cmd}"
-    }
-}
-
-def scp_put = { src, dst ->
-
-    withCredentials([sshUserPrivateKey(credentialsId: GENESIS_CREDS,
-            keyFileVariable: 'SSH_KEY',
-            usernameVariable: 'SSH_USER')]) {
-
-        sh "scp -i ${SSH_KEY} ${src} ${SSH_USER}@${GENESIS_IP}:${dst}"
-    }
-}
-
-def scp_get = { src, dst ->
-
-    withCredentials([sshUserPrivateKey(credentialsId: GENESIS_CREDS,
-            keyFileVariable: 'SSH_KEY',
-            usernameVariable: 'SSH_USER')]) {
-
-        sh "scp -i ${SSH_KEY} ${SSH_USER}@${GENESIS_IP}:${src} ${dst}"
-    }
-}
-
-def gen_wait = {
-    timeout (12) {
-        retry (12) {
-            try {
-                ssh_cmd ('-o StrictHostKeyChecking=no hostname')
-            } catch (err) {
-                sleep 60
-                error(err)
-            }
-        }
-    }
-}
-
 
 //// bare-metal utils
 
@@ -121,13 +83,18 @@ def reset_bare_metal = {
                                       usernameVariable: 'IUSER',
                                       passwordVariable: 'IPASS')]) {
 
-            sh "ipmitool -I lanplus -H ${GENESIS_IPMI_IP} -U \$IUSER -P \$IPASS chassis power off && sleep 11"
-            sh "ipmitool -I lanplus -H ${GENESIS_IPMI_IP} -U \$IUSER -P \$IPASS chassis power on"
+            def auth = redfish.getBasicAuth(IUSER, IPASS)
 
+            // power cycle genesis
+            redfish.powerOff(GENESIS_IPMI_IP, auth)
+            redfish.powerOn(GENESIS_IPMI_IP, auth)
+
+            // shutdown all other nodes
             IPMI_IPS.each() {
-                sh "ipmitool -I lanplus -H ${it} -U \$IUSER -P \$IPASS chassis power off"
+                redfish.powerOff(it, auth)
             }
         }
+
     }
 }
 
@@ -146,7 +113,7 @@ def resolve_versions = {
 def pegleg_site_collect = {
     stage('Pegleg Site Collect') {
 
-        configFileProvider([configFile(fileId: '04fefa7d-a12a-4308-be65-6776ad19bfbd',
+        configFileProvider([configFile(fileId: 'airship-seaworthy-site-definition',
             targetLocation: 'site/airship-seaworthy/site-definition.yaml')]) {
         }
 
@@ -162,7 +129,7 @@ def pegleg_site_collect = {
         }
 
         sh "tar czf site-config.tar.gz airship-seaworthy_yaml"
-        artifactory.upload('site-config.tar.gz', "${ARTF_PATH}/")
+        archiveArtifacts 'site-config.tar.gz'
     }
 }
 
@@ -176,7 +143,7 @@ def prom_config_gen = {
         sh "sudo docker run ${opts} ${PROMENADE_IMAGE} ${cmd}"
 
         sh 'tar czf promenade-bundle.tar.gz promenade-bundle'
-        artifactory.upload('promenade-bundle.tar.gz', "${ARTF_PATH}/")
+        archiveArtifacts 'promenade-bundle.tar.gz'
     }
 }
 
@@ -186,41 +153,56 @@ def prom_config_gen = {
 def genesis_cleanup = {
     stage('Genesis Cleanup') {
 
-        ssh_cmd 'rm -rf \\*'
+        dfiles = ['airship-promenade',
+                  'promenade-bundle',
+                  'promenade-bundle.tar.gz',
+                  'airship-seaworthy_yaml',
+                  'airship-seaworthy.tar.gz',
+                  'debug-cab23-r720-11.tgz',
+                  '/var/lib/docker',
+                  '/var/lib/kubelet']
 
-        ssh_cmd 'git clone https://git.openstack.org/openstack/airship-promenade'
-        ssh_cmd 'sudo -S airship-promenade/tools/cleanup.sh -f'
+        dfiles.each() {
+           ssh.cmd (GENESIS_CREDS, GENESIS_IP, "sudo rm -rf ${it}")
+        }
+
+        ssh.cmd (GENESIS_CREDS, GENESIS_IP,
+                'git clone https://git.openstack.org/openstack/airship-promenade')
+        ssh.cmd (GENESIS_CREDS, GENESIS_IP,
+                'sudo -S airship-promenade/tools/cleanup.sh -f')
 
         GENESIS_CEPH_DISKS.each() {
-            ssh_cmd "sudo parted -s /dev/sd${it} mklabel msdos"
+            ssh.cmd(GENESIS_CREDS, GENESIS_IP,
+                    "sudo parted -s /dev/sd${it} mklabel gpt")
         }
-        ssh_cmd 'sudo rm -rf /var/lib/ceph/cp'
-
-        ssh_cmd 'sudo rm -rf /var/lib/docker'
-        ssh_cmd 'sudo rm -rf /var/lib/kubelet'
-        ssh_cmd 'sudo rm -rf /var/lib/openstack-helm'
     }
 }
 
 def debug_report = {
-    ssh_cmd ('sudo debug-report.sh')
+    ssh.cmd (GENESIS_CREDS, GENESIS_IP, 'sudo debug-report.sh')
+    ssh.get (GENESIS_CREDS, GENESIS_IP, 'debug-cab23-r720-11.tgz', '.')
 
-    scp_get ('debug-cab23-r720-11.tgz', '.')
-    artifactory.upload("debug-cab23-r720-11.tgz", "${ARTF_PATH}/")
+    archiveArtifacts 'debug-cab23-r720-11.tgz'
 }
 
 def genesis_deploy = {
     stage('Genesis Deploy') {
 
         try {
-            scp_put('promenade-bundle.tar.gz', '')
-            ssh_cmd('tar xvzf promenade-bundle.tar.gz')
+
+            ssh.put(GENESIS_CREDS, GENESIS_IP, 'promenade-bundle.tar.gz', '.')
+            ssh.cmd(GENESIS_CREDS, GENESIS_IP, 'tar xvzf promenade-bundle.tar.gz')
 
             timeout (90) {
-                ssh_cmd 'sudo promenade-bundle/genesis.sh'
+                ssh.cmd(GENESIS_CREDS, GENESIS_IP,
+                           'sudo promenade-bundle/genesis.sh')
 
-                retry(3) {
-                    ssh_cmd 'sudo -S promenade-bundle/validate-genesis.sh'
+                // fixme: there is notable initial slowness likely due to coredns
+                // going out of service and taking time to recover
+                // this is a long time issue and needs to be taken look at
+                retry(2) {
+                    ssh.cmd(GENESIS_CREDS, GENESIS_IP,
+                            'sudo -S promenade-bundle/validate-genesis.sh')
                 }
             }
 
@@ -282,33 +264,41 @@ def shipyard_config_upload = {
             manifests += readFile it.path
         }
 
-        def res
         retry(3) {
+            def res
             try {
-                res = httpRequest (url: "${SHIPYARD_URL}/configdocs/${SITE_NAME}?buffermode=replace",
+                res = httpRequest (url: "${SHIPYARD_URL}/configdocs/${SITE_NAME}",
                                httpMode: 'POST',
                                customHeaders: [[name: 'Content-Type', value: 'application/x-yaml'],
                                                [name: 'X-Auth-Token', value: token]],
                                requestBody: manifests)
+
+            if (res.status != 201) {
+                error("Failed to upload configdocs: ${res.status}")
+            }
+            print res.content
+
             } catch (err) {
                 sleep 120
                 error(err)
             }
         }
-
-        if (res.status != 201) {
-            error("Failed to upload configdocs: ${res.status}")
-        }
-        print res.content
     }
 
     stage('Shipyard Config Commit') {
-        def res = httpRequest (url: "${SHIPYARD_URL}/commitconfigdocs", httpMode: 'POST',
-                               customHeaders: [[name: 'X-Auth-Token', value: token]])
-        if (res.status != 200) {
-            error("Failed to commit configdocs: ${res.status}")
+        retry(3) {
+            try {
+                def res = httpRequest (url: "${SHIPYARD_URL}/commitconfigdocs", httpMode: 'POST',
+                                       customHeaders: [[name: 'X-Auth-Token', value: token]])
+                if (res.status != 200) {
+                    error("Failed to commit configdocs: ${res.status}")
+                }
+                print res.content
+            } catch (err) {
+                sleep 120
+                error(err)
+            }
         }
-        print res.content
     }
 }
 
@@ -420,19 +410,20 @@ def shipyard_deploy = { action ->
         error(err)
     }
 
-    ssh_cmd 'sudo kubectl get pods --all-namespaces -o wide -a=false'
-    ssh_cmd 'sudo kubectl get pods --all-namespaces -o wide -a=false |grep kubernetes-proxy'
+    ssh.cmd(GENESIS_CREDS, GENESIS_IP,
+            'sudo kubectl get pods --all-namespaces -o wide -a=false')
 }
 
 
 //// uplift utils
 
 def uplift_versions = {
+    stage('Uplift Versions') {
+        sh 'sudo apt-get install python3-yaml python3-git -y'
 
-    sh 'sudo apt-get install python3-yaml python3-git -y'
-
-    sh 'tools/updater.py --in-file global/software/config/versions.yaml'
-    sh 'git diff'
+        sh 'tools/updater.py --in-file global/software/config/versions.yaml'
+        sh 'git diff'
+    }
 }
 
 def uplift_review = {
@@ -490,18 +481,19 @@ def sanity_tests = {
 vm2() {
     // wait and make sure genesis is up, and remove docker
     // this ensures no containers are running after reboot
-    gen_wait()
-    ssh_cmd('sudo apt-get remove docker-engine -y')
+    ssh.wait (GENESIS_CREDS, GENESIS_IP, 'hostname')
+    ssh.cmd (GENESIS_CREDS, GENESIS_IP,
+             'sudo apt-get remove docker-engine -y')
 
     sh 'sudo apt-get update'
-    sh 'sudo apt-get install docker.io ipmitool -y'
+    sh 'sudo apt-get install docker.io -y'
 
     reset_bare_metal()
 
     clone(AIRSHIP_MANIFESTS_REPO, AIRSHIP_MANIFESTS_REF)
 
     // use updater tool to pull latest charts/images
-    if (AIRSHIP_MANIFESTS_REF == 'latest') {
+    if (AIRSHIP_MANIFESTS_REF == 'uplift') {
         uplift_versions()
     }
 
@@ -511,7 +503,7 @@ vm2() {
     prom_config_gen()
 
     stage ('Genesis Wait') {
-        gen_wait()
+        ssh.wait (GENESIS_CREDS, GENESIS_IP, 'hostname')
     }
 
     genesis_cleanup()
@@ -523,7 +515,7 @@ vm2() {
 
     sanity_tests()
 
-    if (AIRSHIP_MANIFESTS_REF == 'latest') {
+    if (AIRSHIP_MANIFESTS_REF == 'uplift') {
         uplift_review()
     }
 }
