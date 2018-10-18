@@ -14,8 +14,9 @@ import groovy.json.JsonOutput
 
 PEGLEG_IMAGE = 'quay.io/airshipit/pegleg:73fbf264ca99b1a80c9e29e21048451716b630e7'
 
-KEYSTONE_URL = 'https://iam.atlantafoundry.com/v3/auth/tokens'
-SHIPYARD_URL = 'https://shipyard.atlantafoundry.com/api/v1.0'
+KEYSTONE_URL = 'https://iam.atlantafoundry.com'
+SHIPYARD_URL = 'https://shipyard.atlantafoundry.com'
+uuid = UUID.randomUUID().toString()
 
 SITE_NAME='airship-seaworthy'
 IPMI_CREDS = 'airship-seaworthy-ipmi'
@@ -124,11 +125,11 @@ def pegleg_site_collect = {
             sh "cp ${SSH_KEY} ssh-key"
 
             auth = "-u ${SSH_USER} -k /target/ssh-key"
-            cmd = "pegleg site ${auth} -r /target collect airship-seaworthy -s /target/airship-seaworthy_yaml"
+            cmd = "pegleg site ${auth} -r /target collect ${SITE_NAME} -s /target/${SITE_NAME}"
             sh "sudo docker run --rm -t -v \$(pwd):/target ${PEGLEG_IMAGE} ${cmd}"
         }
 
-        sh "tar czf site-config.tar.gz airship-seaworthy_yaml"
+        sh "tar czf site-config.tar.gz ${SITE_NAME}"
         archiveArtifacts 'site-config.tar.gz'
     }
 }
@@ -139,7 +140,7 @@ def prom_config_gen = {
         sh "mkdir -p promenade-bundle"
 
         opts = '--rm -t -w /target -v $(pwd):/target'
-        cmd = "promenade build-all --validators -o promenade-bundle airship-seaworthy_yaml/*.yaml"
+        cmd = "promenade build-all --validators -o promenade-bundle ${SITE_NAME}/*.yaml"
         sh "sudo docker run ${opts} ${PROMENADE_IMAGE} ${cmd}"
 
         sh 'tar czf promenade-bundle.tar.gz promenade-bundle'
@@ -156,7 +157,7 @@ def genesis_cleanup = {
         dfiles = ['airship-promenade',
                   'promenade-bundle',
                   'promenade-bundle.tar.gz',
-                  'airship-seaworthy_yaml',
+                  SITE_NAME,
                   'airship-seaworthy.tar.gz',
                   'debug-cab23-r720-11.tgz',
                   '/var/lib/docker',
@@ -216,194 +217,37 @@ def genesis_deploy = {
 }
 
 
-//// keystone utils
-
-def keystone_token = {
-
-    def req = ['auth': [
-               'identity': [
-                 'methods': ['password'],
-                 'password': [
-                   'user': ['name': 'shipyard',
-                            'domain': ['id': 'default'],
-                            'password': SHIPYARD_PASSWD]]]]]
-
-    def jreq = new JsonOutput().toJson(req)
-
-    def res
-
-    retry (3) {
-        try {
-            res = httpRequest (url: KEYSTONE_URL,
-                           contentType: 'APPLICATION_JSON',
-                           httpMode: 'POST',
-                           requestBody: jreq)
-        } catch (err) {
-            sleep 120
-            error(err)
-        }
-    }
-
-    return res.getHeaders()['X-Subject-Token'][0]
-}
-
-
 //// shipyard utils
+def shipyard_config_upload = {token ->
 
-def shipyard_config_upload = {
-
-    def token = keystone_token()
 
     stage('Shipyard Config Create') {
-
-        def manifests = ''
-        files = findFiles(glob: 'airship-seaworthy_yaml/')
-
-        files.each {
-            print "Reading file -> ${it}"
-            manifests += readFile it.path
-        }
-
-        retry(3) {
-            def res
-            try {
-                res = httpRequest (url: "${SHIPYARD_URL}/configdocs/${SITE_NAME}",
-                               httpMode: 'POST',
-                               customHeaders: [[name: 'Content-Type', value: 'application/x-yaml'],
-                                               [name: 'X-Auth-Token', value: token]],
-                               requestBody: manifests)
-
-            if (res.status != 201) {
-                error("Failed to upload configdocs: ${res.status}")
-            }
-            print res.content
-
-            } catch (err) {
-                sleep 120
-                error(err)
-            }
-        }
+        shipyard2.createConfigdocs(uuid, token, SHIPYARD_URL, ARTF_PATH, SITE_NAME)
     }
 
     stage('Shipyard Config Commit') {
-        retry(3) {
-            try {
-                def res = httpRequest (url: "${SHIPYARD_URL}/commitconfigdocs", httpMode: 'POST',
-                                       customHeaders: [[name: 'X-Auth-Token', value: token]])
-                if (res.status != 200) {
-                    error("Failed to commit configdocs: ${res.status}")
-                }
-                print res.content
-            } catch (err) {
-                sleep 120
-                error(err)
-            }
-        }
+        shipyard2.commitConfigdocs(uuid, token,  SHIPYARD_URL)
     }
 }
 
 
-def shipyard_steps_get = { action ->
-
-    def res = httpRequest (url: "${SHIPYARD_URL}/actions/${action}",
-                           contentType: 'APPLICATION_JSON',
-                           httpMode: 'GET',
-                           customHeaders: [[name: 'X-Auth-Token', value: keystone_token()]])
-
-    if (res.status != 200) {
-        error("Failed to get Shypyard action steps: ${res.status}")
-    }
-
-    def cont = new JsonSlurperClassic().parseText(res.content)
-    print cont
-
-    return cont.steps
-}
-
-
-def shipyard_step_wait = { systep, interval ->
-
-    print ">> Waiting on Shipyard step: ${systep}"
-
-    def String state = systep.state
-    def res
-
-    while (state == null || state == 'running' || state == 'queued' || state == 'scheduled') {
-        sleep interval
-
-        // relax waiting on shipyard tasks
-        // requests may fail when new nodes join
-        retry (3) {
-            res = httpRequest (url: "${SHIPYARD_URL}${systep.url}",
-                               contentType: 'APPLICATION_JSON',
-                               httpMode: 'GET',
-                               customHeaders: [[name: 'X-Auth-Token',
-                                                value: keystone_token()]])
-
-           if (!res) {
-               error("httpRequest returned null - likely library issue")
-           }
-
-           if (res.status != 200) {
-               error("Failed to get Shipyard step info: ${res.status}")
-           }
-
-           if (!res.content) {
-               error("Shypyard returned null content")
-           }
-        }
-
+def shipyard_action_create = { action, token ->
+    def actionId
+    stage('Action create') {
+        def res = shipyard2.createAction(uuid, token, SHIPYARD_URL, action)
         def cont = new JsonSlurperClassic().parseText(res.content)
         print cont
-        state = cont.state
+        actionId = cont.id
     }
-
-    if (state != 'success' && state != 'skipped') {
-        error("Failed Shipyard task ${systep.id}: ${res.status}, ${res.content}")
-    }
-}
-
-def shipyard_steps_wait = { action ->
-
-    def systeps = shipyard_steps_get(action)
-
-    systeps.each() {
-        // add explicit stage for steps taking long time
-        if (it.id == 'drydock_build' || it.id == 'armada_build') {
-            stage ("Shipyard (${it.id})") {
-               shipyard_step_wait(it, 240)
-            }
-        } else {
-            shipyard_step_wait(it, 4)
-        }
-    }
-}
-
-def shipyard_action_create = { action ->
-
-    def req = [ 'name': action ]
-    def jreq = new JsonOutput().toJson(req)
-
-    res = httpRequest (url: "${SHIPYARD_URL}/actions",
-                       contentType: 'APPLICATION_JSON',
-                       httpMode: 'POST',
-                       customHeaders: [[name: 'X-Auth-Token', value: keystone_token()]],
-                       requestBody: jreq)
-
-    if (res.status != 201) {
-        error("Failed to create Shypyard action: ${res.status}")
-    }
-
-    def cont = new JsonSlurperClassic().parseText(res.content)
-    print cont
-
-    shipyard_steps_wait(cont.id)
+    shipyard2.waitAction(actionId, SHIPYARD_URL, SHIPYARD_PASSWD, KEYSTONE_URL, false)
 }
 
 def shipyard_deploy = { action ->
     try {
-        shipyard_config_upload()
-        shipyard_action_create(action)
+        def req = keystone.retrieveToken(SHIPYARD_PASSWD, KEYSTONE_URL, false)
+        def token = req.getHeaders()["X-Subject-Token"][0]
+        shipyard_config_upload(token)
+        shipyard_action_create(action, token)
 
     } catch (err) {
         debug_report()
