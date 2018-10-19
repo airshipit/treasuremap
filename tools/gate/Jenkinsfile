@@ -301,6 +301,19 @@ def uplift_review = {
             sh 'git review'
         }
     }
+
+    // send a Slack message to request review/merge
+    def msg = 'Latest charts/images passed green-field deployment, and sanity tests.\n' +
+              'A patchset is published and ready to review/merge:\n' +
+              '    https://review.openstack.org/#/q/owner:jenkins.uplifter%2540gmail.com+status:open'
+
+    try {
+        notify.msg(msg, '#integration')
+    } catch (err) {
+        // tolerate Slack errors as not critical for success
+        print "Failed to send Slack message: ${err}"
+        currentBuild.result = 'UNSTABLE'
+    }
 }
 
 
