@@ -32,16 +32,23 @@ The pipeline attempts to uplift and deploy latest versions on daily bases.
 Hardware
 --------
 
-The site has 6 DELL R720xd bare-metal servers, 4 control and 2 compute nodes.
+While HW configuration is flexible, Airship Seaworthy reference manifests
+reflect full HA deployment, similar to what might be expected in production.
+
+Reducing number of control/compute nodes will require site overrides
+to align parts of the system such as Ceph replication, etcd, etc.
+
+Airship Seaworthy site has 6 DELL R720xd bare-metal servers:
+3 control, and 3 compute nodes.
 See host profiles for the servers `here <https://github.com/openstack/airship-treasuremap/tree/master/site/airship-seaworthy/profiles/host>`__.
 
 Control (masters)
  - cab23-r720-11
  - cab23-r720-12
  - cab23-r720-13
- - cab23-r720-14
 
 Compute (workers)
+ - cab23-r720-14
  - cab23-r720-17
  - cab23-r720-19
 
