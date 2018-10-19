@@ -10,8 +10,6 @@ metadata:
     parentSelector:
       name: ucp-maas-global
     actions:
-      - method: replace
-        path: .values.conf.maas.proxy
       - method: merge
         path: .
   storagePolicy: cleartext
@@ -23,15 +21,4 @@ data:
           default_os: 'ubuntu'
           default_image: 'xenial'
           default_kernel: 'hwe-16.04'
-        proxy:
-          # Whether deploying nodes should use MaaS region as an APT proxy.
-          proxy_enabled: false
-          # NEWSITE-CHANGEME: Whether MaaS region should utilize an external proxy
-          # for accessing repos. Set to 'true' if your environment needs a proxy
-          # to get to the upstream package mirrors, and false otherwise.
-          peer_proxy_enabled: false
-          # NEWSITE-CHANGEME: If your site requires a proxy to reach upstream
-          # package mirrors, enter the proxy information here. Otherwise, comment
-          # out this line.
-          # proxy_server: http://proxy.example.com:8080
 ...

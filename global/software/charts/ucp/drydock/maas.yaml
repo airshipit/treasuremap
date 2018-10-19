@@ -68,7 +68,7 @@ metadata:
         name: common-addresses
         path: .node_ports.maas_proxy
       dest:
-        path: .values.network.proxy.node_port.port
+        path: .values.network.port.service_proxy
 
     # MaaS Config
     - src:
@@ -195,7 +195,10 @@ data:
         url:
           maas_url: http://MAAS_IP:MAAS_PORT/MAAS
         proxy:
-          proxy_enabled: 'false'
+          # Use MAAS Built-in proxy. This supports environments where
+          # the PXE interface can not reach the internet.
+          # Also improves efficiency due to caching via MAAS.
+          proxy_enabled: 'true'
         ntp:
           use_external_only: 'true'
           disable_ntpd_region: true
