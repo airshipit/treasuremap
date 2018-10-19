@@ -1,0 +1,319 @@
+---
+# The purpose of this file is to define the PKI certificates for the environment
+#
+# NOTE: When deploying a new site, this file should not be configured until
+# baremetal/nodes.yaml is complete.
+#
+schema: promenade/PKICatalog/v1
+metadata:
+  schema: metadata/Document/v1
+  name: cluster-certificates
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  certificate_authorities:
+    kubernetes:
+      description: CA for Kubernetes components
+      certificates:
+        - document_name: apiserver
+          description: Service certificate for Kubernetes apiserver
+          common_name: apiserver
+          hosts:
+            - localhost
+            - 127.0.0.1
+            # FIXME: Repetition of api_service_ip in common-addresses; use
+            # substitution
+            - 10.96.0.1
+          kubernetes_service_names:
+            - kubernetes.default.svc.cluster.local
+
+        # NEWSITE-CHANGEME: The following should be a list of all the nodes in
+        # the environment (genesis, control plane, data plane, everything).
+        # Add/delete from this list as necessary until all nodes are listed.
+        # For each node, the `hosts` list should be comprised of:
+        #   1. The node's hostname, as already defined in baremetal/nodes.yaml
+        #   2. The node's oam IP address, as already defined in baremetal/nodes.yaml
+        #   3. The node's Calico IP address, as already defined in baremetal/nodes.yaml
+        # NOTE: This list also needs to include the Genesis node, which is not
+        # listed in baremetal/nodes.yaml, but by convention should be allocated
+        # the first non-reserved IP in each logical network allocation range
+        # defined in networks/physical/networks.yaml
+        # NOTE: The genesis node needs to be defined twice (the first two entries
+        # on this list) with all of the same paramters except the document_name.
+        # In the first case the document_name is `kubelet-genesis`, and in the
+        # second case the document_name format is `kubelete-YOUR_GENESIS_HOSTNAME`.
+        - document_name: kubelet-genesis
+          common_name: system:node:deathkitten-01
+          hosts:
+            - deathkitten-01
+            - 192.168.0.241
+          groups:
+            - system:nodes
+        - document_name: kubelet-deathkitten-01
+          common_name: system:node:deathkitten-01
+          hosts:
+            - deathkitten-01
+            - 192.168.0.241
+          groups:
+            - system:nodes
+        - document_name: kubelet-deathkitten-02
+          common_name: system:node:deathkitten-02
+          hosts:
+            - deathkitten-02
+            - 192.168.0.242
+          groups:
+            - system:nodes
+        - document_name: kubelet-deathkitten-03
+          common_name: system:node:deathkitten-03
+          hosts:
+            - deathkitten-03
+            - 192.168.0.243
+          groups:
+            - system:nodes
+        - document_name: kubelet-deathkitten-04
+          common_name: system:node:deathkitten-04
+          hosts:
+            - deathkitten-04
+            - 192.168.0.244
+          groups:
+            - system:nodes
+        # End node list
+        - document_name: scheduler
+          description: Service certificate for Kubernetes scheduler
+          common_name: system:kube-scheduler
+        - document_name: controller-manager
+          description: certificate for controller-manager
+          common_name: system:kube-controller-manager
+        - document_name: admin
+          common_name: admin
+          groups:
+            - system:masters
+        - document_name: armada
+          common_name: armada
+          groups:
+            - system:masters
+    kubernetes-etcd:
+      description: Certificates for Kubernetes's etcd servers
+      certificates:
+        - document_name: apiserver-etcd
+          description: etcd client certificate for use by Kubernetes apiserver
+          common_name: apiserver
+        # NOTE(mark-burnett): hosts not required for client certificates
+        - document_name: kubernetes-etcd-anchor
+          description: anchor
+          common_name: anchor
+        # NEWSITE-CHANGEME: The following should be a list of the control plane
+        # nodes in the environment, including genesis.
+        # For each node, the `hosts` list should be comprised of:
+        #   1. The node's hostname, as already defined in baremetal/nodes.yaml
+        #   2. The node's oam IP address, as already defined in baremetal/nodes.yaml
+        #   3. The node's Calico IP address, as already defined in baremetal/nodes.yaml
+        #   4. 127.0.0.1
+        #   5. localhost
+        #   6. kubernetes-etcd.kube-system.svc.cluster.local
+        # NOTE: This list also needs to include the Genesis node, which is not
+        # listed in baremetal/nodes.yaml, but by convention should be allocated
+        # the first non-reserved IP in each logical network allocation range
+        # defined in networks/physical/networks.yaml, except for the kubernetes
+        # service_cidr where it should start with the second IP in the range.
+        # NOTE: The genesis node is defined twice with the same `hosts` data:
+        # Once with its hostname in the common/document name, and once with
+        # `genesis` defined instead of the host. For now, this duplicated
+        # genesis definition is required. FIXME: Remove duplicate definition
+        # after Promenade addresses this issue.
+        - document_name: kubernetes-etcd-genesis
+          common_name: kubernetes-etcd-genesis
+          hosts:
+            - deathkitten-01
+            - 192.168.0.241
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-deathkitten-01
+          common_name: kubernetes-etcd-deathkitten-01
+          hosts:
+            - deathkitten-01
+            - 192.168.0.241
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-deathkitten-02
+          common_name: kubernetes-etcd-deathkitten-02
+          hosts:
+            - deathkitten-02
+            - 192.168.0.242
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-deathkitten-03
+          common_name: kubernetes-etcd-deathkitten-03
+          hosts:
+            - deathkitten-03
+            - 192.168.0.243
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-deathkitten-04
+          common_name: kubernetes-etcd-deathkitten-04
+          hosts:
+            - deathkitten-04
+            - 192.168.0.244
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        # End node list
+    kubernetes-etcd-peer:
+      certificates:
+        # NEWSITE-CHANGEME: This list should be identical to the previous list,
+        # except that `-peer` has been appended to the document/common names.
+        - document_name: kubernetes-etcd-genesis-peer
+          common_name: kubernetes-etcd-genesis-peer
+          hosts:
+            - deathkitten-01
+            - 192.168.0.241
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-deathkitten-01-peer
+          common_name: kubernetes-etcd-deathkitten-01-peer
+          hosts:
+            - deathkitten-01
+            - 192.168.0.241
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-deathkitten-02-peer
+          common_name: kubernetes-etcd-deathkitten-02-peer
+          hosts:
+            - deathkitten-02
+            - 192.168.0.242
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-deathkitten-03-peer
+          common_name: kubernetes-etcd-deathkitten-03-peer
+          hosts:
+            - deathkitten-03
+            - 192.168.0.243
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-deathkitten-04-peer
+          common_name: kubernetes-etcd-deathkitten-04-peer
+          hosts:
+            - deathkitten-04
+            - 192.168.0.244
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        # End node list
+    calico-etcd:
+      description: Certificates for Calico etcd client traffic
+      certificates:
+        - document_name: calico-etcd-anchor
+          description: anchor
+          common_name: anchor
+        # NEWSITE-CHANGEME: The following should be a list of the control plane
+        # nodes in the environment, including genesis.
+        # For each node, the `hosts` list should be comprised of:
+        #   1. The node's hostname, as already defined in baremetal/nodes.yaml
+        #   2. The node's oam IP address, as already defined in baremetal/nodes.yaml
+        #   3. The node's Calico IP address, as already defined in baremetal/nodes.yaml
+        #   4. 127.0.0.1
+        #   5. localhost
+        #   6. The calico/etcd/service_ip defined in networks/common-addresses.yaml
+        # NOTE: This list also needs to include the Genesis node, which is not
+        # listed in baremetal/nodes.yaml, but by convention should be allocated
+        # the first non-reserved IP in each logical network allocation range
+        # defined in networks/physical/networks.yaml
+        - document_name: calico-etcd-deathkitten-01
+          common_name: calico-etcd-deathkitten-01
+          hosts:
+            - deathkitten-01
+            - 192.168.0.241
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-etcd-deathkitten-02
+          common_name: calico-etcd-deathkitten-02
+          hosts:
+            - deathkitten-02
+            - 192.168.0.242
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-etcd-deathkitten-03
+          common_name: calico-etcd-deathkitten-03
+          hosts:
+            - deathkitten-03
+            - 192.168.0.243
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-etcd-deathkitten-04
+          common_name: calico-etcd-deathkitten-04
+          hosts:
+            - deathkitten-04
+            - 192.168.0.244
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-node
+          common_name: calcico-node
+        # End node list
+    calico-etcd-peer:
+      description: Certificates for Calico etcd clients
+      certificates:
+        # NEWSITE-CHANGEME: This list should be identical to the previous list,
+        # except that `-peer` has been appended to the document/common names.
+        - document_name: calico-etcd-deathkitten-01-peer
+          common_name: calico-etcd-deathkitten-01-peer
+          hosts:
+            - deathkitten-01
+            - 192.168.0.241
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-etcd-deathkitten-02-peer
+          common_name: calico-etcd-deathkitten-02-peer
+          hosts:
+            - deathkitten-02
+            - 192.168.0.242
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-etcd-deathkitten-03-peer
+          common_name: calico-etcd-deathkitten-03-peer
+          hosts:
+            - deathkitten-03
+            - 192.168.0.243
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-etcd-deathkitten-04-peer
+          common_name: calico-etcd-deathkitten-04-peer
+          hosts:
+            - deathkitten-04
+            - 192.168.0.244
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-node-peer
+          common_name: calcico-node-peer
+        # End node list
+  keypairs:
+    - name: service-account
+      description: Service account signing key for use by Kubernetes controller-manager.
+...

@@ -1,0 +1,16 @@
+---
+# The purpose of this file is to define site-specific common software config
+# paramters.
+schema: pegleg/CommonSoftwareConfig/v1
+metadata:
+  schema: metadata/Document/v1
+  name: common-software-config
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  osh:
+    # NEWSITE-CHANGEME: Replace with the site name
+    region_name: airship-seaworthy
+...

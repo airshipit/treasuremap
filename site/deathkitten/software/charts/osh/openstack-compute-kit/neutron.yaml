@@ -1,0 +1,23 @@
+---
+# This file defines hardware-specific settings for neutron. If you use the same
+# hardware profile as this environment, you should not need to change this file.
+# Otherwise, you should review the settings here and adjust for your hardware.
+# In particular:
+# 1. logical network interface names
+# 2. physical device mappigns
+# TODO: Should move to global layer and become tied to the hardware profile
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: neutron-fixme
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: neutron-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data: {}
+...
