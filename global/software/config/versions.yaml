@@ -207,7 +207,7 @@ data:
         type: git
       nagios:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27ea2a53a69d8c2820e2f4343c47ca093270392b
+        reference: 922d7d3d26b15d1d25e40ba1528337002ae15b0c
         subpath: nagios
         type: git
       prometheus:
@@ -238,7 +238,7 @@ data:
     ucp:
       armada:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: e1179a8ba8f2136037200d77cc7ade2dd1b5cafe
+        reference: 8666342f8ad96203ada8233ba7225a73f603d22d
         subpath: charts/armada
         type: git
       armada-htk:
@@ -438,7 +438,7 @@ data:
         type: git
       tiller:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: e1179a8ba8f2136037200d77cc7ade2dd1b5cafe
+        reference: 8666342f8ad96203ada8233ba7225a73f603d22d
         subpath: charts/tiller
         type: git
       tiller-htk:
@@ -689,7 +689,7 @@ data:
         apache_proxy: docker.io/httpd:2.4
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         image_repo_sync: docker.io/docker:17.07.0
-        nagios: quay.io/attcomdev/nagios:98ca738ce770b375b2bcffe1267969d7c3709893
+        nagios: quay.io/attcomdev/nagios:46d4812f74a7cfc1f57fa9fffbc808facfc1bec1
       prometheus:
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         helm_tests: docker.io/openstackhelm/heat:ocata
@@ -716,7 +716,7 @@ data:
         prometheus_openstack_exporter: quay.io/attcomdev/prometheus-openstack-exporter:bcce8711f24137d6b9018aa5f780c111784e6d65
     ucp:
       armada:
-        api: quay.io/airshipit/armada:e1179a8ba8f2136037200d77cc7ade2dd1b5cafe
+        api: quay.io/airshipit/armada:8666342f8ad96203ada8233ba7225a73f603d22d
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         helm: docker.io/lachlanevenson/k8s-helm:v2.10.0
         image_repo_sync: docker.io/docker:17.07.0

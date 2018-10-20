@@ -183,7 +183,7 @@ metadata:
         name: common-addresses
         path: .neutron.external_iface
       dest:
-        path: .values.network.interface.external
+        path: .values.network.auto_bridge_add.br-ex
         pattern: 'EXTERNAL_INTERFACE'
 
 data:
@@ -234,9 +234,10 @@ data:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
     network:
+      auto_bridge_add:
+        br-ex: 'EXTERNAL_INTERFACE'
       interface:
         tunnel: 'TUNNEL_DEVICE'
-        external: 'EXTERNAL_INTERFACE'
     conf:
       logging:
         loggers:
@@ -322,12 +323,7 @@ data:
             type_drivers: vlan,flat,vxlan
             tenant_network_types: vxlan
           ml2_type_vlan:
-            network_vlan_ranges: bond0
-        openvswitch_agent:
-          agent:
-            tunnel_types: vxlan
-          ovs:
-            bridge_mappings: bond0:br-bond0
+            network_vlan_ranges: external
   dependencies:
     - osh-helm-toolkit
 ...

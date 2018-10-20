@@ -11,7 +11,7 @@ parameters:
 
   physical_network_interface:
     type: string
-    default: bond0
+    default: external
 
   physical_network_vlan:
     type: string
