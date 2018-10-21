@@ -89,7 +89,9 @@ function wait_for_ssh_port {
 wait_for_ssh_port $FLOATING_IP
 
 # SSH into the VM and check it can reach the outside world
+touch ~/.ssh/known_hosts
 ssh-keygen -R "$FLOATING_IP"
+
 ssh-keyscan "$FLOATING_IP" >> ~/.ssh/known_hosts
 ssh -i ${OSH_VM_KEY_STACK} cirros@${FLOATING_IP} ping -q -c 1 -W 2 ${OSH_EXT_GATEWAY}
 
