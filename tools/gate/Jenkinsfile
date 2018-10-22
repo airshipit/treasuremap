@@ -216,38 +216,12 @@ def genesis_deploy = {
     }
 }
 
-
-//// shipyard utils
-def shipyard_config_upload = {token ->
-
-
-    stage('Shipyard Config Create') {
-        shipyard2.createConfigdocs(uuid, token, SHIPYARD_URL, ARTF_PATH, SITE_NAME)
-    }
-
-    stage('Shipyard Config Commit') {
-        shipyard2.commitConfigdocs(uuid, token,  SHIPYARD_URL)
-    }
-}
-
-
-def shipyard_action_create = { action, token ->
-    def actionId
-    stage('Action create') {
-        def res = shipyard2.createAction(uuid, token, SHIPYARD_URL, action)
-        def cont = new JsonSlurperClassic().parseText(res.content)
-        print cont
-        actionId = cont.id
-    }
-    shipyard2.waitAction(actionId, SHIPYARD_URL, SHIPYARD_PASSWD, KEYSTONE_URL, false)
-}
-
 def shipyard_deploy = { action ->
     try {
         def req = keystone.retrieveToken(SHIPYARD_PASSWD, KEYSTONE_URL, false)
         def token = req.getHeaders()["X-Subject-Token"][0]
-        shipyard_config_upload(token)
-        shipyard_action_create(action, token)
+        shipyard2.uploadConfig(uuid, token, SHIPYARD_URL, ARTF_PATH, SITE_NAME)
+        shipyard2.waitAction(action, uuid, SHIPYARD_URL, SHIPYARD_PASSWD, KEYSTONE_URL, false)
 
     } catch (err) {
         debug_report()
