@@ -335,12 +335,17 @@ def sanity_tests = {
 
 //// main flow
 
-vm2() {
-    // wait and make sure genesis is up, and remove docker
-    // this ensures no containers are running after reboot
+vm(timeout: 360) {
+    // wait and make sure genesis is up
     ssh.wait (GENESIS_CREDS, GENESIS_IP, 'hostname')
+
+
+    // disable docker/kubelet services
+    // this is done to be able to properly cleanup genesis after reboot
     ssh.cmd (GENESIS_CREDS, GENESIS_IP,
-             'sudo apt-get remove docker-engine -y')
+             'sudo systemctl disable kubelet')
+    ssh.cmd (GENESIS_CREDS, GENESIS_IP,
+             'sudo systemctl disable docker')
 
     sh 'sudo apt-get update'
     sh 'sudo apt-get install docker.io -y'
