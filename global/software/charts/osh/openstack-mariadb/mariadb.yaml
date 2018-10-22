@@ -3,6 +3,9 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: openstack-mariadb
+  labels:
+    name: openstack-mariadb-global
+    component: mariadb
   layeringDefinition:
     abstract: false
     layer: global
