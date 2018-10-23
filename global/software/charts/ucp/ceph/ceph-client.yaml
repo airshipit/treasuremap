@@ -162,7 +162,7 @@ data:
         target:
           osd: 1
           pg_per_osd: 100
-          protected: false
+          protected: true
 
         default:
           # NOTE(alanmeadows): This is required ATM for bootstrapping a Ceph
