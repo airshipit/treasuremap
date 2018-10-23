@@ -240,6 +240,10 @@ def traverse(obj, dict_path=None):
                 old_git_commit_id = v['reference']
                 git_url = v['location']
 
+                if skip_list and k in skip_list:
+                    logging.info("Ignoring chart %s, it is in a skip list (%s)", k, git_url)
+                    continue
+
                 new_git_commit_id = get_commit_id(git_url)
 
                 # Update git commit id in reference field of dictionary
@@ -284,6 +288,10 @@ def traverse(obj, dict_path=None):
                     hash_v = v.split(":")
                     image, old_image_tag = hash_v
 
+                    if skip_list and image.endswith(skip_list):
+                        logging.info("Ignoring image %s, it is in a skip list", image)
+                        continue
+
                     new_image_tag = get_image_tag(image)
                     if new_image_tag == 0:
                         logging.error("Failed to get image tag for %s" % image)
@@ -315,9 +323,17 @@ if __name__ == '__main__':
     parser.add_argument('--out-file', default='versions.yaml',
     help='name of output file; default - "versions.yaml" (overwrite existing)')
 
+    parser.add_argument('--skip',
+    help='comma-delimited list of images and charts to skip during the update')
+
     args = parser.parse_args()
     in_file = args.in_file
     out_file = args.out_file
+    if args.skip:
+        skip_list = tuple(args.skip.strip().split(","))
+        logging.info('Skip list: %s', skip_list)
+    else:
+        skip_list = None
 
     if os.path.isfile(in_file):
         out_file = os.path.join(os.path.dirname(os.path.abspath(in_file)), out_file)
@@ -340,4 +356,3 @@ if __name__ == '__main__':
                                explicit_end=True, explicit_start=True,
                                width=4096))
         logging.info('New versions.yaml created as %s' % out_file)
-
