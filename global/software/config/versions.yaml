@@ -502,218 +502,33 @@ data:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.10.2
         scheduler: gcr.io/google-containers/hyperkube-amd64:v1.10.2
     osh:
-      barbican:
-        barbican_api: docker.io/openstackhelm/barbican:ocata
-        barbican_db_sync: docker.io/openstackhelm/barbican:ocata
-        bootstrap: docker.io/openstackhelm/heat:ocata
-        db_drop: docker.io/openstackhelm/heat:ocata
-        db_init: docker.io/openstackhelm/heat:ocata
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
-        rabbit_init: docker.io/rabbitmq:3.7-management
-        scripted_test: docker.io/openstackhelm/heat:ocata
-      cinder:
-        bootstrap: docker.io/openstackhelm/heat:ocata
-        cinder_api: docker.io/openstackhelm/cinder:ocata
-        cinder_backup: docker.io/openstackhelm/cinder:ocata
-        cinder_backup_storage_init: docker.io/port/ceph-config-helper:v1.10.2
-        cinder_db_sync: docker.io/openstackhelm/cinder:ocata
-        cinder_scheduler: docker.io/openstackhelm/cinder:ocata
-        cinder_storage_init: docker.io/port/ceph-config-helper:v1.10.2
-        cinder_volume: docker.io/openstackhelm/cinder:ocata
-        cinder_volume_usage_audit: docker.io/openstackhelm/cinder:ocata
-        db_drop: docker.io/openstackhelm/heat:ocata
-        db_init: docker.io/openstackhelm/heat:ocata
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
-        rabbit_init: docker.io/rabbitmq:3.7-management
-        test: docker.io/kolla/ubuntu-source-rally:4.0.0
-      glance:
-        bootstrap: docker.io/openstackhelm/heat:ocata
-        db_drop: docker.io/openstackhelm/heat:ocata
-        db_init: docker.io/openstackhelm/heat:ocata
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        glance_api: docker.io/openstackhelm/glance:ocata
-        glance_db_sync: docker.io/openstackhelm/glance:ocata
-        glance_registry: docker.io/openstackhelm/glance:ocata
-        glance_storage_init: docker.io/port/ceph-config-helper:v1.10.2
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
-        rabbit_init: docker.io/rabbitmq:3.7-management
-        test: docker.io/kolla/ubuntu-source-rally:4.0.0
-      heat:
-        bootstrap: docker.io/openstackhelm/heat:ocata
-        db_drop: docker.io/openstackhelm/heat:ocata
-        db_init: docker.io/openstackhelm/heat:ocata
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        heat_api: docker.io/openstackhelm/heat:ocata
-        heat_cfn: docker.io/openstackhelm/heat:ocata
-        heat_cloudwatch: docker.io/openstackhelm/heat:ocata
-        heat_db_sync: docker.io/openstackhelm/heat:ocata
-        heat_engine: docker.io/openstackhelm/heat:ocata
-        heat_engine_cleaner: docker.io/openstackhelm/heat:ocata
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
-        rabbit_init: docker.io/rabbitmq:3.7-management
-      horizon:
-        db_drop: docker.io/openstackhelm/heat:ocata
-        db_init: docker.io/openstackhelm/heat:ocata
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        horizon: docker.io/openstackhelm/horizon:ocata
-        horizon_db_sync: docker.io/openstackhelm/horizon:ocata
-      ingress:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        entrypoint: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        error_pages: gcr.io/google-containers/defaultbackend:1.0
-        ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
-      keystone:
-        bootstrap: docker.io/openstackhelm/heat:ocata
-        db_drop: docker.io/openstackhelm/heat:ocata
-        db_init: docker.io/openstackhelm/heat:ocata
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        keystone_api: docker.io/openstackhelm/keystone:ocata
-        keystone_credential_rotate: docker.io/openstackhelm/keystone:ocata
-        keystone_credential_setup: docker.io/openstackhelm/keystone:ocata
-        keystone_db_sync: docker.io/openstackhelm/keystone:ocata
-        keystone_domain_manage: docker.io/openstackhelm/keystone:ocata
-        keystone_fernet_rotate: docker.io/openstackhelm/keystone:ocata
-        keystone_fernet_setup: docker.io/openstackhelm/keystone:ocata
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
-        rabbit_init: docker.io/rabbitmq:3.7-management
-        test: docker.io/kolla/ubuntu-source-rally:4.0.0
-      libvirt:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        image_repo_sync: docker.io/docker:17.07.0
-        libvirt: docker.io/openstackhelm/libvirt:ubuntu-xenial-1.3.1-1ubuntu10.24
-      mariadb:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        error_pages: gcr.io/google-containers/defaultbackend:1.0
-        image_repo_sync: docker.io/docker:17.07.0
-        ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
-        mariadb: docker.io/mariadb:10.2.13
-        prometheus_create_mysql_user: docker.io/mariadb:10.2.13
-        prometheus_mysql_exporter: docker.io/prom/mysqld-exporter:v0.10.0
-        prometheus_mysql_exporter_helm_tests: docker.io/openstackhelm/heat:ocata
-      memcached:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        memcached: docker.io/memcached:1.5.5
-      neutron:
-        bootstrap: docker.io/openstackhelm/heat:ocata
-        db_drop: docker.io/openstackhelm/heat:ocata
-        db_init: docker.io/openstackhelm/heat:ocata
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
-        neutron_db_sync: docker.io/openstackhelm/neutron:ocata
-        neutron_dhcp: docker.io/openstackhelm/neutron:ocata
-        neutron_l3: docker.io/openstackhelm/neutron:ocata
-        neutron_linuxbridge_agent: docker.io/openstackhelm/neutron:ocata
-        neutron_metadata: docker.io/openstackhelm/neutron:ocata
-        neutron_openvswitch_agent: docker.io/openstackhelm/neutron:ocata
-        neutron_server: docker.io/openstackhelm/neutron:ocata
-        rabbit_init: docker.io/rabbitmq:3.7-management
-        test: docker.io/kolla/ubuntu-source-rally:4.0.0
-      nova:
-        bootstrap: docker.io/openstackhelm/heat:ocata
-        db_drop: docker.io/openstackhelm/heat:ocata
-        db_init: docker.io/openstackhelm/heat:ocata
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
-        nova_api: docker.io/openstackhelm/nova:ocata
-        nova_cell_setup: docker.io/openstackhelm/nova:ocata
-        nova_cell_setup_init: docker.io/openstackhelm/heat:ocata
-        nova_compute: docker.io/openstackhelm/nova:ocata
-        nova_compute_ssh: docker.io/openstackhelm/nova:ocata
-        nova_conductor: docker.io/openstackhelm/nova:ocata
-        nova_consoleauth: docker.io/openstackhelm/nova:ocata
-        nova_db_sync: docker.io/openstackhelm/nova:ocata
-        nova_novncproxy: docker.io/openstackhelm/nova:ocata
-        nova_novncproxy_assets: docker.io/kolla/ubuntu-source-nova-novncproxy:3.0.3
-        nova_placement: docker.io/openstackhelm/nova:ocata
-        nova_scheduler: docker.io/openstackhelm/nova:ocata
-        nova_spiceproxy: docker.io/openstackhelm/nova:ocata
-        nova_spiceproxy_assets: docker.io/kolla/ubuntu-source-nova-spicehtml5proxy:3.0.3
-        rabbit_init: docker.io/rabbitmq:3.7-management
-        test: docker.io/kolla/ubuntu-source-rally:4.0.0
-      openvswitch:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        openvswitch_db_server: docker.io/openstackhelm/openvswitch:v2.8.1
-        openvswitch_vswitchd: docker.io/openstackhelm/openvswitch:v2.8.1
-      rabbitmq:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        prometheus_rabbitmq_exporter: docker.io/kbudde/rabbitmq-exporter:v0.21.0
-        prometheus_rabbitmq_exporter_helm_tests: docker.io/openstackhelm/heat:ocata
-        rabbitmq: docker.io/rabbitmq:3.7.4
+      barbican: {}
+      cinder: {}
+      glance: {}
+      heat: {}
+      horizon: {}
+      ingress: {}
+      keystone: {}
+      libvirt: {}
+      mariadb: {}
+      memcached: {}
+      neutron: {}
+      nova: {}
+      openvswitch: {}
+      rabbitmq: {}
     osh_infra:
-      elasticsearch:
-        apache_proxy: docker.io/httpd:2.4
-        curator: docker.io/bobrik/curator:5.2.0
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        elasticsearch: docker.io/srwilkers/elasticsearch-s3:v0.1.0
-        helm_tests: docker.io/openstackhelm/heat:ocata
-        image_repo_sync: docker.io/docker:17.07.0
-        memory_init: docker.io/openstackhelm/heat:ocata
-        prometheus_elasticsearch_exporter: docker.io/justwatch/elasticsearch_exporter:1.0.1
-        snapshot_repository: docker.io/openstackhelm/heat:ocata
-      fluent_logging:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        elasticsearch_template: docker.io/openstackhelm/heat:ocata
-        fluentbit: docker.io/fluent/fluent-bit:0.12.14
-        fluentd: docker.io/fluent/fluentd-kubernetes-daemonset:v1.2-debian-elasticsearch
-        helm_tests: docker.io/openstackhelm/heat:ocata
-        image_repo_sync: docker.io/docker:17.07.0
-        prometheus_fluentd_exporter: docker.io/srwilkers/fluentd_exporter:v0.1
-      grafana:
-        db_init: docker.io/openstackhelm/heat:ocata
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        grafana: docker.io/grafana/grafana:5.0.0
-        grafana_db_session_sync: docker.io/openstackhelm/heat:ocata
-        image_repo_sync: docker.io/docker:17.07.0
-      kibana:
-        apache_proxy: docker.io/httpd:2.4
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        image_repo_sync: docker.io/docker:17.07.0
-        kibana: docker.elastic.co/kibana/kibana:5.6.4
+      elasticsearch: {}
+      fluent_logging: {}
+      grafana: {}
+      kibana: {}
       nagios:
-        apache_proxy: docker.io/httpd:2.4
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        image_repo_sync: docker.io/docker:17.07.0
+        # bug: storage leak in nagios
         nagios: quay.io/attcomdev/nagios:46d4812f74a7cfc1f57fa9fffbc808facfc1bec1
-      prometheus:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        helm_tests: docker.io/openstackhelm/heat:ocata
-        image_repo_sync: docker.io/docker:17.07.0
-        prometheus: docker.io/prom/prometheus:v2.0.0
-      prometheus_alertmanager:
-        alertmanager: docker.io/prom/alertmanager:v0.11.0
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        image_repo_sync: docker.io/docker:17.07.0
-      prometheus_kube_state_metrics:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        image_repo_sync: docker.io/docker:17.07.0
-        kube_state_metrics: docker.io/bitnami/kube-state-metrics:1.3.1
-      prometheus_node_exporter:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        image_repo_sync: docker.io/docker:17.07.0
-        node_exporter: docker.io/prom/node-exporter:v0.15.0
-      prometheus_openstack_exporter:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        image_repo_sync: docker.io/docker:17.07.0
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
-        prometheus_openstack_exporter: quay.io/attcomdev/prometheus-openstack-exporter:bcce8711f24137d6b9018aa5f780c111784e6d65
+      prometheus: {}
+      prometheus_alertmanager: {}
+      prometheus_kube_state_metrics: {}
+      prometheus_node_exporter: {}
+      prometheus_openstack_exporter: {}
     ucp:
       armada:
         api: quay.io/airshipit/armada:b170daeea7db8538dbe8c80d1e79f7b2a101e731
@@ -831,33 +646,6 @@ data:
         shipyard_db_sync: quay.io/airshipit/shipyard:1c8fd5ce4f793aaf12a97eb4684a6d5a8a5d7661
       tiller:
         tiller: gcr.io/kubernetes-helm/tiller:v2.10.0
-  images_refs:
-    images:
-      ceph_daemon: docker.io/ceph/daemon:tag-build-master-luminous-ubuntu-16.04
-      cinder: docker.io/openstackhelm/cinder:ocata
-      dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-      glance: docker.io/openstackhelm/glance:ocata
-      heat: docker.io/openstackhelm/heat:ocata
-      horizon: docker.io/openstackhelm/horizon:ocata
-      ingress_controller: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
-      ingress_error_pages: gcr.io/google-containers/defaultbackend:1.0
-      keystone: docker.io/openstackhelm/keystone:ocata
-      libvirt: docker.io/openstackhelm/libvirt:ubuntu-xenial-1.3.1
-      mariadb_db: docker.io/mariadb:10.2.13
-      memcached: docker.io/memcached:1.5.5
-      neutron: docker.io/openstackhelm/neutron:ocata
-      nova: docker.io/openstackhelm/nova:ocata
-      nova_novncproxy: docker.io/kolla/ubuntu-source-nova-novncproxy:3.0.3
-      nova_spiceproxy: docker.io/kolla/ubuntu-source-nova-spicehtml5proxy:3.0.3
-      openvswitch: docker.io/openstackhelm/openvswitch:v2.8.1
-      os_barbican: docker.io/openstackhelm/barbican:ocata
-      rabbitmq: docker.io/rabbitmq:3.7-management
-      rally_test: docker.io/kolla/ubuntu-source-rally:4.0.0
-      storage_init: docker.io/port/ceph-config-helper:v1.10.2
-    keystone:
-      ks_endpoints: docker.io/openstackhelm/heat:ocata
-      ks_service: docker.io/openstackhelm/heat:ocata
-      ks_user: docker.io/openstackhelm/heat:ocata
   packages:
     gpgkey: |-
       -----BEGIN PGP PUBLIC KEY BLOCK-----
