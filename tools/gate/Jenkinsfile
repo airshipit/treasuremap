@@ -239,7 +239,13 @@ def uplift_versions = {
     stage('Uplift Versions') {
         sh 'sudo apt-get install python3-yaml python3-git -y'
 
-        sh 'tools/updater.py --in-file global/software/config/versions.yaml'
+        def cmd = 'tools/updater.py --in-file global/software/config/versions.yaml'
+
+        if (!UPLIFT_BLACKLIST.isEmpty()) {
+           cmd += " --skip ${UPLIFT_BLACKLIST}"
+        }
+
+        sh cmd
         sh 'git diff'
     }
 }
