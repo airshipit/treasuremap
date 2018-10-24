@@ -285,7 +285,11 @@ def uplift_review = {
     // send a Slack message to request review/merge
     def msg = 'Latest charts/images passed green-field deployment, and sanity tests.\n' +
               'A patchset is published and ready to review/merge:\n' +
-              '    https://review.openstack.org/#/q/owner:jenkins.uplifter%2540gmail.com+status:open'
+              'https://review.openstack.org/#/q/owner:jenkins.uplifter%2540gmail.com+status:open'
+
+    if (!UPLIFT_BLACKLIST.isEmpty()) {
+       msg += "\n\nBlacklisted charts/images: ${UPLIFT_BLACKLIST}"
+    }
 
     try {
         notify.msg(msg, '#integration')
