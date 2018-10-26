@@ -77,9 +77,6 @@ data:
           labels:
             release_group: airship-keystone-rabbitmq
   values:
-    pod:
-      replicas:
-        server: 1
     labels:
       server:
         node_selector_key: openstack-control-plane

@@ -78,9 +78,6 @@ data:
       error_server:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-    pod:
-      replicas:
-        server: 1
   dependencies:
     - mariadb-htk
 ...
