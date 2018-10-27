@@ -4,7 +4,7 @@ data:
     kubernetes:
       apiserver:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: ee881f897074afc99b090fa196b8988b6dbf172f
+        reference: 43c85a3953797795c6e03f1b79ac7b68ede2744b
         subpath: charts/apiserver
         type: git
       apiserver-htk:
@@ -25,7 +25,7 @@ data:
           type: git
         etcd:
           location: https://git.openstack.org/openstack/airship-promenade
-          reference: ee881f897074afc99b090fa196b8988b6dbf172f
+          reference: 43c85a3953797795c6e03f1b79ac7b68ede2744b
           subpath: charts/etcd
           type: git
         etcd-htk:
@@ -35,7 +35,7 @@ data:
           type: git
       controller-manager:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: ee881f897074afc99b090fa196b8988b6dbf172f
+        reference: 43c85a3953797795c6e03f1b79ac7b68ede2744b
         subpath: charts/controller_manager
         type: git
       controller-manager-htk:
@@ -45,7 +45,7 @@ data:
         type: git
       coredns:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: ee881f897074afc99b090fa196b8988b6dbf172f
+        reference: 43c85a3953797795c6e03f1b79ac7b68ede2744b
         subpath: charts/coredns
         type: git
       coredns-htk:
@@ -55,7 +55,7 @@ data:
         type: git
       etcd:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: ee881f897074afc99b090fa196b8988b6dbf172f
+        reference: 43c85a3953797795c6e03f1b79ac7b68ede2744b
         subpath: charts/etcd
         type: git
       etcd-htk:
@@ -65,7 +65,7 @@ data:
         type: git
       haproxy:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: ee881f897074afc99b090fa196b8988b6dbf172f
+        reference: 43c85a3953797795c6e03f1b79ac7b68ede2744b
         subpath: charts/haproxy
         type: git
       haproxy-htk:
@@ -85,7 +85,7 @@ data:
         type: git
       proxy:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: ee881f897074afc99b090fa196b8988b6dbf172f
+        reference: 43c85a3953797795c6e03f1b79ac7b68ede2744b
         subpath: charts/proxy
         type: git
       proxy-htk:
@@ -95,7 +95,7 @@ data:
         type: git
       scheduler:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: ee881f897074afc99b090fa196b8988b6dbf172f
+        reference: 43c85a3953797795c6e03f1b79ac7b68ede2744b
         subpath: charts/scheduler
         type: git
       scheduler-htk:
@@ -106,22 +106,22 @@ data:
     osh:
       barbican:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: d0aa21b3c1ad85a964916e19d393c43dab61d298
+        reference: 9d72fe1a501bc609a875eebf7b6274e18600ed70
         subpath: barbican
         type: git
       cinder:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: d0aa21b3c1ad85a964916e19d393c43dab61d298
+        reference: 9d72fe1a501bc609a875eebf7b6274e18600ed70
         subpath: cinder
         type: git
       glance:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: d0aa21b3c1ad85a964916e19d393c43dab61d298
+        reference: 9d72fe1a501bc609a875eebf7b6274e18600ed70
         subpath: glance
         type: git
       heat:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: d0aa21b3c1ad85a964916e19d393c43dab61d298
+        reference: 9d72fe1a501bc609a875eebf7b6274e18600ed70
         subpath: heat
         type: git
       helm_toolkit:
@@ -131,7 +131,7 @@ data:
         type: git
       horizon:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: d0aa21b3c1ad85a964916e19d393c43dab61d298
+        reference: 9d72fe1a501bc609a875eebf7b6274e18600ed70
         subpath: horizon
         type: git
       ingress:
@@ -141,7 +141,7 @@ data:
         type: git
       keystone:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: d0aa21b3c1ad85a964916e19d393c43dab61d298
+        reference: 9d72fe1a501bc609a875eebf7b6274e18600ed70
         subpath: keystone
         type: git
       libvirt:
@@ -161,12 +161,12 @@ data:
         type: git
       neutron:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: d0aa21b3c1ad85a964916e19d393c43dab61d298
+        reference: 9d72fe1a501bc609a875eebf7b6274e18600ed70
         subpath: neutron
         type: git
       nova:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: d0aa21b3c1ad85a964916e19d393c43dab61d298
+        reference: 9d72fe1a501bc609a875eebf7b6274e18600ed70
         subpath: nova
         type: git
       openvswitch:
@@ -238,7 +238,7 @@ data:
     ucp:
       armada:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: b170daeea7db8538dbe8c80d1e79f7b2a101e731
+        reference: 57316d98d4e80455f658e911dab52f528ca99d8a
         subpath: charts/armada
         type: git
       armada-htk:
@@ -248,7 +248,7 @@ data:
         type: git
       barbican:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: d0aa21b3c1ad85a964916e19d393c43dab61d298
+        reference: 9d72fe1a501bc609a875eebf7b6274e18600ed70
         subpath: barbican
         type: git
       barbican-htk:
@@ -328,7 +328,7 @@ data:
         type: git
       keystone:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: d0aa21b3c1ad85a964916e19d393c43dab61d298
+        reference: 9d72fe1a501bc609a875eebf7b6274e18600ed70
         subpath: keystone
         type: git
       keystone-htk:
@@ -378,7 +378,7 @@ data:
         type: git
       promenade:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: ee881f897074afc99b090fa196b8988b6dbf172f
+        reference: 43c85a3953797795c6e03f1b79ac7b68ede2744b
         subpath: charts/promenade
         type: git
       promenade-htk:
@@ -438,7 +438,7 @@ data:
         type: git
       tiller:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: b170daeea7db8538dbe8c80d1e79f7b2a101e731
+        reference: 57316d98d4e80455f658e911dab52f528ca99d8a
         subpath: charts/tiller
         type: git
       tiller-htk:
@@ -530,7 +530,7 @@ data:
       prometheus_openstack_exporter: {}
     ucp:
       armada:
-        api: quay.io/airshipit/armada:b170daeea7db8538dbe8c80d1e79f7b2a101e731
+        api: quay.io/airshipit/armada:57316d98d4e80455f658e911dab52f528ca99d8a
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         helm: docker.io/lachlanevenson/k8s-helm:v2.10.0
         image_repo_sync: docker.io/docker:17.07.0
@@ -577,7 +577,7 @@ data:
         ks_endpoints: docker.io/openstackhelm/heat:ocata
         ks_service: docker.io/openstackhelm/heat:ocata
         ks_user: docker.io/openstackhelm/heat:ocata
-        promenade: quay.io/airshipit/promenade:ee881f897074afc99b090fa196b8988b6dbf172f
+        promenade: quay.io/airshipit/promenade:43c85a3953797795c6e03f1b79ac7b68ede2744b
       rabbitmq: {}
       shipyard:
         airflow: quay.io/airshipit/airflow:70ec78815dfc9deeb342a3fccfa3cd079a4312d9
