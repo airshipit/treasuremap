@@ -455,15 +455,8 @@ data:
     kubelet: https://dl.k8s.io/v1.10.2/kubernetes-node-linux-amd64.tar.gz
   images:
     calico:
-      calico:
-        calico_cni: quay.io/calico/cni:v3.2.1
-        calico_ctl: calico/ctl:release-v3.2-amd64
-        calico_kube_controllers: quay.io/calico/kube-controllers:v3.2.1
-        calico_node: quay.io/calico/node:v3.2.1
-        calico_settings: calico/ctl:release-v3.2-amd64
-      etcd:
-        etcd: quay.io/coreos/etcd:v3.2.14
-        etcdctl: quay.io/coreos/etcd:v3.2.14
+      calico: {}
+      etcd: {}
     ceph:
       ceph-client: {}
       ceph-mon: {}
@@ -484,21 +477,13 @@ data:
         controller_manager: gcr.io/google-containers/hyperkube-amd64:v1.10.2
       coredns:
         coredns: docker.io/coredns/coredns:1.1.2
-        test: docker.io/coredns/coredns:1.1.2
       etcd:
         etcd: quay.io/coreos/etcd:v3.2.14
         etcdctl: quay.io/coreos/etcd:v3.2.14
       haproxy:
         anchor: gcr.io/google_containers/hyperkube-amd64:v1.10.2
         haproxy: docker.io/haproxy:1.8.3
-        test: docker.io/python:3.6
-      ingress:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        entrypoint: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        error_pages: gcr.io/google_containers/defaultbackend:1.0
-        image_repo_sync: docker.io/docker:17.07.0
-        ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
-        keepalived: docker.io/osixia/keepalived:1.4.5
+      ingress: {}
       kubectl: gcr.io/google-containers/hyperkube-amd64:v1.10.2
       pause: gcr.io/google-containers/pause-amd64:3.1
       proxy:
@@ -537,39 +522,22 @@ data:
     ucp:
       armada:
         api: quay.io/airshipit/armada:a64d435de8210cda9c5a5fb25885209c33801cd9
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         helm: docker.io/lachlanevenson/k8s-helm:v2.10.0
-        image_repo_sync: docker.io/docker:17.07.0
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
         tiller: gcr.io/kubernetes-helm/tiller:v2.10.0
       barbican: {}
       deckhand:
-        db_init: docker.io/postgres:9.5
         db_sync: quay.io/airshipit/deckhand:cc7e00970dd978c392a79537096252e07a3afc1d
         deckhand: quay.io/airshipit/deckhand:cc7e00970dd978c392a79537096252e07a3afc1d
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
       divingbell:
         divingbell: docker.io/ubuntu:16.04
       drydock:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         drydock: quay.io/airshipit/drydock:3470f89519d018c572905566891bafc8a3c51c3b
-        drydock_db_init: docker.io/postgres:9.5
         drydock_db_sync: quay.io/airshipit/drydock:3470f89519d018c572905566891bafc8a3c51c3b
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
       ingress: {}
       keystone: {}
       maas:
         bootstrap: quay.io/airshipit/maas-region-controller:2e003450cceb16b9bda71aa69a939a8466516582
-        db_init: docker.io/postgres:9.5
         db_sync: quay.io/airshipit/maas-region-controller:2e003450cceb16b9bda71aa69a939a8466516582
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         export_api_key: quay.io/airshipit/maas-region-controller:2e003450cceb16b9bda71aa69a939a8466516582
         maas_cache: quay.io/airshipit/sstream-cache:2d71c24e0fceb7868de10dc750954a494713a04c
         maas_rack: quay.io/airshipit/maas-rack-controller:2e003450cceb16b9bda71aa69a939a8466516582
@@ -578,31 +546,17 @@ data:
       memcached: {}
       postgresql: {}
       promenade:
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        image_repo_sync: docker.io/docker:17.07.0
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
         promenade: quay.io/airshipit/promenade:cfb8aa498c294c2adbc369ba5aaee19b49550d22
       rabbitmq: {}
       shipyard:
         airflow: quay.io/airshipit/airflow:7f3286b523104ad4de1a073f5c953511795530ff
-        airflow_db_init: docker.io/postgres:9.5
         airflow_db_sync: quay.io/airshipit/airflow:7f3286b523104ad4de1a073f5c953511795530ff
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        image_repo_sync: docker.io/docker:17.07.0
-        ks_endpoints: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
-        ks_user: docker.io/openstackhelm/heat:ocata
         shipyard: quay.io/airshipit/shipyard:7f3286b523104ad4de1a073f5c953511795530ff
-        shipyard_db_init: docker.io/postgres:9.5
         shipyard_db_sync: quay.io/airshipit/shipyard:7f3286b523104ad4de1a073f5c953511795530ff
-      tiller:
-        tiller: gcr.io/kubernetes-helm/tiller:v2.10.0
+      tiller: {}
   packages:
     gpgkey: |-
       -----BEGIN PGP PUBLIC KEY BLOCK-----
-
       mQINBFWln24BEADrBl5p99uKh8+rpvqJ48u4eTtjeXAWbslJotmC/CakbNSqOb9o
       ddfzRvGVeJVERt/Q/mlvEqgnyTQy+e6oEYN2Y2kqXceUhXagThnqCoxcEJ3+KM4R
       mYdoe/BJ/J/6rHOjq7Omk24z2qB3RU1uAv57iY5VGw5p45uZB4C4pNNsBJXoCvPn
