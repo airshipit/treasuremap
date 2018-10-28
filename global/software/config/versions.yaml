@@ -238,7 +238,7 @@ data:
     ucp:
       armada:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: 57316d98d4e80455f658e911dab52f528ca99d8a
+        reference: 93dadcb0db86ef3247effbe80b4427e31fa3e0df
         subpath: charts/armada
         type: git
       armada-htk:
@@ -288,7 +288,7 @@ data:
         type: git
       deckhand:
         location: https://git.openstack.org/openstack/airship-deckhand
-        reference: 7defe473d2e1111ba1738610cbecaffd6ff6151d
+        reference: a5deb49e7eb52d2814b64d5fd83e4006440f1358
         subpath: charts/deckhand
         type: git
       deckhand-htk:
@@ -438,7 +438,7 @@ data:
         type: git
       tiller:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: 57316d98d4e80455f658e911dab52f528ca99d8a
+        reference: 93dadcb0db86ef3247effbe80b4427e31fa3e0df
         subpath: charts/tiller
         type: git
       tiller-htk:
@@ -530,7 +530,7 @@ data:
       prometheus_openstack_exporter: {}
     ucp:
       armada:
-        api: quay.io/airshipit/armada:57316d98d4e80455f658e911dab52f528ca99d8a
+        api: quay.io/airshipit/armada:93dadcb0db86ef3247effbe80b4427e31fa3e0df
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         helm: docker.io/lachlanevenson/k8s-helm:v2.10.0
         image_repo_sync: docker.io/docker:17.07.0
@@ -541,8 +541,8 @@ data:
       barbican: {}
       deckhand:
         db_init: docker.io/postgres:9.5
-        db_sync: quay.io/airshipit/deckhand:7defe473d2e1111ba1738610cbecaffd6ff6151d
-        deckhand: quay.io/airshipit/deckhand:7defe473d2e1111ba1738610cbecaffd6ff6151d
+        db_sync: quay.io/airshipit/deckhand:a5deb49e7eb52d2814b64d5fd83e4006440f1358
+        deckhand: quay.io/airshipit/deckhand:a5deb49e7eb52d2814b64d5fd83e4006440f1358
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         ks_endpoints: docker.io/openstackhelm/heat:ocata
         ks_service: docker.io/openstackhelm/heat:ocata
