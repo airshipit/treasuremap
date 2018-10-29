@@ -141,6 +141,7 @@ data:
       storage:
         mon:
           directory: /var/lib/openstack-helm/tenant-ceph/mon
+          log_directory: /var/log/tenant-ceph
     storageclass:
       rbd:
         admin_secret_namespace: tenant-ceph

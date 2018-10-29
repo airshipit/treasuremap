@@ -133,6 +133,7 @@ data:
       enabled: true
     conf:
       storage:
+        osd_log_directory: /var/log/tenant-ceph
         mon:
           directory: /var/lib/openstack-helm/tenant-ceph/mon
         osd:
