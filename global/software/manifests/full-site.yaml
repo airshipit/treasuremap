@@ -2,9 +2,9 @@
 schema: armada/Manifest/v1
 metadata:
   schema: metadata/Document/v1
-  name: full-site-global
+  name: full-site
   layeringDefinition:
-    abstract: true
+    abstract: false
     layer: global
   labels:
     name: full-site-global
@@ -40,7 +40,6 @@ data:
     - openstack-tenant-ceph
     - openstack-mariadb
     - openstack-memcached
-    - openstack-compute-services
     - openstack-keystone
     - openstack-radosgw
     - openstack-glance
@@ -49,5 +48,4 @@ data:
     - openstack-heat
     - osh-infra-prometheus-openstack-exporter
     - openstack-horizon
-    - openstack-barbican
 ...
