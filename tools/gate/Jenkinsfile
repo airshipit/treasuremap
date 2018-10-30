@@ -130,7 +130,9 @@ def pegleg_site_collect = {
         }
 
         sh "tar czf site-config.tar.gz ${SITE_NAME}"
+
         archiveArtifacts 'site-config.tar.gz'
+        artifactory.upload('site-config.tar.gz', "${ARTF_PATH}/")
     }
 }
 
