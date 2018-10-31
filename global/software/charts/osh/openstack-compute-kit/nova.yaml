@@ -322,13 +322,13 @@ data:
         node_selector_value: enabled
     pod:
       replicas:
-        api_metadata: 2
-        placement: 1
-        osapi: 2
-        conductor: 2
-        consoleauth: 1
-        scheduler: 1
-        novncproxy: 1
+        api_metadata: 4
+        placement: 2
+        osapi: 4
+        conductor: 4
+        consoleauth: 2
+        scheduler: 2
+        novncproxy: 2
     ceph_client:
       configmap: tenant-ceph-etc
       user_secret_name: pvc-tceph-client-key

@@ -203,10 +203,10 @@ data:
   values:
     pod:
       replicas:
-        api: 1
-        cfn: 1
-        cloudwatch: 1
-        engine: 2
+        api: 2
+        cfn: 2
+        cloudwatch: 2
+        engine: 4
     labels:
       api:
         node_selector_key: openstack-control-plane
