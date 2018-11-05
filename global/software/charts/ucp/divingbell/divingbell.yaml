@@ -49,6 +49,8 @@ data:
         # Reboot the node 60 seconds after a kernel panic, instead of default
         # value of 0 (i.e. never reboot)
         kernel.panic: '60'
+        # Randomize stack space to prevent buffer overflow exploits
+        kernel.randomize_va_space: '2'
         # Accept gratuitous ARP to support failover scenarios
         # https://bugs.launchpad.net/fuel/+bug/1456272
         net.ipv4.conf.default.arp_accept: '1'
