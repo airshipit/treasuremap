@@ -61,4 +61,5 @@ data:
       openstack-libvirt: kernel
       beta.kubernetes.io/fluentd-ds-ready: 'true'
       node-exporter: enabled
+      fluentbit: enabled
 ...

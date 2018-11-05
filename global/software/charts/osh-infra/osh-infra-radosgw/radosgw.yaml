@@ -1,0 +1,118 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: osh-infra-radosgw
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.ceph-rgw
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ceph.ceph-rgw
+      dest:
+        path: .values.images.tags
+
+    # IP addresses
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .storage.ceph.public_cidr
+      dest:
+        path: .values.network.public
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .storage.ceph.cluster_cidr
+      dest:
+        path: .values.network.cluster
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.ceph_object_store
+      dest:
+        path: .values.endpoints.ceph_object_store
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ceph.ceph_mon
+      dest:
+        path: .values.endpoints.ceph_mon
+
+    # Credentials
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_infra_service_accounts
+        path: .osh_infra.ceph_object_store.admin
+      dest:
+        path: .values.endpoints.ceph_object_store.auth.admin
+
+    # Secrets
+    - dest:
+        path: .values.endpoints.ceph_object_store.auth.admin.access_key
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_infra_rgw_s3_admin_access_key
+        path: .
+    - dest:
+        path: .values.endpoints.ceph_object_store.auth.admin.secret_key
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_infra_rgw_s3_admin_secret_key
+        path: .
+
+data:
+  chart_name: osh-infra-radosgw
+  release: osh-infra-radosgw
+  namespace: osh-infra
+  wait:
+    timeout: 900
+    labels:
+      release_group: clcp-osh-infra-radosgw
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: clcp-osh-infra-radosgw
+  values:
+    labels:
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      rgw:
+        node_selector_key: ceph-rgw
+        node_selector_value: enabled
+    deployment:
+      storage_secrets: false
+      ceph: true
+      rbd_provisioner: false
+      cephfs_provisioner: false
+      client_secrets: false
+      rgw_keystone_user_and_endpoints: false
+    bootstrap:
+      enabled: false
+    conf:
+      rgw_s3:
+        enabled: true
+    ceph_client:
+      configmap: ceph-etc
+  dependencies:
+    - osh-infra-helm-toolkit
+...

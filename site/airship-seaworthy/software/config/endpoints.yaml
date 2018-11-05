@@ -1008,6 +1008,22 @@ metadata:
         pattern: AUTH_PATH
 data:
   osh_infra:
+    ceph_object_store:
+      name: radosgw
+      namespace: osh-infra
+      hosts:
+        default: ceph-rgw
+        public: radosgw
+      host_fqdn_override:
+        default: null
+      path:
+        default: null
+      scheme:
+        default: "http"
+      port:
+        api:
+          default: 8088
+          public: 80
     elasticsearch:
       name: elasticsearch
       namespace: osh-infra
@@ -1023,8 +1039,12 @@ data:
       scheme:
         default: "http"
       port:
+        client:
+          default: 9200
         http:
           default: 80
+        discovery:
+          default: 9300
     prometheus_elasticsearch_exporter:
       namespace: null
       hosts:

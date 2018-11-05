@@ -102,6 +102,7 @@ data:
       prometheus-server: enabled
       prometheus-client: enabled
       fluentd: enabled
+      fluentbit: enabled
       influxdb: enabled
       kibana: enabled
       elasticsearch-client: enabled
