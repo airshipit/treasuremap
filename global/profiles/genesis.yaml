@@ -87,6 +87,7 @@ data:
       - --authorization-mode=Node,RBAC
       - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds
       - --endpoint-reconciler-type=lease
+      - --feature-gates=PodShareProcessNamespace=true
   armada:
     target_manifest: cluster-bootstrap
   labels:
