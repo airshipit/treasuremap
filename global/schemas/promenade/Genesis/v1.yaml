@@ -81,6 +81,9 @@ data:
     hostname:
       $ref: '#/definitions/hostname'
 
+    domain:
+      type: string
+
     ip:
       $ref: '#/definitions/ip_address'
 
