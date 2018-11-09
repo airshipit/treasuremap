@@ -3,6 +3,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: kubernetes-controller-manager
+  labels:
+    name: kubernetes-controller-manager-global
   layeringDefinition:
     abstract: false
     layer: global

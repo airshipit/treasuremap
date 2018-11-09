@@ -3,6 +3,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-shipyard
+  labels:
+    name: ucp-shipyard-global
   layeringDefinition:
     abstract: false
     layer: global

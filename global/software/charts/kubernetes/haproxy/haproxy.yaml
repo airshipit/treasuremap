@@ -3,6 +3,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: haproxy
+  labels:
+    name: haproxy-global
   layeringDefinition:
     abstract: false
     layer: global

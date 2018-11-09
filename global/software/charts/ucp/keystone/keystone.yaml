@@ -4,6 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: ucp-keystone
   labels:
+    name: ucp-keystone-global
     component: keystone
   layeringDefinition:
     abstract: false
