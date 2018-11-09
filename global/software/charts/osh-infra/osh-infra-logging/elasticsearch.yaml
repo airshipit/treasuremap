@@ -209,6 +209,9 @@ data:
       job:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
+      test:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
     monitoring:
       prometheus:
         enabled: true
@@ -351,9 +354,8 @@ data:
                 use_age: True
                 disk_space: 1200
     storage:
-      elasticsearch:
-        requests:
-          storage: 500Gi
+      requests:
+        storage: 500Gi
   dependencies:
     - osh-infra-helm-toolkit
 ...
