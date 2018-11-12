@@ -555,7 +555,7 @@ Ensure to select the following:
    (e.g., 30G for /, 1G for /boot, 100G for /var/log, and all remaining
    storage for /var). Note that the volume size syntax looking like
    ``>300g`` in Drydock means that all remaining disk space is allocated
-   to this volume, and that that volume needs to be at least 300G in
+   to this volume, and that volume needs to be at least 300G in
    size.
 -  When you get to the prompt, "How do you want to manage upgrades on
    this system?", choose "No automatic updates" so that packages are
