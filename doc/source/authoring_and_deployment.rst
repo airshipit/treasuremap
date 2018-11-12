@@ -40,7 +40,7 @@ storage, etc) sourced to run cloud services.
 
 **Data Plane**: From the point of view of the cloud service provider,
 the data plane is the set of resources (hardware, network, storage,
-etc.) sourced to to run consumer workloads. When used in this document,
+etc.) sourced to run consumer workloads. When used in this document,
 "data plane" refers to the data plane of the overcloud (OSH).
 
 **Host Profile**: A host profile is a standard way of configuring a bare
