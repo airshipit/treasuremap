@@ -3,11 +3,11 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-promenade-global
+  labels:
+    name: ucp-promenade-global
   layeringDefinition:
     abstract: true
     layer: global
-  labels:
-    name: ucp-promenade-global
   storagePolicy: cleartext
   substitutions:
 

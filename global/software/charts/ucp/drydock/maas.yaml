@@ -3,11 +3,11 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-maas-global
+  labels:
+    name: ucp-maas-global
   layeringDefinition:
     abstract: true
     layer: global
-  labels:
-    name: ucp-maas-global
   storagePolicy: cleartext
   substitutions:
     # Chart source

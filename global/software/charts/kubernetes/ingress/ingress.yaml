@@ -5,6 +5,7 @@ metadata:
   name: global-ingress-kube-system
   labels:
     ingress: kube-system
+    name: ingress-kube-system-global
   layeringDefinition:
     abstract: true
     layer: global

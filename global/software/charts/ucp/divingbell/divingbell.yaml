@@ -3,11 +3,11 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-divingbell-global
+  labels:
+    name: ucp-divingbell-global
   layeringDefinition:
     abstract: true
     layer: global
-  labels:
-    name: ucp-divingbell-global
   storagePolicy: cleartext
   substitutions:
     # Chart source

@@ -3,6 +3,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: kubernetes-proxy
+  labels:
+    name: kubernetes-proxy-global
   layeringDefinition:
     abstract: false
     layer: global
