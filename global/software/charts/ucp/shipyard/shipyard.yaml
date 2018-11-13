@@ -164,9 +164,15 @@ metadata:
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: ucp_service_accounts
-        path: .ucp.airflow.oslo_messaging
+        path: .ucp.airflow.oslo_messaging.user
       dest:
         path: .values.endpoints.oslo_messaging.auth.user
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.airflow.oslo_messaging.admin
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.admin
 
     # Secrets
     - dest:
@@ -219,10 +225,16 @@ metadata:
         path: .
     - src:
         schema: deckhand/Passphrase/v1
-        name: ucp_oslo_messaging_password
+        name: ucp_airflow_oslo_messaging_password
         path: .
       dest:
         path: .values.endpoints.oslo_messaging.auth.user.password
+    - src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_oslo_messaging_password
+        path: .
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.admin.password
 
 data:
   chart_name: shipyard
