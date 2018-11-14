@@ -3,6 +3,9 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: glance-rabbitmq
+  labels:
+    name: glance-rabbitmq-global
+    component: glance
   layeringDefinition:
     abstract: false
     layer: global

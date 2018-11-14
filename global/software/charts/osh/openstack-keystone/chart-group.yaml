@@ -3,6 +3,9 @@ schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
   name: openstack-keystone
+  labels:
+    name: openstack-keystone-chart-group-global
+    component: keystone
   layeringDefinition:
     abstract: false
     layer: global

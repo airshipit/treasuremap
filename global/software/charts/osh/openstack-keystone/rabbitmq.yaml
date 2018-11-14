@@ -3,6 +3,9 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: keystone-rabbitmq
+  labels:
+    name: keystone-rabbitmq-global
+    component: keystone
   layeringDefinition:
     abstract: false
     layer: global

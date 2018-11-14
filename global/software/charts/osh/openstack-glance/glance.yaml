@@ -4,6 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: glance
   labels:
+    name: glance-global
     component: glance
   layeringDefinition:
     abstract: false

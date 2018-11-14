@@ -3,6 +3,9 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: neutron-rabbitmq
+  labels:
+    name: neutron-rabbitmq-global
+    component: neutron
   layeringDefinition:
     abstract: false
     layer: global

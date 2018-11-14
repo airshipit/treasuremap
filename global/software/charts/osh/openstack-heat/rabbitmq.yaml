@@ -3,6 +3,9 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: heat-rabbitmq
+  labels:
+    name: heat-rabbitmq-global
+    component: heat
   layeringDefinition:
     abstract: false
     layer: global
