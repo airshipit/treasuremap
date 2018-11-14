@@ -1,0 +1,19 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-mariadb-airskiff
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-mariadb-chart-group-global
+      component: mariadb
+    actions:
+      - method: replace
+        path: .chart_group
+  storagePolicy: cleartext
+data:
+  chart_group:
+    - openstack-mariadb-airskiff
+...

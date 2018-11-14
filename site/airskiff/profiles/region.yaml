@@ -1,0 +1,55 @@
+---
+# NOTE: This file is ignored by Airskiff and is copied from the seaworthy site.
+
+# The purpose of this file is to define the drydock Region, which in turn drives
+# the MaaS region.
+schema: 'drydock/Region/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  # NEWSITE-CHANGEME: Replace with the site name
+  name: airship-seaworthy
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+  substitutions:
+    # NEWSITE-CHANGEME: Substitutions from deckhand SSH public keys into the
+    # list of authorized keys which MaaS will register for the build-in "ubuntu"
+    # account during the PXE process. Create a substitution rule for each SSH
+    # key that should have access to the "ubuntu" account (useful for trouble-
+    # shooting problems before UAM or UAM-lite is operational). SSH keys are
+    # stored as secrets in site/airship-seaworthy/secrets.
+    - dest:
+        # Add/replace the first item in the list
+        path: .authorized_keys[0]
+      src:
+        schema: deckhand/PublicKey/v1
+        # This should match the "name" metadata of the SSH key which will be
+        # substituted, located in site/airship-seaworthy/secrets folder.
+        name: airship_ssh_public_key
+        path: .
+    - dest:
+        path: .repositories.main_archive
+      src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .packages.repositories.main_archive
+    # Second key example
+    #- dest:
+    #    # Increment the list index
+    #    path: .authorized_keys[1]
+    #  src:
+    #    schema: deckhand/PublicKey/v1
+    #    # your ssh key
+    #    name: MY_USER_ssh_public_key
+    #    path: .
+data:
+  tag_definitions: []
+  # This is the list of SSH keys which MaaS will register for the built-in
+  # "ubuntu" account during the PXE process. This list is populated by
+  # substitution, so the same SSH keys do not need to be repeated in multiple
+  # manifests.
+  authorized_keys: []
+  repositories:
+    remove_unlisted: true
+...

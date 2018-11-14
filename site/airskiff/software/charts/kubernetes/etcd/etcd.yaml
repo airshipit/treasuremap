@@ -1,0 +1,165 @@
+---
+# NOTE: This file is ignored by Airskiff and is copied from the seaworthy site.
+
+# The purpose of this file is to build the list of k8s etcd nodes and the
+# k8s etcd certs for those nodes in the environment.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-etcd
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: kubernetes-etcd-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+  substitutions:
+    # Generate a list of control plane nodes (i.e. genesis node + master node
+    # list) on which k8s etcd will run and will need certs. It is assumed
+    # that Airship sites will have 4 control plane nodes, so this should not need to
+    # change for a new site.
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .genesis.hostname
+      dest:
+        path: .values.nodes[0].name
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .masters[0].hostname
+      dest:
+        path: .values.nodes[1].name
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .masters[1].hostname
+      dest:
+        path: .values.nodes[2].name
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .masters[2].hostname
+      dest:
+        path: .values.nodes[3].name
+
+    # Certificate substitutions for the node names assembled on the above list.
+    # NEWSITE-CHANGEME: Per above, the number of substitutions should not need
+    # to change with a standard Airship deployment. However, the names of each
+    # deckhand certficiate should be updated with the correct hostnames for your
+    # environment. The ordering is important (Genesis is index 0, then master
+    # nodes in the order they are specified in common-addresses).
+
+    # Genesis Exception*
+    # *NOTE: This is an exception in that `genesis` is not the hostname of the
+    # genesis node, but `genesis` is reference here in the certificate names
+    # because of certain Promenade assumptions that may be addressed in the
+    # future. Therefore `genesis` is used instead of `cab23-r720-11` here.
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubernetes-etcd-genesis
+        path: .
+      dest:
+        path: .values.nodes[0].tls.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubernetes-etcd-genesis
+        path: .
+      dest:
+        path: .values.nodes[0].tls.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubernetes-etcd-genesis-peer
+        path: .
+      dest:
+        path: .values.nodes[0].tls.peer.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubernetes-etcd-genesis-peer
+        path: .
+      dest:
+        path: .values.nodes[0].tls.peer.key
+
+    # master node 1 hostname - cab23-r720-12
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubernetes-etcd-cab23-r720-12
+        path: .
+      dest:
+        path: .values.nodes[1].tls.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubernetes-etcd-cab23-r720-12
+        path: .
+      dest:
+        path: .values.nodes[1].tls.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubernetes-etcd-cab23-r720-12-peer
+        path: .
+      dest:
+        path: .values.nodes[1].tls.peer.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubernetes-etcd-cab23-r720-12-peer
+        path: .
+      dest:
+        path: .values.nodes[1].tls.peer.key
+
+    # master node 2 hostname - cab23-r720-13
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubernetes-etcd-cab23-r720-13
+        path: .
+      dest:
+        path: .values.nodes[2].tls.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubernetes-etcd-cab23-r720-13
+        path: .
+      dest:
+        path: .values.nodes[2].tls.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubernetes-etcd-cab23-r720-13-peer
+        path: .
+      dest:
+        path: .values.nodes[2].tls.peer.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubernetes-etcd-cab23-r720-13-peer
+        path: $
+      dest:
+        path: .values.nodes[2].tls.peer.key
+
+    # master node 3 hostname - cab23-r720-14
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubernetes-etcd-cab23-r720-14
+        path: .
+      dest:
+        path: .values.nodes[3].tls.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubernetes-etcd-cab23-r720-14
+        path: .
+      dest:
+        path: .values.nodes[3].tls.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubernetes-etcd-cab23-r720-14-peer
+        path: .
+      dest:
+        path: .values.nodes[3].tls.peer.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubernetes-etcd-cab23-r720-14-peer
+        path: $
+      dest:
+        path: .values.nodes[3].tls.peer.key
+
+data: {}
+...

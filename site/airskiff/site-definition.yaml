@@ -1,0 +1,12 @@
+---
+schema: pegleg/SiteDefinition/v1
+metadata:
+  schema: metadata/Document/v1
+  layeringDefinition:
+    abstract: false
+    layer: site
+  name: airskiff
+  storagePolicy: cleartext
+data:
+  site_type: single-node
+...

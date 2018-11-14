@@ -1,0 +1,26 @@
+---
+# NOTE: This file is ignored by Airskiff and is copied from the seaworthy site.
+
+# This file defines site-specific deviations for MaaS.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-maas
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-maas-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      maas:
+        images:
+          default_os: 'ubuntu'
+          default_image: 'xenial'
+          default_kernel: 'hwe-16.04'
+...

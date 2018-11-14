@@ -1,0 +1,22 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-ingress-controller-airskiff
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-ingress-controller-global
+      component: ingress
+    actions:
+      - method: replace
+        path: .values.pod
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        ingress: 1
+        error_page: 1
+...

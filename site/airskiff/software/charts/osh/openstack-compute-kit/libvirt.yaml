@@ -1,0 +1,26 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: libvirt-airskiff
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: libvirt-global
+      component: libvirt
+    actions:
+      - method: replace
+        path: .values
+  storagePolicy: cleartext
+data:
+  values:
+    labels:
+      agent:
+        libvirt:
+          node_selector_key: openstack-compute-node
+          node_selector_value: enabled
+    conf:
+      ceph:
+        enabled: false
+...

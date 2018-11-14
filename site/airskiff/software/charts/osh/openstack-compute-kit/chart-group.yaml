@@ -1,0 +1,25 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-compute-kit-airskiff
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-compute-kit-chart-group-global
+    actions:
+      - method: merge
+        path: .sequenced
+      - method: replace
+        path: .chart_group
+  storagePolicy: cleartext
+data:
+  sequenced: true
+  chart_group:
+    - libvirt-airskiff
+    - openvswitch
+    - neutron-rabbitmq-airskiff
+    - nova-rabbitmq-airskiff
+    - neutron-airskiff
+    - nova

@@ -1,0 +1,367 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: osh-helm-toolkit
+data:
+  chart_name: helm-toolkit
+  release: helm-toolkit
+  namespace: helm-toolkit
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-helm-toolkit
+  values: {}
+  source:
+    type: git
+    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    subpath: helm-toolkit
+    reference: master
+  dependencies: []
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ingress-kube-system
+data:
+  chart_name: ingress
+  release: ingress-kube-system
+  namespace: kube-system
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-ingress-kube-system
+  values:
+    deployment:
+      mode: cluster
+      type: DaemonSet
+    network:
+      host_namespace: True
+  source:
+    type: git
+    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    subpath: ingress
+    reference: master
+  dependencies:
+  - osh-helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ingress-ucp
+data:
+  chart_name: ingress
+  release: ingress-ucp
+  namespace: ucp
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-ingress-ucp
+  values: {}
+  source:
+    type: git
+    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    subpath: ingress
+    reference: master
+  dependencies:
+    - osh-helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nfs-provisioner
+data:
+  chart_name: nfs-provisioner
+  release: nfs-provisioner
+  namespace: nfs
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-nfs-provisioner
+  values:
+    storageclass:
+      name: general
+  source:
+    type: git
+    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    subpath: nfs-provisioner
+    reference: master
+  dependencies:
+    - osh-helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: mariadb
+data:
+  chart_name: mariadb
+  release: mariadb
+  namespace: ucp
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-mariadb
+  values:
+    pod:
+      replicas:
+        server: 1
+  source:
+    type: git
+    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    subpath: mariadb
+    reference: master
+  dependencies:
+    - osh-helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: rabbitmq
+data:
+  chart_name: rabbitmq
+  release: rabbitmq
+  namespace: ucp
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-rabbitmq
+  test:
+    enabled: false
+  values:
+    pod:
+      replicas:
+        server: 1
+  source:
+    type: git
+    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    subpath: rabbitmq
+    reference: master
+  dependencies:
+    - osh-helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: memcached
+data:
+  chart_name: memcached
+  release: memcached
+  namespace: ucp
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-memcached
+  values: {}
+  source:
+    type: git
+    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    subpath: memcached
+    reference: master
+  dependencies:
+    - osh-helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: keystone-ucp
+data:
+  chart_name: keystone
+  release: keystone-ucp
+  namespace: ucp
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-keystone-ucp
+  values: {}
+  source:
+    type: git
+    location: https://git.openstack.org/openstack/openstack-helm.git
+    subpath: keystone
+    reference: master
+  dependencies:
+    - osh-helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: postgresql
+data:
+  chart_name: postgresql
+  release: postgresql
+  namespace: ucp
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-postgresql
+  values:
+    pod:
+      replicas:
+        server: 1
+  source:
+    type: git
+    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    subpath: postgresql
+    reference: master
+  dependencies:
+    - osh-helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: barbican
+data:
+  chart_name: barbican
+  release: barbican
+  namespace: ucp
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-barbican
+  values: {}
+  source:
+    type: git
+    location: https://git.openstack.org/openstack/openstack-helm.git
+    subpath: barbican
+    reference: master
+  dependencies:
+    - osh-helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: armada
+data:
+  chart_name: armada
+  release: armada
+  namespace: ucp
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-armada
+  values:
+    conf:
+      armada:
+        keystone_authtoken:
+          timeout: null
+  source:
+    type: git
+    location: https://git.openstack.org/openstack/airship-armada.git
+    subpath: charts/armada
+    reference: master
+  dependencies:
+    - osh-helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: deckhand
+data:
+  chart_name: deckhand
+  release: deckhand
+  namespace: ucp
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-deckhand
+  values: {}
+  source:
+    type: git
+    location: https://git.openstack.org/openstack/airship-deckhand.git
+    subpath: charts/deckhand
+    reference: master
+  dependencies:
+    - osh-helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: shipyard
+data:
+  chart_name: shipyard
+  release: shipyard
+  namespace: ucp
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-shipyard
+  values:
+    images:
+      tags:
+        shipyard:         'quay.io/airshipit/shipyard:untagged'
+        shipyard_db_sync: 'quay.io/airshipit/shipyard:untagged'
+        airflow:          'quay.io/airshipit/airflow:untagged'
+        airflow_db_sync:  'quay.io/airshipit/airflow:untagged'
+    pod:
+      replicas:
+        shipyard:
+          api: 1
+        airflow:
+          web: 1
+          worker: 1
+          flower: 1
+          scheduler: 1
+    conf:
+      shipyard:
+        # NOTE(drewwalters96): Since Drydock and Promenade are not deployed,
+        #    alias those validations to Armada.
+        drydock:
+          service_type: armada
+        promenade:
+          service_type: armada
+  source:
+    type: git
+    location: https://git.openstack.org/openstack/airship-shipyard.git
+    subpath: charts/shipyard
+    reference: master
+  dependencies:
+    - osh-helm-toolkit
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kube-system
+data:
+  description: Kube system ingress controller
+  sequenced: False
+  chart_group:
+    - ingress-kube-system
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: airship-infra
+data:
+  description: Services required for the operation of Airship components
+  sequenced: True
+  chart_group:
+    - ingress-ucp
+    - nfs-provisioner
+    - mariadb
+    - rabbitmq
+    - memcached
+    - keystone-ucp
+    - postgresql
+    - barbican
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: airship-components
+data:
+  description: Airship software delivery components
+  sequenced: False
+  chart_group:
+    - shipyard
+    - deckhand
+    - armada
+---
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: armada-manifest
+data:
+  release_prefix: airship
+  chart_groups:
+    - kube-system
+    - airship-infra
+    - airship-components

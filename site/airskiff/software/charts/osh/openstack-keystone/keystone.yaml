@@ -1,0 +1,21 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: keystone-airskiff
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: keystone-global
+      component: keystone
+    actions:
+      - method: replace
+        path: .values.pod
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        api: 1
+...
