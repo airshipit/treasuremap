@@ -15,3 +15,45 @@
       - docs-on-readthedocs
     vars:
       rtd_webhook_id: '47687'
+    check:
+      jobs:
+        - airship-seaworthy-site-lint-gate
+        - airskiff-site-lint-gate
+    gate:
+      jobs:
+        - airship-seaworthy-site-lint-gate
+        - airskiff-site-lint-gate
+
+- nodeset:
+    name: airship-treasuremap-single-node
+    nodes:
+      - name: primary
+        label: ubuntu-xenial
+
+- job:
+    name: airship-seaworthy-site-lint-gate
+    nodeset: airship-treasuremap-single-node
+    timeout: 900
+    pre-run:
+      - tools/gate/playbooks/install-docker.yaml
+      - tools/gate/playbooks/git-config.yaml
+    run: tools/gate/playbooks/airship-seaworthy-site-lint.yaml
+    required-projects:
+      - openstack/airship-pegleg
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^doc/.*$
+
+- job:
+    name: airskiff-site-lint-gate
+    nodeset: airship-treasuremap-single-node
+    timeout: 900
+    pre-run:
+      - tools/gate/playbooks/install-docker.yaml
+      - tools/gate/playbooks/git-config.yaml
+    run: tools/gate/playbooks/airskiff-site-lint.yaml
+    required-projects:
+      - openstack/airship-pegleg
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^doc/.*$
