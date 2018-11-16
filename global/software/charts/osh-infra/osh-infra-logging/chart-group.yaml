@@ -9,6 +9,7 @@ metadata:
   storagePolicy: cleartext
 data:
   description: OSH Infra Logging
+  sequenced: True
   chart_group:
     - elasticsearch
     - fluent-logging
