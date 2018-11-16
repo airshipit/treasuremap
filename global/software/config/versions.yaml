@@ -182,12 +182,12 @@ data:
     osh_infra:
       elasticsearch:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 6ef48d37060e81cc6ffc283644bcd2df6c7ef80e
+        reference: 5d356f9265b337b75f605dee839faa8cd0ed3ab2
         subpath: elasticsearch
         type: git
       fluent_logging:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 6ef48d37060e81cc6ffc283644bcd2df6c7ef80e
+        reference: 5d356f9265b337b75f605dee839faa8cd0ed3ab2
         subpath: fluent-logging
         type: git
       grafana:
@@ -571,7 +571,7 @@ data:
         db_sync: quay.io/airshipit/maas-region-controller:2e003450cceb16b9bda71aa69a939a8466516582
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         export_api_key: quay.io/airshipit/maas-region-controller:2e003450cceb16b9bda71aa69a939a8466516582
-        maas_cache: quay.io/airshipit/sstream-cache:6935bc798e7322764bbe58f3bb57aa765628ccbe
+        maas_cache: quay.io/airshipit/sstream-cache:2d71c24e0fceb7868de10dc750954a494713a04c
         maas_rack: quay.io/airshipit/maas-rack-controller:2e003450cceb16b9bda71aa69a939a8466516582
         maas_region: quay.io/airshipit/maas-region-controller:2e003450cceb16b9bda71aa69a939a8466516582
       mariadb: {}
