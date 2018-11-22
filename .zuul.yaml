@@ -44,12 +44,12 @@
     run: tools/gate/playbooks/airskiff-deploy-gate.yaml
     post-run: tools/gate/playbooks/debug-report.yaml
     required-projects:
-      - openstack/airship-armada
-      - openstack/airship-deckhand
-      - openstack/airship-pegleg
-      - openstack/airship-shipyard
-      - openstack/openstack-helm
-      - openstack/openstack-helm-infra
+      - name: openstack/airship-armada
+      - name: openstack/airship-deckhand
+      - name: openstack/airship-pegleg
+      - name: openstack/airship-shipyard
+      - name: openstack/openstack-helm-infra
+        override-checkout: 8662018a4dceb82a5d699d9e118caff9e5edb156
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$

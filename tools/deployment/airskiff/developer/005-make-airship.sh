@@ -39,7 +39,9 @@ cd ${INSTALL_PATH}
 git clone https://git.openstack.org/openstack/airship-pegleg.git
 
 # Clone dependencies
-git clone https://git.openstack.org/openstack/openstack-helm.git
 git clone https://git.openstack.org/openstack/openstack-helm-infra.git
+
+cd openstack-helm-infra
+git checkout 8662018a4dceb82a5d699d9e118caff9e5edb156
 
 cd "${CURRENT_DIR}"
