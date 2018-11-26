@@ -17,9 +17,12 @@
 
 set -xe
 
+: "${INSTALL_PATH:="$(pwd)/../"}"
+
 # Download latest Armada image and deploy Airship components
 docker run --rm --net host -p 8000:8000 --name armada \
     -v ~/.kube/config:/armada/.kube/config \
     -v "$(pwd)"/tools/deployment/airskiff/manifests/:/manifests \
+    -v "${INSTALL_PATH}":/airship-components \
     quay.io/airshipit/armada:latest \
     apply /manifests/airship.yaml

@@ -13,10 +13,9 @@ data:
       release_group: airship-helm-toolkit
   values: {}
   source:
-    type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    type: local
+    location: /airship-components/openstack-helm-infra
     subpath: helm-toolkit
-    reference: master
   dependencies: []
 ---
 schema: armada/Chart/v1
@@ -38,10 +37,9 @@ data:
     network:
       host_namespace: True
   source:
-    type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    type: local
+    location: /airship-components/openstack-helm-infra
     subpath: ingress
-    reference: master
   dependencies:
   - osh-helm-toolkit
 ---
@@ -59,10 +57,9 @@ data:
       release_group: airship-ingress-ucp
   values: {}
   source:
-    type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    type: local
+    location: /airship-components/openstack-helm-infra
     subpath: ingress
-    reference: master
   dependencies:
     - osh-helm-toolkit
 ---
@@ -82,10 +79,9 @@ data:
     storageclass:
       name: general
   source:
-    type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    type: local
+    location: /airship-components/openstack-helm-infra
     subpath: nfs-provisioner
-    reference: master
   dependencies:
     - osh-helm-toolkit
 ---
@@ -106,10 +102,9 @@ data:
       replicas:
         server: 1
   source:
-    type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    type: local
+    location: /airship-components/openstack-helm-infra
     subpath: mariadb
-    reference: master
   dependencies:
     - osh-helm-toolkit
 ---
@@ -132,10 +127,9 @@ data:
       replicas:
         server: 1
   source:
-    type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    type: local
+    location: /airship-components/openstack-helm-infra
     subpath: rabbitmq
-    reference: master
   dependencies:
     - osh-helm-toolkit
 ---
@@ -153,10 +147,9 @@ data:
       release_group: airship-memcached
   values: {}
   source:
-    type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    type: local
+    location: /airship-components/openstack-helm-infra
     subpath: memcached
-    reference: master
   dependencies:
     - osh-helm-toolkit
 ---
@@ -174,10 +167,9 @@ data:
       release_group: airship-keystone-ucp
   values: {}
   source:
-    type: git
-    location: https://git.openstack.org/openstack/openstack-helm.git
+    type: local
+    location: /airship-components/openstack-helm
     subpath: keystone
-    reference: master
   dependencies:
     - osh-helm-toolkit
 ---
@@ -198,10 +190,9 @@ data:
       replicas:
         server: 1
   source:
-    type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    type: local
+    location: /airship-components/openstack-helm-infra
     subpath: postgresql
-    reference: master
   dependencies:
     - osh-helm-toolkit
 ---
@@ -219,10 +210,9 @@ data:
       release_group: airship-barbican
   values: {}
   source:
-    type: git
-    location: https://git.openstack.org/openstack/openstack-helm.git
+    type: local
+    location: /airship-components/openstack-helm
     subpath: barbican
-    reference: master
   dependencies:
     - osh-helm-toolkit
 ---
@@ -244,10 +234,9 @@ data:
         keystone_authtoken:
           timeout: null
   source:
-    type: git
-    location: https://git.openstack.org/openstack/airship-armada.git
+    type: local
+    location: /airship-components/airship-armada
     subpath: charts/armada
-    reference: master
   dependencies:
     - osh-helm-toolkit
 ---
@@ -265,10 +254,9 @@ data:
       release_group: airship-deckhand
   values: {}
   source:
-    type: git
-    location: https://git.openstack.org/openstack/airship-deckhand.git
+    type: local
+    location: /airship-components/airship-deckhand
     subpath: charts/deckhand
-    reference: master
   dependencies:
     - osh-helm-toolkit
 ---
@@ -309,10 +297,9 @@ data:
         promenade:
           service_type: armada
   source:
-    type: git
-    location: https://git.openstack.org/openstack/airship-shipyard.git
+    type: local
+    location: /airship-components/airship-shipyard
     subpath: charts/shipyard
-    reference: master
   dependencies:
     - osh-helm-toolkit
 ---
