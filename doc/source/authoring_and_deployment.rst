@@ -557,6 +557,8 @@ Ensure to select the following:
    ``>300g`` in Drydock means that all remaining disk space is allocated
    to this volume, and that volume needs to be at least 300G in
    size.
+-  Ensure that OpenSSH and Docker (Docker is needed because of
+   miniMirror) are included as installed packages
 -  When you get to the prompt, "How do you want to manage upgrades on
    this system?", choose "No automatic updates" so that packages are
    only updated at the time of our choosing (e.g. maintenance windows).
