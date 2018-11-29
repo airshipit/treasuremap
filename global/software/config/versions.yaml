@@ -511,8 +511,7 @@ data:
       fluent_logging: {}
       grafana: {}
       kibana: {}
-      nagios:
-        nagios: quay.io/attcomdev/nagios:410fcb08d2586e98e18ced317dab4157eb27456e
+      nagios: {}
       prometheus: {}
       prometheus_alertmanager: {}
       prometheus_kube_state_metrics: {}
