@@ -25,7 +25,7 @@ data:
           type: git
         etcd:
           location: https://git.openstack.org/openstack/airship-promenade
-          reference: fafdaae196b1d9890226391e7aea5e8877cafda1
+          reference: 425d8bdff8b5fb9aadd22bfbf6de727986e7abe0
           subpath: charts/etcd
           type: git
         etcd-htk:
@@ -35,7 +35,7 @@ data:
           type: git
       controller-manager:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: fafdaae196b1d9890226391e7aea5e8877cafda1
+        reference: 425d8bdff8b5fb9aadd22bfbf6de727986e7abe0
         subpath: charts/controller_manager
         type: git
       controller-manager-htk:
@@ -45,7 +45,7 @@ data:
         type: git
       coredns:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: fafdaae196b1d9890226391e7aea5e8877cafda1
+        reference: 425d8bdff8b5fb9aadd22bfbf6de727986e7abe0
         subpath: charts/coredns
         type: git
       coredns-htk:
@@ -55,7 +55,7 @@ data:
         type: git
       etcd:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: fafdaae196b1d9890226391e7aea5e8877cafda1
+        reference: 425d8bdff8b5fb9aadd22bfbf6de727986e7abe0
         subpath: charts/etcd
         type: git
       etcd-htk:
@@ -65,7 +65,7 @@ data:
         type: git
       haproxy:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: fafdaae196b1d9890226391e7aea5e8877cafda1
+        reference: 425d8bdff8b5fb9aadd22bfbf6de727986e7abe0
         subpath: charts/haproxy
         type: git
       haproxy-htk:
@@ -85,7 +85,7 @@ data:
         type: git
       proxy:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: fafdaae196b1d9890226391e7aea5e8877cafda1
+        reference: 425d8bdff8b5fb9aadd22bfbf6de727986e7abe0
         subpath: charts/proxy
         type: git
       proxy-htk:
@@ -95,7 +95,7 @@ data:
         type: git
       scheduler:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: fafdaae196b1d9890226391e7aea5e8877cafda1
+        reference: 425d8bdff8b5fb9aadd22bfbf6de727986e7abe0
         subpath: charts/scheduler
         type: git
       scheduler-htk:
@@ -243,7 +243,7 @@ data:
     ucp:
       armada:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: 673b1ed4bcb5ef4f81e5ab6b9ee28c21167dbd53
+        reference: 709eb9ec9b78b76fd18b817ae6c7a32221e9d0c4
         subpath: charts/armada
         type: git
       armada-htk:
@@ -293,7 +293,7 @@ data:
         type: git
       deckhand:
         location: https://git.openstack.org/openstack/airship-deckhand
-        reference: bf98dfdbbc79486350d120dff188c39317f87f0b
+        reference: 139cabd106727d41790005d998a84cc1edba1f6e
         subpath: charts/deckhand
         type: git
       deckhand-htk:
@@ -443,7 +443,7 @@ data:
         type: git
       tiller:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: 673b1ed4bcb5ef4f81e5ab6b9ee28c21167dbd53
+        reference: 709eb9ec9b78b76fd18b817ae6c7a32221e9d0c4
         subpath: charts/tiller
         type: git
       tiller-htk:
@@ -520,13 +520,13 @@ data:
       prometheus_process_exporter: {}
     ucp:
       armada:
-        api: quay.io/airshipit/armada:673b1ed4bcb5ef4f81e5ab6b9ee28c21167dbd53
+        api: quay.io/airshipit/armada:709eb9ec9b78b76fd18b817ae6c7a32221e9d0c4
         helm: docker.io/lachlanevenson/k8s-helm:v2.10.0
         tiller: gcr.io/kubernetes-helm/tiller:v2.10.0
       barbican: {}
       deckhand:
-        db_sync: quay.io/airshipit/deckhand:bf98dfdbbc79486350d120dff188c39317f87f0b
-        deckhand: quay.io/airshipit/deckhand:bf98dfdbbc79486350d120dff188c39317f87f0b
+        db_sync: quay.io/airshipit/deckhand:139cabd106727d41790005d998a84cc1edba1f6e
+        deckhand: quay.io/airshipit/deckhand:139cabd106727d41790005d998a84cc1edba1f6e
       divingbell:
         divingbell: docker.io/ubuntu:16.04
       drydock:
