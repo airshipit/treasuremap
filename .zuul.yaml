@@ -19,16 +19,40 @@
       jobs:
         - airship-seaworthy-site-lint-gate
         - airskiff-site-lint-gate
+        - airskiff-deploy-gate
     gate:
       jobs:
         - airship-seaworthy-site-lint-gate
         - airskiff-site-lint-gate
+        - airskiff-deploy-gate
 
 - nodeset:
     name: airship-treasuremap-single-node
     nodes:
       - name: ubuntu-xenial
         label: ubuntu-xenial
+
+- job:
+    name: airskiff-deploy-gate
+    nodeset: airship-treasuremap-single-node
+    description: |
+      Deploy Memcached using Airskiff and latest Treasuremap changes.
+    timeout: 9600
+    pre-run:
+      - tools/gate/playbooks/git-config.yaml
+      - tools/gate/playbooks/airskiff-reduce-site.yaml
+    run: tools/gate/playbooks/airskiff-deploy-gate.yaml
+    post-run: tools/gate/playbooks/debug-report.yaml
+    required-projects:
+      - openstack/airship-armada
+      - openstack/airship-deckhand
+      - openstack/airship-pegleg
+      - openstack/airship-shipyard
+      - openstack/openstack-helm
+      - openstack/openstack-helm-infra
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^doc/.*$
 
 - job:
     name: airship-seaworthy-site-lint-gate

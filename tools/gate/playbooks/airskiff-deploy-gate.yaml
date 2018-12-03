@@ -1,0 +1,79 @@
+# Copyright 2018 AT&T Intellectual Property.  All other rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- hosts: ubuntu-xenial
+  tasks:
+    - name: Install required packages
+      shell: |
+        ./tools/deployment/airskiff/developer/000-install-packages.sh
+      args:
+        chdir: "{{ zuul.project.src_dir }}"
+      become: yes
+
+    - name: Build Armada
+      shell: |
+        make images
+      args:
+        chdir: "{{ zuul.projects['git.openstack.org/openstack/airship-armada'].src_dir }}"
+      become: yes
+
+    - name: Build Deckhand
+      shell: |
+        make
+      args:
+        chdir: "{{ zuul.projects['git.openstack.org/openstack/airship-deckhand'].src_dir }}"
+      become: yes
+
+    - name: Build Shipyard
+      shell: |
+        make
+      args:
+        chdir: "{{ zuul.projects['git.openstack.org/openstack/airship-shipyard'].src_dir }}"
+      become: yes
+
+    - name: Deploy Kubernetes with KubeADM
+      shell: |
+        ./tools/deployment/airskiff/developer/010-deploy-k8s.sh
+      args:
+        chdir: "{{ zuul.project.src_dir }}"
+
+    - name: Setup OpenStack Client
+      shell: |
+        ./tools/deployment/airskiff/developer/020-setup-client.sh
+      args:
+        chdir: "{{ zuul.project.src_dir }}"
+      become: yes
+
+    - name: Deploy Airship components using Armada
+      shell: |
+        mkdir ~/.kube
+        cp -rp /home/zuul/.kube/config ~/.kube/config
+        ./tools/deployment/airskiff/developer/030-armada-bootstrap.sh
+      args:
+        chdir: "{{ zuul.project.src_dir }}"
+      become: yes
+
+    - name: Deploy Software using Airship
+      shell: |
+        ./tools/deployment/airskiff/developer/100-deploy-osh.sh
+      args:
+        chdir: "{{ zuul.project.src_dir }}"
+      become: yes
+
+    - name: Wait for deployment completion
+      shell: |
+        ./tools/gate/wait-for-shipyard.sh
+      args:
+        chdir: "{{ zuul.project.src_dir }}"
+      become: yes
