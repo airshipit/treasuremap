@@ -19,7 +19,7 @@ metadata:
         name: seccomp-default
         path: .seccompDirPath
       dest:
-        path: .arguments[7]
+        path: .arguments[9]
         pattern: SECCOMP_PROFILE_ROOT
 data:
   arguments:
@@ -30,4 +30,6 @@ data:
     - --node-status-update-frequency=5s
     - --max-pods=200
     - --pods-per-core=10
+    - --kube-api-burst=40
+    - --kube-api-qps=20
     - --seccomp-profile-root=SECCOMP_PROFILE_ROOT
