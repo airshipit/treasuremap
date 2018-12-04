@@ -26,6 +26,7 @@ sudo apt-get install --no-install-recommends -y \
         jq \
         nmap \
         curl \
+        python-pip \
         uuid-runtime \
         apt-transport-https \
         ca-certificates \

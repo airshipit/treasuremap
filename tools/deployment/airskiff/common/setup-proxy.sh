@@ -28,19 +28,4 @@ sed -i -e "/\s      type:/a\        proxy_server: ${PROXY}" \
 sed -i -e "/type: git/a\    proxy_server: ${PROXY}" \
   tools/deployment/airskiff/manifests/airship.yaml
 
-# Configure OpenStack-Helm proxy variables
-cd ${INSTALL_PATH}
-tee -a openstack-helm-infra/tools/gate/devel/local-vars.yaml << EOF
-proxy:
-  http: ${PROXY}
-  https: ${PROXY}
-  noproxy: localhost,127.0.0.1,172.17.0.1,.svc.cluster.local
-EOF
-
-# Add DNS nameservers present in /etc/resolv.conf to OSH playbook vars
-sed -ne "s/nameserver //p" /etc/resolv.conf | while read -r ns; do
-  sed -i -e "/external_dns_nameservers:/ a\      - ${ns}" \
-    openstack-helm-infra/tools/images/kubeadm-aio/assets/opt/playbooks/vars.yaml
-done
-
 cd "${CURRENT_DIR}"

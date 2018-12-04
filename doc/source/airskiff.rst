@@ -21,7 +21,7 @@ Airskiff is packaged with a set of deployment scripts modeled after the
 These scripts:
 
 * Download, build, and containerize the Airship components above from source.
-* Deploy a Kubernetes cluster using KubeADM.
+* Deploy a Kubernetes cluster using Minikube.
 * Deploy Armada, Deckhand, and Shipyard using the latest `Armada image`_.
 * Deploy OpenStack using the Airskiff site and charts from the
   `OpenStack-Helm project`_.
@@ -59,13 +59,13 @@ environment variables:
 
   export USE_PROXY=true
   export PROXY=${http_proxy}
-  export no_proxy=${no_proxy},172.17.0.1,.svc.cluster.local
-  export NO_PROXY=${NO_PROXY},172.17.0.1,.svc.cluster.local
+  export no_proxy=${no_proxy},10.0.2.15,.svc.cluster.local
+  export NO_PROXY=${NO_PROXY},10.0.2.15,.svc.cluster.local
 
 .. note:: The ``.svc.cluster.local`` address is required to allow the OpenStack
   client to communicate without being routed through proxy servers. The IP
-  address ``172.17.0.1`` is the advertised IP address for the Kubernetes API
-  server. Replace the addresses if your configuration does not match the one
+  address ``10.0.2.15`` is the advertised IP address of the minikube Kubernetes
+  cluster. Replace the addresses if your configuration does not match the one
   defined above.
 
 Deploy Airskiff
@@ -110,8 +110,8 @@ Alternatively, this step can be performed by running the script directly:
 
   ./tools/deployment/airskiff/developer/005-clone-dependencies.sh
 
-Deploy Kubernetes with KubeADM
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Deploy Kubernetes with Minikube
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. literalinclude:: ../../tools/deployment/airskiff/developer/010-deploy-k8s.sh
     :language: shell

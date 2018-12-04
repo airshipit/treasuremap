@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# Copyright 2017 The Openstack-Helm Authors.
-# Copyright 2018 AT&T Intellectual Property.  All other rights reserved.
+# Copyright 2019, AT&T Intellectual Property
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -25,10 +24,10 @@ if [ -n "${PROXY}" ]; then
   . tools/deployment/airskiff/common/setup-proxy.sh
 fi
 
-# Deploy a kubeadm-administered cluster.
-cd ${OSH_INFRA_PATH}
-make dev-deploy setup-host
-make dev-deploy k8s
-cd "${CURRENT_DIR}"
+# Deploy K8s with Minikube
+cd "${OSH_INFRA_PATH}"
+bash -c "./tools/deployment/common/005-deploy-k8s.sh"
 
 kubectl label nodes --all --overwrite ucp-control-plane=enabled
+
+cd "${CURRENT_DIR}"
