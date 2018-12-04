@@ -78,6 +78,29 @@ data:
         # were restarted. "Failed to add /run/systemd/ask-password to directory
         # watch: No space left on device". https://bit.ly/2Mj5qn2 TDP bug 427616
         fs.inotify.max_user_watches: '1048576'
+      overrides:
+        divingbell_perm:
+          labels:
+            - label:
+                key: kubernetes-etcd
+                values:
+                - enabled
+              conf:
+                perm:
+                  - path: '/var/lib/etcd/*'
+                    owner: 'root'
+                    group: 'root'
+                    permissions: '0700'
+            - label:
+                key: calico-etcd
+                values:
+                - enabled
+              conf:
+                perm:
+                  - path: '/var/lib/etcd/*'
+                    owner: 'root'
+                    group: 'root'
+                    permissions: '0700'
   dependencies:
     - ucp-divingbell-htk
 ---
