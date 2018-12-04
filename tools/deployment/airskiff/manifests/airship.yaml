@@ -336,7 +336,7 @@ metadata:
   name: airship-components
 data:
   description: Airship software delivery components
-  sequenced: False
+  sequenced: True
   chart_group:
     - shipyard
     - deckhand
