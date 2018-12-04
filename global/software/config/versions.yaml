@@ -608,7 +608,7 @@ data:
         - backports
         url: http://us.archive.ubuntu.com/ubuntu
     unnamed:
-    - ceph-common=10.2.10-0ubuntu0.16.04.1
+    - ceph-common
 metadata:
   labels:
     name: software-versions-global
