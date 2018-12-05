@@ -27,7 +27,7 @@
 - nodeset:
     name: airship-treasuremap-single-node
     nodes:
-      - name: primary
+      - name: ubuntu-xenial
         label: ubuntu-xenial
 
 - job:
