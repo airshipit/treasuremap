@@ -75,7 +75,8 @@ Support
 Bugs may be viewed and reported at the following locations, depending on
 the component:
 
--  For OSH: `Launchpad <https://bugs.launchpad.net/openstack-helm>`__
+-  OpenStack Helm: `OpenStack Storyboard group
+   <https://storyboard.openstack.org/#!/project_group/64>`__
 
 -  Airship: Bugs may be filed using OpenStack Storyboard for specific
    projects in `Airship
