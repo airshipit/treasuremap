@@ -21,6 +21,13 @@
         chdir: "{{ zuul.project.src_dir }}"
       become: yes
 
+    - name: Enable apparmor
+      shell: |
+        ./tools/deployment/airskiff/developer/001-enable-apparmor.sh
+      args:
+        chdir: "{{ zuul.project.src_dir }}"
+      become: yes
+
     - name: Build Armada
       shell: |
         make images
