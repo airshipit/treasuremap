@@ -212,7 +212,7 @@ Remove ``airship-seaworthy`` specific certificates.
 
 ::
 
-    rm -rf airship-treasuremap/site/airship-seaworthy/secrets/certificates/certificates.yaml
+    rm -f airship-treasuremap/site/${NEW_SITE}/secrets/certificates/certificates.yaml
 
 
 You will then need to manually make changes to these files. These site
@@ -240,7 +240,7 @@ Control Plane Ceph Cluster Notes
 
 Environment Ceph parameters for the control plane are located in:
 
-``site/$NEW_SITE/software/charts/ucp/ceph/ceph.yaml``
+``site/${NEW_SITE}/software/charts/ucp/ceph/ceph.yaml``
 
 Setting highlights:
 
@@ -412,7 +412,7 @@ for the control-plane nodes:
 Update Passphrases
 ~~~~~~~~~~~~~~~~~~~~
 
-Replace passphrases under ``site/airship-seaworthy/secrets/passphrases/``
+Replace passphrases under ``site/${NEW_SITE}/secrets/passphrases/``
 with random generated ones (e.g. ``openssl rand -hex 10``).
 
 Manifest linting and combining layers
@@ -545,14 +545,14 @@ Ensure to select the following:
 -  UTC timezone
 -  Hostname that matches the Genesis hostname given in
    ``/data/genesis/hostname`` in
-   ``airship-treasuremap/site/$NEW_SITE/networks/common-addresses.yaml``.
+   ``airship-treasuremap/site/${NEW_SITE}/networks/common-addresses.yaml``.
 -  At the ``Partition Disks`` screen, select ``Manual`` so that you can
    setup the same disk partitioning scheme used on the other control
    plane nodes that will be deployed by MaaS. Select the first logical
    device that corresponds to one of the RAID-1 arrays already setup in
    the hardware controller. On this device, setup partitions matching
    those defined for the ``bootdisk`` in your control plane host profile
-   found in ``airship-treasuremap/site/$NEW_SITE/profiles/host``.
+   found in ``airship-treasuremap/site/${NEW_SITE}/profiles/host``.
    (e.g., 30G for /, 1G for /boot, 100G for /var/log, and all remaining
    storage for /var). Note that the volume size syntax looking like
    ``>300g`` in Drydock means that all remaining disk space is allocated
@@ -572,7 +572,7 @@ resolve public DNS entries (e.g., ``nslookup google.com``,
 
 Ensure that the deployed Genesis hostname matches the hostname in
 ``data/genesis/hostname`` in
-``airship-treasuremap/site/$NEW_SITE/networks/common-addresses.yaml``.
+``airship-treasuremap/site/${NEW_SITE}/networks/common-addresses.yaml``.
 If it does not match, then either change the hostname of the node to
 match the configuration documents, or re-generate the configuration with
 the correct hostname. In order to change the hostname of the deployed
@@ -701,7 +701,7 @@ Then, install the NTP client:
 
 Add the list of NTP servers specified in ``data/ntp/servers_joined`` in
 file
-``airship-treasuremap/site/$NEW_SITE/networks/common-address.yaml``
+``airship-treasuremap/site/${NEW_SITE}/networks/common-address.yaml``
 to ``/etc/ntp.conf`` as follows:
 
 ::
@@ -865,7 +865,7 @@ for the site. Currently there is no authorization checks in place, so
 the credentials for any of the site-defined users will work. For
 example, we can use the ``shipyard`` user, with the password that was
 defined in
-``airship-treasuremap/site/$NEW_SITE/secrets/passphrases/ucp_shipyard_keystone_password.yaml``.
+``airship-treasuremap/site/${NEW_SITE}/secrets/passphrases/ucp_shipyard_keystone_password.yaml``.
 Ex:
 
 ::
