@@ -16,5 +16,4 @@ data:
     - ucp-ceph-osd
     - ucp-ceph-client-update
     - ucp-ceph-provisioners
-    - ucp-ceph-rgw
 ...
