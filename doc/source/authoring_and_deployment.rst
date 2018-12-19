@@ -108,17 +108,19 @@ Hardware Prep
 Disk
 ~~~~
 
-1. Control plane server disks:
+1. For servers that are in the control plane (including Genesis):
 
-   - Two-disk RAID-1 mirror for operating system
-   - Two-disk RAID-1 mirror for ceph journals - preferentially SSDs
-   - Remaining disks as JBOD for Ceph
+   - Two-disk RAID-1: Operating System
+   - Two disks JBOD: Ceph Journal/Meta
+   - Remaining disks JBOD: Ceph OSD
 
-2. Data plane server disks:
+2. For servers that are in the tenant data plane (compute nodes):
 
-   - Two-disk RAID-1 mirror for operating system
+   - Two-disk RAID-1: Operating System
+   - Two disks JBOD: Ceph Journal/Meta
+   - Two disks JBOD: Ceph OSD
    - Remaining disks need to be configured according to the host profile target
-     for each given server (e.g., RAID-10).
+     for each given server (e.g. RAID-10 for OpenStack Ephemeral).
 
 BIOS and IPMI
 ~~~~~~~~~~~~~
