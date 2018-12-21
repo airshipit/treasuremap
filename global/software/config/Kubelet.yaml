@@ -33,3 +33,4 @@ data:
     - --kube-api-burst=40
     - --kube-api-qps=20
     - --seccomp-profile-root=SECCOMP_PROFILE_ROOT
+    - --feature-gates=PodShareProcessNamespace=true
