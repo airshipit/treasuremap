@@ -415,7 +415,16 @@ Update Passphrases
 ~~~~~~~~~~~~~~~~~~~~
 
 Replace passphrases under ``site/${NEW_SITE}/secrets/passphrases/``
-with random generated ones (e.g. ``openssl rand -hex 10``).
+with random generated ones:
+
+- Passpharses generation ``openssl rand -hex 10``
+- UUID generation ``uuidgen`` (e.g. for Ceph filesystem ID)
+- Update ``secrets/passphrases/ipmi_admin_password.yaml`` with IPMI password
+- Update ``secrets/passphrases/ubuntu_crypt_password.yaml`` with password hash:
+
+::
+
+    python3 -c "from crypt import *; print(crypt('<YOUR_PASSWORD>', METHOD_SHA512))"
 
 Manifest linting and combining layers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
