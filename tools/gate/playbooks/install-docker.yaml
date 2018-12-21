@@ -18,13 +18,14 @@
       shell: |
         set -xe;
 
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-        sudo apt-add-repository \
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+        apt-add-repository \
         "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
         $(lsb_release -cs) \
         stable"
 
-        sudo apt-get update
-        sudo apt-get install --no-install-recommends -y docker-ce
+        apt-get update
+        apt-get install --no-install-recommends -y docker-ce
       args:
         chdir: "{{ zuul.project.src_dir }}"
+      become: yes
