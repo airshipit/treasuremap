@@ -493,7 +493,7 @@ Clone the Promenade repo, if not already cloned:
     git clone https://github.com/openstack/airship-promenade
 
 Refer to the ``data/charts/ucp/promenade/reference`` field in
-``airship-treasuremap/global/v4.0/software/config/versions.yaml``. If
+``airship-treasuremap/global/software/config/versions.yaml``. If
 this is a pinned reference (i.e., any reference that's not ``master``),
 then you should checkout the same version of the Promenade repository.
 For example, if the Promenade reference was ``86c3c11...`` in the
@@ -506,7 +506,7 @@ cloned previously:
 
 Likewise, before running the ``simple-deployment.sh`` script, you should
 refer to the ``data/images/ucp/promenade/promenade`` field in
-``~/airship-treasuremap/global/v4.0/software/config/versions.yaml``. If
+``~/airship-treasuremap/global/software/config/versions.yaml``. If
 there is a pinned reference (i.e., any image reference that's not
 ``latest``), then this reference should be used to set the
 ``IMAGE_PROMENADE`` environment variable. For example, if the Promenade
@@ -609,7 +609,7 @@ In order to do this, first you must determine the kernel version that
 will be deployed to those nodes. Start by looking at the host profile
 definition used to deploy other control plane nodes by searching for
 ``control-plane: enabled``. Most likely this will be a file under
-``global/v4.0/profiles/host``. In this file, find the kernel info -
+``global/profiles/host``. In this file, find the kernel info -
 e.g.:
 
 ::
@@ -622,7 +622,7 @@ In this case, it is the hardware enablement kernel for 16.04. To find
 the exact kernel version that will be deployed, we must look into the
 simple-stream image cache that will be used by MaaS to deploy nodes
 with. Locate the ``data/images/ucp/maas/maas_cache`` key in within
-``airship-treasuremap/global/v4.0/software/config/versions.yaml``. This
+``airship-treasuremap/global/software/config/versions.yaml``. This
 is the image that you will need to fetch, using a node with docker
 installed that has access and can reach the site/location hosting the
 image. For example, from the **build node**, the command would take the
@@ -754,7 +754,7 @@ Assuming your genesis HW matches the HW used in your control plane host
 profile, you should manually apply to the genesis node the same Ceph
 partitioning (OSDs & journals) and formatting + mounting (journals only)
 as defined in the control plane host profile. See
-``airship-treasuremap/global/v4.0/profiles/host/base_control_plane.yaml``.
+``airship-treasuremap/global/profiles/host/base_control_plane.yaml``.
 
 For example, if we have a journal SSDs ``/dev/sdb`` on the genesis node,
 then use the ``cfdisk`` tool to format it:
@@ -846,7 +846,7 @@ Start by cloning the shipyard repository to the Genesis node:
     git clone https://github.com/openstack/airship-shipyard
 
 Refer to the ``data/charts/ucp/shipyard/reference`` field in
-``airship-treasuremap/global/v4.0/software/config/versions.yaml``. If
+``airship-treasuremap/global/software/config/versions.yaml``. If
 this is a pinned reference (i.e., any reference that's not ``master``),
 then you should checkout the same version of the Shipyard repository.
 For example, if the Shipyard reference was ``7046ad3...`` in the
@@ -859,7 +859,7 @@ cloned previously:
 
 Likewise, before running the ``deckhand_load_yaml.sh`` script, you
 should refer to the ``data/images/ucp/shipyard/shipyard`` field in
-``airship-treasuremap/global/v4.0/software/config/versions.yaml``. If
+``airship-treasuremap/global/software/config/versions.yaml``. If
 there is a pinned reference (i.e., any image reference that's not
 ``latest``), then this reference should be used to set the
 ``SHIPYARD_IMAGE`` environment variable. For example, if the Shipyard
