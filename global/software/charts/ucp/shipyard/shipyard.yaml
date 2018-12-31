@@ -140,12 +140,6 @@ metadata:
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: ucp_service_accounts
-        path: .ucp.keystone.admin
-      dest:
-        path: .values.endpoints.identity.auth.admin
-    - src:
-        schema: pegleg/AccountCatalogue/v1
-        name: ucp_service_accounts
         path: .ucp.shipyard.postgres
       dest:
         path: .values.endpoints.postgresql_shipyard_db.auth.user
@@ -173,6 +167,18 @@ metadata:
         path: .ucp.airflow.oslo_messaging.admin
       dest:
         path: .values.endpoints.oslo_messaging.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.keystone.admin
+      dest:
+        path: .values.endpoints.identity.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.shipyard.keystone
+      dest:
+        path: .values.endpoints.identity.auth.shipyard
 
     # Secrets
     - dest:

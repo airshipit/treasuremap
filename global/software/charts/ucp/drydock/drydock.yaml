@@ -102,9 +102,15 @@ metadata:
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: ucp_service_accounts
+        path: .ucp.keystone.admin
+      dest:
+        path: .values.endpoints.identity.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
         path: .ucp.drydock.keystone
       dest:
-        path: .values.endpoints.identity.drydock.user
+        path: .values.endpoints.identity.auth.drydock
 
     # Secrets
     - dest:
