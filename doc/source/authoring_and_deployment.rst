@@ -522,7 +522,7 @@ Now, create an output directory for Promenade bundles and run the
 ::
 
     mkdir ${NEW_SITE}_bundle
-    sudo airship-promenade/tools/simple-deployment.sh ${NEW_SITE}_collected ${NEW_SITE}_bundle
+    sudo -E airship-promenade/tools/simple-deployment.sh ${NEW_SITE}_collected ${NEW_SITE}_bundle
 
 Estimated runtime: About **1 minute**
 
@@ -891,7 +891,7 @@ Next, run the deckhand\_load\_yaml.sh script as follows:
 
 ::
 
-    sudo airship-shipyard/tools/deckhand_load_yaml.sh ${NEW_SITE} ${NEW_SITE}_collected
+    sudo -E airship-shipyard/tools/deckhand_load_yaml.sh ${NEW_SITE} ${NEW_SITE}_collected
 
 Estimated runtime: **3m**
 
@@ -899,7 +899,7 @@ Now deploy the site with shipyard:
 
 ::
 
-    sudo airship-shipyard/tools/deploy_site.sh
+    sudo -E airship-shipyard/tools/deploy_site.sh
 
 Estimated runtime: **1h30m**
 
