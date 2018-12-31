@@ -435,8 +435,7 @@ proceeding:
 
 ::
 
-    sudo airship-pegleg/tools/pegleg.sh lint \
-      -p airship-treasuremap
+    sudo airship-pegleg/tools/pegleg.sh -r airship-treasuremap lint
 
 Note: ``P001`` and ``P003`` linting errors are expected for missing
 certificates, as they are not generated until the next section. You may
@@ -449,7 +448,7 @@ global + site type + site YAML:
 ::
 
     sudo sh airship-pegleg/tools/pegleg.sh site \
-      -p airship-treasuremap \
+      -r airship-treasuremap \
       collect $NEW_SITE
 
 Perform a visual inspection of the output. If any errors are discovered,
@@ -460,9 +459,8 @@ After you have an error-free output, save the resulting YAML as follows:
 
 ::
 
-    mkdir -p ~/${NEW_SITE}_collected
     sudo airship-pegleg/tools/pegleg.sh site \
-      -p airship-treasuremap \
+      -r airship-treasuremap \
       collect $NEW_SITE -s ${NEW_SITE}_collected
 
 It is this output which will be used in subsequent steps.
@@ -477,7 +475,7 @@ prior to submitting via Shipyard:
 ::
 
     sudo airship-pegleg/tools/pegleg.sh site \
-      -p airship-treasuremap \
+      -r airship-treasuremap \
       render $NEW_SITE
 
 Inspect the rendered document for any errors. If there are errors,
