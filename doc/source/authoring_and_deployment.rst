@@ -29,7 +29,7 @@ collection of Helm charts used to deploy OpenStack on kubernetes.
 
 **Undercloud/Overcloud**: Terms used to distinguish which cloud is
 deployed on top of the other. In Airship sites, OpenStack (overcloud)
-is deployed on top of Kubernetes (underlcoud).
+is deployed on top of Kubernetes (undercloud).
 
 **Airship**: A specific implementation of OpenStack Helm charts onto
 kubernetes, the deployment of which is the primary focus of this document.
