@@ -1064,13 +1064,6 @@ data:
         default: null
       scheme:
         default: "http"
-      port:
-        client:
-          default: 9200
-        http:
-          default: 80
-        discovery:
-          default: 9300
     prometheus_elasticsearch_exporter:
       namespace: null
       hosts:
