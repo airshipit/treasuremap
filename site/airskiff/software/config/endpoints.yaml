@@ -56,8 +56,8 @@ data:
       namespace: ucp
       name: keystone
       hosts:
-        default: keystone-api
-        public: keystone
+        default: keystone
+        internal: keystone-api
       host_fqdn_override:
         default: null
         public:
