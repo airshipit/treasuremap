@@ -584,7 +584,7 @@ data:
       =Fm3p
       -----END PGP PUBLIC KEY BLOCK-----
     named:
-      docker: docker-engine=1.13.1-0~ubuntu-xenial
+      docker: docker-engine=17.03.1~ce-0~ubuntu-xenial
       socat: socat=1.7.3.1-1
     repositories:
       docker:
