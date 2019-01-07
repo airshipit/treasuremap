@@ -29,47 +29,47 @@ data:
               location: /dev/sdd
             journal:
               type: block-logical
-              location: /dev/sdb1
+              location: /dev/sdb
           - data:
               type: block-logical
               location: /dev/sde
             journal:
               type: block-logical
-              location: /dev/sdb2
+              location: /dev/sdb
           - data:
               type: block-logical
               location: /dev/sdf
             journal:
               type: block-logical
-              location: /dev/sdb3
+              location: /dev/sdb
           - data:
               type: block-logical
               location: /dev/sdg
             journal:
               type: block-logical
-              location: /dev/sdb4
+              location: /dev/sdb
           - data:
               type: block-logical
               location: /dev/sdh
             journal:
               type: block-logical
-              location: /dev/sdc1
+              location: /dev/sdc
           - data:
               type: block-logical
               location: /dev/sdi
             journal:
               type: block-logical
-              location: /dev/sdc2
+              location: /dev/sdc
           - data:
               type: block-logical
               location: /dev/sdj
             journal:
               type: block-logical
-              location: /dev/sdc3
+              location: /dev/sdc
           - data:
               type: block-logical
               location: /dev/sdk
             journal:
               type: block-logical
-              location: /dev/sdc4
+              location: /dev/sdc
 ...

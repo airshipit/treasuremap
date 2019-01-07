@@ -33,23 +33,23 @@ data:
               location: /dev/sde
             journal:
               type: block-logical
-              location: /dev/sdb1
+              location: /dev/sdb
           - data:
               type: block-logical
               location: /dev/sdf
             journal:
               type: block-logical
-              location: /dev/sdb2
+              location: /dev/sdb
           - data:
               type: block-logical
               location: /dev/sdg
             journal:
               type: block-logical
-              location: /dev/sdc1
+              location: /dev/sdc
           - data:
               type: block-logical
               location: /dev/sdh
             journal:
               type: block-logical
-              location: /dev/sdc2
+              location: /dev/sdc
 ...
