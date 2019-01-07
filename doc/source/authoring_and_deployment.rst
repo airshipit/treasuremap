@@ -435,7 +435,8 @@ proceeding:
 
 ::
 
-    sudo airship-pegleg/tools/pegleg.sh -r airship-treasuremap lint
+    sudo airship-pegleg/tools/pegleg.sh repo \
+      -r airship-treasuremap lint
 
 Note: ``P001`` and ``P003`` linting errors are expected for missing
 certificates, as they are not generated until the next section. You may
