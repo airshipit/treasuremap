@@ -40,54 +40,12 @@ metadata:
         path: .values.network.cluster
     - src:
         schema: pegleg/EndpointCatalogue/v1
-        name: osh_endpoints
-        path: .osh.identity
-      dest:
-        path: .values.endpoints.identity
-    - src:
-        schema: pegleg/EndpointCatalogue/v1
-        name: ucp_endpoints
-        path: .ceph.object_store
-      dest:
-        path: .values.endpoints.object_store
-    - src:
-        schema: pegleg/EndpointCatalogue/v1
         name: ucp_endpoints
         path: .ceph.ceph_mon
       dest:
         path: .values.endpoints.ceph_mon
-    - src:
-        schema: pegleg/EndpointCatalogue/v1
-        name: ucp_endpoints
-        path: .ceph.ceph_mgr
-      dest:
-        path: .values.endpoints.ceph_mgr
-    - src:
-        schema: pegleg/AccountCatalogue/v1
-        name: osh_service_accounts
-        path: .osh.keystone.admin
-      dest:
-        path: .values.endpoints.identity.auth.admin
-    - src:
-        schema: pegleg/AccountCatalogue/v1
-        name: osh_service_accounts
-        path: .osh.swift.keystone
-      dest:
-        path: .values.endpoints.identity.auth.swift
 
     # Secrets
-    - dest:
-        path: .values.endpoints.identity.auth.admin.password
-      src:
-        schema: deckhand/Passphrase/v1
-        name: osh_keystone_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.identity.auth.swift.password
-      src:
-        schema: deckhand/Passphrase/v1
-        name: ceph_swift_keystone_password
-        path: .
     - dest:
        path: .values.conf.ceph.global.fsid
       src:
@@ -119,23 +77,13 @@ data:
       job:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-      provisioner:
-        node_selector_key: ucp-control-plane
-        node_selector_value: enabled
       mds:
         node_selector_key: ceph-mds
-        node_selector_value: enabled
-      rgw:
-        node_selector_key: ceph-rgw
         node_selector_value: enabled
       mgr:
         node_selector_key: ceph-mgr
         node_selector_value: enabled
     endpoints:
-      identity:
-        namespace: openstack
-      object_store:
-        namespace: ceph
       ceph_mon:
         namespace: ceph
     deployment:

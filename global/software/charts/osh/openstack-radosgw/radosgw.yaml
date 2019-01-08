@@ -57,12 +57,6 @@ metadata:
         path: .ceph.tenant_ceph_mon
       dest:
         path: .values.endpoints.ceph_mon
-    - src:
-        schema: pegleg/EndpointCatalogue/v1
-        name: ucp_endpoints
-        path: .ceph.tenant_ceph_mgr
-      dest:
-        path: .values.endpoints.ceph_mgr
 
     # Credentials
     - src:
