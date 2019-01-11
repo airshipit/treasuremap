@@ -32,7 +32,7 @@ metadata:
         name: ucp_endpoints
         path: .ucp.oslo_db
       dest:
-        path: .values.endpoints.olso_db
+        path: .values.endpoints.oslo_db
     # Accounts
     - src:
         schema: pegleg/AccountCatalogue/v1
