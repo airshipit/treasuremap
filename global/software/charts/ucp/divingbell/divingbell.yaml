@@ -87,6 +87,9 @@ data:
                 - enabled
               conf:
                 perm:
+                  rerun_policy: always
+                  rerun_interval: 120
+                  paths:
                   - path: '/var/lib/etcd/*'
                     owner: 'root'
                     group: 'root'
@@ -97,6 +100,9 @@ data:
                 - enabled
               conf:
                 perm:
+                  rerun_policy: always
+                  rerun_interval: 120
+                  paths:
                   - path: '/var/lib/etcd/*'
                     owner: 'root'
                     group: 'root'

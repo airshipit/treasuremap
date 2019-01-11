@@ -308,7 +308,7 @@ data:
         type: git
       divingbell:
         location: https://git.openstack.org/openstack/airship-divingbell
-        reference: 606cf35bdad637427b8e2632a0d1c21d05dd550e
+        reference: f4c8228ff62bfecf5d2df977f7abc5db3e693e4d
         subpath: divingbell
         type: git
       divingbell-htk:
