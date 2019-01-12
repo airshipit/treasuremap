@@ -1,0 +1,13 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: podsecuritypolicy
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: Cluster Pod Security Policy definitions
+  chart_group:
+    - podsecuritypolicy

@@ -10,6 +10,7 @@ metadata:
 data:
   release_prefix: airship
   chart_groups:
+    - podsecuritypolicy
     - kubernetes-proxy
     - kubernetes-container-networking
     - kubernetes-dns

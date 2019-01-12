@@ -1,0 +1,73 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: podsecuritypolicy
+  labels:
+    name: podsecuritypolicy-global
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.podsecuritypolicy
+      dest:
+        path: .source
+data:
+  chart_name: podsecuritypolicy
+  release: podsecuritypolicy
+  namespace: ucp
+  wait:
+    resources: []
+  install:
+    no_hooks: true
+  upgrade:
+    no_hooks: true
+  values:
+    conf:
+      # This defines creation of ClusterRoleBindings that configure
+      # default PodSecurityPolicies for the subjects below.
+      # `nil` avoids creation of a default binding for the subject.
+      #
+      defaults:
+        serviceaccounts: psp-default
+        authenticated: psp-default
+        unauthenticated: nil
+    data:
+      # Each of these corresponds to the `spec` of a PodSecurityPolicy object.
+      # Note that this default PodSecurityPolicy is incredibly permissive.  It is
+      # intended to be tuned over time as a default, and to be overridden by
+      # operators as appropriate.
+      #
+      # A ClusterRole will be created for the PSP, with the same `metadata.name`.
+      #
+      # Note: you can define as many PSPs here as you need.
+      #
+      psp-default:  # This will be the `metadata.name` of the PodSecurityPolicy
+        privileged: true
+        allowPrivilegeEscalation: true
+        hostNetwork: true
+        hostPID: true
+        hostIPC: true
+        seLinux:
+          rule: RunAsAny
+        supplementalGroups:
+          rule: RunAsAny
+        runAsUser:
+          rule: RunAsAny
+        fsGroup:
+          rule: RunAsAny
+        volumes:
+        - '*'
+        allowedCapabilities:
+        - '*'
+        hostPorts:
+        - min: 1
+          max: 65536
+  dependencies:
+    - osh-infra-helm-toolkit
+...
