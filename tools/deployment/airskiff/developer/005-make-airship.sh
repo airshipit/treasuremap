@@ -25,7 +25,10 @@ CURRENT_DIR="$(pwd)"
 
 cd ${INSTALL_PATH}
 git clone https://git.openstack.org/openstack/airship-armada.git
-cd airship-armada && make images
+cd airship-armada
+# NOTE(drewwalters96): Temporarily pin Armada to K8s v2.11.0.
+git checkout dd75474d78e69f3634eb94c8ea6730b898e83277
+make images IMAGE_TAG=dd75474d78e69f3634eb94c8ea6730b898e83277
 
 cd ${INSTALL_PATH}
 git clone https://git.openstack.org/openstack/airship-deckhand.git
