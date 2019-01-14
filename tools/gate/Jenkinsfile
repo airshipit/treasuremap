@@ -25,7 +25,7 @@ GENESIS_IP = '10.23.21.11'
 GENESIS_CREDS = 'airship-seaworthy-key'
 
 GENESIS_IPMI_IP = '10.23.104.11'
-GENESIS_CEPH_DISKS = ['d', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
+GENESIS_CEPH_DISKS = ['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
 
 IPMI_IPS = ['10.23.104.12',
             '10.23.104.13',
