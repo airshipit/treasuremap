@@ -30,7 +30,7 @@ metadata:
         name: osh_infra_endpoints
         path: .osh_infra.oslo_db
       dest:
-        path: .values.endpoints.olso_db
+        path: .values.endpoints.oslo_db
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: osh_infra_endpoints

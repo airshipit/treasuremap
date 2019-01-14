@@ -86,9 +86,9 @@ metadata:
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: ucp_endpoints
-        path: .ucp.oslo_messaging
+        path: .ucp.airflow_oslo_messaging
       dest:
-        path: .values.endpoints.olso_messaging
+        path: .values.endpoints.oslo_messaging
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: ucp_endpoints

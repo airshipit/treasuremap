@@ -154,6 +154,19 @@ data:
         api:
           default: 9311
           public: 80
+    airflow_oslo_messaging:
+      namespace: null
+      hosts:
+        default: rabbitmq
+      host_fqdn_override:
+        default: null
+      path: /airflow
+      scheme: amqp
+      port:
+        amqp:
+          default: 5672
+        http:
+          default: 15672
     oslo_messaging:
       namespace: null
       hosts:
