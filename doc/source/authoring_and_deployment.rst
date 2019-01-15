@@ -900,7 +900,8 @@ Now deploy the site with shipyard:
 
 ::
 
-    sudo -E airship-shipyard/tools/deploy_site.sh
+    cd airship-shipyard/tools/
+    sudo -E ./deploy_site.sh
 
 Estimated runtime: **1h30m**
 
