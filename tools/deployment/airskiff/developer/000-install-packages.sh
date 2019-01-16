@@ -19,6 +19,7 @@ set -xe
 
 sudo apt-get update
 sudo apt-get install --no-install-recommends -y \
+        apparmor \
         ca-certificates \
         git \
         make \
@@ -41,6 +42,10 @@ sudo apt-add-repository \
 
 sudo apt-get update
 sudo apt-get install --no-install-recommends -y docker-ce
+
+# Enable apparmor
+sudo systemctl enable apparmor
+sudo systemctl start apparmor
 
 # Add $USER to docker group
 # NOTE: This requires re-authentication. Restart your shell.
