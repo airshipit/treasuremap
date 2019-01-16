@@ -50,11 +50,11 @@ metadata:
         name: osh_infra_service_accounts
         path: .osh_infra.prometheus.admin
       dest:
-        path: .values.endpoints.prometheus.auth.admin
+        path: .values.endpoints.monitoring.auth.admin
 
     # Secrets
     - dest:
-        path: .values.endpoints.prometheus.auth.admin.password
+        path: .values.endpoints.monitoring.auth.admin.password
       src:
         schema: deckhand/Passphrase/v1
         name: osh_infra_prometheus_admin_password

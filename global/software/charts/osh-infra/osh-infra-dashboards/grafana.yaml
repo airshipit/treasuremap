@@ -71,12 +71,6 @@ metadata:
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_infra_service_accounts
-        path: .osh_infra.prometheus.admin
-      dest:
-        path: .values.endpoints.monitoring.auth.admin
-    - src:
-        schema: pegleg/AccountCatalogue/v1
-        name: osh_infra_service_accounts
         path: .osh_infra.grafana.oslo_db.database
       dest:
         path: .values.endpoints.oslo_db.path
@@ -94,6 +88,12 @@ metadata:
       dest:
         path: .values.endpoints.oslo_db_session.path
         pattern: DB_NAME
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_infra_service_accounts
+        path: .osh_infra.prometheus.admin
+      dest:
+        path: .values.endpoints.monitoring.auth.user
 
     # Secrets
     - dest:
@@ -127,7 +127,7 @@ metadata:
         name: osh_infra_oslo_db_admin_password
         path: .
     - dest:
-        path: .values.endpoints.monitoring.auth.admin.password
+        path: .values.endpoints.monitoring.auth.user.password
       src:
         schema: deckhand/Passphrase/v1
         name: osh_infra_prometheus_admin_password
