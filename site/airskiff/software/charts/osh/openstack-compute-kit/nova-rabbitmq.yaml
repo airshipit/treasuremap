@@ -10,12 +10,10 @@ metadata:
       name: nova-rabbitmq-global
       component: nova
     actions:
-      - method: merge
-        path: .values.pod
       - method: delete
         path: .values.labels.prometheus_rabbitmq_exporter
       - method: merge
-        path: .values.monitoring
+        path: .
   storagePolicy: cleartext
 data:
   test:
