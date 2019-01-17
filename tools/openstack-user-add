@@ -1,0 +1,41 @@
+#!/bin/bash
+
+if [ -z "$2" ]; then
+    echo "Usage: openstack-user-add <user> <email>"
+    exit 1
+fi
+
+
+OS_USER=$1
+OS_PROJ="${OS_USER}-proj"
+OS_EMAIL=$2
+
+OS_PASSWD=`openssl rand -hex 10`
+OS_DOMAIN='default'
+
+openstack domain create --or-show --enable ${OS_DOMAIN}
+
+openstack project create --or-show --enable \
+    --domain ${OS_DOMAIN} ${OS_PROJ}
+
+openstack user create --or-show --enable \
+    --domain ${OS_DOMAIN} \
+    --email ${OS_EMAIL} ${OS_USER}
+
+openstack user set --domain ${OS_DOMAIN} \
+    --password=${OS_PASSWD} ${OS_USER}
+
+openstack role add --project-domain ${OS_DOMAIN} \
+    --user-domain ${OS_DOMAIN} \
+    --project ${OS_PROJ} \
+    --user ${OS_USER} member
+
+openstack quota set --floating-ips 4 ${OS_PROJ}
+openstack quota set --cores 36 ${OS_PROJ}
+openstack quota set --ram 98304 ${OS_PROJ}
+
+echo https://dashboard.atlantafoundry.com/
+echo "Domain: ${OS_DOMAIN}"
+echo "User: ${OS_USER}"
+echo "Passwd: ${OS_PASSWD}"
+
