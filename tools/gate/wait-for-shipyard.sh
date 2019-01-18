@@ -26,6 +26,10 @@ while true; do
         status=$(${SHIPYARD} describe "$ACTION" | grep -i "Lifecycle" | \
                 awk '{print $2}')
 
+        steps=$(${SHIPYARD} describe "$ACTION" | grep -i "step/" | \
+                awk '{print $3}')
+
+        # Verify lifecycle status
         if [ "${status}" == "Failed" ]; then
                 echo -e "\n$ACTION FAILED\n"
                 ${SHIPYARD} describe "${ACTION}"
@@ -33,6 +37,15 @@ while true; do
         fi
 
         if [ "${status}" == "Complete" ]; then
+                # Verify status of each action step
+                for step in $steps; do
+                  if [ "${step}" == "failed" ]; then
+                    echo -e "\n$ACTION FAILED\n"
+                    ${SHIPYARD} describe "${ACTION}"
+                    exit 1
+                  fi
+                done
+
                 echo -e "\n$ACTION completed SUCCESSFULLY\n"
                 ${SHIPYARD} describe "${ACTION}"
                 exit 0
