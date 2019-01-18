@@ -15,7 +15,7 @@ import groovy.json.JsonOutput
 PEGLEG_IMAGE = 'quay.io/airshipit/pegleg:178c058474fb632806e281673d3eaf6be80fa854'
 
 KEYSTONE_URL = 'https://iam.atlantafoundry.com'
-SHIPYARD_URL = 'https://shipyard.atlantafoundry.com'
+SHIPYARD_URL = 'https://shipyard.atlantafoundry.com/api/v1.0'
 uuid = UUID.randomUUID().toString()
 
 SITE_NAME='airship-seaworthy'
@@ -132,7 +132,6 @@ def pegleg_site_collect = {
         sh "tar czf site-config.tar.gz ${SITE_NAME}"
 
         archiveArtifacts 'site-config.tar.gz'
-        artifactory.upload('site-config.tar.gz', "${ARTF_PATH}/")
     }
 }
 
