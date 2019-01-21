@@ -106,22 +106,22 @@ data:
     osh:
       barbican:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: 5b86825680e8dfa5147f9d64ad2be325bd2ac620
+        reference: 1173ef79a1c10b94dda2ea81a122e0a0d8ba7fc0
         subpath: barbican
         type: git
       cinder:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: 5b86825680e8dfa5147f9d64ad2be325bd2ac620
+        reference: 1173ef79a1c10b94dda2ea81a122e0a0d8ba7fc0
         subpath: cinder
         type: git
       glance:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: 5b86825680e8dfa5147f9d64ad2be325bd2ac620
+        reference: 1173ef79a1c10b94dda2ea81a122e0a0d8ba7fc0
         subpath: glance
         type: git
       heat:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: 5b86825680e8dfa5147f9d64ad2be325bd2ac620
+        reference: 1173ef79a1c10b94dda2ea81a122e0a0d8ba7fc0
         subpath: heat
         type: git
       helm_toolkit:
@@ -131,7 +131,7 @@ data:
         type: git
       horizon:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: 5b86825680e8dfa5147f9d64ad2be325bd2ac620
+        reference: 1173ef79a1c10b94dda2ea81a122e0a0d8ba7fc0
         subpath: horizon
         type: git
       ingress:
@@ -141,7 +141,7 @@ data:
         type: git
       keystone:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: 5b86825680e8dfa5147f9d64ad2be325bd2ac620
+        reference: 1173ef79a1c10b94dda2ea81a122e0a0d8ba7fc0
         subpath: keystone
         type: git
       libvirt:
@@ -161,12 +161,12 @@ data:
         type: git
       neutron:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: 5b86825680e8dfa5147f9d64ad2be325bd2ac620
+        reference: 1173ef79a1c10b94dda2ea81a122e0a0d8ba7fc0
         subpath: neutron
         type: git
       nova:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: 5b86825680e8dfa5147f9d64ad2be325bd2ac620
+        reference: 1173ef79a1c10b94dda2ea81a122e0a0d8ba7fc0
         subpath: nova
         type: git
       openvswitch:
@@ -258,7 +258,7 @@ data:
         type: git
       barbican:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: 5b86825680e8dfa5147f9d64ad2be325bd2ac620
+        reference: 1173ef79a1c10b94dda2ea81a122e0a0d8ba7fc0
         subpath: barbican
         type: git
       barbican-htk:
@@ -298,7 +298,7 @@ data:
         type: git
       deckhand:
         location: https://git.openstack.org/openstack/airship-deckhand
-        reference: d5462d0c7046a8e5a134348c0c23cd0b073183e0
+        reference: daee3f2234c14ed0247838d29ec20629bde06668
         subpath: charts/deckhand
         type: git
       deckhand-htk:
@@ -338,7 +338,7 @@ data:
         type: git
       keystone:
         location: https://git.openstack.org/openstack/openstack-helm
-        reference: 5b86825680e8dfa5147f9d64ad2be325bd2ac620
+        reference: 1173ef79a1c10b94dda2ea81a122e0a0d8ba7fc0
         subpath: keystone
         type: git
       keystone-htk:
@@ -530,8 +530,8 @@ data:
         tiller: gcr.io/kubernetes-helm/tiller:v2.10.0
       barbican: {}
       deckhand:
-        db_sync: quay.io/airshipit/deckhand:d5462d0c7046a8e5a134348c0c23cd0b073183e0
-        deckhand: quay.io/airshipit/deckhand:d5462d0c7046a8e5a134348c0c23cd0b073183e0
+        db_sync: quay.io/airshipit/deckhand:daee3f2234c14ed0247838d29ec20629bde06668
+        deckhand: quay.io/airshipit/deckhand:daee3f2234c14ed0247838d29ec20629bde06668
       divingbell:
         divingbell: docker.io/ubuntu:16.04
       drydock:
