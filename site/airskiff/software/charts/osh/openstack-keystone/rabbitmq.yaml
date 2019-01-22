@@ -10,12 +10,10 @@ metadata:
       name: keystone-rabbitmq-global
       component: keystone
     actions:
-      - method: merge
-        path: .values.pod
       - method: delete
         path: .values.labels.prometheus_rabbitmq_exporter
-      - method: replace
-        path: .values.monitoring
+      - method: merge
+        path: .
   storagePolicy: cleartext
 data:
   test:

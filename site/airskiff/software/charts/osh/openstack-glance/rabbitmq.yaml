@@ -10,12 +10,10 @@ metadata:
       name: glance-rabbitmq-global
       component: glance
     actions:
-      - method: merge
-        path: .values.pod
       - method: delete
         path: .values.labels.prometheus_rabbitmq_exporter
-      - method: replace
-        path: .values.monitoring
+      - method: merge
+        path: .
   storagePolicy: cleartext
 data:
   test:
