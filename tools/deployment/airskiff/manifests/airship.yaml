@@ -239,9 +239,6 @@ data:
     labels:
       release_group: airship-armada
   values:
-    images:
-      tags:
-        api: 'quay.io/airshipit/armada:dd75474d78e69f3634eb94c8ea6730b898e83277'
     conf:
       armada:
         keystone_authtoken:

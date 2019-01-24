@@ -45,8 +45,6 @@
     post-run: tools/gate/playbooks/debug-report.yaml
     required-projects:
       - name: openstack/airship-armada
-        # NOTE(drewwalters96): Temporarily pin Armada to K8s v2.11.0.
-        override-checkout: dd75474d78e69f3634eb94c8ea6730b898e83277
       - name: openstack/airship-deckhand
       - name: openstack/airship-pegleg
       - name: openstack/airship-shipyard
