@@ -34,6 +34,11 @@ data:
     timeout: 100
     labels:
       release_group: airship-ucp-tiller
+    native:
+      # Allows tiller to update its own release's status to DEPLOYED before it
+      # goes away during an upgrade, otherwise it can get stuck in
+      # PENDING_UPGRADE status.
+      enabled: false
   install:
     no_hooks: false
   upgrade:

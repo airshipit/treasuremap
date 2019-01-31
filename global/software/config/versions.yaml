@@ -248,7 +248,7 @@ data:
     ucp:
       armada:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: 709eb9ec9b78b76fd18b817ae6c7a32221e9d0c4
+        reference: 03dd1f27c1b0827c4a8d309a3b592acef5fde5aa
         subpath: charts/armada
         type: git
       armada-htk:
@@ -448,7 +448,7 @@ data:
         type: git
       tiller:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: 091dbd283dbd6e7d547af5f2a81a555c39d89167
+        reference: 03dd1f27c1b0827c4a8d309a3b592acef5fde5aa
         subpath: charts/tiller
         type: git
       tiller-htk:
@@ -457,7 +457,7 @@ data:
         subpath: helm-toolkit
         type: git
   files:
-    kubelet: https://dl.k8s.io/v1.10.11/kubernetes-node-linux-amd64.tar.gz
+    kubelet: https://dl.k8s.io/v1.11.6/kubernetes-node-linux-amd64.tar.gz
   images:
     calico:
       calico: {}
@@ -475,27 +475,27 @@ data:
       tenant-ceph-rgw: {}
     kubernetes:
       apiserver:
-        anchor: gcr.io/google-containers/hyperkube-amd64:v1.10.11
-        apiserver: gcr.io/google-containers/hyperkube-amd64:v1.10.11
+        anchor: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+        apiserver: gcr.io/google-containers/hyperkube-amd64:v1.11.6
       controller-manager:
-        anchor: gcr.io/google-containers/hyperkube-amd64:v1.10.11
-        controller_manager: gcr.io/google-containers/hyperkube-amd64:v1.10.11
+        anchor: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+        controller_manager: gcr.io/google-containers/hyperkube-amd64:v1.11.6
       coredns:
-        coredns: docker.io/coredns/coredns:1.1.2
+        coredns: docker.io/coredns/coredns:1.1.3
       etcd:
-        etcd: quay.io/coreos/etcd:v3.2.14
-        etcdctl: quay.io/coreos/etcd:v3.2.14
+        etcd: quay.io/coreos/etcd:v3.2.18
+        etcdctl: quay.io/coreos/etcd:v3.2.18
       haproxy:
-        anchor: gcr.io/google_containers/hyperkube-amd64:v1.10.11
+        anchor: gcr.io/google_containers/hyperkube-amd64:v1.11.6
         haproxy: docker.io/haproxy:1.8.3
       ingress: {}
-      kubectl: gcr.io/google-containers/hyperkube-amd64:v1.10.11
+      kubectl: gcr.io/google-containers/hyperkube-amd64:v1.11.6
       pause: gcr.io/google-containers/pause-amd64:3.1
       proxy:
-        proxy: gcr.io/google-containers/hyperkube-amd64:v1.10.11
+        proxy: gcr.io/google-containers/hyperkube-amd64:v1.11.6
       scheduler:
-        anchor: gcr.io/google-containers/hyperkube-amd64:v1.10.11
-        scheduler: gcr.io/google-containers/hyperkube-amd64:v1.10.11
+        anchor: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+        scheduler: gcr.io/google-containers/hyperkube-amd64:v1.11.6
     osh:
       barbican: {}
       cinder: {}
@@ -525,9 +525,9 @@ data:
       prometheus_process_exporter: {}
     ucp:
       armada:
-        api: quay.io/airshipit/armada:709eb9ec9b78b76fd18b817ae6c7a32221e9d0c4
-        helm: docker.io/lachlanevenson/k8s-helm:v2.10.0
-        tiller: gcr.io/kubernetes-helm/tiller:v2.10.0
+        api: quay.io/airshipit/armada:03dd1f27c1b0827c4a8d309a3b592acef5fde5aa
+        helm: docker.io/lachlanevenson/k8s-helm:v2.12.1
+        tiller: gcr.io/kubernetes-helm/tiller:v2.12.1
       barbican: {}
       deckhand:
         db_sync: quay.io/airshipit/deckhand:0aae9dc1776bd97ab8f4152a51baedb24eb61396
