@@ -613,55 +613,11 @@ e.g.:
 
 ::
 
-    platform:
-        image: 'xenial'
-        kernel: 'hwe-16.04'
-
-In this case, it is the hardware enablement kernel for 16.04. To find
-the exact kernel version that will be deployed, we must look into the
-simple-stream image cache that will be used by MaaS to deploy nodes
-with. Locate the ``data/images/ucp/maas/maas_cache`` key in within
-``airship-treasuremap/global/software/config/versions.yaml``. This
-is the image that you will need to fetch, using a node with docker
-installed that has access and can reach the site/location hosting the
-image. For example, from the **build node**, the command would take the
-form:
-
-::
-
-    sudo docker pull YOUR_SSTREAM_IMAGE
-
-Then, create a container from that image:
-
-::
-
-    cd ~
-    sudo sh -c "$(docker images | grep sstream-cache | head -1 | awk '{print $1}' > image_name)"
-    sudo docker create --name sstream $(cat image_name)
-
-Then use the container ID returned from the last command as follows:
-
-::
-
-    sudo docker start sstream
-    sudo docker exec -it sstream /bin/bash
-
-In the container, ``cd`` to the following location (substituting for the
-platform image and platform kernel identified in the host profile
-previously, and choosing the folder corresponding to the most current
-date if more than one are available) and run the ``file`` command on the
-``boot-kernel`` file:
-
-::
-
-    cd /var/www/html/maas/images/ephemeral-v3/daily/PLATFORM_IMAGE/amd64/LATEST_DATE/PLATFORM_KERNEL/generic
-    file boot-kernel
-
-This will produce the complete kernel version. E.g.:
-
-::
-
-    Linux kernel x86 boot executable bzImage, version 4.13.0-43-generic (buildd@lcy01-amd64-029) #48~16.04.1-Ubuntu S, RO-rootFS, swap_dev 0x7, Normal VGA
+  platform:
+    image: 'xenial'
+    kernel: 'hwe-16.04'
+    kernel_params:
+      kernel_package: 'linux-image-4.15.0-34-generic'
 
 In this example, the kernel version is ``4.13.0-43-generic``. Define any proxy
 environment variables needed for your environment to reach public ubuntu
@@ -676,18 +632,6 @@ Check the installed packages on the genesis host with ``dpkg --list``.
 If there are any later kernel versions installed, remove them with
 ``sudo apt remove``, so that the newly install kernel is the latest
 available.
-
-Lastly if you wish to cleanup your build node, you may run the
-following:
-
-::
-
-    exit # (to quit the container)
-    cd ~
-    sudo docker stop sstream
-    sudo docker rm sstream
-    sudo docker image rm $(cat image_name)
-    sudo rm image_name
 
 Install ntpdate/ntp
 ~~~~~~~~~~~~~~~~~~~
