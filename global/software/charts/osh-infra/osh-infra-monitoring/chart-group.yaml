@@ -15,4 +15,6 @@ data:
     - prometheus-node-exporter
     - prometheus-process-exporter
     - prometheus-kube-state-metrics
-    - nagios
+    # fixme: enable once fixed
+    # - nagios
+...
