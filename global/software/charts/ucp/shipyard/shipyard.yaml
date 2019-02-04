@@ -26,20 +26,6 @@ metadata:
       dest:
         path: .values.images.tags
 
-    # Node ports
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .node_ports.shipyard_api
-      dest:
-        path: .values.network.shipyard.node_port
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .node_ports.airflow_web
-      dest:
-        path: .values.network.airflow.web.node_port
-
     # Endpoints
     - src:
         schema: pegleg/EndpointCatalogue/v1
@@ -71,18 +57,6 @@ metadata:
         path: .ucp.shipyard
       dest:
         path: .values.endpoints.shipyard
-    - src:
-        schema: pegleg/EndpointCatalogue/v1
-        name: ucp_endpoints
-        path: .ucp.airflow_web
-      dest:
-        path: .values.endpoints.airflow_web
-    - src:
-        schema: pegleg/EndpointCatalogue/v1
-        name: ucp_endpoints
-        path: .ucp.airflow_flower
-      dest:
-        path: .values.endpoints.airflow_flower
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: ucp_endpoints
@@ -289,20 +263,15 @@ data:
         shipyard:
           api: 2
         airflow:
-          web: 2
           worker: 2
-          flower: 2
-          scheduler: 2
+          # TODO: Scheduler can be set to 0 with a future version - here to
+          # accommodate the upgrade to the current configuration with the
+          # Scheduler being a sidecar with the Worker.
+          scheduler: 1
     labels:
       job:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-    network:
-      shipyard:
-        enable_node_port: true
-      airflow:
-        web:
-          enable_node_port: true
     conf:
       shipyard:
         keystone_authtoken:

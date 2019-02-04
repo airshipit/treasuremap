@@ -246,33 +246,6 @@ data:
         default: null
         public:
           host: shipyard.DOMAIN
-    airflow_web:
-      name: airflow-web
-      hosts:
-        default: airflow-web-int
-        public: airflow-web
-      port:
-        airflow_web:
-          default: 8080
-      path:
-        default: /
-      scheme:
-        default: "http"
-      host_fqdn_override:
-        default: null
-    airflow_flower:
-      name: airflow-flower
-      hosts:
-        default: airflow-flower
-      port:
-        airflow_flower:
-          default: 5555
-      path:
-        default: /
-      scheme:
-        default: "http"
-      host_fqdn_override:
-        default: null
     prometheus_openstack_exporter:
       namespace: ucp
       hosts:

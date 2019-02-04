@@ -408,7 +408,7 @@ data:
         type: git
       shipyard:
         location: https://git.openstack.org/openstack/airship-shipyard
-        reference: 6bd02eea8477bba077848463e7e740efe12fa782
+        reference: c7472d7f607bb1ee0202cebd9706754f5bb7decf
         subpath: charts/shipyard
         type: git
       shipyard-htk:
@@ -553,10 +553,10 @@ data:
         promenade: quay.io/airshipit/promenade:76c942b5ce9c106f69173ab8e03319238087262a
       rabbitmq: {}
       shipyard:
-        airflow: quay.io/airshipit/airflow:6bd02eea8477bba077848463e7e740efe12fa782
-        airflow_db_sync: quay.io/airshipit/airflow:6bd02eea8477bba077848463e7e740efe12fa782
-        shipyard: quay.io/airshipit/shipyard:6bd02eea8477bba077848463e7e740efe12fa782
-        shipyard_db_sync: quay.io/airshipit/shipyard:6bd02eea8477bba077848463e7e740efe12fa782
+        airflow: quay.io/airshipit/airflow:c7472d7f607bb1ee0202cebd9706754f5bb7decf
+        airflow_db_sync: quay.io/airshipit/airflow:c7472d7f607bb1ee0202cebd9706754f5bb7decf
+        shipyard: quay.io/airshipit/shipyard:c7472d7f607bb1ee0202cebd9706754f5bb7decf
+        shipyard_db_sync: quay.io/airshipit/shipyard:c7472d7f607bb1ee0202cebd9706754f5bb7decf
       tiller: {}
   packages:
     gpgkey: |-

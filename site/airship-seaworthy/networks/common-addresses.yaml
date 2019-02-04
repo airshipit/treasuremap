@@ -103,8 +103,6 @@ data:
     drydock_api: 30000
     maas_api: 30001
     maas_proxy: 31800  # hardcoded in MAAS
-    shipyard_api: 30003
-    airflow_web: 30004
 
   ntp:
     # comma separated NTP server list. Verify that these upstream NTP servers are
