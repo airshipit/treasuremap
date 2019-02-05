@@ -619,14 +619,14 @@ e.g.:
     kernel_params:
       kernel_package: 'linux-image-4.15.0-34-generic'
 
-In this example, the kernel version is ``4.13.0-43-generic``. Define any proxy
+In this example, the kernel version is ``4.15.0-34-generic``. Define any proxy
 environment variables needed for your environment to reach public ubuntu
 package repos, and install the matching kernel on the Genesis host (make sure
 to run on Genesis host, not on the build host):
 
 ::
 
-    sudo apt -y install 4.13.0-43-generic
+    sudo apt -y install 4.15.0-34-generic
 
 Check the installed packages on the genesis host with ``dpkg --list``.
 If there are any later kernel versions installed, remove them with
