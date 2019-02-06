@@ -30,11 +30,11 @@ clouds:
     identity_api_version: 3
     auth:
       username: 'admin'
-      password: 'password'
+      password: 'password123'
       project_name: 'admin'
       project_domain_name: 'default'
       user_domain_name: 'default'
-      auth_url: 'http://keystone.ucp.svc.cluster.local/v3'
+      auth_url: 'http://keystone-api.ucp.svc.cluster.local:5000/v3'
   openstack:
     region_name: RegionOne
     identity_api_version: 3

@@ -18,6 +18,9 @@ set -e
 
 : "${SHIPYARD:=../shipyard/tools/shipyard.sh}"
 
+# Source OpenStack credentials for Airship utility scripts
+. tools/deployment/airskiff/common/os-env.sh
+
 ACTION=$(${SHIPYARD} get actions | grep -i "Processing" | awk '{ print $2 }')
 
 echo -e "\nWaiting for $ACTION..."

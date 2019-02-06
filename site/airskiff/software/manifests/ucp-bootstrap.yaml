@@ -1,0 +1,19 @@
+---
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-bootstrap
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  release_prefix: airship
+  chart_groups:
+    - osh-infra-nfs-provisioner
+    - ucp-core
+    - ucp-keystone
+    - ucp-shipyard
+    - ucp-armada
+    - ucp-deckhand
+...

@@ -24,8 +24,4 @@ CURRENT_DIR="$(pwd)"
 sed -i -e "/\s      type:/a\        proxy_server: ${PROXY}" \
   global/software/config/versions.yaml
 
-# Update Armada bootstrap manifest
-sed -i -e "/type: git/a\    proxy_server: ${PROXY}" \
-  tools/deployment/airskiff/manifests/airship.yaml
-
 cd "${CURRENT_DIR}"

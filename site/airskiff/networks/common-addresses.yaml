@@ -39,7 +39,7 @@ data:
     # NEWSITE-CHANGEME: FQDN for ingress (i.e. "publicly facing" access point)
     # Choose FQDN according to the ingress/public FQDN naming conventions at
     # the top of this document.
-    ingress_domain: openstack.svc.cluster.local
+    ingress_domain: ucp.svc.cluster.local
 
   genesis:
     # NEWSITE-CHANGEME: Update with the hostname for the node which will take on

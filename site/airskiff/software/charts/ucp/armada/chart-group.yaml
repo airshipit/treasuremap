@@ -1,0 +1,19 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-armada
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-armada-chart-group-global
+    actions:
+      - method: replace
+        path: .chart_group
+  storagePolicy: cleartext
+data:
+  chart_group:
+    - ucp-armada
+...

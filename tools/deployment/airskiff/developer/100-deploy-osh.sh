@@ -29,6 +29,9 @@ CURRENT_DIR="$(pwd)"
 : "${PEGLEG:="${PL_PATH}/tools/pegleg.sh"}"
 : "${PL_SITE:="airskiff"}"
 
+# Source OpenStack credentials for Airship utility scripts
+. tools/deployment/airskiff/common/os-env.sh
+
 # NOTE(drewwalters96): Disable Pegleg linting errors P001 and P009; a
 #  a cleartext storage policy is acceptable for non-production use cases
 #  and maintain consistency with other treasuremap sites.

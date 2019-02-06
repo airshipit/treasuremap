@@ -1,0 +1,26 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-rabbitmq
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-rabbitmq-global
+    actions:
+      - method: replace
+        path: .test
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  timeout: 1800
+  test:
+    enabled: false
+  values:
+    pod:
+      replicas:
+        server: 1
+...

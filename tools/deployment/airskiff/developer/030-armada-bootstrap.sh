@@ -17,12 +17,24 @@
 
 set -xe
 
+CURRENT_DIR="$(pwd)"
 : "${INSTALL_PATH:="$(pwd)/../"}"
+
+: "${PL_PATH:="../pegleg"}"
+
+# NOTE: Image to use for all Pegleg operations
+: "${PL_IMAGE:=quay.io/airshipit/pegleg:latest}"
+
+: "${PEGLEG:="${PL_PATH}/tools/pegleg.sh"}"
+: "${PL_SITE:="airskiff"}"
+
+# Render documents
+IMAGE=${PL_IMAGE} TERM_OPTS=" " ${PEGLEG} site -r . render "${PL_SITE}" -o airskiff.yaml
 
 # Download latest Armada image and deploy Airship components
 docker run --rm --net host -p 8000:8000 --name armada \
     -v ~/.kube/config:/armada/.kube/config \
-    -v "$(pwd)"/tools/deployment/airskiff/manifests/:/manifests \
+    -v "$(pwd)"/airskiff.yaml:/airskiff.yaml \
     -v "${INSTALL_PATH}":/airship-components \
     quay.io/airshipit/armada:latest \
-    apply /manifests/airship.yaml
+    apply /airskiff.yaml --target-manifest ucp-bootstrap

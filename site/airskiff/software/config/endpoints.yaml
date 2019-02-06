@@ -20,12 +20,6 @@ metadata:
           pattern: DOMAIN
         - path: .ucp.identity.host_fqdn_override.admin.host
           pattern: DOMAIN
-        - path: .ucp.shipyard.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .ucp.physicalprovisioner.host_fqdn_override.public.host
-          pattern: DOMAIN
-        - path: .ucp.maas_region.host_fqdn_override.public.host
-          pattern: DOMAIN
         - path: .ceph.object_store.host_fqdn_override.public.host
           pattern: DOMAIN
         - path: .ceph.ceph_object_store.host_fqdn_override.public.host
@@ -71,17 +65,17 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: iam-sw.DOMAIN
+          host: keystone-api.DOMAIN
         admin:
-          host: iam-sw.DOMAIN
+          host: keystone-api.DOMAIN
       path:
         default: /v3
       scheme:
-        default: "https"
-        internal: "http"
+        default: http
+        internal: http
       port:
         api:
-          default: 443
+          default: 5000
           internal: 5000
     armada:
       name: armada
@@ -273,16 +267,12 @@ data:
       port:
         api:
           default: 9000
-          public: 443
       path:
         default: /api/v1.0
       scheme:
         default: "http"
-        public: "https"
       host_fqdn_override:
         default: null
-        public:
-          host: shipyard-sw.DOMAIN
     prometheus_openstack_exporter:
       namespace: ucp
       hosts:
@@ -592,9 +582,9 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: identity-sw.DOMAIN
+          host: identity.DOMAIN
         admin:
-          host: identity-sw.DOMAIN
+          host: identity.DOMAIN
       path:
         default: /v3
       scheme:
@@ -638,7 +628,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: image-sw.DOMAIN
+          host: image.DOMAIN
       path:
         default: null
       scheme:
@@ -777,7 +767,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: orchestration-sw.DOMAIN
+          host: orchestration.DOMAIN
       path:
         default: "/v1/%(project_id)s"
       scheme:
@@ -795,7 +785,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: cloudformation-sw.DOMAIN
+          host: cloudformation.DOMAIN
       path:
         default: /v1
       scheme:
@@ -855,7 +845,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: network-sw.DOMAIN
+          host: network.DOMAIN
       path:
         default: null
       scheme:
@@ -899,7 +889,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: compute-sw.DOMAIN
+          host: compute.DOMAIN
       path:
         default: "/v2/%(tenant_id)s"
       scheme:
@@ -934,7 +924,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: nova-novncproxy-sw.DOMAIN
+          host: nova-novncproxy.DOMAIN
       path:
         default: /vnc_auto.html
       scheme:
@@ -965,7 +955,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: placement-sw.DOMAIN
+          host: placement.DOMAIN
       path:
         default: /
       scheme:
