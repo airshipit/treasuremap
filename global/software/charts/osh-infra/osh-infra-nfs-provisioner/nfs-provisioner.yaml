@@ -1,0 +1,39 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nfs-provisioner
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.nfs_provisioner
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh_infra.nfs_provisioner
+      dest:
+        path: .values.images.tags
+data:
+  chart_name: nfs-provisioner
+  release: nfs-provisioner
+  namespace: nfs
+  wait:
+    timeout: 900
+    labels:
+      release_group: airship-nfs-provisioner
+  values:
+    storageclass:
+      name: general
+  dependencies:
+    - osh-infra-helm-toolkit
+...

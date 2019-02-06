@@ -210,6 +210,11 @@ data:
         reference: a367bacb4bd3af55dd11dbc5c9855749a123779d
         subpath: nagios
         type: git
+      nfs_provisioner:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 8662018a4dceb82a5d699d9e118caff9e5edb156
+        subpath: nfs-provisioner
+        type: git
       podsecuritypolicy:
         location: https://git.openstack.org/openstack/openstack-helm-infra
         reference: a367bacb4bd3af55dd11dbc5c9855749a123779d
@@ -517,6 +522,7 @@ data:
       grafana: {}
       kibana: {}
       nagios: {}
+      nfs_provisioner: {}
       prometheus: {}
       prometheus_alertmanager: {}
       prometheus_kube_state_metrics: {}
