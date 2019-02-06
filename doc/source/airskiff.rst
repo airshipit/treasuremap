@@ -97,10 +97,10 @@ Restart your shell session
 At this point, restart your shell session to complete adding ``$USER`` to the
 ``docker`` group.
 
-Build Airship components
-~~~~~~~~~~~~~~~~~~~~~~~~
+Clone Dependencies
+~~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: ../../tools/deployment/airskiff/developer/005-make-airship.sh
+.. literalinclude:: ../../tools/deployment/airskiff/developer/005-clone-dependencies.sh
     :language: shell
     :lines: 1,18-
 
@@ -108,7 +108,7 @@ Alternatively, this step can be performed by running the script directly:
 
 .. code-block:: shell
 
-  ./tools/deployment/airskiff/developer/005-make-airship.sh
+  ./tools/deployment/airskiff/developer/005-clone-dependencies.sh
 
 Deploy Kubernetes with KubeADM
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
