@@ -33,8 +33,6 @@ IPMI_IPS = ['10.23.104.12',
             '10.23.104.17',
             '10.23.104.19']
 
-ARTF_PATH="cicd/${JOB_BASE_NAME}/${BUILD_NUMBER}"
-
 AIRSHIP_MANIFESTS_REPO = 'https://git.openstack.org/openstack/airship-treasuremap'
 DISPLAY_NAME = 'manual'
 
@@ -221,7 +219,7 @@ def shipyard_deploy = { action ->
     try {
         def req = keystone.retrieveToken(SHIPYARD_PASSWD, KEYSTONE_URL, false)
         def token = req.getHeaders()["X-Subject-Token"][0]
-        shipyard2.uploadConfig(uuid, token, SHIPYARD_URL, ARTF_PATH, SITE_NAME)
+        shipyard2.uploadConfig(uuid, token, SHIPYARD_URL, SITE_NAME)
         shipyard2.waitAction(action, uuid, SHIPYARD_URL, SHIPYARD_PASSWD, KEYSTONE_URL, false)
 
     } catch (err) {
@@ -320,7 +318,7 @@ def sanity_tests = {
 
 //// main flow
 
-vm(timeout: 360) {
+vm(timeout: 360, publicNet: 'foundry') {
     // wait and make sure genesis is up
     ssh.wait (GENESIS_CREDS, GENESIS_IP, 'hostname')
 
