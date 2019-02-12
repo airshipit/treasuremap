@@ -3,6 +3,9 @@ schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
   name: openstack-cinder
+  labels:
+    name: openstack-cinder-chart-group-global
+    component: cinder
   layeringDefinition:
     abstract: false
     layer: global

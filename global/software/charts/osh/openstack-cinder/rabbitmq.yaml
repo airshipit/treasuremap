@@ -3,6 +3,9 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: cinder-rabbitmq
+  labels:
+    name: cinder-rabbitmq-global
+    component: cinder
   layeringDefinition:
     abstract: false
     layer: global

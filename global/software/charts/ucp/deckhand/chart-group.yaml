@@ -3,6 +3,8 @@ schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-deckhand
+  labels:
+    name: ucp-deckhand-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global

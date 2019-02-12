@@ -3,6 +3,9 @@ schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
   name: openstack-memcached
+  labels:
+    name: openstack-memcached-chart-group-global
+    component: memcached
   layeringDefinition:
     abstract: false
     layer: global
