@@ -42,6 +42,6 @@ git clone https://git.openstack.org/openstack/airship-pegleg.git
 git clone https://git.openstack.org/openstack/openstack-helm-infra.git
 
 cd openstack-helm-infra
-git checkout 8662018a4dceb82a5d699d9e118caff9e5edb156
+git checkout ef3adc4d0e5d26e74590d2f78400f7e1d800dbcb
 
 cd "${CURRENT_DIR}"

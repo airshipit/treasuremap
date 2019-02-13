@@ -49,7 +49,6 @@
       - name: openstack/airship-pegleg
       - name: openstack/airship-shipyard
       - name: openstack/openstack-helm-infra
-        override-checkout: 8662018a4dceb82a5d699d9e118caff9e5edb156
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$
