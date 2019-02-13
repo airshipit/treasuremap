@@ -123,6 +123,11 @@ data:
     apiserver:
       etcd:
         endpoints: https://127.0.0.1:2378
+      tls:
+        tls-cipher-suites: "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA"
+        # https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
+        # Possible values: VersionTLS10, VersionTLS11, VersionTLS12
+        tls-min-version: 'VersionTLS12'
     command_prefix:
       - /apiserver
       - --service-cluster-ip-range=SERVICE_CIDR
