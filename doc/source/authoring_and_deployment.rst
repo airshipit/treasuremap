@@ -240,26 +240,27 @@ the order in which you should build your site files is as follows:
 Control Plane Ceph Cluster Notes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Environment Ceph parameters for the control plane are located in:
+Configuration variables for ceph control plane are located in:
 
-``site/${NEW_SITE}/software/charts/ucp/ceph/ceph.yaml``
+- ``site/${NEW_SITE}/software/charts/ucp/ceph/ceph-osd.yaml``
+- ``site/${NEW_SITE}/software/charts/ucp/ceph/ceph-client.yaml``
 
 Setting highlights:
 
 -  data/values/conf/storage/osd[\*]/data/location: The block device that
    will be formatted by the Ceph chart and used as a Ceph OSD disk
--  data/values/conf/storage/osd[\*]/journal/location: The directory
+-  data/values/conf/storage/osd[\*]/journal/location: The block device
    backing the ceph journal used by this OSD. Refer to the journal
    paradigm below.
 -  data/values/conf/pool/target/osd: Number of OSD disks on each node
 
 Assumptions:
 
-1. Ceph OSD disks are not configured for any type of RAID (i.e., they
-   are configured as JBOD if connected through a RAID controller). (If
-   RAID controller does not support JBOD, put each disk in its own
-   RAID-0 and enable RAID cache and write-back cache if the RAID
-   controller supports it.)
+1. Ceph OSD disks are not configured for any type of RAID, they
+   are configured as JBOD when connected through a RAID controller.
+   If RAID controller does not support JBOD, put each disk in its
+   own RAID-0 and enable RAID cache and write-back cache if the
+   RAID controller supports it.
 2. Ceph disk mapping, disk layout, journal and OSD setup is the same
    across Ceph nodes, with only their role differing. Out of the 4
    control plane nodes, we expect to have 3 actively participating in
@@ -268,16 +269,12 @@ Assumptions:
    (cp\_*-secondary) than the other three (cp\_*-primary).
 3. If doing a fresh install, disk are unlabeled or not labeled from a
    previous Ceph install, so that Ceph chart will not fail disk
-   initialization
+   initialization.
 
-This document covers two Ceph journal deployment paradigms:
-
-1. Servers with SSD/HDD mix (disregarding operating system disks).
-2. Servers with no SSDs (disregarding operating system disks). In other
-   words, exclusively spinning disk HDDs available for Ceph.
+It's highly recommended to use SSD devices for Ceph Journal partitions.
 
 If you have an operating system available on the target hardware, you
-can determine HDD and SSD layout with:
+can determine HDD and SSD devices with:
 
 ::
 
@@ -288,28 +285,23 @@ and where a value of ``0`` indicates non-spinning disk (i.e. SSD). (Note
 - Some SSDs still report a value of ``1``, so it is best to go by your
 server specifications).
 
-In case #1, the SSDs will be used for journals and the HDDs for OSDs.
-
 For OSDs, pass in the whole block device (e.g., ``/dev/sdd``), and the
 Ceph chart will take care of disk partitioning, formatting, mounting,
 etc.
 
-For journals, divide the number of journal disks as evenly as possible
-between the OSD disks. We will also use the whole block device, however
-we cannot pass that block device to the Ceph chart like we can for the
-OSD disks.
+For Ceph Journals, you can pass in a specific partition (e.g., ``/dev/sdb1``),
+note that it's not required to pre-create these partitions, Ceph chart
+will create journal partitions automatically if they don't exist.
+By default the size of every journal partition is 10G, make sure
+there is enough space available to allocate all journal partitions.
 
-Instead, the journal devices must be already partitioned, formatted, and
-mounted prior to Ceph chart execution. This should be done by MaaS as
-part of the Drydock host-profile being used for control plane nodes.
-
-Consider the follow example where:
+Consider the following example where:
 
 -  /dev/sda is an operating system RAID-1 device (SSDs for OS root)
--  /dev/sdb is an operating system RAID-1 device (SSDs for ceph journal)
--  /dev/sd[cdef] are HDDs
+-  /dev/sd[bc] are SSDs for ceph journals
+-  /dev/sd[efgh] are HDDs for OSDs
 
-Then, the data section of this file would look like:
+The data section of this file would look like:
 
 ::
 
@@ -318,98 +310,31 @@ Then, the data section of this file would look like:
         conf:
           storage:
             osd:
-              - data:
-                  type: block-logical
-                  location: /dev/sdd
-                journal:
-                  type: directory
-                  location: /var/lib/openstack-helm/ceph/journal/journal-sdd
               - data:
                   type: block-logical
                   location: /dev/sde
                 journal:
-                  type: directory
-                  location: /var/lib/openstack-helm/ceph/journal/journal-sde
+                  type: block-logical
+                  location: /dev/sdb1
               - data:
                   type: block-logical
                   location: /dev/sdf
                 journal:
-                  type: directory
-                  location: /var/lib/openstack-helm/ceph/journal/journal-sdf
+                  type: block-logical
+                  location: /dev/sdb2
               - data:
                   type: block-logical
                   location: /dev/sdg
                 journal:
-                  type: directory
-                  location: /var/lib/openstack-helm/ceph/journal/journal-sdg
-          pool:
-            target:
-              osd: 4
-
-where the following mount is setup by MaaS via Drydock host profile for
-the control-plane nodes:
-
-::
-
-    /dev/sdb is mounted to /var/lib/openstack-helm/ceph/journal
-
-In case #2, Ceph best practice is to allocate journal space on all OSD
-disks. The Ceph chart assumes this partitioning has been done
-beforehand. Ensure that your control plane host profile is partitioning
-each disk between the Ceph OSD and Ceph journal, and that it is mounting
-the journal partitions. (Drydock will drive these disk layouts via MaaS
-provisioning). Note the mountpoints for the journals and the partition
-mappings. Consider the following example where:
-
--  /dev/sda is the operating system RAID-1 device
--  /dev/sd[bcde] are HDDs
-
-Then, the data section of this file will look similar to the following:
-
-::
-
-    data:
-      values:
-        conf:
-          storage:
-            osd:
+                  type: block-logical
+                  location: /dev/sdc1
               - data:
                   type: block-logical
-                  location: /dev/sdb2
+                  location: /dev/sdh
                 journal:
-                  type: directory
-                  location: /var/lib/openstack-helm/ceph/journal0/journal-sdb
-              - data:
                   type: block-logical
                   location: /dev/sdc2
-                journal:
-                  type: directory
-                  location: /var/lib/openstack-helm/ceph/journal1/journal-sdc
-              - data:
-                  type: block-logical
-                  location: /dev/sdd2
-                journal:
-                  type: directory
-                  location: /var/lib/openstack-helm/ceph/journal2/journal-sdd
-              - data:
-                  type: block-logical
-                  location: /dev/sde2
-                journal:
-                  type: directory
-                  location: /var/lib/openstack-helm/ceph/journal3/journal-sde
-          pool:
-            target:
-              osd: 4
 
-where the following mounts are setup by MaaS via Drydock host profile
-for the control-plane nodes:
-
-::
-
-    /dev/sdb1 is mounted to /var/lib/openstack-helm/ceph/journal0
-    /dev/sdc1 is mounted to /var/lib/openstack-helm/ceph/journal1
-    /dev/sdd1 is mounted to /var/lib/openstack-helm/ceph/journal2
-    /dev/sde1 is mounted to /var/lib/openstack-helm/ceph/journal3
 
 Update Passphrases
 ~~~~~~~~~~~~~~~~~~~~
@@ -684,75 +609,6 @@ This prevents an issue with the MaaS containers, which otherwise get
 permission denied errors from apparmor when the MaaS container tries to
 leverage libc6 for /bin/sh when MaaS container ntpd is forcefully
 disabled.
-
-Setup Ceph Journals
-~~~~~~~~~~~~~~~~~~~
-
-Until genesis node reprovisioning is implemented, it is necessary to
-manually perform host-level disk partitioning and mounting on the
-genesis node, for activites that would otherwise have been addressed by
-a bare metal node provision via Drydock host profile data by MaaS.
-
-Assuming your genesis HW matches the HW used in your control plane host
-profile, you should manually apply to the genesis node the same Ceph
-partitioning (OSDs & journals) and formatting + mounting (journals only)
-as defined in the control plane host profile. See
-``airship-treasuremap/global/profiles/host/base_control_plane.yaml``.
-
-For example, if we have a journal SSDs ``/dev/sdb`` on the genesis node,
-then use the ``cfdisk`` tool to format it:
-
-::
-
-    sudo cfdisk /dev/sdb
-
-Then:
-
-1. Select ``gpt`` label for the disk
-2. Select ``New`` to create a new partition
-3. If scenario #1 applies in
-   site/$NEW\_SITE/software/charts/ucp/ceph/ceph.yaml\_, then accept
-   default partition size (entire disk). If scenario #2 applies, then
-   only allocate as much space as defined in the journal disk partitions
-   mounted in the control plane host profile.
-4. Select ``Write`` option to commit changes, then ``Quit``
-5. If scenario #2 applies, create a second partition that takes up all
-   of the remaining disk space. This will be used as the OSD partition
-   (``/dev/sdb2``).
-
-Install package to format disks with XFS:
-
-::
-
-    sudo apt -y install xfsprogs
-
-Then, construct an XFS filesystem on the journal partition with XFS:
-
-::
-
-    sudo mkfs.xfs /dev/sdb1
-
-Create a directory as mount point for ``/dev/sdb1`` to match those
-defined in the same host profile ceph journals:
-
-::
-
-    sudo mkdir -p /var/lib/ceph/cp
-
-Use the ``blkid`` command to get the UUID for ``/dev/sdb1``, then
-populate ``/etc/fstab`` accordingly. Ex:
-
-::
-
-    sudo sh -c 'echo "UUID=01234567-ffff-aaaa-bbbb-abcdef012345 /var/lib/ceph/cp xfs defaults 0 0" >> /etc/fstab'
-
-Repeat all preceeding steps in this section for each journal device in
-the Ceph cluster. After this is completed for all journals, mount the
-partitions:
-
-::
-
-    sudo mount -a
 
 Promenade bootstrap
 ~~~~~~~~~~~~~~~~~~~
