@@ -9,18 +9,18 @@ data:
         type: git
       apiserver-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       calico:
         calico:
           location: https://git.openstack.org/openstack/openstack-helm-infra
-          reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+          reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
           subpath: calico
           type: git
         calico-htk:
           location: https://git.openstack.org/openstack/openstack-helm-infra
-          reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+          reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
           subpath: helm-toolkit
           type: git
         etcd:
@@ -30,7 +30,7 @@ data:
           type: git
         etcd-htk:
           location: https://git.openstack.org/openstack/openstack-helm-infra
-          reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+          reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
           subpath: helm-toolkit
           type: git
       controller-manager:
@@ -40,7 +40,7 @@ data:
         type: git
       controller-manager-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       coredns:
@@ -50,7 +50,7 @@ data:
         type: git
       coredns-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       etcd:
@@ -60,7 +60,7 @@ data:
         type: git
       etcd-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       haproxy:
@@ -70,17 +70,17 @@ data:
         type: git
       haproxy-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       ingress:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: ingress
         type: git
       ingress-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       proxy:
@@ -90,7 +90,7 @@ data:
         type: git
       proxy-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       scheduler:
@@ -100,7 +100,7 @@ data:
         type: git
       scheduler-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
     osh:
@@ -126,7 +126,7 @@ data:
         type: git
       helm_toolkit:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       horizon:
@@ -136,7 +136,7 @@ data:
         type: git
       ingress:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: ingress
         type: git
       keystone:
@@ -146,17 +146,17 @@ data:
         type: git
       libvirt:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: libvirt
         type: git
       mariadb:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: mariadb
         type: git
       memcached:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: memcached
         type: git
       neutron:
@@ -171,89 +171,89 @@ data:
         type: git
       openvswitch:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: openvswitch
         type: git
       rabbitmq:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: rabbitmq
         type: git
     osh_infra:
       elasticsearch:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: elasticsearch
         type: git
       fluent_logging:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: fluent-logging
         type: git
       grafana:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: grafana
         type: git
       helm_toolkit:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       kibana:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: kibana
         type: git
       nagios:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: nagios
         type: git
       podsecuritypolicy:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: podsecuritypolicy
         type: git
       prometheus:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: prometheus
         type: git
       prometheus_alertmanager:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: prometheus-alertmanager
         type: git
       prometheus_kube_state_metrics:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: prometheus-kube-state-metrics
         type: git
       prometheus_node_exporter:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: prometheus-node-exporter
         type: git
       prometheus_openstack_exporter:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: prometheus-openstack-exporter
         type: git
       prometheus_process_exporter:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: prometheus-process-exporter
         type: git
     ucp:
       armada:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: aa90e5c17e8f37d0276df8bf64e5aae1ba261088
+        reference: 7f26bbcd59f97ab090516fe732912ebe7851eb30
         subpath: charts/armada
         type: git
       armada-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       barbican:
@@ -263,37 +263,37 @@ data:
         type: git
       barbican-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       ceph-client:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: ceph-client
         type: git
       ceph-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       ceph-mon:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: ceph-mon
         type: git
       ceph-osd:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: ceph-osd
         type: git
       ceph-provisioners:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: ceph-provisioners
         type: git
       ceph-rgw:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: ceph-rgw
         type: git
       deckhand:
@@ -303,7 +303,7 @@ data:
         type: git
       deckhand-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       divingbell:
@@ -313,7 +313,7 @@ data:
         type: git
       divingbell-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       drydock:
@@ -323,17 +323,17 @@ data:
         type: git
       drydock-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       ingress:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: ingress
         type: git
       ingress-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       keystone:
@@ -343,7 +343,7 @@ data:
         type: git
       keystone-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       maas:
@@ -353,37 +353,37 @@ data:
         type: git
       maas-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       mariadb:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: mariadb
         type: git
       mariadb-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       memcached:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: memcached
         type: git
       memcached-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       postgresql:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: postgresql
         type: git
       postgresql-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       promenade:
@@ -393,17 +393,17 @@ data:
         type: git
       promenade-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       rabbitmq:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: rabbitmq
         type: git
       rabbitmq-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       shipyard:
@@ -413,47 +413,47 @@ data:
         type: git
       shipyard-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       tenant-ceph-client:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: ceph-client
         type: git
       tenant-ceph-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
       tenant-ceph-mon:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: ceph-mon
         type: git
       tenant-ceph-osd:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: ceph-osd
         type: git
       tenant-ceph-provisioners:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: ceph-provisioners
         type: git
       tenant-ceph-rgw:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: ceph-rgw
         type: git
       tiller:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: aa90e5c17e8f37d0276df8bf64e5aae1ba261088
+        reference: 7f26bbcd59f97ab090516fe732912ebe7851eb30
         subpath: charts/tiller
         type: git
       tiller-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 27f4c66a803d0c103b48f2523fb63c2557679a0e
+        reference: ded99204b2d58e92c4b7f051a6d6f6f8ed0c8148
         subpath: helm-toolkit
         type: git
   files:
@@ -525,7 +525,7 @@ data:
       prometheus_process_exporter: {}
     ucp:
       armada:
-        api: quay.io/airshipit/armada:aa90e5c17e8f37d0276df8bf64e5aae1ba261088
+        api: quay.io/airshipit/armada:7f26bbcd59f97ab090516fe732912ebe7851eb30
         helm: docker.io/lachlanevenson/k8s-helm:v2.12.1
         tiller: gcr.io/kubernetes-helm/tiller:v2.12.1
       barbican: {}
