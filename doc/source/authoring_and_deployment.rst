@@ -351,6 +351,17 @@ with random generated ones:
 
     python3 -c "from crypt import *; print(crypt('<YOUR_PASSWORD>', METHOD_SHA512))"
 
+Configure certificates in ``site/${NEW_SITE}/secrets/certificates/ingress.yaml``,
+they need to be issued for domain configured in a section ``data.dns.ingress_domain``
+of a file ``./site/${NEW_SITE}/networks/common-addresses.yaml``. A list of endpoints
+which will be used with these certificates can be found in the following file
+``./site/${NEW_SITE}/software/config/endpoints.yaml``.
+
+.. caution::
+
+    It's required to configure valid certificates, self-signed certificates
+    are not supported.
+
 Manifest linting and combining layers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
