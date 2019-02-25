@@ -472,6 +472,14 @@ certificates into the security folder. Ex:
     sudo cp ${NEW_SITE}_bundle/certificates.yaml \
       airship-treasuremap/site/${NEW_SITE}/secrets/certificates/certificates.yaml
 
+Regenerate collected YAML files to include copied certificates:
+
+::
+
+    sudo airship-pegleg/tools/pegleg.sh site \
+      -r airship-treasuremap \
+      collect $NEW_SITE -s ${NEW_SITE}_collected
+
 Genesis node
 ------------
 
