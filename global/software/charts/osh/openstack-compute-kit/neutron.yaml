@@ -169,6 +169,12 @@ metadata:
         schema: deckhand/Passphrase/v1
         name: osh_oslo_cache_secret_key
         path: .
+    - dest:
+        path: .values.conf.metadata_agent.DEFAULT.metadata_proxy_shared_secret
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_nova_metadata_proxy_shared_secret
+        path: .
 
     # Interfaces for neutron configuration
     - src:

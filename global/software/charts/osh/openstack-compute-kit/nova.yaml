@@ -269,6 +269,12 @@ metadata:
         schema: deckhand/Passphrase/v1
         name: osh_oslo_cache_secret_key
         path: .
+    - dest:
+        path: .values.conf.nova.neutron.metadata_proxy_shared_secret
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_nova_metadata_proxy_shared_secret
+        path: .
 data:
   chart_name: nova
   release: nova
