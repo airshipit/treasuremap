@@ -248,7 +248,7 @@ data:
     ucp:
       armada:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: 7f26bbcd59f97ab090516fe732912ebe7851eb30
+        reference: c7d9e21b1e3c144eee54d7d2a5da3eb562255894
         subpath: charts/armada
         type: git
       armada-htk:
@@ -448,7 +448,7 @@ data:
         type: git
       tiller:
         location: https://git.openstack.org/openstack/airship-armada
-        reference: 7f26bbcd59f97ab090516fe732912ebe7851eb30
+        reference: c7d9e21b1e3c144eee54d7d2a5da3eb562255894
         subpath: charts/tiller
         type: git
       tiller-htk:
@@ -525,7 +525,7 @@ data:
       prometheus_process_exporter: {}
     ucp:
       armada:
-        api: quay.io/airshipit/armada:7f26bbcd59f97ab090516fe732912ebe7851eb30
+        api: quay.io/airshipit/armada:c7d9e21b1e3c144eee54d7d2a5da3eb562255894
         helm: docker.io/lachlanevenson/k8s-helm:v2.12.1
         tiller: gcr.io/kubernetes-helm/tiller:v2.12.1
       barbican: {}

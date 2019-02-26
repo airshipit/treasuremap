@@ -201,6 +201,11 @@ data:
             release_group: airship-neutron
     post:
       create: []
+  test:
+    timeout: 500
+  wait:
+    labels:
+      release_group: airship-neutron
   values:
     pod:
       replicas:
