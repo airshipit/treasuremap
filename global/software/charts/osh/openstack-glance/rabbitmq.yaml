@@ -70,6 +70,8 @@ data:
     timeout: 900
     labels:
       release_group: airship-glance-rabbitmq
+    resources:
+      - type: statefulset
   install:
     no_hooks: false
   upgrade:
