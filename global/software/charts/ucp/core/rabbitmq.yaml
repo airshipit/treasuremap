@@ -64,6 +64,8 @@ data:
     timeout: 300
     labels:
       release_group: airship-ucp-rabbitmq
+    resources:
+      - type: statefulset
   install:
     no_hooks: false
   upgrade:
