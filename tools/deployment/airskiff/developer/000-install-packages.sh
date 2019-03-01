@@ -32,7 +32,7 @@ sudo apt-get install --no-install-recommends -y \
         software-properties-common
 
 # Purge Docker and install Docker CE
-systemctl unmask docker.service
+sudo systemctl unmask docker.service
 sudo apt-get remove --no-install-recommends -y docker docker-engine docker.io
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo apt-add-repository \
