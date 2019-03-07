@@ -150,9 +150,7 @@ data:
             Name: tail
             Tag: kernel
             Path: /var/log/kern.log
-            DB: /var/log/kern.db
             Mem_Buf_Limit: 5MB
-            DB.Sync: Normal
             Buffer_Chunk_Size: 1M
             Buffer_Max_Size: 1M
         - kubelet:
@@ -161,9 +159,7 @@ data:
             Tag: journal.*
             Path: ${JOURNAL_PATH}
             Systemd_Filter: _SYSTEMD_UNIT=kubelet.service
-            DB: /var/log/kubelet.db
             Mem_Buf_Limit: 5MB
-            DB.Sync: Normal
             Buffer_Chunk_Size: 1M
             Buffer_Max_Size: 1M
         - docker_daemon:
@@ -172,9 +168,7 @@ data:
             Tag: journal.*
             Path: ${JOURNAL_PATH}
             Systemd_Filter: _SYSTEMD_UNIT=docker.service
-            DB: /var/log/docker.db
             Mem_Buf_Limit: 5MB
-            DB.Sync: Normal
             Buffer_Chunk_Size: 1M
             Buffer_Max_Size: 1M
         - libvirt:
@@ -182,9 +176,7 @@ data:
             Name: tail
             Tag: libvirt
             Path: /var/log/libvirt/libvirtd.log
-            DB: /var/log/libvirt.db
             Mem_Buf_Limit: 5MB
-            DB.Sync: Normal
             Buffer_Chunk_Size: 1M
             Buffer_Max_Size: 1M
         - qemu:
@@ -192,9 +184,7 @@ data:
             Name: tail
             Tag: qemu
             Path: /var/log/libvirt/qemu/*.log
-            DB: /var/log/qemu.db
             Mem_Buf_Limit: 5MB
-            DB.Sync: Normal
             Buffer_Chunk_Size: 1M
             Buffer_Max_Size: 1M
         - libvirt_record_modifier:
@@ -236,10 +226,8 @@ data:
             Name: tail
             Tag: ceph.cluster.*
             Path: /var/log/ceph/airship-ucp-ceph-mon/ceph.log
-            DB: /var/log/ceph.db
             Parsers: syslog
             Mem_Buf_Limit: 5MB
-            DB.Sync: Normal
             Buffer_Chunk_Size: 1M
             Buffer_Max_Size: 1M
         - ceph_audit_logs:
@@ -247,10 +235,8 @@ data:
             Name: tail
             Tag: ceph.audit.*
             Path: /var/log/ceph/airship-ucp-ceph-mon/ceph.audit.log
-            DB: /var/log/ceph.db
             Parsers: syslog
             Mem_Buf_Limit: 5MB
-            DB.Sync: Normal
             Buffer_Chunk_Size: 1M
             Buffer_Max_Size: 1M
         - ceph_mon_logs:
@@ -258,10 +244,8 @@ data:
             Name: tail
             Tag: ceph.mon.*
             Path: /var/log/ceph/airship-ucp-ceph-mon/ceph-mon**.log
-            DB: /var/log/ceph.db
             Parsers: syslog
             Mem_Buf_Limit: 5MB
-            DB.Sync: Normal
             Buffer_Chunk_Size: 1M
             Buffer_Max_Size: 1M
         - ceph_osd_logs:
@@ -269,10 +253,8 @@ data:
             Name: tail
             Tag: ceph.osd.*
             Path: /var/log/ceph/airship-ucp-ceph-osd/ceph-osd**.log
-            DB: /var/log/ceph.db
             Parsers: syslog
             Mem_Buf_Limit: 5MB
-            DB.Sync: Normal
             Buffer_Chunk_Size: 1M
             Buffer_Max_Size: 1M
         - containers_tail:
@@ -281,8 +263,6 @@ data:
             Tag: kube.*
             Path: /var/log/containers/*.log
             Parser: docker
-            DB: /var/log/flb_kube.db
-            DB.Sync: Normal
             Buffer_Chunk_Size: 1M
             Buffer_Max_Size: 1M
             Mem_Buf_Limit: 5MB
@@ -295,6 +275,13 @@ data:
             Name: kubernetes
             Match: kube.*
             Merge_JSON_Log: On
+        - throttle_filter:
+            header: filter
+            Name: throttle
+            Match: "**"
+            Rate: 1000
+            Window: 300
+            Interval: 1s
         - fluentd_output:
             header: output
             Name: forward
