@@ -106,7 +106,11 @@ data:
              "auth": "DH_SUB_PRIVATE_DOCKER_KEY"
            }
         }
-
+      # Make sure that promjoin script does not run on every boot,
+      # otherwise it may downgrade current versions of Docker & Kubelet.
+    - path: /var/lib/prom.done
+      mode: 0444
+      content: ""
   packages:
     repositories:
       - deb https://download.docker.com/linux/ubuntu/ xenial stable
