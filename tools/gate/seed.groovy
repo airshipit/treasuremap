@@ -15,6 +15,14 @@ pipelineJob('airship-seaworthy') {
             name("AIRSHIP_MANIFESTS_REF")
             trim(true)
         }
+        booleanParam {
+            defaultValue(true)
+            description('Flag to publish the console log from the pipeline run to artifactory. ' +
+                        'Set this value to false, if you should want to suppress uploading ' +
+                        'and publishing of the pipeline logs to the artifactory.')
+            name("ARTIFACTORY_LOGS")
+        }
+
     }
 
 

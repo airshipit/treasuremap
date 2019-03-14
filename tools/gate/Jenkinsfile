@@ -318,7 +318,9 @@ def sanity_tests = {
 
 //// main flow
 
-vm(timeout: 360, publicNet: 'foundry') {
+vm(timeout: 360,
+   publicNet: 'foundry',
+   artifactoryLogs: ARTIFACTORY_LOGS.toBoolean()) {
     // wait and make sure genesis is up
     ssh.wait (GENESIS_CREDS, GENESIS_IP, 'hostname')
 
