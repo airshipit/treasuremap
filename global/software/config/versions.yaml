@@ -487,7 +487,7 @@ data:
         etcdctl: quay.io/coreos/etcd:v3.2.18
       haproxy:
         anchor: gcr.io/google_containers/hyperkube-amd64:v1.11.6
-        haproxy: docker.io/haproxy:1.8.3
+        haproxy: docker.io/haproxy:1.8.19
       ingress: {}
       kubectl: gcr.io/google-containers/hyperkube-amd64:v1.11.6
       pause: gcr.io/google-containers/pause-amd64:3.1
