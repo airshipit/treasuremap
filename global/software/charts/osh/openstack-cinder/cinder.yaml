@@ -4,6 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: cinder
   labels:
+    name: cinder-global
     component: cinder
   layeringDefinition:
     abstract: false

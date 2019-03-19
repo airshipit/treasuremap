@@ -4,6 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: horizon
   labels:
+    name: horizon-global
     component: horizon
   layeringDefinition:
     abstract: false

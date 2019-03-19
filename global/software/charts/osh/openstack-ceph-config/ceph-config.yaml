@@ -3,6 +3,9 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: openstack-ceph-config
+  labels:
+    name: openstack-ceph-config-global
+    component: ceph
   layeringDefinition:
     abstract: false
     layer: global
