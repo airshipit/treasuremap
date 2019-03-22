@@ -284,6 +284,10 @@ data:
             release_group: airship-nova
     post:
       create: []
+  wait:
+    timeout: 2700
+    labels:
+      release_group: airship-nova
   values:
     labels:
       agent:
