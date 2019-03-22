@@ -21,27 +21,6 @@
         chdir: "{{ zuul.project.src_dir }}"
       become: yes
 
-    - name: Build Armada
-      shell: |
-        make images
-      args:
-        chdir: "{{ zuul.projects['git.openstack.org/openstack/airship-armada'].src_dir }}"
-      become: yes
-
-    - name: Build Deckhand
-      shell: |
-        make
-      args:
-        chdir: "{{ zuul.projects['git.openstack.org/openstack/airship-deckhand'].src_dir }}"
-      become: yes
-
-    - name: Build Shipyard
-      shell: |
-        make
-      args:
-        chdir: "{{ zuul.projects['git.openstack.org/openstack/airship-shipyard'].src_dir }}"
-      become: yes
-
     - name: Deploy Kubernetes with KubeADM
       shell: |
         ./tools/deployment/airskiff/developer/010-deploy-k8s.sh

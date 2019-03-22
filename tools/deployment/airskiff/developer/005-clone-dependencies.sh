@@ -17,31 +17,22 @@
 
 set -xe
 
-# NOTE(drewwalters96): Build Airship components locally, for use as a
-#   as a development environment.
-
 CURRENT_DIR="$(pwd)"
 : "${INSTALL_PATH:="../"}"
+: "${OSH_INFRA_COMMIT:="ef3adc4d0e5d26e74590d2f78400f7e1d800dbcb"}"
 
 cd ${INSTALL_PATH}
+
+# Clone Airship projects
 git clone https://git.openstack.org/openstack/airship-armada.git
-cd airship-armada && make images
-
-cd ${INSTALL_PATH}
 git clone https://git.openstack.org/openstack/airship-deckhand.git
-cd airship-deckhand && make
-
-cd ${INSTALL_PATH}
-git clone https://git.openstack.org/openstack/airship-shipyard.git
-cd airship-shipyard && make
-
-cd ${INSTALL_PATH}
 git clone https://git.openstack.org/openstack/airship-pegleg.git
+git clone https://git.openstack.org/openstack/airship-shipyard.git
 
 # Clone dependencies
 git clone https://git.openstack.org/openstack/openstack-helm-infra.git
 
 cd openstack-helm-infra
-git checkout ef3adc4d0e5d26e74590d2f78400f7e1d800dbcb
+git checkout "${OSH_INFRA_COMMIT}"
 
 cd "${CURRENT_DIR}"

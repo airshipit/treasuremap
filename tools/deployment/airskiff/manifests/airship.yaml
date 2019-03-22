@@ -283,12 +283,6 @@ data:
     labels:
       release_group: airship-shipyard
   values:
-    images:
-      tags:
-        shipyard:         'quay.io/airshipit/shipyard:untagged'
-        shipyard_db_sync: 'quay.io/airshipit/shipyard:untagged'
-        airflow:          'quay.io/airshipit/airflow:untagged'
-        airflow_db_sync:  'quay.io/airshipit/airflow:untagged'
     pod:
       replicas:
         shipyard:
