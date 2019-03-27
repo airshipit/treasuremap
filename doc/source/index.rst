@@ -198,6 +198,7 @@ Process Flows
    seaworthy
    airsloop
    airskiff
+   development_guide
 
 .. _Barbican: https://docs.openstack.org/barbican/latest/api/
 .. _Helm Homepage: https://helm.sh/
