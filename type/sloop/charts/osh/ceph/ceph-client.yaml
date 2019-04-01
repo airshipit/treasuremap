@@ -1,0 +1,102 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: tenant-ceph-client
+  labels:
+    name: tenant-ceph-client-type
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: tenant-ceph-client-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        mds: 1
+        mgr: 1
+    conf:
+      ceph:
+        global:
+          osd_pool_default_size: 1
+      pool:
+        default:
+          crush_rule: same_host
+        spec:
+          # RBD pool
+          - name: rbd
+            application: rbd
+            replication: 1
+            percent_total_data: 10
+          # Cinder volumes  pool
+          - name: cinder.volumes
+            application: cinder-volume
+            replication: 1
+            percent_total_data: 40
+          # RadosGW pools
+          - name: .rgw.root
+            application: rgw
+            replication: 1
+            percent_total_data: 0.1
+          - name: default.rgw.control
+            application: rgw
+            replication: 1
+            percent_total_data: 0.1
+          - name: default.rgw.data.root
+            application: rgw
+            replication: 1
+            percent_total_data: 0.1
+          - name: default.rgw.gc
+            application: rgw
+            replication: 1
+            percent_total_data: 0.1
+          - name: default.rgw.log
+            application: rgw
+            replication: 1
+            percent_total_data: 0.1
+          - name: default.rgw.intent-log
+            application: rgw
+            replication: 1
+            percent_total_data: 0.1
+          - name: default.rgw.meta
+            application: rgw
+            replication: 1
+            percent_total_data: 0.1
+          - name: default.rgw.usage
+            application: rgw
+            replication: 1
+            percent_total_data: 0.1
+          - name: default.rgw.users.keys
+            application: rgw
+            replication: 1
+            percent_total_data: 0.1
+          - name: default.rgw.users.email
+            application: rgw
+            replication: 1
+            percent_total_data: 0.1
+          - name: default.rgw.users.swift
+            application: rgw
+            replication: 1
+            percent_total_data: 0.1
+          - name: default.rgw.users.uid
+            application: rgw
+            replication: 1
+            percent_total_data: 0.1
+          - name: default.rgw.buckets.extra
+            application: rgw
+            replication: 1
+            percent_total_data: 0.1
+          - name: default.rgw.buckets.index
+            application: rgw
+            replication: 1
+            percent_total_data: 3
+          - name: default.rgw.buckets.data
+            application: rgw
+            replication: 1
+            percent_total_data: 30
+...

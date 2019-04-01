@@ -18,6 +18,7 @@ set -xe
 export OS_CLOUD=openstack_helm
 
 : ${OSH_EXT_NET_NAME:="public"}
+: ${OSH_EXT_NET_VLAN:="27"}
 : ${OSH_EXT_SUBNET_NAME:="public-subnet"}
 : ${OSH_EXT_SUBNET:="10.23.27.0/24"}
 : ${OSH_EXT_GATEWAY:="10.23.27.1"}
@@ -25,7 +26,8 @@ export OS_CLOUD=openstack_helm
 : ${OSH_EXT_SUBNET_POOL_END:="10.23.27.99"}
 tools/openstack stack create --wait \
   --parameter network_name=${OSH_EXT_NET_NAME} \
-  --parameter physical_network_name=public \
+  --parameter physical_network_name=${OSH_EXT_NET_NAME} \
+  --parameter physical_network_vlan=${OSH_EXT_NET_VLAN} \
   --parameter subnet_name=${OSH_EXT_SUBNET_NAME} \
   --parameter subnet_cidr=${OSH_EXT_SUBNET} \
   --parameter subnet_gateway=${OSH_EXT_GATEWAY} \
@@ -34,7 +36,6 @@ tools/openstack stack create --wait \
   -t /target/tools/files/heat-public-net-deployment.yaml \
   heat-public-net-deployment
 
-: ${OSH_EXT_NET_NAME:="public"}
 : ${OSH_VM_KEY_STACK:="heat-vm-key"}
 : ${OSH_PRIVATE_SUBNET:="10.0.0.0/24"}
 # NOTE(portdirect): We do this fancy, and seemingly pointless, footwork to get

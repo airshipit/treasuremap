@@ -1,0 +1,33 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: prometheus
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: prometheus-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        prometheus: 1
+      resources:
+        enabled: true
+        prometheus:
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+    storage:
+      requests:
+        storage: 50Gi
+...

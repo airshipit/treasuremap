@@ -1,0 +1,37 @@
+---
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: cluster-bootstrap
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: cluster-bootstrap-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  release_prefix: airship
+  chart_groups:
+    - podsecuritypolicy
+    - kubernetes-proxy
+    - kubernetes-container-networking
+    - kubernetes-dns
+    - kubernetes-etcd
+    - kubernetes-haproxy
+    - kubernetes-core
+    - ingress-kube-system
+    - ucp-ceph
+    - ucp-ceph-config
+    - ucp-core
+    - ucp-keystone
+    - ucp-divingbell
+    - ucp-armada
+    - ucp-deckhand
+    - ucp-drydock
+    - ucp-promenade
+    - ucp-shipyard
+...

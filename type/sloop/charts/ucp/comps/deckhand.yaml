@@ -1,0 +1,21 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: ucp-deckhand
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-deckhand-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        deckhand: 1
+...

@@ -1,0 +1,22 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: tenant-ceph-ingress
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: tenant-ceph-ingress-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        ingress: 1
+        error_page: 1
+...

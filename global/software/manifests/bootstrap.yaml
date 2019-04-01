@@ -6,6 +6,8 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
+  labels:
+    name: cluster-bootstrap-global
   storagePolicy: cleartext
 data:
   release_prefix: airship
@@ -28,3 +30,4 @@ data:
     - ucp-drydock
     - ucp-promenade
     - ucp-shipyard
+...
