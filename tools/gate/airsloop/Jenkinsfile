@@ -1,0 +1,371 @@
+// shared libaries used within the pipeline
+// https://github.com/att-comdev/cicd/blob/master/vars
+
+
+import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.DumperOptions;
+
+import groovy.json.JsonSlurperClassic
+import groovy.json.JsonOutput
+
+PEGLEG_IMAGE = 'quay.io/airshipit/pegleg:178c058474fb632806e281673d3eaf6be80fa854'
+
+KEYSTONE_URL = 'http://keystone.ucp.svc.cluster.local'
+SHIPYARD_URL = 'http://shipyard-api.ucp.svc.cluster.local/api/v1.0'
+
+uuid = UUID.randomUUID().toString()
+
+SITE_NAME='airsloop'
+IPMI_CREDS = 'airsloop-ipmi'
+
+GENESIS_IP = '10.22.71.21'
+GENESIS_CREDS = 'airsloop-key'
+
+GENESIS_IPMI_IP = '10.22.104.21'
+
+IPMI_IPS = ['10.22.104.22']
+
+AIRSHIP_MANIFESTS_REPO = 'https://review.opendev.org/airship/treasuremap'
+DISPLAY_NAME = 'manual'
+
+if (env.GERRIT_REFSPEC) {
+    AIRSHIP_MANIFESTS_REF = GERRIT_REFSPEC
+    DISPLAY_NAME = GERRIT_EVENT_TYPE
+} else if (AIRSHIP_MANIFESTS_REF == 'uplift') {
+    DISPLAY_NAME = 'uplift'
+}
+
+ARTF_BASE = "cicd/logs/${JOB_NAME}/${BUILD_ID}"
+
+currentBuild.displayName = "#${BUILD_NUMBER} ${DISPLAY_NAME}"
+
+
+//// git utils
+
+def clone(String ref){
+
+    def refspec = ''
+
+    // override refspec if patchset provided
+    if (ref.contains('refs')) {
+        refspec = "${ref}:${ref}"
+    }
+
+    // base uplift on latest master
+    if (ref == 'uplift') {
+        ref = 'master'
+    }
+
+    checkout poll: false,
+    scm: [$class: 'GitSCM',
+         branches: [[name: ref]],
+         doGenerateSubmoduleConfigurations: false,
+         extensions: [[$class: 'CleanBeforeCheckout']],
+         submoduleCfg: [],
+         userRemoteConfigs: [[refspec: refspec,
+         url: AIRSHIP_MANIFESTS_REPO ]]]
+}
+
+
+
+//// bare-metal utils
+
+def reset_bare_metal = {
+    stage ('Bare-Metal Reset') {
+
+        withCredentials([usernamePassword(credentialsId: IPMI_CREDS,
+                                      usernameVariable: 'IUSER',
+                                      passwordVariable: 'IPASS')]) {
+
+            def auth = redfish.getBasicAuth(IUSER, IPASS)
+
+            // power cycle genesis
+            redfish.powerOff(GENESIS_IPMI_IP, auth)
+            redfish.powerOn(GENESIS_IPMI_IP, auth)
+
+            // shutdown all other nodes
+            IPMI_IPS.each() {
+                redfish.powerOff(it, auth)
+            }
+        }
+
+    }
+}
+
+
+//// manifest utils
+
+def resolve_versions = {
+
+    def versions = readYaml file: 'global/software/config/versions.yaml'
+    PROMENADE_IMAGE = versions.data.images.ucp.promenade.promenade
+
+    def shipyard = readYaml file: "site/${SITE_NAME}/secrets/passphrases/ucp_shipyard_keystone_password.yaml"
+    SHIPYARD_PASSWD = shipyard.data
+}
+
+def pegleg_site_collect = {
+    stage('Pegleg Site Collect') {
+
+        configFileProvider([configFile(fileId: 'airsloop-site-definition',
+            targetLocation: "site/${SITE_NAME}/site-definition.yaml")]) {
+        }
+
+        withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-attcomdev-key',
+                keyFileVariable: 'SSH_KEY',
+                usernameVariable: 'SSH_USER')]) {
+
+            sh "cp ${SSH_KEY} ssh-key"
+
+            auth = "-u ${SSH_USER} -k /target/ssh-key"
+            cmd = "pegleg site ${auth} -r /target collect ${SITE_NAME} -s /target/${SITE_NAME}"
+            sh "sudo docker run --rm -t -v \$(pwd):/target ${PEGLEG_IMAGE} ${cmd}"
+        }
+
+        sh "tar czf site-config.tar.gz ${SITE_NAME}"
+
+        archiveArtifacts 'site-config.tar.gz'
+    }
+}
+
+def prom_config_gen = {
+    stage ("Promenade Config Gen") {
+
+        sh "mkdir -p promenade-bundle"
+
+        opts = '--rm -t -w /target -v $(pwd):/target'
+        cmd = "promenade build-all --validators -o promenade-bundle ${SITE_NAME}/*.yaml"
+        sh "sudo docker run ${opts} ${PROMENADE_IMAGE} ${cmd}"
+
+        sh 'tar czf promenade-bundle.tar.gz promenade-bundle'
+        archiveArtifacts 'promenade-bundle.tar.gz'
+    }
+}
+
+
+//// genesis utils
+
+def genesis_cleanup = {
+    stage('Genesis Cleanup') {
+
+        dfiles = ['promenade',
+                  'promenade-bundle',
+                  'promenade-bundle.tar.gz',
+                  SITE_NAME,
+                  'airsloop.tar.gz',
+                  'debug-cab23-r720-11.tgz',
+                  '/var/lib/docker',
+                  '/var/lib/kubelet']
+
+        dfiles.each() {
+           ssh.cmd (GENESIS_CREDS, GENESIS_IP, "sudo rm -rf ${it}")
+        }
+
+        ssh.cmd (GENESIS_CREDS, GENESIS_IP,
+                'git clone https://opendev.org/airship/promenade')
+        ssh.cmd (GENESIS_CREDS, GENESIS_IP,
+                'sudo -S promenade/tools/cleanup.sh -f')
+
+    }
+}
+
+def debug_report = {
+    ssh.cmd (GENESIS_CREDS, GENESIS_IP, 'sudo debug-report.sh')
+    ssh.get (GENESIS_CREDS, GENESIS_IP, 'debug-airsloop-control-1.tgz', '.')
+
+    archiveArtifacts 'debug-airsloop-control-1.tgz'
+
+    artifactory.upload("debug-airsloop-control-1.tgz",
+        "${ARTF_BASE}/debug-airsloop-control-1.tgz")
+}
+
+def genesis_deploy = {
+    stage('Genesis Deploy') {
+
+        try {
+
+            ssh.put(GENESIS_CREDS, GENESIS_IP, 'promenade-bundle.tar.gz', '.')
+            ssh.cmd(GENESIS_CREDS, GENESIS_IP, 'tar xvzf promenade-bundle.tar.gz')
+
+            timeout (90) {
+                ssh.cmd(GENESIS_CREDS, GENESIS_IP,
+                           'sudo promenade-bundle/genesis.sh')
+
+                // fixme: there is notable initial slowness likely due to coredns
+                // going out of service and taking time to recover
+                // this is a long time issue and needs to be taken look at
+                retry(2) {
+                    ssh.cmd(GENESIS_CREDS, GENESIS_IP,
+                            'sudo -S promenade-bundle/validate-genesis.sh')
+                }
+            }
+
+            sleep 120 // wait for k8s to calm down
+
+        } catch (err) {
+            debug_report()
+            error(err)
+        }
+    }
+}
+
+def shipyard_deploy = { action ->
+    try {
+        def req = keystone.retrieveToken(SHIPYARD_PASSWD, KEYSTONE_URL, false)
+        def token = req.getHeaders()["X-Subject-Token"][0]
+        shipyard2.uploadConfig(uuid, token, SHIPYARD_URL, SITE_NAME)
+        shipyard2.waitAction(action, uuid, SHIPYARD_URL, SHIPYARD_PASSWD, KEYSTONE_URL, false)
+
+    } catch (err) {
+        debug_report()
+        error(err)
+    }
+
+    ssh.cmd(GENESIS_CREDS, GENESIS_IP,
+            'sudo kubectl get pods --all-namespaces -o wide -a=false')
+}
+
+
+//// uplift utils
+
+def uplift_versions = {
+    stage('Uplift Versions') {
+        sh 'sudo apt-get install python3-yaml python3-git -y'
+
+        def cmd = 'tools/updater.py --in-file global/software/config/versions.yaml'
+
+        if (!UPLIFT_BLACKLIST.isEmpty()) {
+           cmd += " --skip ${UPLIFT_BLACKLIST}"
+        }
+
+        sh cmd
+        sh 'git diff'
+    }
+}
+
+def uplift_review = {
+    withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-uplifter-key',
+            keyFileVariable: 'SSH_KEY',
+            usernameVariable: 'SSH_USER')]) {
+
+        sh 'sudo apt-get install git-review -y'
+
+        sh "cp ${SSH_KEY} ~/.ssh/id_rsa"
+
+        sh "ssh-keyscan -p 29418 review.opendev.org >> ~/.ssh/known_hosts"
+
+        sh "git clone ssh://${SSH_USER}@review.opendev.org:29418/airship/treasuremap"
+        sh "scp -p -P 29418 ${SSH_USER}@review.opendev.org:hooks/commit-msg treasuremap/.git/hooks/"
+
+        sh "cp global/software/config/versions.yaml treasuremap/global/software/config/versions.yaml"
+
+        dir ('treasuremap') {
+            sh "git config --global user.name 'Jenkins Uplifter'"
+            sh "git config --global user.email ${SSH_USER}@gmail.com"
+            sh "git config --global gitreview.username ${SSH_USER}"
+
+            sh 'git checkout -b versions/uplift'
+
+            sh 'git add global/software/config/versions.yaml'
+            sh 'git status'
+            sh 'git commit -m "Auto chart/image uplift to latest"'
+
+            sh 'git review -s'
+            sh 'git review'
+        }
+    }
+}
+
+
+//// test utils
+
+def sanity_tests = {
+    stage('Sanity Tests') {
+
+        sh 'sudo apt-get install nmap -y'
+
+        withEnv(['TERM_OPTS=-i',
+                 'OSH_EXT_SUBNET=',
+                 'OSH_BR_EX_ADDR=',
+                 'OSH_KEYSTONE_URL=http://keystone.openstack.svc.cluster.local',
+                 'OSH_EXT_NET_VLAN=75',
+                 'OSH_EXT_SUBNET=10.22.75.0/24',
+                 'OSH_EXT_GATEWAY=10.22.75.1',
+                 'OSH_EXT_SUBNET_POOL_START=10.22.75.11',
+                 'OSH_EXT_SUBNET_POOL_END=10.22.75.99',
+                 'OSH_REGION_NAME=airsloop',
+                 'OSH_ADMIN_PASSWD=airsloop123']) {
+            sh 'tools/tests.sh'
+        }
+    }
+}
+
+
+//// main flow
+
+vm(timeout: 360,
+   publicNet: 'foundry',
+   artifactoryLogs: ARTIFACTORY_LOGS.toBoolean()) {
+
+    // wait and make sure genesis is up
+    ssh.wait (GENESIS_CREDS, GENESIS_IP, 'hostname')
+
+
+    // disable docker/kubelet services
+    // this is done to be able to properly cleanup genesis after reboot
+    ssh.cmd (GENESIS_CREDS, GENESIS_IP,
+             'sudo systemctl disable kubelet')
+    ssh.cmd (GENESIS_CREDS, GENESIS_IP,
+             'sudo systemctl disable docker')
+
+    sh 'sudo apt-get update'
+    sh 'sudo apt-get install docker.io -y'
+
+    sh 'cat /etc/hosts > hosts'
+    sh 'echo "10.22.71.21 keystone.ucp.svc.cluster.local ' +
+        'shipyard-api.ucp.svc.cluster.local ' +
+        'keystone.openstack.svc.cluster.local ' +
+        'heat.openstack.svc.cluster.local ' +
+        'cinder.openstack.svc.cluster.local ' +
+        'cloudformation.openstack.svc.cluster.local ' +
+        'glance.openstack.svc.cluster.local ' +
+        'glance-reg.openstack.svc.cluster.local ' +
+        'horizon.openstack.svc.cluster.local ' +
+        'metadata.openstack.svc.cluster.local ' +
+        'neutron.openstack.svc.cluster.local ' +
+        'nova.openstack.svc.cluster.local ' +
+        'placement.openstack.svc.cluster.local" >> hosts'
+    sh 'sudo mv hosts /etc/hosts'
+
+    reset_bare_metal()
+
+    clone(AIRSHIP_MANIFESTS_REF)
+
+    // use updater tool to pull latest charts/images
+    if (AIRSHIP_MANIFESTS_REF == 'uplift') {
+        uplift_versions()
+    }
+
+    resolve_versions()
+
+    pegleg_site_collect()
+    prom_config_gen()
+
+    stage ('Genesis Wait') {
+        ssh.wait (GENESIS_CREDS, GENESIS_IP, 'hostname')
+    }
+
+    genesis_cleanup()
+    genesis_deploy()
+
+    timeout(240) {
+        shipyard_deploy('deploy_site')
+    }
+
+    sanity_tests()
+
+    if (AIRSHIP_MANIFESTS_REF == 'uplift') {
+        uplift_review()
+    }
+}
+
