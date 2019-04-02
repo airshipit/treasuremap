@@ -4,7 +4,7 @@ data:
     kubernetes:
       apiserver:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: 1138ee5c422d54b7fdd78e63971822c501793fbf
+        reference: c178634b89cad626b99da31038a4d26545d3428e
         subpath: charts/apiserver
         type: git
       apiserver-htk:
@@ -25,7 +25,7 @@ data:
           type: git
         etcd:
           location: https://git.openstack.org/openstack/airship-promenade
-          reference: 1138ee5c422d54b7fdd78e63971822c501793fbf
+          reference: c178634b89cad626b99da31038a4d26545d3428e
           subpath: charts/etcd
           type: git
         etcd-htk:
@@ -35,7 +35,7 @@ data:
           type: git
       controller-manager:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: 1138ee5c422d54b7fdd78e63971822c501793fbf
+        reference: c178634b89cad626b99da31038a4d26545d3428e
         subpath: charts/controller_manager
         type: git
       controller-manager-htk:
@@ -45,7 +45,7 @@ data:
         type: git
       coredns:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: 1138ee5c422d54b7fdd78e63971822c501793fbf
+        reference: c178634b89cad626b99da31038a4d26545d3428e
         subpath: charts/coredns
         type: git
       coredns-htk:
@@ -55,7 +55,7 @@ data:
         type: git
       etcd:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: 1138ee5c422d54b7fdd78e63971822c501793fbf
+        reference: c178634b89cad626b99da31038a4d26545d3428e
         subpath: charts/etcd
         type: git
       etcd-htk:
@@ -65,7 +65,7 @@ data:
         type: git
       haproxy:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: 1138ee5c422d54b7fdd78e63971822c501793fbf
+        reference: c178634b89cad626b99da31038a4d26545d3428e
         subpath: charts/haproxy
         type: git
       haproxy-htk:
@@ -85,7 +85,7 @@ data:
         type: git
       proxy:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: 1138ee5c422d54b7fdd78e63971822c501793fbf
+        reference: c178634b89cad626b99da31038a4d26545d3428e
         subpath: charts/proxy
         type: git
       proxy-htk:
@@ -95,7 +95,7 @@ data:
         type: git
       scheduler:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: 1138ee5c422d54b7fdd78e63971822c501793fbf
+        reference: c178634b89cad626b99da31038a4d26545d3428e
         subpath: charts/scheduler
         type: git
       scheduler-htk:
@@ -393,7 +393,7 @@ data:
         type: git
       promenade:
         location: https://git.openstack.org/openstack/airship-promenade
-        reference: 1138ee5c422d54b7fdd78e63971822c501793fbf
+        reference: c178634b89cad626b99da31038a4d26545d3428e
         subpath: charts/promenade
         type: git
       promenade-htk:
@@ -556,7 +556,7 @@ data:
       memcached: {}
       postgresql: {}
       promenade:
-        promenade: quay.io/airshipit/promenade:1138ee5c422d54b7fdd78e63971822c501793fbf
+        promenade: quay.io/airshipit/promenade:12b1e84791befdc0b70b6a3854088d874f369214
       rabbitmq: {}
       shipyard:
         airflow: quay.io/airshipit/airflow:2d10945dd853fda07cdd325a275efd66640a39b4
