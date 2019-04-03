@@ -21,7 +21,7 @@
         chdir: "{{ zuul.project.src_dir }}"
       become: yes
 
-    - name: Deploy Kubernetes with KubeADM
+    - name: Deploy Kubernetes with Minikube
       shell: |
         ./tools/deployment/airskiff/developer/010-deploy-k8s.sh
       args:
