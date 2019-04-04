@@ -562,7 +562,10 @@ to run on Genesis host, not on the build host):
 
 ::
 
-    sudo apt -y install 4.15.0-34-generic
+    sudo apt -y install linux-modules-4.15.0-34-generic \
+       linux-modules-extra-4.15.0-34-generic \
+       linux-image-4.15.0-34-generic linux-headers-4.15.0-34-generic \
+       linux-headers-4.15.0-34
 
 Check the installed packages on the genesis host with ``dpkg --list``.
 If there are any later kernel versions installed, remove them with
