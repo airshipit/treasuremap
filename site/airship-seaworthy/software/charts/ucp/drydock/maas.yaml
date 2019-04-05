@@ -21,4 +21,7 @@ data:
           default_os: 'ubuntu'
           default_image: 'xenial'
           default_kernel: 'hwe-16.04'
+    network:
+      maas_ingress:
+        addr: '10.23.20.9/32'
 ...

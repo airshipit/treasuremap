@@ -1,0 +1,25 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-drydock
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-drydock-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: ucp-drydock-site
+  storagePolicy: cleartext
+  replacement: true
+data:
+  values:
+    network:
+      api:
+        ingress:
+          classes:
+            cluster: "maas-ingress"
+...

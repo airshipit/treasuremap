@@ -14,8 +14,8 @@ import groovy.json.JsonOutput
 
 PEGLEG_IMAGE = 'quay.io/airshipit/pegleg:178c058474fb632806e281673d3eaf6be80fa854'
 
-KEYSTONE_URL = 'https://iam.atlantafoundry.com'
-SHIPYARD_URL = 'https://shipyard.atlantafoundry.com/api/v1.0'
+KEYSTONE_URL = 'https://iam-sw.atlantafoundry.com'
+SHIPYARD_URL = 'https://shipyard-sw.atlantafoundry.com/api/v1.0'
 uuid = UUID.randomUUID().toString()
 
 SITE_NAME='airship-seaworthy'

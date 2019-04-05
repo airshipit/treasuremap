@@ -22,6 +22,8 @@ data:
     # network. E.g. VLAN 22 for the calico network as a member of bond0, you
     # would set "interface=bond0.22" as shown here.
     ip_autodetection_method: interface=bond0.22
+    ip_rule:
+      gateway: '10.23.21.1'
     etcd:
       # etcd service IP address
       service_ip: 10.96.232.136

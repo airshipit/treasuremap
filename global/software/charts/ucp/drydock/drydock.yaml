@@ -47,6 +47,12 @@ metadata:
         path: .ucp.physicalprovisioner
       dest:
         path: .values.endpoints.physicalprovisioner
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ucp.maas_region
+      dest:
+        path: .values.endpoints.maas_region
 
     # Drydock IPs
     - src:
@@ -61,22 +67,6 @@ metadata:
         path: .node_ports.drydock_api
       dest:
         path: .values.endpoints.physicalprovisioner.port.api.nodeport
-
-    # MaaS IPs
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .genesis.ip
-      dest:
-        path: .values.conf.drydock.maasdriver.maas_api_url
-        pattern: 'MAAS_IP'
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .node_ports.maas_api
-      dest:
-        path: .values.conf.drydock.maasdriver.maas_api_url
-        pattern: 'MAAS_PORT'
 
     # Credentials
 
@@ -162,13 +152,11 @@ data:
     network:
       api:
         nodeport:
-          enabled: true
+          enabled: false
     conf:
       drydock:
         database:
           pool_size: 200
-        maasdriver:
-          maas_api_url: http://MAAS_IP:MAAS_PORT/MAAS/api/2.0/
         plugins:
           ingester: drydock_provisioner.ingester.plugins.deckhand.DeckhandIngester
   dependencies:

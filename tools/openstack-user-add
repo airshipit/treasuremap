@@ -34,7 +34,7 @@ openstack quota set --floating-ips 4 ${OS_PROJ}
 openstack quota set --cores 36 ${OS_PROJ}
 openstack quota set --ram 98304 ${OS_PROJ}
 
-echo https://dashboard.atlantafoundry.com/
+echo https://dashboard-sw.atlantafoundry.com/
 echo "Domain: ${OS_DOMAIN}"
 echo "User: ${OS_USER}"
 echo "Passwd: ${OS_PASSWD}"

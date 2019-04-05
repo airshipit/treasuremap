@@ -52,7 +52,7 @@ data:
         node_selector_value: enabled
     deployment:
       mode: cluster
-      type: DaemonSet
+      type: Deployment
     network:
       host_namespace: true
       ingress:
@@ -60,7 +60,8 @@ data:
           nginx.ingress.kubernetes.io/proxy-read-timeout: "603"
     pod:
       replicas:
-        error_page: 2
+        ingress: 1
+        error_page: 1
   dependencies:
     - ingress-kube-system-htk
 ---

@@ -22,6 +22,10 @@ metadata:
           pattern: DOMAIN
         - path: .ucp.shipyard.host_fqdn_override.public.host
           pattern: DOMAIN
+        - path: .ucp.physicalprovisioner.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .ucp.maas_region.host_fqdn_override.public.host
+          pattern: DOMAIN
         - path: .ceph.object_store.host_fqdn_override.public.host
           pattern: DOMAIN
         - path: .ceph.ceph_object_store.host_fqdn_override.public.host
@@ -33,6 +37,7 @@ metadata:
       dest:
         - path: .ucp.identity.host_fqdn_override.public.tls.crt
         - path: .ucp.shipyard.host_fqdn_override.public.tls.crt
+        - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.crt
         - path: .ceph.object_store.host_fqdn_override.public.tls.crt
         - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.crt
     - src:
@@ -42,6 +47,7 @@ metadata:
       dest:
         - path: .ucp.identity.host_fqdn_override.public.tls.ca
         - path: .ucp.shipyard.host_fqdn_override.public.tls.ca
+        - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.ca
         - path: .ceph.object_store.host_fqdn_override.public.tls.ca
         - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.ca
     - src:
@@ -51,6 +57,7 @@ metadata:
       dest:
         - path: .ucp.identity.host_fqdn_override.public.tls.key
         - path: .ucp.shipyard.host_fqdn_override.public.tls.key
+        - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.key
         - path: .ceph.object_store.host_fqdn_override.public.tls.key
         - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.key
 data:
@@ -64,9 +71,9 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: iam.DOMAIN
+          host: iam-sw.DOMAIN
         admin:
-          host: iam.DOMAIN
+          host: iam-sw.DOMAIN
       path:
         default: /v3
       scheme:
@@ -194,27 +201,57 @@ data:
         api:
           default: 9000
           nodeport: 31900
+          public: 443
       path:
         default: /api/v1.0
       scheme:
         default: "http"
+        public: "https"
       host_fqdn_override:
         default: null
-    maas_region_ui:
-      name: maas-region-ui
+        public:
+          host: drydock-sw.DOMAIN
+    maas_region:
+      name: maas-region
       hosts:
-        default: maas-region-ui
+        default: maas-region
         public: maas
       path:
         default: /MAAS
       scheme:
         default: "http"
       port:
-        region_ui:
+        region_api:
           default: 80
+          nodeport: 31900
+          podport: 80
           public: 80
+        region_proxy:
+          default: 8000
       host_fqdn_override:
         default: null
+        public:
+          host: maas-sw.DOMAIN
+    maas_ingress:
+      hosts:
+        default: maas-ingress
+        error_pages: maas-ingress-error
+      host_fqdn_override:
+        public: null
+      port:
+        http:
+          default: 80
+        https:
+          default: 443
+        ingress_default_server:
+          default: 8383
+        error_pages:
+          default: 8080
+          podport: 8080
+        healthz:
+          podport: 10259
+        status:
+          podport: 18089
     kubernetesprovisioner:
       name: promenade
       hosts:
@@ -245,7 +282,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: shipyard.DOMAIN
+          host: shipyard-sw.DOMAIN
     prometheus_openstack_exporter:
       namespace: ucp
       hosts:
@@ -269,7 +306,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: object-store.DOMAIN
+          host: object-store-sw.DOMAIN
       path:
         default: /swift/v1
       scheme:
@@ -288,7 +325,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: object-store.DOMAIN
+          host: object-store-sw.DOMAIN
       path:
         default: /auth/v1.0
       scheme:
@@ -456,7 +493,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: object-store.DOMAIN
+          host: object-store-sw.DOMAIN
       path:
         default: /swift/v1/KEY_$(tenant_id)s
       scheme:
@@ -475,7 +512,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: object-store.DOMAIN
+          host: object-store-sw.DOMAIN
       path:
         default: /auth/v1.0
       scheme:
@@ -555,9 +592,9 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: identity.DOMAIN
+          host: identity-sw.DOMAIN
         admin:
-          host: identity.DOMAIN
+          host: identity-sw.DOMAIN
       path:
         default: /v3
       scheme:
@@ -601,7 +638,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: image.DOMAIN
+          host: image-sw.DOMAIN
       path:
         default: null
       scheme:
@@ -660,7 +697,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: volume.DOMAIN
+          host: volume-sw.DOMAIN
       path:
         default: "/v1/%(tenant_id)s"
       scheme:
@@ -678,7 +715,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: volume.DOMAIN
+          host: volume-sw.DOMAIN
       path:
         default: "/v2/%(tenant_id)s"
       scheme:
@@ -696,7 +733,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: volume.DOMAIN
+          host: volume-sw.DOMAIN
       path:
         default: "/v3/%(tenant_id)s"
       scheme:
@@ -740,7 +777,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: orchestration.DOMAIN
+          host: orchestration-sw.DOMAIN
       path:
         default: "/v1/%(project_id)s"
       scheme:
@@ -758,7 +795,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: cloudformation.DOMAIN
+          host: cloudformation-sw.DOMAIN
       path:
         default: /v1
       scheme:
@@ -818,7 +855,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: network.DOMAIN
+          host: network-sw.DOMAIN
       path:
         default: null
       scheme:
@@ -862,7 +899,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: compute.DOMAIN
+          host: compute-sw.DOMAIN
       path:
         default: "/v2/%(tenant_id)s"
       scheme:
@@ -897,7 +934,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: nova-novncproxy.DOMAIN
+          host: nova-novncproxy-sw.DOMAIN
       path:
         default: /vnc_auto.html
       scheme:
@@ -928,7 +965,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: placement.DOMAIN
+          host: placement-sw.DOMAIN
       path:
         default: /
       scheme:
@@ -946,7 +983,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: dashboard.DOMAIN
+          host: dashboard-sw.DOMAIN
       path:
         default: null
       scheme:
@@ -1123,7 +1160,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: grafana.DOMAIN
+          host: grafana-sw.DOMAIN
       path:
         default: null
       scheme:
@@ -1159,7 +1196,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: kibana.DOMAIN
+          host: kibana-sw.DOMAIN
       path:
         default: null
       scheme:
@@ -1261,7 +1298,7 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: nagios.DOMAIN
+          host: nagios-sw.DOMAIN
       path:
         default: null
       scheme:

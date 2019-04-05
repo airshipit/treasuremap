@@ -11,7 +11,7 @@ OS_CLOUD_CFG=${HOME}/.openstack/clouds.yaml
 
 : ${TERM_OPTS:=-it}
 
-: ${OSH_KEYSTONE_URL:='https://identity.atlantafoundry.com/v3'}
+: ${OSH_KEYSTONE_URL:='https://identity-sw.atlantafoundry.com/v3'}
 : ${OSH_REGION_NAME:='airship-seaworthy'}
 : ${OSH_ADMIN_PASSWD:='password123'}
 

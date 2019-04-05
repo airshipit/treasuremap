@@ -14,5 +14,12 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
-data: {}
+data:
+  values:
+    network:
+      ingress:
+        disable-ipv6: "true"
+      vip:
+        manage: true
+        addr: '10.23.21.20/32'
 ...
