@@ -21,6 +21,12 @@
         chdir: "{{ zuul.project.src_dir }}"
       become: yes
 
+    - name: Clone dependencies
+      shell: |
+        ./tools/deployment/airskiff/developer/005-clone-dependencies.sh
+      args:
+        chdir: "{{ zuul.project.src_dir }}"
+
     - name: Deploy Kubernetes with Minikube
       shell: |
         export OSH_INFRA_PATH={{ OSH_INFRA_PATH }}
