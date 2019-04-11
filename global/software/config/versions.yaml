@@ -530,6 +530,8 @@ data:
       prometheus_openstack_exporter: {}
       prometheus_process_exporter: {}
     ucp:
+      pegleg:
+        pegleg: quay.io/airshipit/pegleg:178c058474fb632806e281673d3eaf6be80fa854
       armada:
         api: quay.io/airshipit/armada:c7d9e21b1e3c144eee54d7d2a5da3eb562255894
         helm: docker.io/lachlanevenson/k8s-helm:v2.12.1

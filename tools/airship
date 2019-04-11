@@ -1,0 +1,128 @@
+#!/usr/bin/env bash
+
+# mkdir -p collect certs bundle
+# tools/airship pegleg site -r /target collect airsloop -s collect
+# tools/airship promenade generate-certs -o /target/certs /target/collect/*.yaml
+# tools/airship promenade build-all -o /target/bundle /target/collect/*.yaml /target/certs/*.yaml
+# tools/shipyard get actions
+
+: ${TERM_OPTS:='-it'}
+
+
+ENV_FILE=$(mktemp)
+trap "{ rm -f $ENV_FILE; }" EXIT
+
+# prepare docker environment file
+cat > $ENV_FILE << EOF
+PEGLEG_PASSPHRASE=${PEGLEG_PASSPHRASE:-'password123'}
+PEGLEG_SALT=${PEGLEG_SALT:=-'password123'}
+
+OS_AUTH_URL=${OS_AUTH_URL:-'http://keystone-api.ucp.svc.cluster.local:5000/v3'}
+OS_PASSWORD=${OS_PASSWORD:-'password123'}
+OS_PROJECT_DOMAIN_NAME=${OS_PROJECT_DOMAIN_NAME:-'default'}
+OS_PROJECT_NAME=${OS_PROJECT_NAME:-'service'}
+OS_USERNAME=${OS_USERNAME:-'shipyard'}
+OS_USER_DOMAIN_NAME=${OS_USER_DOMAIN_NAME:-'default'}
+OS_IDENTITY_API_VERSION=${OS_IDENTITY_API_VERSION:-'3'}
+EOF
+
+
+# Key/value lookups from manifests
+manifests_lookup(){
+
+  local file="$1"
+  local schema="$2"
+  local mdata_name="$3"
+  local key_path="$4"
+  local oper="$5"
+  local allow_fail="$6"
+
+  FAIL=false
+  RESULT=`python3 -c "
+
+import yaml,sys
+y = yaml.load_all(open('$file'))
+for x in y:
+  if x.get('schema') == '$schema':
+    if x['metadata']['name'] == '$mdata_name':
+      if isinstance(x$key_path,list):
+        if '$oper' == 'get_size':
+          print(len(x$key_path))
+          break
+        else:
+          for i in x$key_path:
+            print(i)
+          break
+      else:
+        if '$oper' == 'dict_keys':
+          print(' '.join(x$key_path.keys()))
+          break
+        else:
+          print(x$key_path)
+          break
+else:
+  sys.exit(1)" 2>&1` || FAIL=true
+
+  if [[ $FAIL = true ]] && [[ $allow_fail != true ]]; then
+    die "Lookup failed for schema '$schema', metadata.name '$mdata_name', key path '$key_path'"
+  fi
+}
+
+versions_lookup() {
+  manifests_lookup 'global/software/config/versions.yaml' \
+                   'pegleg/SoftwareVersions/v1' \
+                   'software-versions' "$1"
+  IMAGE_URL=$RESULT
+}
+
+
+pegleg() {
+
+  versions_lookup "['data']['images']['ucp']['pegleg']['pegleg']"
+
+  docker run --rm --net=host $TERM_OPTS \
+      -w /target \
+      -v $(pwd):/target \
+      -v ${HOME}/.ssh:/target/.ssh \
+      --env-file $ENV_FILE \
+      $IMAGE_URL $@
+}
+
+promenade() {
+
+  versions_lookup "['data']['images']['ucp']['promenade']['promenade']"
+
+  docker run --rm --net=host $TERM_OPTS \
+      -w /target \
+      -v $(pwd):/target \
+      --env-file $ENV_FILE \
+      $IMAGE_URL $@
+}
+
+shipyard() {
+
+  versions_lookup "['data']['images']['ucp']['shipyard']['shipyard']"
+
+  SHIPYARD_IMAGE=$RESULT
+  docker run --rm --net=host $TERM_OPTS \
+    -w /target \
+    -v $(pwd):/target \
+    --env-file $ENV_FILE \
+    $IMAGE_URL $@
+}
+
+
+case "$1" in
+'pegleg')
+  pegleg $@
+  ;;
+'promenade')
+  promenade $@
+  ;;
+'shipyard')
+  shipyard $@
+  ;;
+*) echo "Invalid option"
+   exit 1
+  ;;
+esac
