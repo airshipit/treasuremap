@@ -337,6 +337,10 @@ data:
       configmap: tenant-ceph-etc
       user_secret_name: pvc-tceph-client-key
     conf:
+      nova:
+        libvirt:
+          cpu_mode: 'host-passthrough'
+          virt_type: kvm
       logging:
         loggers:
           keys:
