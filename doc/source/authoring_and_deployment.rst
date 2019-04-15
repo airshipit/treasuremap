@@ -710,11 +710,12 @@ Ex:
 and should otherwise be correct, barring any customizations of these
 site parameters).
 
-Next, run the deckhand\_load\_yaml.sh script as follows:
+Next, run the deckhand\_load\_yaml.sh script providing an absolute path
+to a directory that contains collected manifests:
 
 ::
 
-    sudo -E airship-shipyard/tools/deckhand_load_yaml.sh ${NEW_SITE} ${NEW_SITE}_collected
+    sudo -E airship-shipyard/tools/deckhand_load_yaml.sh ${NEW_SITE} $(pwd)/${NEW_SITE}_collected
 
 Estimated runtime: **3m**
 
