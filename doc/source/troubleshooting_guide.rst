@@ -25,7 +25,7 @@ how to get it configured on your environment.
     cd treasuremap/
     # List available tags.
     git tag --list
-    # Switch to the version of your site.
+    # Switch to the version your site is using.
     git checkout {your-tag}
     # Go back to a previous directory.
     cd ..
