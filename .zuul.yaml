@@ -96,6 +96,7 @@
     nodeset: airship-treasuremap-single-node
     description: |
       Deploy Memcached using Airskiff and latest Treasuremap changes.
+    voting: false
     timeout: 9600
     pre-run:
       - tools/gate/playbooks/git-config.yaml
