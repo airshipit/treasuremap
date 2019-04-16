@@ -1,0 +1,20 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: neutron-fixme
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: neutron-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        server: 1
+...

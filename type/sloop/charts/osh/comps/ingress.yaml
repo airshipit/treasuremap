@@ -1,0 +1,22 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: openstack-ingress-controller
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: openstack-ingress-controller-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        ingress: 1
+        error_page: 1
+...

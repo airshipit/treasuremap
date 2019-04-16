@@ -1,0 +1,29 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: elasticsearch
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      hosttype: elasticsearch-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        master: 2
+        data: 1
+        client: 2
+    storage:
+      requests:
+        storage: 50Gi
+    conf:
+      elasticsearch:
+        env:
+          java_opts: "-Xms768m -Xmx768m"
+...

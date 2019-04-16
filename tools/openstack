@@ -11,6 +11,9 @@ OS_CLOUD_CFG=${HOME}/.openstack/clouds.yaml
 
 : ${TERM_OPTS:=-it}
 
+: ${OSH_KEYSTONE_URL:='https://identity.atlantafoundry.com/v3'}
+: ${OSH_REGION_NAME:='airship-seaworthy'}
+: ${OSH_ADMIN_PASSWD:='password123'}
 
 if [ ! -f $OS_CLOUD_CFG ]; then
     echo " => Creating OpenStack client config"
@@ -18,15 +21,15 @@ if [ ! -f $OS_CLOUD_CFG ]; then
     tee $OS_CLOUD_CFG << EOF
 clouds:
  openstack_helm:
-   region_name: 'airship-seaworthy'
+   region_name: '${OSH_REGION_NAME}'
    identity_api_version: 3
    auth:
      username: 'admin'
-     password: 'password123'
+     password: '${OSH_ADMIN_PASSWD}'
      project_name: 'admin'
      project_domain_name: 'default'
      user_domain_name: 'default'
-     auth_url: 'https://identity.atlantafoundry.com/v3'
+     auth_url: '${OSH_KEYSTONE_URL}'
 EOF
 fi
 

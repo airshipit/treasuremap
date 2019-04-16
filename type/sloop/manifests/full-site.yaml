@@ -1,0 +1,58 @@
+---
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: full-site
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: full-site-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  release_prefix: airship
+  chart_groups:
+    - podsecuritypolicy
+    - kubernetes-proxy
+    - kubernetes-container-networking
+    - kubernetes-dns
+    - kubernetes-etcd
+    - kubernetes-haproxy
+    - kubernetes-core
+    - ingress-kube-system
+    - ucp-ceph
+    - ucp-ceph-config
+    - ucp-core
+    - ucp-keystone
+    - ucp-divingbell
+    - ucp-armada
+    - ucp-deckhand
+    - ucp-drydock
+    - ucp-promenade
+    - ucp-shipyard
+    - ucp-prometheus-openstack-exporter
+    - osh-infra-ingress-controller
+    - osh-infra-ceph-config
+    - osh-infra-radosgw
+    - osh-infra-logging
+    - osh-infra-monitoring
+    - osh-infra-mariadb
+    - osh-infra-dashboards
+    - openstack-ingress-controller
+    - openstack-ceph-config
+    - openstack-tenant-ceph
+    - openstack-mariadb
+    - openstack-memcached
+    - openstack-keystone
+    - openstack-radosgw
+    - openstack-glance
+    - openstack-cinder
+    - openstack-compute-kit
+    - openstack-heat
+    - osh-infra-prometheus-openstack-exporter
+    - openstack-horizon
+...

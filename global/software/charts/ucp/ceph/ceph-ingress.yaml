@@ -6,6 +6,8 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
+  labels:
+    name: ucp-ceph-ingress-global
   storagePolicy: cleartext
   substitutions:
     # Chart source

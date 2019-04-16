@@ -1,0 +1,65 @@
+---
+# Drydock BaremetalNode resources for a specific rack are stored in this file.
+#
+# NOTE: For new sites, you should complete the networks/physical/networks.yaml
+# file before working on this file.
+#
+# In this file, you should make the number of `drydock/BaremetalNode/v1`
+# resources equal the number of bare metal nodes you have, either by deleting
+# excess BaremetalNode definitions (if there are too many), or by copying and
+# pasting the last BaremetalNode in the file until you have the correct number
+# of baremetal nodes (if there are too few).
+#
+# Then in each file, address all additional NEWSITE-CHANGEME markers to update
+# the data in these files with the right values for your new site.
+#
+# *NOTE: The Genesis node is counted as one of the control plane nodes. Note
+# that the Genesis node does not appear on this bare metal list, because the
+# procedure to reprovision the Genesis host with MaaS has not yet been
+# implemented. Therefore there will be only three bare metal nodes in this file
+# with the 'masters' tag, as the genesis roles are assigned in a difference
+# place (profiles/genesis.yaml).
+# NOTE: The host profiles for the control plane are further divided into two
+# variants: primary and secondary. The only significance this has is that the
+# "primary" nodes are active Ceph nodes, whereas the "secondary" nodes are Ceph
+# standby nodes. For Ceph quorum, this means that the control plane split will
+# be 3 primary + 1 standby host profile, and the Genesis node counts toward one
+# of the 3 primary profiles. Other control plane services are not affected by
+# primary vs secondary designation.
+#
+# TODO: Include the hostname naming convention
+#
+schema: 'drydock/BaremetalNode/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  # NEWSITE-CHANGEME: The next node's hostname
+  name: airsloop-compute-1
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: The next node's IPv4 addressing
+  addressing:
+    - network: oob
+      address: 10.22.104.22
+    - network: pxe
+      address: 10.22.70.22
+    - network: oam
+      address: 10.22.71.22
+    - network: calico
+      address: 10.22.72.22
+    - network: storage
+      address: 10.22.73.22
+    - network: overlay
+      address: 10.22.74.22
+  # NEWSITE-CHANGEME: The next node's host profile
+  # This is the third "primary" control plane profile after genesis
+  host_profile: compute_r720xd
+  metadata:
+    # NEWSITE-CHANGEME: The next node's rack designation
+    rack: cab22
+    # NEWSITE-CHANGEME: The next node's role desigatnion
+    tags:
+      - 'workers'
+...

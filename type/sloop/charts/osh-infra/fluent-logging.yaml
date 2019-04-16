@@ -1,0 +1,20 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: fluent-logging
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      hosttype: fluent-logging-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        fluentd: 1
+...
