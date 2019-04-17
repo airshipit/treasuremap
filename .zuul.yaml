@@ -17,14 +17,16 @@
       rtd_webhook_id: '47687'
     check:
       jobs:
-        - airship-seaworthy-site-lint-gate
-        - airskiff-site-lint-gate
-        - airskiff-deploy-gate
+        - airship-treasuremap-airship-seaworthy-site-lint
+        - airship-treasuremap-airskiff-site-lint
+        - airship-treasuremap-airsloop-site-lint
+        - airship-treasuremap-airskiff-deployment
     gate:
       jobs:
-        - airship-seaworthy-site-lint-gate
-        - airskiff-site-lint-gate
-        - airskiff-deploy-gate
+        - airship-treasuremap-airship-seaworthy-site-lint
+        - airship-treasuremap-airskiff-site-lint
+        - airship-treasuremap-airsloop-site-lint
+        - airship-treasuremap-airskiff-deployment
 
 - nodeset:
     name: airship-treasuremap-single-node
@@ -33,7 +35,64 @@
         label: ubuntu-xenial
 
 - job:
-    name: airskiff-deploy-gate
+    name: airship-treasuremap-site-lint
+    description:
+      Lint a site using Pegleg. Default site is airship-seaworthy.
+    nodeset: airship-treasuremap-single-node
+    timeout: 900
+    pre-run:
+      - tools/gate/playbooks/install-docker.yaml
+      - tools/gate/playbooks/git-config.yaml
+    run: tools/gate/playbooks/site-lint.yaml
+    required-projects:
+      - openstack/airship-pegleg
+    vars:
+      site: airship-seaworthy
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^doc/.*$
+
+- job:
+    name: airship-treasuremap-airship-seaworthy-site-lint
+    description: |
+      Lint the airship-seaworthy site using Pegleg.
+    parent: airship-treasuremap-site-lint
+    vars:
+      site: airship-seaworthy
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^doc/.*$
+      - ^site/airskiff/.*$
+      - ^site/airsloop/.*$
+
+- job:
+    name: airship-treasuremap-airskiff-site-lint
+    description: |
+      Lint the airskiff site using Pegleg.
+    parent: airship-treasuremap-site-lint
+    vars:
+      site: airskiff
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^doc/.*$
+      - ^site/airship-seaworthy/.*$
+      - ^site/airsloop/.*$
+
+- job:
+    name: airship-treasuremap-airsloop-site-lint
+    description: |
+      Lint the airsloop site using Pegleg.
+    parent: airship-treasuremap-site-lint
+    vars:
+      site: airsloop
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^doc/.*$
+      - ^site/airship-seaworthy/.*$
+      - ^site/airskiff/.*$
+
+- job:
+    name: airship-treasuremap-airskiff-deployment
     nodeset: airship-treasuremap-single-node
     description: |
       Deploy Memcached using Airskiff and latest Treasuremap changes.
@@ -52,31 +111,5 @@
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$
-
-- job:
-    name: airship-seaworthy-site-lint-gate
-    nodeset: airship-treasuremap-single-node
-    timeout: 900
-    pre-run:
-      - tools/gate/playbooks/install-docker.yaml
-      - tools/gate/playbooks/git-config.yaml
-    run: tools/gate/playbooks/airship-seaworthy-site-lint.yaml
-    required-projects:
-      - openstack/airship-pegleg
-    irrelevant-files:
-      - ^.*\.rst$
-      - ^doc/.*$
-
-- job:
-    name: airskiff-site-lint-gate
-    nodeset: airship-treasuremap-single-node
-    timeout: 900
-    pre-run:
-      - tools/gate/playbooks/install-docker.yaml
-      - tools/gate/playbooks/git-config.yaml
-    run: tools/gate/playbooks/airskiff-site-lint.yaml
-    required-projects:
-      - openstack/airship-pegleg
-    irrelevant-files:
-      - ^.*\.rst$
-      - ^doc/.*$
+      - ^site/airship-seaworthy/.*$
+      - ^site/airsloop/.*$

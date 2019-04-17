@@ -14,10 +14,10 @@
 
 - hosts: ubuntu-xenial
   tasks:
-    - name: Lint airskiff site
+    - name: Lint site
       shell: |
         set -xe;
-        ./tools/gate/lint-site.sh airskiff
+        ./tools/gate/lint-site.sh "{{ site }}"
       args:
         chdir: "{{ zuul.project.src_dir }}"
       become: yes
