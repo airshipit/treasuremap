@@ -13,8 +13,36 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
+  substitutions:
+
+    # MaaS IPs
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .genesis.ip
+      dest:
+        path: .values.conf.drydock.maasdriver.maas_api_url
+        pattern: 'MAAS_IP'
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .node_ports.maas_api
+      dest:
+        path: .values.conf.drydock.maasdriver.maas_api_url
+        pattern: 'MAAS_PORT'
+
 data:
   values:
+    network:
+      api:
+        nodeport:
+          enabled: true
     replicas:
       drydock: 1
+    conf:
+      drydock:
+        database:
+          pool_size: 200
+        maasdriver:
+          maas_api_url: http://MAAS_IP:MAAS_PORT/MAAS
 ...
