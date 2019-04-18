@@ -193,6 +193,7 @@ Process Flows
    :maxdepth: 2
 
    authoring_and_deployment
+   troubleshooting_guide
    seaworthy
    airskiff
    airsloop
