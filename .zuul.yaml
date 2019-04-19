@@ -45,7 +45,7 @@
       - tools/gate/playbooks/git-config.yaml
     run: tools/gate/playbooks/site-lint.yaml
     required-projects:
-      - openstack/airship-pegleg
+      - airship/pegleg
     vars:
       site: airship-seaworthy
     irrelevant-files:
@@ -103,10 +103,10 @@
     run: tools/gate/playbooks/airskiff-deploy-gate.yaml
     post-run: tools/gate/playbooks/debug-report.yaml
     required-projects:
-      - name: openstack/airship-armada
-      - name: openstack/airship-deckhand
-      - name: openstack/airship-pegleg
-      - name: openstack/airship-shipyard
+      - name: airship/armada
+      - name: airship/deckhand
+      - name: airship/pegleg
+      - name: airship/shipyard
       - name: openstack/openstack-helm-infra
     irrelevant-files:
       - ^.*\.rst$
