@@ -24,13 +24,13 @@ CURRENT_DIR="$(pwd)"
 cd ${INSTALL_PATH}
 
 # Clone Airship projects
-git clone https://git.openstack.org/openstack/airship-armada.git
-git clone https://git.openstack.org/openstack/airship-deckhand.git
-git clone https://git.openstack.org/openstack/airship-pegleg.git
-git clone https://git.openstack.org/openstack/airship-shipyard.git
+git clone https://opendev.org/airship/armada.git
+git clone https://opendev.org/airship/deckhand.git
+git clone https://opendev.org/airship/pegleg.git
+git clone https://opendev.org/airship/shipyard.git
 
 # Clone dependencies
-git clone https://git.openstack.org/openstack/openstack-helm-infra.git
+git clone https://opendev.org/openstack/openstack-helm-infra.git
 
 cd openstack-helm-infra
 git checkout "${OSH_INFRA_COMMIT}"

@@ -108,6 +108,8 @@
       - name: airship/pegleg
       - name: airship/shipyard
       - name: openstack/openstack-helm-infra
+    vars:
+      OSH_INFRA_PATH: "../../openstack/openstack-helm-infra"
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$

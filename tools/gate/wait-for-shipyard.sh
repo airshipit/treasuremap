@@ -16,7 +16,7 @@
 
 set -e
 
-: "${SHIPYARD:=../airship-shipyard/tools/shipyard.sh}"
+: "${SHIPYARD:=../shipyard/tools/shipyard.sh}"
 
 ACTION=$(${SHIPYARD} get actions | grep -i "Processing" | awk '{ print $2 }')
 

@@ -245,7 +245,7 @@ data:
           timeout: null
   source:
     type: local
-    location: /airship-components/airship-armada
+    location: /airship-components/armada
     subpath: charts/armada
   dependencies:
     - osh-helm-toolkit
@@ -265,7 +265,7 @@ data:
   values: {}
   source:
     type: local
-    location: /airship-components/airship-deckhand
+    location: /airship-components/deckhand
     subpath: charts/deckhand
   dependencies:
     - osh-helm-toolkit
@@ -302,7 +302,7 @@ data:
           service_type: armada
   source:
     type: local
-    location: /airship-components/airship-shipyard
+    location: /airship-components/shipyard
     subpath: charts/shipyard
   dependencies:
     - osh-helm-toolkit

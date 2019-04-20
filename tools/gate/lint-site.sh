@@ -16,7 +16,7 @@
 
 set -xe
 
-: "${PEGLEG_PATH:=../airship-pegleg}"
+: "${PEGLEG_PATH:=../pegleg}"
 : "${PEGLEG_IMG:=quay.io/airshipit/pegleg:b7556bd89e99f2a6539e97d5a4ac6738751b9c55}"
 
 : "${PEGLEG:=${PEGLEG_PATH}/tools/pegleg.sh}"

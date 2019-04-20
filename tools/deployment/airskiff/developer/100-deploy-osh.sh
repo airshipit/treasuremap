@@ -19,8 +19,8 @@ set -xe
 
 # Deploy OpenStack using Airship
 CURRENT_DIR="$(pwd)"
-: "${PL_PATH:="../airship-pegleg"}"
-: "${SY_PATH:="../airship-shipyard"}"
+: "${PL_PATH:="../pegleg"}"
+: "${SY_PATH:="../shipyard"}"
 
 # NOTE: Image to use for all Pegleg operations
 : "${PL_IMAGE:=quay.io/airshipit/pegleg:latest}"

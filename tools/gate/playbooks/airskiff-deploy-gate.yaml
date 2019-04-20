@@ -23,6 +23,7 @@
 
     - name: Deploy Kubernetes with Minikube
       shell: |
+        export OSH_INFRA_PATH={{ OSH_INFRA_PATH }}
         ./tools/deployment/airskiff/developer/010-deploy-k8s.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
