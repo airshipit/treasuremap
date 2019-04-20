@@ -88,6 +88,10 @@ data:
     pod:
       replicas:
         api: 2
+      env:
+        armada_api:
+          - name: ARMADA_UWSGI_TIMEOUT
+            value: 14400
     conf:
       armada:
         DEFAULT:
