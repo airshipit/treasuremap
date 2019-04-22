@@ -14,7 +14,7 @@ data:
   values: {}
   source:
     type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    location: https://opendev.org/openstack/openstack-helm-infra.git
     reference: 6b17525b9312a0c9681cce2d22ab0e182362133d
     subpath: helm-toolkit
   dependencies: []
@@ -39,7 +39,7 @@ data:
       host_namespace: True
   source:
     type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    location: https://opendev.org/openstack/openstack-helm-infra.git
     reference: 8662018a4dceb82a5d699d9e118caff9e5edb156
     subpath: ingress
   dependencies:
@@ -60,7 +60,7 @@ data:
   values: {}
   source:
     type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    location: https://opendev.org/openstack/openstack-helm-infra.git
     reference: 8662018a4dceb82a5d699d9e118caff9e5edb156
     subpath: ingress
   dependencies:
@@ -83,7 +83,7 @@ data:
       name: general
   source:
     type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    location: https://opendev.org/openstack/openstack-helm-infra.git
     reference: 8662018a4dceb82a5d699d9e118caff9e5edb156
     subpath: nfs-provisioner
   dependencies:
@@ -107,7 +107,7 @@ data:
         server: 1
   source:
     type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    location: https://opendev.org/openstack/openstack-helm-infra.git
     reference: 8662018a4dceb82a5d699d9e118caff9e5edb156
     subpath: mariadb
   dependencies:
@@ -133,7 +133,7 @@ data:
         server: 1
   source:
     type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    location: https://opendev.org/openstack/openstack-helm-infra.git
     reference: 8662018a4dceb82a5d699d9e118caff9e5edb156
     subpath: rabbitmq
   dependencies:
@@ -154,7 +154,7 @@ data:
   values: {}
   source:
     type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    location: https://opendev.org/openstack/openstack-helm-infra.git
     reference: 8662018a4dceb82a5d699d9e118caff9e5edb156
     subpath: memcached
   dependencies:
@@ -175,7 +175,7 @@ data:
   values: {}
   source:
     type: git
-    location: https://git.openstack.org/openstack/openstack-helm.git
+    location: https://opendev.org/openstack/openstack-helm.git
     reference: 112e15b1655285194593a7afca4352ce046c7a47
     subpath: keystone
   dependencies:
@@ -199,7 +199,7 @@ data:
         server: 1
   source:
     type: git
-    location: https://git.openstack.org/openstack/openstack-helm-infra.git
+    location: https://opendev.org/openstack/openstack-helm-infra.git
     reference: 8662018a4dceb82a5d699d9e118caff9e5edb156
     subpath: postgresql
   dependencies:
@@ -220,7 +220,7 @@ data:
   values: {}
   source:
     type: git
-    location: https://git.openstack.org/openstack/openstack-helm.git
+    location: https://opendev.org/openstack/openstack-helm.git
     reference: 112e15b1655285194593a7afca4352ce046c7a47
     subpath: barbican
   dependencies:
