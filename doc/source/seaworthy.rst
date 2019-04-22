@@ -5,7 +5,7 @@ Airship Seaworthy is a multi-node site deployment reference
 and continuous integration pipeline.
 
 The site manifests are available at
-`site/airship-seaworthy <https://github.com/openstack/airship-treasuremap/tree/master/site/airship-seaworthy>`__.
+`site/airship-seaworthy <https://opendev.org/airship/treasuremap/src/branch/master/site/airship-seaworthy>`__.
 
 
 Pipeline
@@ -15,15 +15,15 @@ Airship Seaworthy pipeline automates deployment flow documented in
 `Site Authoring and Deployment Guide <https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html>`__.
 
 The pipeline is implemented as Jenkins Pipeline (Groovy), see code for the pipeline at
-`Jenkinsfile <https://github.com/openstack/airship-treasuremap/blob/master/tools/gate/Jenkinsfile>`__.
+`Jenkinsfile <https://opendev.org/airship/treasuremap/src/branch/master/tools/gate/Jenkinsfile>`__.
 
 Versions
 --------
 
-The manifest overrides (`versions.yaml <https://github.com/openstack/airship-treasuremap/blob/master/global/software/config/versions.yaml>`__)
+The manifest overrides (`versions.yaml <https://opendev.org/airship/treasuremap/src/branch/master/global/software/config/versions.yaml>`__)
 are setup to deploy OpenStack Ocata.
 
-The versions are kept up to date via `updater.py <https://github.com/openstack/airship-treasuremap/blob/master/tools/updater.py>`__,
+The versions are kept up to date via `updater.py <https://opendev.org/airship/treasuremap/src/branch/master/tools/updater.py>`__,
 a utility that updates versions.yaml latest charts and (selected) images.
 
 The pipeline attempts to uplift and deploy latest versions on daily bases.
@@ -40,7 +40,7 @@ to align parts of the system such as Ceph replication, etcd, etc.
 
 Airship Seaworthy site has 6 DELL R720xd bare-metal servers:
 3 control, and 3 compute nodes.
-See host profiles for the servers `here <https://github.com/openstack/airship-treasuremap/tree/master/site/airship-seaworthy/profiles/host>`__.
+See host profiles for the servers `here <https://opendev.org/airship/treasuremap/src/branch/master/site/airship-seaworthy/profiles/host>`__.
 
 Control (masters)
  - cab23-r720-11
@@ -57,7 +57,7 @@ Network
 -------
 
 Physical (underlay) networks are described in Drydock site configuration
-`here <https://github.com/openstack/airship-treasuremap/blob/master/site/airship-seaworthy/networks/physical/networks.yaml>`__.
+`here <https://opendev.org/airship/treasuremap/src/branch/master/site/airship-seaworthy/networks/physical/networks.yaml>`__.
 It defines OOB (iLO/IPMI), untagged PXE, and multiple tagged general use networks.
 
 Calico overlay for k8s POD networking uses IPIP mesh.

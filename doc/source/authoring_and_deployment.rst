@@ -455,7 +455,7 @@ Clone the Promenade repo, if not already cloned:
 
 ::
 
-    git clone https://github.com/openstack/airship-promenade
+    git clone https://opendev.org/airship/promenade
 
 Refer to the ``data/charts/ucp/promenade/reference`` field in
 ``airship-treasuremap/global/software/config/versions.yaml``. If
@@ -694,7 +694,7 @@ Start by cloning the shipyard repository to the Genesis node:
 
 ::
 
-    git clone https://github.com/openstack/airship-shipyard
+    git clone https://opendev.org/airship/shipyard
 
 Refer to the ``data/charts/ucp/shipyard/reference`` field in
 ``airship-treasuremap/global/software/config/versions.yaml``. If
@@ -736,7 +736,7 @@ Ex:
     export OS_PASSWORD=46a75e4...
 
 (Note: Default auth variables are defined
-`here <https://github.com/openstack/airship-shipyard/blob/master/tools/shipyard_docker_base_command.sh>`__,
+`here <https://opendev.org/airship/shipyard/src/branch/master/tools/shipyard_docker_base_command.sh>`__,
 and should otherwise be correct, barring any customizations of these
 site parameters).
 

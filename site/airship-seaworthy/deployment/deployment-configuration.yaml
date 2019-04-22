@@ -3,7 +3,7 @@
 # parameters. This should not require modification for a new site. However,
 # shipyard deployment strategies can be very useful in getting around certain
 # failures, like misbehaving nodes that hold up the deployment. See more at
-# https://github.com/openstack/airship-shipyard/blob/master/docs/source/site-definition-documents.rst#using-a-deployment-strategy
+# https://opendev.org/airship/shipyard/src/branch/master/doc/source/site-definition-documents.rst#using-a-deployment-strategy
 schema: shipyard/DeploymentConfiguration/v1
 metadata:
   schema: metadata/Document/v1

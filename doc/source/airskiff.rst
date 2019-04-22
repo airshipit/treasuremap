@@ -289,14 +289,14 @@ client is configured for authentication:
 .. _OpenStack-Helm project: https://docs.openstack.org/openstack-helm/latest/
     install/developer/requirements-and-host-config.html
 
-.. _Armada: https://github.com/openstack/airship-armada
-.. _Deckhand: https://github.com/openstack/airship-deckhand
-.. _Pegleg: https://github.com/openstack/airship-pegleg
-.. _Shipyard: https://github.com/openstack/airship-shipyard
+.. _Armada: https://opendev.org/airship/armada
+.. _Deckhand: https://opendev.org/airship/deckhand
+.. _Pegleg: https://opendev.org/airship/pegleg
+.. _Shipyard: https://opendev.org/airship/shipyard
 
 .. _Armada image: https://quay.io/repository/airshipit/armada?tab=tags
 
-.. _airship-treasuremap: https://github.com/openstack/airship-treasuremap
+.. _airship-treasuremap: https://opendev.org/airship/treasuremap
 
 .. _Shipyard actions: https://airship-shipyard.readthedocs.io/en/latest/
     action-commands.html

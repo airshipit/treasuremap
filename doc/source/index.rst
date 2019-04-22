@@ -18,13 +18,13 @@ Component Projects
 Pegleg
 ------
 
-`Pegleg <https://github.com/openstack/airship-pegleg>`_ is a document aggregator
+`Pegleg <https://opendev.org/airship/pegleg>`_ is a document aggregator
 that provides early linting and validations via Deckhand, a document management
 micro-service within Airship.
 
 Shipyard
 --------
-`Shipyard <https://github.com/openstack/airship-shipyard>`_ is the directed acyclic
+`Shipyard <https://opendev.org/airship/shipyard>`_ is the directed acyclic
 graph controller for Kubernetes and OpenStack control plane life cycle
 management.
 
@@ -49,7 +49,7 @@ monitor and control the execution of the workflow.
 
 Drydock
 -------
-`Drydock <https://github.com/openstack/airship-drydock>`_ is a provisioning orchestrator
+`Drydock <https://opendev.org/airship/drydock>`_ is a provisioning orchestrator
 for baremetal servers that translates a YAML-based declaritive site topology into a
 physical undercloud that can be used for building out a enterprise Kubernetes cluster.
 It uses plugins to leverage existing provisioning systems to build the servers allowing
@@ -69,7 +69,7 @@ Capabilities
 
 Deckhand
 --------
-`Deckhand <https://github.com/openstack/airship-deckhand>`_ is a document-based
+`Deckhand <https://opendev.org/airship/deckhand>`_ is a document-based
 configuration storage service built with auditability and validation in mind.
 
 Core Responsibilities
@@ -90,7 +90,7 @@ Core Responsibilities
 
 Armada
 ------
-`Armada <https://github.com/openstack/airship-armada>`_ is a tool for managing multiple
+`Armada <https://opendev.org/airship/armada>`_ is a tool for managing multiple
 Helm charts with dependencies by centralizing all configurations in a single
 Armada YAML and providing life-cycle hooks for all Helm releases.
 
@@ -110,7 +110,7 @@ basic mechanisms for deployment, maintenance, and scaling of applications.
 
 Promenade
 ---------
-`Promenade <https://github.com/openstack/airship-promenade>`_ is a tool for
+`Promenade <https://opendev.org/airship/promenade>`_ is a tool for
 bootstrapping a resilient, self-hosted Kubernetes cluster and managing its
 life-cycle.
 
@@ -161,7 +161,7 @@ OpenStack applications into a cloud-native model.
 
 Divingbell
 ----------
-`Divingbell <https://github.com/openstack/airship-divingbell>`_ is a lightweight
+`Divingbell <https://opendev.org/airship/divingbell>`_ is a lightweight
 solution for:
 
 1. Bare metal configuration management for a few very targeted use cases
@@ -177,7 +177,7 @@ The needs identified for Divingbell were:
 
 Berth
 -----
-`Berth <https://github.com/openstack/airship-berth>`_ is a deliberately minimalist VM
+`Berth <https://opendev.org/airship/berth>`_ is a deliberately minimalist VM
 runner for Kubernetes.
 
 
@@ -201,6 +201,6 @@ Process Flows
 .. _Kubernetes Homepage: https://kubernetes.io/
 .. _Openstack: https://www.openstack.org/
 .. _Openstack Helm: https://github.com/openstack/openstack-helm
-.. _Treasuremap: https://github.com/openstack/airship-treasuremap
+.. _Treasuremap: https://opendev.org/airship/treasuremap
 .. _yaml: http://yaml.org/
 
