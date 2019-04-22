@@ -5,7 +5,6 @@
 // shared libaries used within the pipeline
 // https://github.com/att-comdev/cicd/blob/master/vars
 
-
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.DumperOptions;
 
@@ -14,9 +13,11 @@ import groovy.json.JsonOutput
 
 PEGLEG_IMAGE = 'quay.io/airshipit/pegleg:178c058474fb632806e281673d3eaf6be80fa854'
 
+COLLECT_DIR = 'collect'
+BUNDLE_DIR = 'bundle'
+
 KEYSTONE_URL = 'https://iam-sw.atlantafoundry.com'
 SHIPYARD_URL = 'https://shipyard-sw.atlantafoundry.com/api/v1.0'
-uuid = UUID.randomUUID().toString()
 
 SITE_NAME='airship-seaworthy'
 IPMI_CREDS = 'airship-seaworthy-ipmi'
@@ -33,14 +34,15 @@ IPMI_IPS = ['10.23.104.12',
             '10.23.104.17',
             '10.23.104.19']
 
-AIRSHIP_MANIFESTS_REPO = 'https://git.openstack.org/openstack/airship-treasuremap'
-DISPLAY_NAME = 'manual'
+AIRSHIP_MANIFESTS_REPO = 'https://review.opendev.org/airship/treasuremap'
 
 if (env.GERRIT_REFSPEC) {
     AIRSHIP_MANIFESTS_REF = GERRIT_REFSPEC
     DISPLAY_NAME = GERRIT_EVENT_TYPE
 } else if (AIRSHIP_MANIFESTS_REF == 'uplift') {
     DISPLAY_NAME = 'uplift'
+} else {
+  DISPLAY_NAME = "manual ${AIRSHIP_MANIFESTS_REF}"
 }
 
 currentBuild.displayName = "#${BUILD_NUMBER} ${DISPLAY_NAME}"
@@ -48,7 +50,7 @@ currentBuild.displayName = "#${BUILD_NUMBER} ${DISPLAY_NAME}"
 
 //// git utils
 
-def clone(String url, String ref){
+def clone(String ref){
 
     def refspec = ''
 
@@ -69,7 +71,7 @@ def clone(String url, String ref){
          extensions: [[$class: 'CleanBeforeCheckout']],
          submoduleCfg: [],
          userRemoteConfigs: [[refspec: refspec,
-         url: url ]]]
+         url: AIRSHIP_MANIFESTS_REPO ]]]
 }
 
 
@@ -101,10 +103,6 @@ def reset_bare_metal = {
 //// manifest utils
 
 def resolve_versions = {
-
-    def versions = readYaml file: 'global/software/config/versions.yaml'
-    PROMENADE_IMAGE = versions.data.images.ucp.promenade.promenade
-
     def shipyard = readYaml file: "site/${SITE_NAME}/secrets/passphrases/ucp_shipyard_keystone_password.yaml"
     SHIPYARD_PASSWD = shipyard.data
 }
@@ -123,12 +121,11 @@ def pegleg_site_collect = {
             sh "cp ${SSH_KEY} ssh-key"
 
             auth = "-u ${SSH_USER} -k /target/ssh-key"
-            cmd = "pegleg site ${auth} -r /target collect ${SITE_NAME} -s /target/${SITE_NAME}"
+            cmd = "pegleg site ${auth} -r /target collect ${SITE_NAME} -s /target/${COLLECT_DIR}"
             sh "sudo docker run --rm -t -v \$(pwd):/target ${PEGLEG_IMAGE} ${cmd}"
         }
 
-        sh "tar czf site-config.tar.gz ${SITE_NAME}"
-
+        sh "tar czf site-config.tar.gz ${COLLECT_DIR}"
         archiveArtifacts 'site-config.tar.gz'
     }
 }
@@ -136,14 +133,14 @@ def pegleg_site_collect = {
 def prom_config_gen = {
     stage ("Promenade Config Gen") {
 
-        sh "mkdir -p promenade-bundle"
+        withEnv(['TERM_OPTS=-t']) {
+            sh "mkdir -p ${BUNDLE_DIR}"
+            sh "sudo -E tools/airship promenade build-all --validators" +
+               " -o ${BUNDLE_DIR} /target/${COLLECT_DIR}/*.yaml"
+        }
 
-        opts = '--rm -t -w /target -v $(pwd):/target'
-        cmd = "promenade build-all --validators -o promenade-bundle ${SITE_NAME}/*.yaml"
-        sh "sudo docker run ${opts} ${PROMENADE_IMAGE} ${cmd}"
-
-        sh 'tar czf promenade-bundle.tar.gz promenade-bundle'
-        archiveArtifacts 'promenade-bundle.tar.gz'
+        sh "tar czf ${BUNDLE_DIR}.tar.gz ${BUNDLE_DIR}"
+        archiveArtifacts "${BUNDLE_DIR}.tar.gz"
     }
 }
 
@@ -153,9 +150,9 @@ def prom_config_gen = {
 def genesis_cleanup = {
     stage('Genesis Cleanup') {
 
-        dfiles = ['airship-promenade',
-                  'promenade-bundle',
-                  'promenade-bundle.tar.gz',
+        dfiles = ['promenade',
+                  BUNDLE_DIR,
+                  "${BUNDLE_DIR}.tar.gz",
                   SITE_NAME,
                   'airship-seaworthy.tar.gz',
                   'debug-cab23-r720-11.tgz',
@@ -167,9 +164,9 @@ def genesis_cleanup = {
         }
 
         ssh.cmd (GENESIS_CREDS, GENESIS_IP,
-                'git clone https://git.openstack.org/openstack/airship-promenade')
+                'git clone https://opendev.org/airship/promenade')
         ssh.cmd (GENESIS_CREDS, GENESIS_IP,
-                'sudo -S airship-promenade/tools/cleanup.sh -f')
+                'sudo -S promenade/tools/cleanup.sh -f')
 
         GENESIS_CEPH_DISKS.each() {
             ssh.cmd(GENESIS_CREDS, GENESIS_IP,
@@ -189,20 +186,19 @@ def genesis_deploy = {
     stage('Genesis Deploy') {
 
         try {
-
-            ssh.put(GENESIS_CREDS, GENESIS_IP, 'promenade-bundle.tar.gz', '.')
-            ssh.cmd(GENESIS_CREDS, GENESIS_IP, 'tar xvzf promenade-bundle.tar.gz')
+            ssh.put(GENESIS_CREDS, GENESIS_IP, "${BUNDLE_DIR}.tar.gz", '.')
+            ssh.cmd(GENESIS_CREDS, GENESIS_IP, "tar xvzf ${BUNDLE_DIR}.tar.gz")
 
             timeout (90) {
                 ssh.cmd(GENESIS_CREDS, GENESIS_IP,
-                           'sudo promenade-bundle/genesis.sh')
+                           "sudo ${BUNDLE_DIR}/genesis.sh")
 
                 // fixme: there is notable initial slowness likely due to coredns
                 // going out of service and taking time to recover
                 // this is a long time issue and needs to be taken look at
                 retry(2) {
                     ssh.cmd(GENESIS_CREDS, GENESIS_IP,
-                            'sudo -S promenade-bundle/validate-genesis.sh')
+                            "sudo -S ${BUNDLE_DIR}/validate-genesis.sh")
                 }
             }
 
@@ -217,6 +213,7 @@ def genesis_deploy = {
 
 def shipyard_deploy = { action ->
     try {
+        uuid = UUID.randomUUID().toString()
         def req = keystone.retrieveToken(SHIPYARD_PASSWD, KEYSTONE_URL, false)
         def token = req.getHeaders()["X-Subject-Token"][0]
         shipyard2.uploadConfig(uuid, token, SHIPYARD_URL, SITE_NAME)
@@ -226,9 +223,6 @@ def shipyard_deploy = { action ->
         debug_report()
         error(err)
     }
-
-    ssh.cmd(GENESIS_CREDS, GENESIS_IP,
-            'sudo kubectl get pods --all-namespaces -o wide -a=false')
 }
 
 
@@ -258,14 +252,14 @@ def uplift_review = {
 
         sh "cp ${SSH_KEY} ~/.ssh/id_rsa"
 
-        sh "ssh-keyscan -p 29418 review.openstack.org >> ~/.ssh/known_hosts"
+        sh "ssh-keyscan -p 29418 review.opendev.org >> ~/.ssh/known_hosts"
 
-        sh "git clone ssh://${SSH_USER}@review.openstack.org:29418/openstack/airship-treasuremap"
-        sh "scp -p -P 29418 ${SSH_USER}@review.openstack.org:hooks/commit-msg airship-treasuremap/.git/hooks/"
+        sh "git clone ssh://${SSH_USER}@review.opendev.org:29418/airship/treasuremap"
+        sh "scp -p -P 29418 ${SSH_USER}@review.opendev.org:hooks/commit-msg treasuremap/.git/hooks/"
 
-        sh "cp global/software/config/versions.yaml airship-treasuremap/global/software/config/versions.yaml"
+        sh "cp global/software/config/versions.yaml treasuremap/global/software/config/versions.yaml"
 
-        dir ('airship-treasuremap') {
+        dir ('treasuremap') {
             sh "git config --global user.name 'Jenkins Uplifter'"
             sh "git config --global user.email ${SSH_USER}@gmail.com"
             sh "git config --global gitreview.username ${SSH_USER}"
@@ -279,23 +273,6 @@ def uplift_review = {
             sh 'git review -s'
             sh 'git review'
         }
-    }
-
-    // send a Slack message to request review/merge
-    def msg = 'Latest charts/images passed green-field deployment, and sanity tests.\n' +
-              'A patchset is published and ready to review/merge:\n' +
-              'https://review.openstack.org/#/q/owner:jenkins.uplifter%2540gmail.com+status:open'
-
-    if (!UPLIFT_BLACKLIST.isEmpty()) {
-       msg += "\n\nBlacklisted charts/images: ${UPLIFT_BLACKLIST}"
-    }
-
-    try {
-        notify.msg(msg, '#integration')
-    } catch (err) {
-        // tolerate Slack errors as not critical for success
-        print "Failed to send Slack message: ${err}"
-        currentBuild.result = 'UNSTABLE'
     }
 }
 
@@ -337,7 +314,7 @@ vm(timeout: 360,
 
     reset_bare_metal()
 
-    clone(AIRSHIP_MANIFESTS_REPO, AIRSHIP_MANIFESTS_REF)
+    clone(AIRSHIP_MANIFESTS_REF)
 
     // use updater tool to pull latest charts/images
     if (AIRSHIP_MANIFESTS_REF == 'uplift') {
