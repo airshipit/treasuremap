@@ -314,7 +314,7 @@ data:
       neutron:
         DEFAULT:
           l3_ha: True
-          max_l3_agents_per_router: 5
+          max_l3_agents_per_router: 3
           l3_ha_network_type: vxlan
           dhcp_agents_per_network: 2
         oslo_messaging_rabbit:
