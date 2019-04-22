@@ -1,0 +1,23 @@
+---
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: nested-virt
+  labels:
+    name: nested-virt-global
+    application: 'drydock'
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: 'cleartext'
+data:
+  signaling: false
+  assets:
+    - path: /etc/modprobe.d/nested-virt.conf
+      type: file
+      permissions: '644'
+      data_pipeline:
+        - utf8_decode
+      data: |
+        options kvm-intel nested=y
+...
