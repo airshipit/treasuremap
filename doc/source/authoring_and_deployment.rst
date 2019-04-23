@@ -179,7 +179,6 @@ Establishing build node environment
     git clone https://git.openstack.org/openstack/airship-pegleg
     git clone https://git.openstack.org/openstack/airship-treasuremap
 
-
 Building Site documents
 -----------------------
 
@@ -236,6 +235,64 @@ the order in which you should build your site files is as follows:
 3. site/$NEW\_SITE/networks/common-addresses.yaml
 4. site/$NEW\_SITE/pki/pki-catalog.yaml
 5. All other site files
+
+Register DNS names
+~~~~~~~~~~~~~~~~~~
+
+Register the following list of DNS names:
+
+::
+
+    cloudformation.DOMAIN
+    compute.DOMAIN
+    dashboard.DOMAIN
+    grafana.DOMAIN
+    iam.DOMAIN
+    identity.DOMAIN
+    image.DOMAIN
+    kibana.DOMAIN
+    nagios.DOMAIN
+    network.DOMAIN
+    nova-novncproxy.DOMAIN
+    object-store.DOMAIN
+    orchestration.DOMAIN
+    placement.DOMAIN
+    shipyard.DOMAIN
+    volume.DOMAIN
+
+Here ``DOMAIN`` is a name of ingress domain, you can find it in the
+``data.dns.ingress_domain`` section of
+``site/${NEW_SITE}/secrets/certificates/ingress.yaml`` configuration file.
+
+Run the following command to get up to date list of required DNS names:
+
+::
+
+    grep -E 'host: .+DOMAIN' site/${NEW_SITE}/software/config/endpoints.yaml | \
+        sort -u | awk '{print $2}'
+
+Update Secrets
+~~~~~~~~~~~~~~
+
+Replace passphrases under ``site/${NEW_SITE}/secrets/passphrases/``
+with random generated ones:
+
+- Passpharses generation ``openssl rand -hex 10``
+- UUID generation ``uuidgen`` (e.g. for Ceph filesystem ID)
+- Update ``secrets/passphrases/ipmi_admin_password.yaml`` with IPMI password
+- Update ``secrets/passphrases/ubuntu_crypt_password.yaml`` with password hash:
+
+::
+
+    python3 -c "from crypt import *; print(crypt('<YOUR_PASSWORD>', METHOD_SHA512))"
+
+Configure certificates in ``site/${NEW_SITE}/secrets/certificates/ingress.yaml``,
+they need to be issued for the domains configured in ``Register DNS names`` section.
+
+.. caution::
+
+    It is required to configure valid certificates, self-signed certificates
+    are not supported.
 
 Control Plane Ceph Cluster Notes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -334,33 +391,6 @@ The data section of this file would look like:
                 journal:
                   type: block-logical
                   location: /dev/sdc2
-
-
-Update Passphrases
-~~~~~~~~~~~~~~~~~~~~
-
-Replace passphrases under ``site/${NEW_SITE}/secrets/passphrases/``
-with random generated ones:
-
-- Passpharses generation ``openssl rand -hex 10``
-- UUID generation ``uuidgen`` (e.g. for Ceph filesystem ID)
-- Update ``secrets/passphrases/ipmi_admin_password.yaml`` with IPMI password
-- Update ``secrets/passphrases/ubuntu_crypt_password.yaml`` with password hash:
-
-::
-
-    python3 -c "from crypt import *; print(crypt('<YOUR_PASSWORD>', METHOD_SHA512))"
-
-Configure certificates in ``site/${NEW_SITE}/secrets/certificates/ingress.yaml``,
-they need to be issued for domain configured in a section ``data.dns.ingress_domain``
-of a file ``./site/${NEW_SITE}/networks/common-addresses.yaml``. A list of endpoints
-which will be used with these certificates can be found in the following file
-``./site/${NEW_SITE}/software/config/endpoints.yaml``.
-
-.. caution::
-
-    It's required to configure valid certificates, self-signed certificates
-    are not supported.
 
 Manifest linting and combining layers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
