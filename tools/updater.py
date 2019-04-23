@@ -63,20 +63,20 @@ parser = argparse.ArgumentParser(description=descr_text)
 # being overloaded.
 image_repo_git_url = {
     # airflow image is built from airship-shipyard repository
-    'quay.io/airshipit/airflow': 'https://git.openstack.org/openstack/airship-shipyard',
-    'quay.io/airshipit/armada': 'https://git.openstack.org/openstack/airship-armada',
-    'quay.io/airshipit/deckhand': 'https://git.openstack.org/openstack/airship-deckhand',
+    'quay.io/airshipit/airflow': 'https://opendev.org/airship/shipyard',
+    'quay.io/airshipit/armada': 'https://opendev.org/airship/armada',
+    'quay.io/airshipit/deckhand': 'https://opendev.org/airship/deckhand',
     # yes, divingbell image is just Ubuntu 16.04 image, and we don't check it's tag
-    #'docker.io/ubuntu': 'https://git.openstack.org/openstack/airship-divingbell',
-    'quay.io/airshipit/drydock': 'https://git.openstack.org/openstack/airship-drydock',
+    #'docker.io/ubuntu': 'https://opendev.org/airship/divingbell',
+    'quay.io/airshipit/drydock': 'https://opendev.org/airship/drydock',
     # maas-{rack,region}-controller images are built from airship-maas repository
-    'quay.io/airshipit/maas-rack-controller': 'https://git.openstack.org/openstack/airship-maas',
-    'quay.io/airshipit/maas-region-controller': 'https://git.openstack.org/openstack/airship-maas',
-    'quay.io/airshipit/pegleg': 'https://git.openstack.org/openstack/airship-pegleg',
-    'quay.io/airshipit/promenade': 'https://git.openstack.org/openstack/airship-promenade',
-    'quay.io/airshipit/shipyard': 'https://git.openstack.org/openstack/airship-shipyard',
+    'quay.io/airshipit/maas-rack-controller': 'https://opendev.org/airship/maas',
+    'quay.io/airshipit/maas-region-controller': 'https://opendev.org/airship/maas',
+    'quay.io/airshipit/pegleg': 'https://opendev.org/airship/pegleg',
+    'quay.io/airshipit/promenade': 'https://opendev.org/airship/promenade',
+    'quay.io/airshipit/shipyard': 'https://opendev.org/airship/shipyard',
     # sstream-cache image is built from airship-maas repository
-    'quay.io/airshipit/sstream-cache': 'https://git.openstack.org/openstack/airship-maas',
+    'quay.io/airshipit/sstream-cache': 'https://opendev.org/airship/maas',
     'quay.io/attcomdev/nagios': 'https://github.com/att-comdev/nagios',
     'quay.io/attcomdev/prometheus-openstack-exporter':
         'https://github.com/att-comdev/prometheus-openstack-exporter'
