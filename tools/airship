@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# mkdir -p collect certs bundle
-# tools/airship pegleg site -r /target collect airsloop -s collect
-# tools/airship promenade generate-certs -o /target/certs /target/collect/*.yaml
-# tools/airship promenade build-all -o /target/bundle /target/collect/*.yaml /target/certs/*.yaml
-# tools/shipyard get actions
-
 : ${TERM_OPTS:='-it'}
+
+# Python YAML module required to read versions.yaml
+dpkg -s python3-yaml &> /dev/null || apt -y install python3-yaml
 
 
 ENV_FILE=$(mktemp)
@@ -64,7 +61,9 @@ else:
   sys.exit(1)" 2>&1` || FAIL=true
 
   if [[ $FAIL = true ]] && [[ $allow_fail != true ]]; then
-    die "Lookup failed for schema '$schema', metadata.name '$mdata_name', key path '$key_path'"
+     echo "error: Lookup failed for schema '$schema', \
+metadata.name '$mdata_name', key path '$key_path'" >&2
+     exit 1
   fi
 }
 
@@ -75,6 +74,17 @@ versions_lookup() {
   IMAGE_URL=$RESULT
 }
 
+
+help() {
+  echo -n "Usage: airship <pegleg|promenade|shipyard> [OPTION]...
+
+Examples:
+  tools/airship pegleg site -r /target collect airsloop -s collect
+  tools/airship promenade generate-certs -o /target/certs /target/collect/*.yaml
+  tools/airship promenade build-all -o /target/bundle /target/collect/*.yaml /target/certs/*.yaml
+  tools/airship shipyard get actions
+"
+}
 
 pegleg() {
 
@@ -91,6 +101,16 @@ pegleg() {
 promenade() {
 
   versions_lookup "['data']['images']['ucp']['promenade']['promenade']"
+
+  # support proxy for pulling k8s binary
+  cat >> $ENV_FILE << EOF
+http_proxy=${http_proxy:-}
+https_proxy=${https_proxy:-}
+no_proxy=${no_proxy:-}
+HTTP_PROXY=${HTTP_PROXY:-}
+HTTPS_PROXY=${HTTPS_PROXY:-}
+NO_PROXY=${NO_PROXY:-}
+EOF
 
   docker run --rm --net=host $TERM_OPTS \
       -w /target \
@@ -122,7 +142,7 @@ case "$1" in
 'shipyard')
   shipyard $@
   ;;
-*) echo "Invalid option"
+*) help
    exit 1
   ;;
 esac
