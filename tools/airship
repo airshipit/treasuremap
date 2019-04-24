@@ -23,6 +23,8 @@ OS_USER_DOMAIN_NAME=${OS_USER_DOMAIN_NAME:-'default'}
 OS_IDENTITY_API_VERSION=${OS_IDENTITY_API_VERSION:-'3'}
 EOF
 
+REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/../ >/dev/null 2>&1 && pwd )"
+
 
 # Key/value lookups from manifests
 manifests_lookup(){
@@ -68,7 +70,7 @@ metadata.name '$mdata_name', key path '$key_path'" >&2
 }
 
 versions_lookup() {
-  manifests_lookup 'global/software/config/versions.yaml' \
+  manifests_lookup "${REPO_DIR}/global/software/config/versions.yaml" \
                    'pegleg/SoftwareVersions/v1' \
                    'software-versions' "$1"
   IMAGE_URL=$RESULT
