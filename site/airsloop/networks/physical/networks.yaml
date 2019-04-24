@@ -3,17 +3,17 @@
 # devices) and Networks (i.e. layer 3 configurations). The following is standard
 # for the logical networks in Airship:
 #
-# +----------+-----------------------------------+----------------+--------------+----------------------------------------------------+-----------------+
-# | Network  |                                   | Per-rack or    |              |                                                    |   VLAN tagged   |
-# |   Name   |             Purpose               | per-site CIDR? | Has gateway? |                    Bond                            |  or untagged?   |
-# +----------+-----------------------------------+----------------+--------------+----------------------------------------------------+-----------------+
-# |   oob    | Out of Band devices (iDrac/iLo)   | per-site CIDR  | Has gateway  |                No bond, N/A                        | Untagged/Native |
-# |   pxe    | PXE boot network                  | per-site CIDR  | No gateway   | No bond, no LACP fallback. Dedicated PXE interface | Untagged/Native |
-# |   oam    | management network                | per-site CIDR  | Has gateway  |               member of bond0                      |     tagged      |
-# | storage  | storage network                   | per-site CIDR  | No gateway   |               member of bond0                      |     tagged      |
-# |  calico  | underlay calico net; k8s traffic  | per-site CIDR  | No gateway   |               member of bond0                      |     tagged      |
-# | overlay  | overlay network for openstack SDN | per-site CIDR  | No gateway   |               member of bond0                      |     tagged      |
-# +----------+-----------------------------------+----------------+--------------+----------------------------------------------------+-----------------+
+# +----------+-----------------------------------+----------------+--------------+-----------------+
+# | Network  |                                   | Per-rack or    |              |   VLAN tagged   |
+# |   Name   |             Purpose               | per-site CIDR? | Has gateway? |  or untagged?   |
+# +----------+-----------------------------------+----------------+--------------+-----------------+
+# |   oob    | Out of Band devices (iDrac/iLo)   | per-site CIDR  | Has gateway  | Untagged/Native |
+# |   pxe    | PXE boot network                  | per-site CIDR  | No gateway   | Untagged/Native |
+# |   oam    | management network                | per-site CIDR  | Has gateway  |     tagged      |
+# | storage  | storage network                   | per-site CIDR  | No gateway   |     tagged      |
+# |  calico  | underlay calico net; k8s traffic  | per-site CIDR  | No gateway   |     tagged      |
+# | overlay  | overlay network for openstack SDN | per-site CIDR  | No gateway   |     tagged      |
+# +----------+-----------------------------------+----------------+--------------+-----------------+
 #
 # For standard Airship deployments, you should not need to modify the number of
 # NetworkLinks and Networks in this file. Only the IP addresses and CIDRs should
