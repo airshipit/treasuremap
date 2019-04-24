@@ -467,7 +467,7 @@ cloned previously:
 
 ::
 
-    (cd airship-promenade && git checkout 86c3c11)
+    (cd promenade && git checkout 86c3c11)
 
 Likewise, before running the ``simple-deployment.sh`` script, you should
 refer to the ``data/images/ucp/promenade/promenade`` field in
@@ -489,7 +489,7 @@ Now, create an output directory for Promenade bundles and run the
 ::
 
     mkdir ${NEW_SITE}_bundle
-    sudo -E airship-promenade/tools/simple-deployment.sh ${NEW_SITE}_collected ${NEW_SITE}_bundle
+    sudo -E promenade/tools/simple-deployment.sh ${NEW_SITE}_collected ${NEW_SITE}_bundle
 
 Estimated runtime: About **1 minute**
 
@@ -706,7 +706,7 @@ cloned previously:
 
 ::
 
-    (cd airship-shipyard && git checkout 7046ad3)
+    (cd shipyard && git checkout 7046ad3)
 
 Likewise, before running the ``deckhand_load_yaml.sh`` script, you
 should refer to the ``data/images/ucp/shipyard/shipyard`` field in
@@ -745,7 +745,7 @@ to a directory that contains collected manifests:
 
 ::
 
-    sudo -E airship-shipyard/tools/deckhand_load_yaml.sh ${NEW_SITE} $(pwd)/${NEW_SITE}_collected
+    sudo -E shipyard/tools/deckhand_load_yaml.sh ${NEW_SITE} $(pwd)/${NEW_SITE}_collected
 
 Estimated runtime: **3m**
 
@@ -753,7 +753,7 @@ Now deploy the site with shipyard:
 
 ::
 
-    cd airship-shipyard/tools/
+    cd shipyard/tools/
     sudo -E ./deploy_site.sh
 
 Estimated runtime: **1h30m**
