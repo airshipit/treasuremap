@@ -11,16 +11,16 @@ trap "{ rm -f $ENV_FILE; }" EXIT
 
 # prepare docker environment file
 cat > $ENV_FILE << EOF
-PEGLEG_PASSPHRASE=${PEGLEG_PASSPHRASE:-'password123'}
-PEGLEG_SALT=${PEGLEG_SALT:=-'password123'}
+PEGLEG_PASSPHRASE=${PEGLEG_PASSPHRASE:-password123}
+PEGLEG_SALT=${PEGLEG_SALT:-password123}
 
-OS_AUTH_URL=${OS_AUTH_URL:-'http://keystone-api.ucp.svc.cluster.local:5000/v3'}
-OS_PASSWORD=${OS_PASSWORD:-'password123'}
-OS_PROJECT_DOMAIN_NAME=${OS_PROJECT_DOMAIN_NAME:-'default'}
-OS_PROJECT_NAME=${OS_PROJECT_NAME:-'service'}
-OS_USERNAME=${OS_USERNAME:-'shipyard'}
-OS_USER_DOMAIN_NAME=${OS_USER_DOMAIN_NAME:-'default'}
-OS_IDENTITY_API_VERSION=${OS_IDENTITY_API_VERSION:-'3'}
+OS_AUTH_URL=${OS_AUTH_URL:-http://keystone-api.ucp.svc.cluster.local:5000/v3}
+OS_PASSWORD=${OS_PASSWORD:-password123}
+OS_PROJECT_DOMAIN_NAME=${OS_PROJECT_DOMAIN_NAME:-default}
+OS_PROJECT_NAME=${OS_PROJECT_NAME:-service}
+OS_USERNAME=${OS_USERNAME:-shipyard}
+OS_USER_DOMAIN_NAME=${OS_USER_DOMAIN_NAME:-default}
+OS_IDENTITY_API_VERSION=${OS_IDENTITY_API_VERSION:-3}
 EOF
 
 REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/../ >/dev/null 2>&1 && pwd )"
@@ -142,6 +142,7 @@ case "$1" in
   promenade $@
   ;;
 'shipyard')
+  shift;
   shipyard $@
   ;;
 *) help
