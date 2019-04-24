@@ -157,7 +157,7 @@ data:
       name: maas-region
       hosts:
         default: maas-region
-        public: maas
+        public: maas-region
       path:
         default: /MAAS
       scheme:
