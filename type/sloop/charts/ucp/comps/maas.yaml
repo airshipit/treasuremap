@@ -74,16 +74,13 @@ data:
           enabled: true
 
     conf:
+      drydock:
+        bootaction_url: http://DRYDOCK_IP:DRYDOCK_PORT/api/v1.0
       maas:
         images:
           default_os: 'ubuntu'
           default_image: 'xenial'
           default_kernel: 'ga-16.04'
-      cache:
-        enabled: true
-      drydock:
-        bootaction_url: http://DRYDOCK_IP:DRYDOCK_PORT/api/v1.0
-      maas:
         credentials:
           secret:
             namespace: ucp

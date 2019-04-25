@@ -39,7 +39,8 @@ data:
       - kubernetes-scheduler=enabled
       - promenade-genesis=enabled
       - ucp-control-plane=enabled
-      - maas-control-plane=enabled
+      - maas-rack=enabled
+      - maas-region=enabled
       - ceph-osd-bootstrap=enabled
       - openstack-control-plane=enabled
       - openvswitch=enabled

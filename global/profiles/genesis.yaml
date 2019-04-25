@@ -111,7 +111,8 @@ data:
       - kubernetes-scheduler=enabled
       - promenade-genesis=enabled
       - ucp-control-plane=enabled
-      - maas-control-plane=enabled
+      - maas-rack=enabled
+      - maas-region=enabled
       - node-exporter=enabled
   files:
     - path: /var/lib/anchor/calico-etcd-bootstrap

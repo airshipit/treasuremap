@@ -141,15 +141,11 @@ data:
         rack: 1
     labels:
       rack:
-        node_selector_key: maas-control-plane
+        node_selector_key: maas-rack
         node_selector_value: enabled
       region:
-        node_selector_key: maas-control-plane
+        node_selector_key: maas-region
         node_selector_value: enabled
-    network:
-      proxy:
-        node_port:
-          enabled: true
     jobs:
       import_boot_resources:
         timeout: 1800
@@ -158,6 +154,10 @@ data:
       cache:
         enabled: true
       maas:
+        images:
+          default_os: 'ubuntu'
+          default_image: 'xenial'
+          default_kernel: 'hwe-16.04'
         credentials:
           secret:
             namespace: ucp

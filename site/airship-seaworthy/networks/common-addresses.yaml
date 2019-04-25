@@ -22,11 +22,13 @@ data:
     # network. E.g. VLAN 22 for the calico network as a member of bond0, you
     # would set "interface=bond0.22" as shown here.
     ip_autodetection_method: interface=bond0.22
-    ip_rule:
-      gateway: '10.23.21.1'
     etcd:
       # etcd service IP address
       service_ip: 10.96.232.136
+
+  vip:
+    ingress_vip: '10.23.21.20/32'
+    maas_vip: '10.23.20.9/32'
 
   dns:
     # Kubernetes cluster domain. Do not change. This is internal to the cluster.
