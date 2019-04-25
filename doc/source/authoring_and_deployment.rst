@@ -111,14 +111,14 @@ Disk
 1. For servers that are in the control plane (including Genesis):
 
    - Two-disk RAID-1: Operating System
-   - Two disks JBOD: Ceph Journal/Meta
-   - Remaining disks JBOD: Ceph OSD
+   - Two disks JBOD: Ceph Journal/Meta for control plane
+   - Remaining disks JBOD: Ceph OSD for control plane
 
 2. For servers that are in the tenant data plane (compute nodes):
 
    - Two-disk RAID-1: Operating System
-   - Two disks JBOD: Ceph Journal/Meta
-   - Two disks JBOD: Ceph OSD
+   - Two disks JBOD: Ceph Journal/Meta for tenant-ceph
+   - Two disks JBOD: Ceph OSD for tenant-ceph
    - Remaining disks need to be configured according to the host profile target
      for each given server (e.g. RAID-10 for OpenStack Ephemeral).
 
@@ -294,13 +294,18 @@ they need to be issued for the domains configured in ``Register DNS names`` sect
     It is required to configure valid certificates, self-signed certificates
     are not supported.
 
-Control Plane Ceph Cluster Notes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Control Plane & Tenant Ceph Cluster Notes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Configuration variables for ceph control plane are located in:
 
 - ``site/${NEW_SITE}/software/charts/ucp/ceph/ceph-osd.yaml``
 - ``site/${NEW_SITE}/software/charts/ucp/ceph/ceph-client.yaml``
+
+Configuration variables for tenant ceph are located in:
+
+- ``site/${NEW_SITE}/software/charts/osh/openstack-tenant-ceph/ceph-osd.yaml``
+- ``site/${NEW_SITE}/software/charts/osh/openstack-tenant-ceph/ceph-client.yaml``
 
 Setting highlights:
 
