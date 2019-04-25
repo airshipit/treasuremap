@@ -19,7 +19,7 @@ set -xe
 
 CURRENT_DIR="$(pwd)"
 : "${INSTALL_PATH:="../"}"
-: "${OSH_INFRA_COMMIT:="ef3adc4d0e5d26e74590d2f78400f7e1d800dbcb"}"
+: "${OSH_INFRA_COMMIT:="6d0a9c21b0455e9d674d525c5e0cd0d5d53f0f85"}"
 
 cd ${INSTALL_PATH}
 
