@@ -353,7 +353,7 @@ data:
         type: git
       maas:
         location: https://opendev.org/airship/maas
-        reference: 407d4ccfb41637d46483b319c0b401459523e272
+        reference: 538fb11887272ec6f9dce67423ef503ec31b1d8e
         subpath: charts/maas
         type: git
       maas-htk:
