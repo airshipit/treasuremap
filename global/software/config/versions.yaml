@@ -176,7 +176,7 @@ data:
         type: git
       rabbitmq:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: a367bacb4bd3af55dd11dbc5c9855749a123779d
+        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: rabbitmq
         type: git
     osh_infra:
