@@ -8,6 +8,7 @@ metadata:
     abstract: false
     layer: global
   labels:
+    name: promjoin-systemd-unit
     application: 'drydock'
 data:
   signaling: false

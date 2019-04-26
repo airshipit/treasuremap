@@ -1,0 +1,44 @@
+---
+schema: 'drydock/NetworkLink/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: gp
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  bonding:
+    mode: disabled
+  mtu: 1500
+  linkspeed: auto
+  trunking:
+    mode: disabled
+    default_network: gp
+  allowed_networks:
+    - gp
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: gp
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  mtu: 1500
+  cidr: 172.24.1.0/24
+  ranges:
+    - type: dhcp
+      start: 172.24.1.100
+      end: 172.24.1.200
+  routes:
+    - subnet: 0.0.0.0/0
+      gateway: 172.24.1.1
+      metric: 10
+  dns:
+    domain: gate.local
+    servers: '172.24.1.9'
+...

@@ -1,0 +1,49 @@
+---
+# This file defines a boot action which is responsible for fetching the node's
+# promjoin script from the promenade API. This is the script responsible for
+# installing kubernetes on the node and joining the kubernetes cluster.
+# #GLOBAL-CANDIDATE#
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: promjoin-systemd-unit
+  storagePolicy: 'cleartext'
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: promjoin-systemd-unit
+    actions:
+      - method: replace
+        path: .assets
+  labels:
+    application: 'drydock'
+data:
+  signaling: false
+  # TODO(alanmeadows) move what is global about this document
+  assets:
+    - path: /opt/promjoin.sh
+      type: file
+      permissions: '555'
+      # The ip= parameter must match the MaaS network name of the network used
+      # to contact kubernetes. With a standard, reference Airship deployment where
+      # L2 networks are shared between all racks, the network name (i.e. calico)
+      # should be correct.
+      location: promenade+http://promenade-api.ucp.svc.cluster.local/api/v1.0/join-scripts?design_ref={{ action.design_ref | urlencode }}&hostname={{ node.hostname }}&ip={{ node.network.default.ip }}&domain={{ node.domain }}{% for k, v in node.labels.items() %}&labels.dynamic={{ k }}={{ v }}{% endfor %}
+      location_pipeline:
+        - template
+      data_pipeline:
+        - utf8_decode
+    - path: /lib/systemd/system/promjoin.service
+      type: unit
+      permissions: '600'
+      data: |-
+        W1VuaXRdCkRlc2NyaXB0aW9uPVByb21lbmFkZSBJbml0aWFsaXphdGlvbiBTZXJ2aWNlCkFmdGVy
+        PW5ldHdvcmstb25saW5lLnRhcmdldCBsb2NhbC1mcy50YXJnZXQKQ29uZGl0aW9uUGF0aEV4aXN0
+        cz0hL3Zhci9saWIvcHJvbS5kb25lCgpbU2VydmljZV0KVHlwZT1zaW1wbGUKRXhlY1N0YXJ0PS9v
+        cHQvcHJvbWpvaW4uc2gKCltJbnN0YWxsXQpXYW50ZWRCeT1tdWx0aS11c2VyLnRhcmdldAo=
+      data_pipeline:
+        - base64_decode
+        - utf8_decode
+...

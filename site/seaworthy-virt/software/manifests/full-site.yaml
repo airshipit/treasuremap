@@ -1,0 +1,41 @@
+---
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: full-site
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: full-site-global
+    actions:
+      - method: merge
+        path: .
+      - method: replace
+        path: .chart_groups
+  labels:
+    name: full-site-global
+  storagePolicy: cleartext
+data:
+  release_prefix: airship
+  chart_groups:
+    - podsecuritypolicy
+    - kubernetes-proxy
+    - kubernetes-container-networking
+    - kubernetes-dns
+    - kubernetes-etcd
+    - kubernetes-haproxy
+    - kubernetes-core
+    - ingress-kube-system
+    - ucp-ceph-update
+    - ucp-ceph-config
+    - ucp-core
+    - ucp-keystone
+    - ucp-divingbell
+    - ucp-armada
+    - ucp-deckhand
+    - ucp-drydock-scaled
+    - ucp-promenade
+    - ucp-shipyard
+...
