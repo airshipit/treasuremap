@@ -23,13 +23,13 @@ sudo apt-add-repository \
         "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
         $(lsb_release -cs) \
         stable"
+sudo apt-get update
 
 # Purge Docker and install Docker CE
 sudo systemctl unmask docker.service
 sudo apt-get remove --no-install-recommends -y docker docker-engine docker.io
 
 # TODO(drewwalters96): Update to Docker 18.09 when supported by Minikube.
-sudo apt-get update
 sudo apt-get install --allow-downgrades --no-install-recommends -y \
         apparmor \
         ca-certificates \
