@@ -168,42 +168,54 @@ Getting Started
 ---------------
 
 TODO: Specify which node(s) the command(s) in this section are run on.
-      Also if there is an assumption that we have a node with Ubuntu
-      already provisioned, that assumption or steps should be specified
-      along with any Ubuntu version requirements/assumptions and other
-      pre-requisite steps (e.g., installing NTP)
+Also if there is an assumption that we have a node with Ubuntu
+already provisioned, that assumption or steps should be specified
+along with any Ubuntu version requirements/assumptions and other
+pre-requisite steps (e.g., installing NTP)
 
 Below are the steps that a user should follow to deploy the Airsloop site:
 
 TODO: Add the prerequisite steps that the user needs to do
-      before starting executing the below steps such as:
-      installing git , installing docker, clone sevral repos etc.
+before starting executing the below steps such as:
+installing git, installing docker, clone sevral repos etc.
 
 1. Collect manifests
 
-    `tools/airship pegleg site -r /target collect airsloop -s collect`
+.. code-block:: bash
+
+    ./tools/airship pegleg site -r /target collect airsloop -s collect
 
 2. Generate certs
 
-    `tools/airship promenade generate-certs -o /target/certs /target/collect/*.yaml`
+.. code-block:: bash
+
+    ./tools/airship promenade generate-certs -o /target/certs /target/collect/*.yaml
 
 3. Generate genesis.sh scipt
 
-    `tools/airship promenade build-all -o /target/bundle /target/collect/*.yaml /target/certs/*.yaml`
+.. code-block:: bash
+
+    ./tools/airship promenade build-all -o /target/bundle /target/collect/*.yaml /target/certs/*.yaml
 
 4. Execute the genesis.sh script
 
-     - `cd /target/bundle`
-     - `./genesis.sh`
+.. code-block:: bash
+
+     cd /target/bundle
+     ./genesis.sh
 
 If the genesis.sh script completed succesfully
 
 5. Deploy site through shipyard
 
-    - `tools/airship shipyard create configdocs design --directory=/target/collect`
-    - `tools/airship shipyard commit configdocs`
-    - `tools/airship shipyard create action deploy_site`
+.. code-block:: bash
+
+    ./tools/airship shipyard create configdocs design --directory=/target/collect
+    ./tools/airship shipyard commit configdocs
+    ./tools/airship shipyard create action deploy_site
 
 6. Check the actions that are already created
 
-    `tools/shipyard get actions`
+.. code-block:: bash
+
+    ./tools/shipyard get actions
