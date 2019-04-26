@@ -246,11 +246,13 @@ Register the following list of DNS names:
     cloudformation.DOMAIN
     compute.DOMAIN
     dashboard.DOMAIN
+    drydock.DOMAIN
     grafana.DOMAIN
     iam.DOMAIN
     identity.DOMAIN
     image.DOMAIN
     kibana.DOMAIN
+    maas.DOMAIN
     nagios.DOMAIN
     network.DOMAIN
     nova-novncproxy.DOMAIN
