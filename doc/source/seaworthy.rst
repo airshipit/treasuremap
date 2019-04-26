@@ -1,5 +1,5 @@
-Airship Seaworthy
-=================
+Seaworthy: Production-grade Airship
+===================================
 
 Airship Seaworthy is a multi-node site deployment reference
 and continuous integration pipeline.

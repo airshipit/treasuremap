@@ -196,8 +196,8 @@ Process Flows
    config_update_guide
    troubleshooting_guide
    seaworthy
-   airskiff
    airsloop
+   airskiff
 
 .. _Barbican: https://docs.openstack.org/barbican/latest/api/
 .. _Helm Homepage: https://helm.sh/

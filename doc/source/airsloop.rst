@@ -1,5 +1,5 @@
-Airsloop
-========
+Airsloop: Simple Bare-Metal Airship
+===================================
 
 Airsloop is a two node site deployment reference and continuous integration pipeline.
 The goal of this site is to be used as a reference for mini Airship deployments

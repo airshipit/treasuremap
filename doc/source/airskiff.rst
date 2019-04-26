@@ -1,5 +1,5 @@
-Airskiff
-========
+Airskiff: Lightweight Airship for Dev
+=====================================
 
 * Skiff (n): a shallow, flat-bottomed, open boat
 * Airskiff (n): a learning development, and gating environment for Airship
