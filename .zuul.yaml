@@ -103,8 +103,6 @@
       - tools/gate/playbooks/airskiff-reduce-site.yaml
     run: tools/gate/playbooks/airskiff-deploy-gate.yaml
     post-run: tools/gate/playbooks/debug-report.yaml
-    vars:
-      OSH_INFRA_PATH: "../../openstack/openstack-helm-infra"
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$
