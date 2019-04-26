@@ -16,11 +16,5 @@
 
 set -xe
 
-: "${PEGLEG_PATH:=../pegleg}"
-: "${PEGLEG_IMG:=quay.io/airshipit/pegleg:b7556bd89e99f2a6539e97d5a4ac6738751b9c55}"
-
-: "${PEGLEG:=${PEGLEG_PATH}/tools/pegleg.sh}"
-
 # TODO(drewwalters96): make Treasuremap sites P001 and P009 compliant.
-IMAGE=${PEGLEG_IMG} TERM_OPTS=" " \
-  ${PEGLEG} site -r . lint "$1" -x P001 -x P009
+TERM_OPTS=" " ./tools/airship pegleg site -r . lint "$1" -x P001 -x P009

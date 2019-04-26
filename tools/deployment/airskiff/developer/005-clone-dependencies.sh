@@ -26,7 +26,6 @@ cd ${INSTALL_PATH}
 # Clone Airship projects
 git clone https://opendev.org/airship/armada.git
 git clone https://opendev.org/airship/deckhand.git
-git clone https://opendev.org/airship/pegleg.git
 git clone https://opendev.org/airship/shipyard.git
 
 # Clone dependencies

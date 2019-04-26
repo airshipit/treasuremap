@@ -17,16 +17,10 @@
 
 set -xe
 
-# Deploy OpenStack using Airship
-CURRENT_DIR="$(pwd)"
-: "${PL_PATH:="../pegleg"}"
-: "${SY_PATH:="../shipyard"}"
-
-# NOTE: Image to use for all Pegleg operations
-: "${PL_IMAGE:=quay.io/airshipit/pegleg:latest}"
-
 # Lint deployment documents
-: "${PEGLEG:="${PL_PATH}/tools/pegleg.sh"}"
+: "${AIRSHIP_PATH:="./tools/airship"}"
+: "${PEGLEG:="${AIRSHIP_PATH} pegleg"}"
+: "${SHIPYARD:="${AIRSHIP_PATH} shipyard"}"
 : "${PL_SITE:="airskiff"}"
 
 # Source OpenStack credentials for Airship utility scripts
@@ -35,23 +29,17 @@ CURRENT_DIR="$(pwd)"
 # NOTE(drewwalters96): Disable Pegleg linting errors P001 and P009; a
 #  a cleartext storage policy is acceptable for non-production use cases
 #  and maintain consistency with other treasuremap sites.
-IMAGE=${PL_IMAGE} TERM_OPTS=" " ${PEGLEG} site -r . lint "${PL_SITE}" -x P001 -x P009
+${PEGLEG} site -r . lint "${PL_SITE}" -x P001 -x P009
 
 # Collect deployment documents
 : "${PL_OUTPUT:="peggles"}"
 mkdir -p ${PL_OUTPUT}
 
-IMAGE=${PL_IMAGE} TERM_OPTS="-l info" ${PEGLEG} site -r . collect ${PL_SITE} -s ${PL_OUTPUT}
-cp -rp "${CURRENT_DIR}"/${PL_OUTPUT} ${SY_PATH}
+TERM_OPTS="-l info" ${PEGLEG} site -r . collect ${PL_SITE} -s ${PL_OUTPUT}
 
-# Deploy Airskiff site
-cd ${SY_PATH}
-: "${SHIPYARD:="./tools/shipyard.sh"}"
-
+# Start the deployment
 ${SHIPYARD} create configdocs airskiff-design \
              --replace \
-             --directory=/target/${PL_OUTPUT}
-
+             --directory=${PL_OUTPUT}
 ${SHIPYARD} commit configdocs
 ${SHIPYARD} create action update_software --allow-intermediate-commits
-cd "${CURRENT_DIR}"
