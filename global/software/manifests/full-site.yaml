@@ -27,7 +27,7 @@ data:
     - ucp-divingbell
     - ucp-armada
     - ucp-deckhand
-    - ucp-drydock
+    - ucp-drydock-scaled
     - ucp-promenade
     - ucp-shipyard
     - ucp-prometheus-openstack-exporter

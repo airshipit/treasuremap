@@ -82,7 +82,8 @@ data:
       tenant-ceph-mon: enabled
       tenant-ceph-rgw: enabled
       tenant-ceph-mgr: enabled
-      ucp-maas: enabled
+      maas-rack: enabled
+      maas-region: enabled
       kube-dns: enabled
       kubernetes-apiserver: enabled
       kubernetes-controller-manager: enabled
