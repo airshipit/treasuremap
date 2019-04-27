@@ -14,7 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-: ${TERM_OPTS:='-it'}
+DEFAULT_TERM_OPTS=' '
+# Set an interactive mode only if there is a TTY available.
+test -t 1 && test -t 0 && DEFAULT_TERM_OPTS='-it'
+: ${TERM_OPTS:=${DEFAULT_TERM_OPTS}}
 
 # Python YAML module required to read versions.yaml
 dpkg -s python3-yaml &> /dev/null || apt -y install python3-yaml

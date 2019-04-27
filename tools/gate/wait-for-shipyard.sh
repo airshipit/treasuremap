@@ -16,7 +16,7 @@
 
 set -e
 
-: "${SHIPYARD:=../shipyard/tools/shipyard.sh}"
+: "${SHIPYARD:=./tools/airship shipyard}"
 
 # Source OpenStack credentials for Airship utility scripts
 . tools/deployment/airskiff/common/os-env.sh

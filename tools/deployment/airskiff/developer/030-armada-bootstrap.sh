@@ -17,19 +17,12 @@
 
 set -xe
 
-CURRENT_DIR="$(pwd)"
 : "${INSTALL_PATH:="$(pwd)/../"}"
-
-: "${PL_PATH:="../pegleg"}"
-
-# NOTE: Image to use for all Pegleg operations
-: "${PL_IMAGE:=quay.io/airshipit/pegleg:latest}"
-
-: "${PEGLEG:="${PL_PATH}/tools/pegleg.sh"}"
+: "${PEGLEG:="./tools/airship pegleg"}"
 : "${PL_SITE:="airskiff"}"
 
 # Render documents
-IMAGE=${PL_IMAGE} TERM_OPTS=" " ${PEGLEG} site -r . render "${PL_SITE}" -o airskiff.yaml
+${PEGLEG} site -r . render "${PL_SITE}" -o airskiff.yaml
 
 # Download latest Armada image and deploy Airship components
 docker run --rm --net host -p 8000:8000 --name armada \
