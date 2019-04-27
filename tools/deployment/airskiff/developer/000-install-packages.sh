@@ -43,6 +43,9 @@ sudo apt-get install --allow-downgrades --no-install-recommends -y \
         uuid-runtime \
         apt-transport-https \
         ca-certificates \
+        gcc \
+        python-dev \
+        python-setuptools \
         software-properties-common
 
 # Enable apparmor
