@@ -12,6 +12,8 @@ manifests for a production-oriented example.
 The site manifests are available at
 `site/airsloop <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop>`__.
 
+.. image:: diagrams/airsloop-architecture.png
+
 
 Pipeline
 --------
