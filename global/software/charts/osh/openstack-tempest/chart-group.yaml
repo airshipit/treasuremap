@@ -1,0 +1,16 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-tempest
+  labels:
+    name: openstack-tempest-chart-group-global
+    component: tempest
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: Deploy Tempest
+  chart_group:
+    - tempest
