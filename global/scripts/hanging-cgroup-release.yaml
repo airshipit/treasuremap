@@ -1,0 +1,26 @@
+---
+schema: pegleg/Script/v1
+metadata:
+  schema: metadata/Document/v1
+  name: hanging-cgroup-release
+  storagePolicy: cleartext
+  layeringDefinition:
+    abstract: false
+    layer: global
+data: |-
+  #!/bin/bash
+  set -ex
+
+  cgroup_count() {
+    echo "Current cgroup count: $(find /sys/fs/cgroup/*/system.slice -name tasks | wc -l)"
+  }
+
+  DATE=$(date)
+  echo "$(cgroup_count)"
+  echo   # Stop systemd mount unit that isn't actually mounted
+  echo "Stopping Kubernetes systemd mount units that are not mounted to the system."
+  systemctl list-units --state=running| \
+    sed -rn '/Kubernetes.transient.mount/s,(run-\S+).+(/var/lib/kubelet/pods/.+),\1 \2,p' | \
+    xargs -r -l1 sh -c 'test -d $2 || echo $1' -- | \
+    xargs -r -tl1 systemctl stop |& wc -l
+  echo "$(cgroup_count)"

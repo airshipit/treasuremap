@@ -1,0 +1,32 @@
+---
+schema: pegleg/Script/v1
+metadata:
+  schema: metadata/Document/v1
+  name: rbd-roomba-scanner
+  storagePolicy: cleartext
+  layeringDefinition:
+    abstract: false
+    layer: global
+data: |-
+  #!/bin/bash
+  set -ex
+
+  # don't put it in /tmp where it can be p0wned (???)
+  lsblk | awk '/^rbd/ {if($7==""){print $0}}' | awk '{ printf "/dev/%s\n",$1 }' > /var/run/rbd_list
+
+  # wait a while, so we don't catch rbd devices the kubelet is working on mounting
+  sleep 60
+
+  # finally, examine rbd devices again and if any were seen previously (60s ago) we will
+  # forcefully unmount them if they have no fs mounts
+  DATE=$(date)
+  for rbd in `lsblk | awk '/^rbd/ {if($7==""){print $0}}' | awk '{ printf "/dev/%s\n",$1 }'`; do
+    if grep -q $rbd /var/run/rbd_list; then
+      echo "[${DATE}] Unmapping stale RBD $rbd"
+      /usr/bin/rbd unmap -o force $rbd
+      # NOTE(supamatt): rbd unmap -o force will only succeed if there are NO pending I/O
+    else
+      echo "[${DATE}] Skipping RBD $rbd as it hasn't been stale for at least 60 seconds"
+    fi
+  done
+  rm -rf /var/run/rbd_list

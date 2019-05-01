@@ -24,6 +24,19 @@ metadata:
         path: .images.ucp.divingbell
       dest:
         path: .values.images
+
+    - src:
+        schema: pegleg/Script/v1
+        name: rbd-roomba-scanner
+        path: .
+      dest:
+        path: .values.conf.exec.X005-rbd-roomba-scanner.data
+    - src:
+        schema: pegleg/Script/v1
+        name: hanging-cgroup-release
+        path: .
+      dest:
+        path: .values.conf.exec.X005-hanging-cgroup-release.data
 data:
   chart_name: ucp-divingbell
   release: ucp-divingbell
@@ -78,6 +91,17 @@ data:
         # were restarted. "Failed to add /run/systemd/ask-password to directory
         # watch: No space left on device". https://bit.ly/2Mj5qn2 TDP bug 427616
         fs.inotify.max_user_watches: '1048576'
+      exec:
+        X005-rbd-roomba-scanner:
+          rerun_policy: always
+          # 300 = 5 minutes
+          rerun_interval: 300
+          timeout: 300
+        X005-hanging-cgroup-release:
+          rerun_policy: always
+          # 300 = 5 minutes
+          rerun_interval: 3600
+          timeout: 600
   dependencies:
     - ucp-divingbell-htk
 ---
