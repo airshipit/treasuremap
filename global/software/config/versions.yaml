@@ -179,6 +179,11 @@ data:
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: rabbitmq
         type: git
+      tempest:
+        location: https://opendev.org/openstack/openstack-helm
+        reference: 9bca5deacde31fce79b556c0d63926144a482b7f
+        subpath: tempest
+        type: git
     osh_infra:
       elasticsearch:
         location: https://opendev.org/openstack/openstack-helm-infra
@@ -516,6 +521,7 @@ data:
       nova: {}
       openvswitch: {}
       rabbitmq: {}
+      tempest: {}
     osh_infra:
       elasticsearch: {}
       fluent_logging: {}
