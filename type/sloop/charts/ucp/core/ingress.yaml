@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: ucp-ingress
+  labels:
+    name: ucp-ingress-type
   layeringDefinition:
     abstract: false
     layer: type

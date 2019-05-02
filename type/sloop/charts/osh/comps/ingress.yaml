@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: openstack-ingress-controller
+  labels:
+    name: openstack-ingress-controller-type
   layeringDefinition:
     abstract: false
     layer: type

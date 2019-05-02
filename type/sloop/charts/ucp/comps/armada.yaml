@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: ucp-armada
+  labels:
+    name: ucp-armada-type
   layeringDefinition:
     abstract: false
     layer: type

@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: neutron-rabbitmq
+  labels:
+    name: neutron-rabbitmq-type
   layeringDefinition:
     abstract: false
     layer: type

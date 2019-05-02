@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: heat-rabbitmq
+  labels:
+    name: heat-rabbitmq-type
   layeringDefinition:
     abstract: false
     layer: type

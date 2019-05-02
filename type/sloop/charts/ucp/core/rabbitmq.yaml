@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: ucp-rabbitmq
+  labels:
+    name: ucp-rabbitmq-type
   layeringDefinition:
     abstract: false
     layer: type

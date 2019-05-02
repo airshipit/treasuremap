@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: prometheus
+  labels:
+    name: prometheus-type
   layeringDefinition:
     abstract: false
     layer: type

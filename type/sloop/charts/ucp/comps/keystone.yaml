@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: ucp-keystone
+  labels:
+    name: ucp-keystone-type
   layeringDefinition:
     abstract: false
     layer: type

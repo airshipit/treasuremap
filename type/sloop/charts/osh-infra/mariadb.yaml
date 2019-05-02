@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: osh-infra-mariadb
+  labels:
+    name: osh-infra-mariadb-type
   layeringDefinition:
     abstract: false
     layer: type

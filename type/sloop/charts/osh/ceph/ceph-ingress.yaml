@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: tenant-ceph-ingress
+  labels:
+    name: tenant-ceph-ingress-type
   layeringDefinition:
     abstract: false
     layer: type

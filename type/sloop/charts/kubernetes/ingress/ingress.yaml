@@ -3,6 +3,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ingress-kube-system
+  labels:
+    name: ingress-kube-system-type
   layeringDefinition:
     abstract: false
     layer: type

@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: heat
+  labels:
+    name: heat-type
   layeringDefinition:
     abstract: false
     layer: type

@@ -4,6 +4,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-maas
+  labels:
+    name: ucp-maas-type
   layeringDefinition:
     abstract: false
     layer: type

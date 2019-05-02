@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: glance
+  labels:
+    name: glance-type
   layeringDefinition:
     abstract: false
     layer: type

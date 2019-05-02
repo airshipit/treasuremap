@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: ucp-drydock
+  labels:
+    name: ucp-drydock-type
   layeringDefinition:
     abstract: false
     layer: type

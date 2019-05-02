@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: ucp-shipyard
+  labels:
+    name: ucp-shipyard-type
   layeringDefinition:
     abstract: false
     layer: type

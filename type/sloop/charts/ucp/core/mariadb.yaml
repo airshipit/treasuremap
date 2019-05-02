@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: ucp-mariadb
+  labels:
+    name: ucp-mariadb-type
   layeringDefinition:
     abstract: false
     layer: type

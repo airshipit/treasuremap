@@ -5,6 +5,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-promenade
+  labels:
+    name: ucp-promenade-type
   layeringDefinition:
     abstract: false
     layer: type

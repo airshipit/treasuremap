@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: ucp-deckhand
+  labels:
+    name: ucp-deckhand-type
   layeringDefinition:
     abstract: false
     layer: type

@@ -6,6 +6,8 @@ schema: pegleg/EndpointCatalogue/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp_endpoints
+  labels:
+    name: ucp_endpoints-type
   layeringDefinition:
     abstract: false
     layer: type

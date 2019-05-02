@@ -5,6 +5,8 @@ schema: pegleg/CommonSoftwareConfig/v1
 metadata:
   schema: metadata/Document/v1
   name: common-software-config
+  labels:
+    name: common-software-config-type
   layeringDefinition:
     abstract: false
     layer: type

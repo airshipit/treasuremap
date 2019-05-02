@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: cinder
+  labels:
+    name: cinder-type
   layeringDefinition:
     abstract: false
     layer: type

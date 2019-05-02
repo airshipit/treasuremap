@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: keystone
+  labels:
+    name: keystone-type
   layeringDefinition:
     abstract: false
     layer: type

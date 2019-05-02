@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: horizon
+  labels:
+    name: horizon-type
   layeringDefinition:
     abstract: false
     layer: type

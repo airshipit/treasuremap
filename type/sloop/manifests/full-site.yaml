@@ -4,6 +4,8 @@ metadata:
   schema: metadata/Document/v1
   replacement: true
   name: full-site
+  labels:
+    name: full-site-type
   layeringDefinition:
     abstract: false
     layer: type
