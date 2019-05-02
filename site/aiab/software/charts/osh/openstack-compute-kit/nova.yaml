@@ -1,0 +1,27 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nova
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: nova-type
+    actions:
+      - method: merge
+        path: .values.conf
+      - method: delete
+        path: .values.ceph_client
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      ceph:
+        enabled: false
+      nova:
+        libvirt:
+          virt_type: qemu
+          cpu_mode: host-model
+...

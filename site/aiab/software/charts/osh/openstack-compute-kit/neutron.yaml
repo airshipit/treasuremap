@@ -1,0 +1,40 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: neutron
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: neutron-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+
+data:
+  test:
+    # Neutron test for virtual Airship in a bottle installation
+    # usually take much more time to finish than for baremetal one.
+    timeout: 2700
+
+  values:
+    conf:
+      neutron:
+        DEFAULT:
+          l3_ha: False
+          max_l3_agents_per_router: 1
+          dhcp_agents_per_network: 1
+
+      plugins:
+        ml2_conf:
+          ml2_type_vlan:
+            network_vlan_ranges: null
+        openvswitch_agent:
+          ovs:
+            bridge_mappings: public:br-ex
+        linuxbridge_agent:
+          linux_bridge:
+            bridge_mappings: public:br-ex

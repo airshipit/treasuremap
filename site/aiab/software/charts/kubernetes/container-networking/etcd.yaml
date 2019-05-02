@@ -1,0 +1,50 @@
+---
+# The purpose of this file is to build the list of calico etcd nodes and the
+# calico etcd certs for those nodes in the environment.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-calico-etcd
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: kubernetes-calico-etcd-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .genesis.hostname
+      dest:
+        path: .values.nodes[0].name
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd
+        path: .
+      dest:
+        path: .values.nodes[0].tls.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd
+        path: .
+      dest:
+        path: .values.nodes[0].tls.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd-peer
+        path: .
+      dest:
+        path: .values.nodes[0].tls.peer.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd-peer
+        path: .
+      dest:
+        path: .values.nodes[0].tls.peer.key
+
+data: {}
+...

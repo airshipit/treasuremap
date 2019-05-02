@@ -1,0 +1,21 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: heat
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: heat-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+
+data:
+  test:
+    # Heat test for virtual Airship in a bottle installation
+    # usually takes much more time to finish than for baremetal one.
+    timeout: 1200
