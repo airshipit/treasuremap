@@ -47,5 +47,28 @@ data:
         node_selector_key: openvswitch
         node_selector_value: enabled
   dependencies:
-    - osh-helm-toolkit
+    - openvswitch-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openvswitch-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.openvswitch-htk
+      dest:
+        path: .source
+data:
+  chart_name: openvswitch-htk
+  release: openvswitch-htk
+  namespace: openvswitch-htk
+  values: {}
+  dependencies: []
 ...

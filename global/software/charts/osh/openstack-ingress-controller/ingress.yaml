@@ -55,4 +55,28 @@ data:
         ingress: 2
         error_page: 2
   dependencies:
-    - osh-helm-toolkit
+    - ingress-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ingress-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.ingress-htk
+      dest:
+        path: .source
+data:
+  chart_name: ingress-htk
+  release: ingress-htk
+  namespace: ingress-htk
+  values: {}
+  dependencies: []
+...

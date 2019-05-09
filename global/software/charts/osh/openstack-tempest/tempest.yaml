@@ -90,5 +90,28 @@ data:
       configmap: tenant-ceph-etc
       user_secret_name: pvc-tceph-client-key
   dependencies:
-    - osh-helm-toolkit
+    - tempest-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: tempest-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.tempest-htk
+      dest:
+        path: .source
+data:
+  chart_name: tempest-htk
+  release: tempest-htk
+  namespace: tempest-htk
+  values: {}
+  dependencies: []
 ...

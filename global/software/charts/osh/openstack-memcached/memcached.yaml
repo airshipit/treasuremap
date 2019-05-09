@@ -56,5 +56,28 @@ data:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
   dependencies:
-    - osh-helm-toolkit
+    - memcached-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: memcached-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.memcached-htk
+      dest:
+        path: .source
+data:
+  chart_name: memcached-htk
+  release: memcached-htk
+  namespace: memcached-htk
+  values: {}
+  dependencies: []
 ...

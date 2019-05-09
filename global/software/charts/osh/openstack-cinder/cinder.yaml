@@ -286,5 +286,28 @@ data:
         formatter_default:
           format: "%(message)s"
   dependencies:
-    - osh-helm-toolkit
+    - cinder-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: cinder-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.cinder-htk
+      dest:
+        path: .source
+data:
+  chart_name: cinder-htk
+  release: cinder-htk
+  namespace: cinder-htk
+  values: {}
+  dependencies: []
 ...

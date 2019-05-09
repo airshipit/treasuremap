@@ -93,5 +93,28 @@ data:
       prometheus:
         enabled: true
   dependencies:
-    - osh-helm-toolkit
+    - heat-rabbitmq-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: heat-rabbitmq-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.rabbitmq-htk
+      dest:
+        path: .source
+data:
+  chart_name: heat-rabbitmq-htk
+  release: heat-rabbitmq-htk
+  namespace: heat-rabbitmq-htk
+  values: {}
+  dependencies: []
 ...
