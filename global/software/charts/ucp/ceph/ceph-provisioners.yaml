@@ -102,7 +102,8 @@ data:
     storageclass:
       rbd:
         ceph_configmap_name: ceph-client-keys-etc
-        user_secret_name: pvc-ceph-client-key
+        parameters:
+          userSecretName: pvc-ceph-client-key
   dependencies:
     - ceph-htk
 ...
