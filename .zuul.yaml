@@ -15,6 +15,7 @@
       - docs-on-readthedocs
     vars:
       rtd_webhook_id: '47687'
+      rtd_project_name: 'airship-treasuremap'
     check:
       jobs:
         - treasuremap-airship-seaworthy-site-lint
