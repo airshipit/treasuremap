@@ -221,3 +221,365 @@ If the genesis.sh script completed succesfully
 .. code-block:: bash
 
     ./tools/shipyard get actions
+
+Deploying Behind a Proxy
+------------------------
+
+The following documents show the main differences you need to make in order to have
+airsloop run behind a proxy.
+
+.. note::
+
+    The "-" sign refers to a line that needs to be omitted (replaced), and the "+" sign refers to a
+    line replacing the omitted line, or simply a line that needs to be added to your yaml.
+
+Under site/airsloop/software/charts/osh/openstack-glance/ create a glance.yaml file as follows:
+
+.. code-block:: yaml
+
+    ---
+    schema: armada/Chart/v1
+    metadata:
+      schema: metadata/Document/v1
+      replacement: true
+      name: glance
+      layeringDefinition:
+        abstract: false
+        layer: site
+        parentSelector:
+          name: glance-type
+        actions:
+          - method: merge
+            path: .
+      storagePolicy: cleartext
+    data:
+      test:
+        enabled: false
+    ...
+
+Under site/airsloop/software/config/ create a versions.yaml file in the following format:
+
+.. code-block:: yaml
+
+    ---
+    data:
+      charts:
+        kubernetes:
+          apiserver:
+            proxy_server: proxy.example.com:8080
+          apiserver-htk:
+            proxy_server: proxy.example.com:8080
+          calico:
+            calico:
+              proxy_server: proxy.example.com:8080
+            calico-htk:
+              proxy_server: proxy.example.com:8080
+            etcd:
+              proxy_server: proxy.example.com:8080
+            etcd-htk:
+              proxy_server: proxy.example.com:8080
+          controller-manager:
+            proxy_server: proxy.example.com:8080
+          controller-manager-htk:
+            proxy_server: proxy.example.com:8080
+          coredns:
+            proxy_server: proxy.example.com:8080
+          coredns-htk:
+            proxy_server: proxy.example.com:8080
+          etcd:
+            proxy_server: proxy.example.com:8080
+          etcd-htk:
+            proxy_server: proxy.example.com:8080
+          haproxy:
+            proxy_server: proxy.example.com:8080
+          haproxy-htk:
+            proxy_server: proxy.example.com:8080
+          ingress:
+            proxy_server: proxy.example.com:8080
+          ingress-htk:
+            proxy_server: proxy.example.com:8080
+          proxy:
+            proxy_server: proxy.example.com:8080
+          proxy-htk:
+            proxy_server: proxy.example.com:8080
+          scheduler:
+            proxy_server: proxy.example.com:8080
+          scheduler-htk:
+            proxy_server: proxy.example.com:8080
+        osh:
+          barbican:
+            proxy_server: proxy.example.com:8080
+          cinder:
+            proxy_server: proxy.example.com:8080
+          cinder-htk:
+            proxy_server: proxy.example.com:8080
+          glance:
+            proxy_server: proxy.example.com:8080
+          glance-htk:
+            proxy_server: proxy.example.com:8080
+          heat:
+            proxy_server: proxy.example.com:8080
+          heat-htk:
+            proxy_server: proxy.example.com:8080
+          helm_toolkit:
+            proxy_server: proxy.example.com:8080
+          horizon:
+            proxy_server: proxy.example.com:8080
+          horizon-htk:
+            proxy_server: proxy.example.com:8080
+          ingress:
+            proxy_server: proxy.example.com:8080
+          ingress-htk:
+            proxy_server: proxy.example.com:8080
+          keystone:
+            proxy_server: proxy.example.com:8080
+          keystone-htk:
+            proxy_server: proxy.example.com:8080
+          libvirt:
+            proxy_server: proxy.example.com:8080
+          libvirt-htk:
+            proxy_server: proxy.example.com:8080
+          mariadb:
+            proxy_server: proxy.example.com:8080
+          mariadb-htk:
+            proxy_server: proxy.example.com:8080
+          memcached:
+            proxy_server: proxy.example.com:8080
+          memcached-htk:
+            proxy_server: proxy.example.com:8080
+          neutron:
+            proxy_server: proxy.example.com:8080
+          neutron-htk:
+            proxy_server: proxy.example.com:8080
+          nova:
+            proxy_server: proxy.example.com:8080
+          nova-htk:
+            proxy_server: proxy.example.com:8080
+          openvswitch:
+            proxy_server: proxy.example.com:8080
+          openvswitch-htk:
+            proxy_server: proxy.example.com:8080
+          rabbitmq:
+            proxy_server: proxy.example.com:8080
+          rabbitmq-htk:
+            proxy_server: proxy.example.com:8080
+          tempest:
+            proxy_server: proxy.example.com:8080
+          tempest-htk:
+            proxy_server: proxy.example.com:8080
+        osh_infra:
+          elasticsearch:
+            proxy_server: proxy.example.com:8080
+          fluent_logging:
+            proxy_server: proxy.example.com:8080
+          grafana:
+            proxy_server: proxy.example.com:8080
+          helm_toolkit:
+            proxy_server: proxy.example.com:8080
+          kibana:
+            proxy_server: proxy.example.com:8080
+          nagios:
+            proxy_server: proxy.example.com:8080
+          nfs_provisioner:
+            proxy_server: proxy.example.com:8080
+          podsecuritypolicy:
+            proxy_server: proxy.example.com:8080
+          prometheus:
+            proxy_server: proxy.example.com:8080
+          prometheus_alertmanager:
+            proxy_server: proxy.example.com:8080
+          prometheus_kube_state_metrics:
+            proxy_server: proxy.example.com:8080
+          prometheus_node_exporter:
+            proxy_server: proxy.example.com:8080
+          prometheus_openstack_exporter:
+            proxy_server: proxy.example.com:8080
+          prometheus_process_exporter:
+            proxy_server: proxy.example.com:8080
+        ucp:
+          armada:
+            proxy_server: proxy.example.com:8080
+          armada-htk:
+            proxy_server: proxy.example.com:8080
+          barbican:
+            proxy_server: proxy.example.com:8080
+          barbican-htk:
+            proxy_server: proxy.example.com:8080
+          ceph-client:
+            proxy_server: proxy.example.com:8080
+          ceph-htk:
+            proxy_server: proxy.example.com:8080
+          ceph-mon:
+            proxy_server: proxy.example.com:8080
+          ceph-osd:
+            proxy_server: proxy.example.com:8080
+          ceph-provisioners:
+            proxy_server: proxy.example.com:8080
+          ceph-rgw:
+            proxy_server: proxy.example.com:8080
+          deckhand:
+            proxy_server: proxy.example.com:8080
+          deckhand-htk:
+            proxy_server: proxy.example.com:8080
+          divingbell:
+            proxy_server: proxy.example.com:8080
+          divingbell-htk:
+            proxy_server: proxy.example.com:8080
+          drydock:
+            proxy_server: proxy.example.com:8080
+          drydock-htk:
+            proxy_server: proxy.example.com:8080
+          ingress:
+            proxy_server: proxy.example.com:8080
+          ingress-htk:
+            proxy_server: proxy.example.com:8080
+          keystone:
+            proxy_server: proxy.example.com:8080
+          keystone-htk:
+            proxy_server: proxy.example.com:8080
+          maas:
+            proxy_server: proxy.example.com:8080
+          maas-htk:
+            proxy_server: proxy.example.com:8080
+          mariadb:
+            proxy_server: proxy.example.com:8080
+          mariadb-htk:
+            proxy_server: proxy.example.com:8080
+          memcached:
+            proxy_server: proxy.example.com:8080
+          memcached-htk:
+            proxy_server: proxy.example.com:8080
+          postgresql:
+            proxy_server: proxy.example.com:8080
+          postgresql-htk:
+            proxy_server: proxy.example.com:8080
+          promenade:
+            proxy_server: proxy.example.com:8080
+          promenade-htk:
+            proxy_server: proxy.example.com:8080
+          rabbitmq:
+            proxy_server: proxy.example.com:8080
+          rabbitmq-htk:
+            proxy_server: proxy.example.com:8080
+          shipyard:
+            proxy_server: proxy.example.com:8080
+          shipyard-htk:
+            proxy_server: proxy.example.com:8080
+          tenant-ceph-client:
+            proxy_server: proxy.example.com:8080
+          tenant-ceph-htk:
+            proxy_server: proxy.example.com:8080
+          tenant-ceph-mon:
+            proxy_server: proxy.example.com:8080
+          tenant-ceph-osd:
+            proxy_server: proxy.example.com:8080
+          tenant-ceph-provisioners:
+            proxy_server: proxy.example.com:8080
+          tenant-ceph-rgw:
+            proxy_server: proxy.example.com:8080
+          tiller:
+            proxy_server: proxy.example.com:8080
+          tiller-htk:
+            proxy_server: proxy.example.com:8080
+    metadata:
+      name: software-versions
+      replacement: true
+      layeringDefinition:
+        abstract: false
+        layer: site
+        parentSelector:
+          name: software-versions-global
+        actions:
+          - method: merge
+            path: .
+      storagePolicy: cleartext
+      schema: metadata/Document/v1
+    schema: pegleg/SoftwareVersions/v1
+    ...
+
+Update site/airsloop/networks/common-addresses.yaml to add the proxy information as follows:
+
+.. code-block:: diff
+
+       # settings are correct and reachable in your environment; otherwise update
+       # them with the correct values for your environment.
+       proxy:
+    -    http: ""
+    -    https: ""
+    -    no_proxy: []
+    +    http: "proxy.example.com:8080"
+    +    https: "proxy.example.com:8080"
+    +    no_proxy:
+    +      - 127.0.0.1
+
+Under site/airsloop/software/charts/ucp/ create the file maas.yaml with the following format:
+
+.. code-block:: yaml
+
+    ---
+    # This file defines site-specific deviations for MaaS.
+    schema: armada/Chart/v1
+    metadata:
+      schema: metadata/Document/v1
+      replacement: true
+      name: ucp-maas
+      layeringDefinition:
+        abstract: false
+        layer: site
+        parentSelector:
+          name: ucp-maas-type
+        actions:
+          - method: merge
+            path: .
+      storagePolicy: cleartext
+    data:
+        values:
+          conf:
+            maas:
+              proxy:
+                proxy_enabled: true
+                peer_proxy_enabled: true
+                proxy_server: 'http://proxy.example.com:8080'
+    ...
+
+Under site/airsloop/software/charts/ucp/ create a promenade.yaml file in the following format:
+
+.. code-block:: yaml
+
+    ---
+    # This file defines site-specific deviations for Promenade.
+    schema: armada/Chart/v1
+    metadata:
+      schema: metadata/Document/v1
+      replacement: true
+      name: ucp-promenade
+      layeringDefinition:
+        abstract: false
+        layer: site
+        parentSelector:
+          name: ucp-promenade-type
+        actions:
+          - method: merge
+            path: .
+      storagePolicy: cleartext
+    data:
+      values:
+        pod:
+          env:
+            promenade_api:
+              - name: http_proxy
+                value: http://proxy.example.com:8080
+              - name: https_proxy
+                value: http://proxy.example.com:8080
+              - name: no_proxy
+                value: "127.0.0.1,localhost,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster.local,.cluster.local"
+              - name: HTTP_PROXY
+                value: http://proxy.example.com:8080
+              - name: HTTP_PROXY
+                value: http://proxy.example.com:8080
+              - name: HTTPS_PROXY
+                value: http://proxy.example.com:8080
+              - name: NO_PROXY
+                value: "127.0.0.1,localhost,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster.local,.cluster.local"
+    ...
+
