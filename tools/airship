@@ -20,7 +20,7 @@ test -t 1 && test -t 0 && DEFAULT_TERM_OPTS='-it'
 : ${TERM_OPTS:=${DEFAULT_TERM_OPTS}}
 
 # Python YAML module required to read versions.yaml
-dpkg -s python3-yaml &> /dev/null || apt -y install python3-yaml
+sudo dpkg -s python3-yaml &> /dev/null || sudo apt -y install python3-yaml
 
 
 ENV_FILE=$(mktemp)
