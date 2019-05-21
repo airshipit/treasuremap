@@ -23,6 +23,9 @@ data:
     location: /airship-components/armada
     subpath: charts/armada
   values:
+    images:
+      tags:
+        api: quay.io/airshipit/armada:latest-ubuntu_bionic
     pod:
       replicas:
         api: 1

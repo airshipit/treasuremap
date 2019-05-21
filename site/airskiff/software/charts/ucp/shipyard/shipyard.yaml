@@ -23,6 +23,10 @@ data:
     location: /airship-components/shipyard
     subpath: charts/shipyard
   values:
+    images:
+      tags:
+        airflow: quay.io/airshipit/airflow:latest-ubuntu_xenial
+        shipyard: quay.io/airshipit/shipyard:latest-ubuntu_xenial
     pod:
       replicas:
         shipyard:

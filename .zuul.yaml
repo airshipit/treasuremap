@@ -21,13 +21,13 @@
         - treasuremap-airship-seaworthy-site-lint
         - treasuremap-airskiff-site-lint
         - treasuremap-airsloop-site-lint
-        - treasuremap-airskiff-deployment
+        - treasuremap-airskiff-deployment-ubuntu
     gate:
       jobs:
         - treasuremap-airship-seaworthy-site-lint
         - treasuremap-airskiff-site-lint
         - treasuremap-airsloop-site-lint
-        - treasuremap-airskiff-deployment
+        - treasuremap-airskiff-deployment-ubuntu
     post:
       jobs:
         - treasuremap-upload-git-mirror
@@ -97,7 +97,7 @@
       - ^site/airskiff/.*$
 
 - job:
-    name: treasuremap-airskiff-deployment
+    name: treasuremap-airskiff-deployment-ubuntu
     nodeset: treasuremap-single-node
     description: |
       Deploy Memcached using Airskiff and latest Treasuremap changes.

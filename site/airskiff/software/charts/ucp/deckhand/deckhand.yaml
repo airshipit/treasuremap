@@ -23,6 +23,11 @@ data:
     location: /airship-components/deckhand
     subpath: charts/deckhand
   values:
+    images:
+      tags:
+        # TODO(drewwalters96): Replace with Ubuntu image once openSUSE image
+        # merges.
+        api: quay.io/airshipit/deckhand:latest
     pod:
       replicas:
         deckhand: 1
