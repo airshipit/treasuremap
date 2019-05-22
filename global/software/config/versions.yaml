@@ -608,8 +608,8 @@ data:
     ucp:
       armada:
         api: quay.io/airshipit/armada:fe8ad58605d59d0b778b1bb60272e172699aab97
-        helm: docker.io/lachlanevenson/k8s-helm:v2.13.1
-        tiller: gcr.io/kubernetes-helm/tiller:v2.13.1
+        helm: docker.io/lachlanevenson/k8s-helm:v2.14.0
+        tiller: gcr.io/kubernetes-helm/tiller:v2.14.0
       barbican: {}
       deckhand:
         db_sync: quay.io/airshipit/deckhand:81b2badca57e25efa4ce4a5e750e4923cbaa11fb
