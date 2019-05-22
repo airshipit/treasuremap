@@ -98,7 +98,8 @@ data:
           log_directory: /var/log/tenant-ceph
     storageclass:
       rbd:
-        admin_secret_namespace: tenant-ceph
+        parameters:
+          adminSecretNamespace: tenant-ceph
     deployment:
       ceph: true
       storage_secrets: true

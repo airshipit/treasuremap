@@ -85,8 +85,9 @@ data:
     storageclass:
       rbd:
         ceph_configmap_name: tenant-ceph-etc
-        user_secret_name: pvc-tceph-client-key
-        admin_secret_namespace: tenant-ceph
+        parameters:
+          userSecretName: pvc-tceph-client-key
+          adminSecretNamespace: tenant-ceph
   dependencies:
     - tenant-ceph-htk
 ...
