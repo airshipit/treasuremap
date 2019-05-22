@@ -1,0 +1,54 @@
+// pipeline for treasuremap installation of airship-in-a-bottle,
+// more info at http://www.airshipit.org/
+
+ARTF_BASE = "cicd/logs/${JOB_NAME}/${BUILD_ID}"
+
+REPO_URL = 'https://review.opendev.org/airship/treasuremap'
+REPO_HOME = '/root/deploy/treasuremap'
+
+publicNet = 'public'
+if (env.AIRSHIP_VM_PUBLIC_NET) {
+    publicNet = env.AIRSHIP_VM_PUBLIC_NET
+}
+
+vm(flavor: 'm1.xxlarge', artifactoryLogs: true, publicNet: publicNet) {
+
+    stage('Checkout'){
+
+        sh 'sudo mkdir /root/deploy'
+        sh 'sudo setfacl -m u:ubuntu:rwx /root/deploy'
+        sh 'sudo setfacl -m u:ubuntu:rwx /root'
+
+        gerrit.cloneToBranch(REPO_URL, GERRIT_PATCHSET_REVISION, REPO_HOME)
+
+        if(GERRIT_EVENT_TYPE != 'change-merged') {
+            dir(REPO_HOME) {
+                gerrit.rebase()
+            }
+        }
+        currentBuild.displayName = "#${BUILD_NUMBER} ${GERRIT_EVENT_TYPE}"
+    }
+
+    stage('Run Airship') {
+        dir("${REPO_HOME}/tools/deployment/aiab/dev_single_node"){
+            try {
+                timeout(120){
+                    sh 'sudo TERM_OPTS=-i ./airship-in-a-bottle.sh -y'
+                }
+            } catch (err) {
+                try {
+                    sh 'sudo debug-report.sh'
+                    def hostname =  sh (script: 'hostname', returnStdout: true).trim()
+                    artifactory.upload("debug-${hostname}.tgz",
+                                   "${ARTF_BASE}/debug-${hostname}.tgz")
+                } catch (lerr){
+                    // pipeline may not yet deployed basic k8s
+                    // cause of the issue will be found in Jenkins console log
+                    print "Failed to publish debug report: ${lerr}"
+                }
+                error(err)
+            }
+        }
+    }
+}
+
