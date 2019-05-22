@@ -600,22 +600,30 @@ e.g.:
     kernel_params:
       kernel_package: 'linux-image-4.15.0-34-generic'
 
-In this example, the kernel version is ``4.15.0-34-generic``. Define any proxy
-environment variables needed for your environment to reach public ubuntu
-package repos, and install the matching kernel on the Genesis host (make sure
-to run on Genesis host, not on the build host):
+It is recommended to install the latest kernel. Check the latest
+available kernel, update the site specs and Regenerate collected
+YAML files.
+
+Define any proxy environment variables needed for your environment to
+reach public Ubuntu package repos, and install the matching kernel on the
+Genesis host (make sure to run on Genesis host, not on the build host):
+
+To install the latest hwe-16.04 kernel:
 
 ::
 
-    sudo apt -y install linux-modules-4.15.0-34-generic \
-       linux-modules-extra-4.15.0-34-generic \
-       linux-image-4.15.0-34-generic linux-headers-4.15.0-34-generic \
-       linux-headers-4.15.0-34
+    sudo apt-get install --install-recommends linux-generic-hwe-16.04
+
+To install the latest ga-16.04 kernel:
+
+::
+
+    sudo apt-get install --install-recommends linux-generic
 
 Check the installed packages on the genesis host with ``dpkg --list``.
 If there are any later kernel versions installed, remove them with
 ``sudo apt remove``, so that the newly install kernel is the latest
-available.
+available. Boot the genesis node using install kernel.
 
 Install ntpdate/ntp
 ~~~~~~~~~~~~~~~~~~~
