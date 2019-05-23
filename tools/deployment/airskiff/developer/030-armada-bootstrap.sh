@@ -20,6 +20,7 @@ set -xe
 : "${INSTALL_PATH:="$(pwd)/../"}"
 : "${PEGLEG:="./tools/airship pegleg"}"
 : "${PL_SITE:="airskiff"}"
+: "${TARGET_MANIFEST:="ucp-bootstrap"}"
 
 # Render documents
 ${PEGLEG} site -r . render "${PL_SITE}" -o airskiff.yaml
@@ -30,4 +31,4 @@ docker run --rm --net host -p 8000:8000 --name armada \
     -v "$(pwd)"/airskiff.yaml:/airskiff.yaml \
     -v "${INSTALL_PATH}":/airship-components \
     quay.io/airshipit/armada:latest \
-    apply /airskiff.yaml --target-manifest ucp-bootstrap
+    apply /airskiff.yaml --target-manifest $TARGET_MANIFEST
