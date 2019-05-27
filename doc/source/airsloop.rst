@@ -191,12 +191,14 @@ installing git, installing docker, clone sevral repos etc.
 
 .. code-block:: bash
 
+    mkdir certs
     ./tools/airship promenade generate-certs -o /target/certs /target/collect/*.yaml
 
 3. Generate genesis.sh scipt
 
 .. code-block:: bash
 
+    mkdir bundle
     ./tools/airship promenade build-all -o /target/bundle /target/collect/*.yaml /target/certs/*.yaml
 
 4. Execute the genesis.sh script

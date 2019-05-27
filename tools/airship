@@ -42,6 +42,8 @@ EOF
 
 REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/../ >/dev/null 2>&1 && pwd )"
 
+USER=$(id -u)
+GROUP=$(id -g)
 
 # Key/value lookups from manifests
 manifests_lookup(){
@@ -110,6 +112,7 @@ pegleg() {
   versions_lookup "['data']['images']['ucp']['pegleg']['pegleg']"
 
   docker run --rm --net=host $TERM_OPTS \
+      -u "${USER}:${GROUP}" \
       -w /target \
       -v $(pwd):/target \
       -v ${HOME}/.ssh:/target/.ssh \
@@ -132,6 +135,7 @@ NO_PROXY=${NO_PROXY:-}
 EOF
 
   docker run --rm --net=host $TERM_OPTS \
+      -u "${USER}:${GROUP}" \
       -w /target \
       -v $(pwd):/target \
       --env-file $ENV_FILE \
@@ -144,6 +148,7 @@ shipyard() {
 
   SHIPYARD_IMAGE=$RESULT
   docker run --rm --net=host $TERM_OPTS \
+    -u "${USER}:${GROUP}" \
     -w /target \
     -v $(pwd):/target \
     --env-file $ENV_FILE \
