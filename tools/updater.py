@@ -173,8 +173,9 @@ def get_image_tag(image):
 
 
 def get_image_latest_tag(image):
-    """Get latest image tag from quay.io,
-    returns latest image tag string, or 0 if a problem occured.
+    """Get image tags from quay.io,
+    returns latest image tag matching filter, or latest image tag if filter is not
+    matched or not set, or 0 if a problem occured.
     """
 
     attempt = 0
@@ -183,7 +184,7 @@ def get_image_latest_tag(image):
     hash_image = image.split('/')
     url = 'https://quay.io/api/v1/repository/{}/{}/tag/'
     url = url.format(hash_image[1], hash_image[2])
-    logging.info("Fetching latest tag for image %s (%s)...", image, url)
+    logging.info("Fetching tags for image %s (%s)...", image, url)
 
     while attempt < max_attempts:
         attempt = attempt + 1
@@ -192,7 +193,7 @@ def get_image_latest_tag(image):
             if res.ok:
                 break
         except requests.exceptions.Timeout:
-            logging.warning("Failed to fetch url %s for %d attempt(s)", url, attempt)
+            logging.warning("Timed out fetching url %s for %d attempt(s)", url, attempt)
             time.sleep(1)
         except requests.exceptions.TooManyRedirects:
             logging.error("Failed to fetch url %s, TooManyRedirects", url)
@@ -216,15 +217,35 @@ def get_image_latest_tag(image):
         return 0
 
     try:
+        possible_tag = None
         for tag in res['tags']:
-            if 'end_ts' not in tag:
-                if tag['name'] != 'master' and tag['name'] != 'latest':
-                    return tag['name']
+            # skip images which are old (have 'end_ts'), and
+            # skip images tagged with "*latest*" or "*master*"
+            if 'end_ts' in tag or any(i in tag['name'] for i in ('latest', 'master')):
+                continue
+
+            # simply return first found tag is we don't have filter set
+            if not tag_filter:
+                return tag['name']
+
+            # return tag matching filter, if we have filter set
+            if tag_filter in tag['name']:
+                return tag['name']
+
+            logging.info("Skipping tag %s as not matching to the filter %s",
+                        tag['name'], tag_filter)
+            if not possible_tag:
+                possible_tag = tag['name']
+
+        if possible_tag:
+            logging.info("Couldn't find better tag than %s", possible_tag)
+            return possible_tag
+
     except KeyError:
         logging.error("Unable to parse response from quay.io (%s)", res.url)
         return 0
 
-    logging.error("Image with end_ts in path %s not found", image)
+    logging.error("Image without end_ts in path %s not found", image)
     return 0
 
 
@@ -342,12 +363,12 @@ if __name__ == '__main__':
 
     parser.add_argument('--in-file', default='versions.yaml',
                         help='/path/to/versions.yaml input file; default - "./versions.yaml"')
-
     parser.add_argument('--out-file', default='versions.yaml',
                         help='name of output file; default - "versions.yaml" (overwrite existing)')
-
     parser.add_argument('--skip',
                         help='comma-delimited list of images and charts to skip during the update')
+    parser.add_argument('--tag-filter',
+                        help='e.g. "ubuntu"; update would use image ref. tags on quay.io matching the filter')
 
     args = parser.parse_args()
     in_file = args.in_file
@@ -357,6 +378,9 @@ if __name__ == '__main__':
         logging.info("Skip list: %s", skip_list)
     else:
         skip_list = None
+
+    tag_filter = args.tag_filter
+    logging.info("Tag filter: %s", tag_filter)
 
     if os.path.basename(out_file) != out_file:
         logging.error("Name of the output file must not contain path, " +
