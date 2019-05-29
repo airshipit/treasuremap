@@ -26,6 +26,8 @@ are setup to deploy OpenStack Ocata.
 The versions are kept up to date via `updater.py <https://opendev.org/airship/treasuremap/src/branch/master/tools/updater.py>`__,
 a utility that updates versions.yaml latest charts and (selected) images.
 
+Due to the limited capacity of a test environment, only Ubuntu-based images are used at the moment.
+
 The pipeline attempts to uplift and deploy latest versions on daily bases.
 
 
