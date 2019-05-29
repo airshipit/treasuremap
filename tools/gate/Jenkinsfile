@@ -286,7 +286,10 @@ def sanity_tests = {
 
         withEnv(['TERM_OPTS=-i',
                  'OSH_EXT_SUBNET=',
-                 'OSH_BR_EX_ADDR=']) {
+                 'OSH_BR_EX_ADDR=',
+                 'OSH_KEYSTONE_URL=https://identity-sw.atlantafoundry.com/v3',
+                 'OSH_REGION_NAME=airship-seaworthy',
+                 'OSH_ADMIN_PASSWD=password123']) {
             sh 'tools/tests.sh'
         }
     }
