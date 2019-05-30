@@ -1,0 +1,29 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-divingbell
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-divingbell-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: ucp-divingbell-site
+  storagePolicy: cleartext
+data:
+  values:
+    manifests:
+      daemonset_ethtool: false
+      daemonset_mounts: false
+      daemonset_uamlite: false
+      daemonset_sysctl: false
+      daemonset_limits: false
+      daemonset_apt: true
+      daemonset_perm: false
+      daemonset_exec: true
+      daemonset_apparmor: false
+...

@@ -1,0 +1,24 @@
+---
+# These parameters are environment specific, they are
+# overridden with scripts during the installation.
+schema: dev/Configurables/v1
+metadata:
+  schema: metadata/Document/v1
+  name: dev-configurables
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+
+# This is just an example of configuration parameters.
+data:
+  # Hostname of the node.
+  hostname: aiab
+  # IP address for external network.
+  hostip: 10.0.2.14
+  # IP address range for external neetwork.
+  hostcidr: 10.0.2.0/24
+  # Name of interface.
+  interface: ens3
+  # IP address for MaaS VIP address.
+  maas-ingress: '192.169.1.5/32'

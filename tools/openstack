@@ -11,13 +11,13 @@ OS_CLOUD_CFG=${HOME}/.openstack/clouds.yaml
 
 : ${TERM_OPTS:=-it}
 
-: ${OSH_KEYSTONE_URL:='https://identity-sw.atlantafoundry.com/v3'}
-: ${OSH_REGION_NAME:='airship-seaworthy'}
+: ${OSH_KEYSTONE_URL:='http://keystone.openstack.svc.cluster.local:80/'}
+: ${OSH_REGION_NAME:='RegionOne'}
 : ${OSH_ADMIN_PASSWD:='password123'}
 
 if [ ! -f $OS_CLOUD_CFG ]; then
     echo " => Creating OpenStack client config"
-    mkdir -p ~/.openstack
+    mkdir -p $(dirname $OS_CLOUD_CFG)
     tee $OS_CLOUD_CFG << EOF
 clouds:
  openstack_helm:

@@ -1,0 +1,24 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: libvirt
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: libvirt-global
+      component: libvirt
+    actions:
+      - method: merge
+        path: .values
+      - method: delete
+        path: .values.ceph_client
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      ceph:
+        enabled: false
+...
