@@ -287,7 +287,7 @@ data:
         type: git
       nfs_provisioner:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        reference: b77385c82f9853b3dfd82a9b41af23880877319b
         subpath: nfs-provisioner
         type: git
       podsecuritypolicy:
@@ -598,7 +598,8 @@ data:
       grafana: {}
       kibana: {}
       nagios: {}
-      nfs_provisioner: {}
+      nfs_provisioner:
+        nfs_provisioner: quay.io/kubernetes_incubator/nfs-provisioner:v2.1.0-k8s1.11
       prometheus: {}
       prometheus_alertmanager: {}
       prometheus_kube_state_metrics: {}
