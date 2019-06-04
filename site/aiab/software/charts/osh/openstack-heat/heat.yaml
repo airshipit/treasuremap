@@ -2,13 +2,12 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: heat
-  replacement: true
+  name: heat-aiab
   layeringDefinition:
     abstract: false
     layer: site
     parentSelector:
-      name: heat-global
+      name: heat-type
     actions:
       - method: merge
         path: .

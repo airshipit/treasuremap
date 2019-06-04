@@ -1,0 +1,20 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-heat-aiab
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-heat-chart-group-global
+      component: heat
+    actions:
+      - method: replace
+        path: .chart_group
+  storagePolicy: cleartext
+data:
+  sequenced: true
+  chart_group:
+    - heat-rabbitmq
+    - heat-aiab

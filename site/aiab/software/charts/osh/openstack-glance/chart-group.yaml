@@ -1,0 +1,19 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-glance-aiab
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-glance-chart-group-global
+      component: glance
+    actions:
+      - method: replace
+        path: .chart_group
+  storagePolicy: cleartext
+data:
+  chart_group:
+    - glance-rabbitmq
+    - glance-aiab

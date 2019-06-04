@@ -2,13 +2,12 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: glance
-  replacement: true
+  name: glance-aiab
   layeringDefinition:
     abstract: false
     layer: site
     parentSelector:
-      name: glance-global
+      name: glance-type
     actions:
       - method: merge
         path: .
@@ -16,9 +15,5 @@ metadata:
 
 data:
   values:
-    pod:
-      replicas:
-        api: 1
-        registry: 1
     storage: pvc
 ...

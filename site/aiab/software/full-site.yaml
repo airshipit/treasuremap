@@ -36,8 +36,8 @@ data:
     - openstack-mariadb
     - openstack-memcached
     - openstack-keystone
-    - openstack-glance
+    - openstack-glance-aiab
     - openstack-compute-kit
-    - openstack-heat
+    - openstack-heat-aiab
     - openstack-horizon
 ...
