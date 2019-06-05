@@ -18,6 +18,7 @@ BUNDLE_DIR = 'bundle'
 
 KEYSTONE_URL = 'https://iam-sw.atlantafoundry.com'
 SHIPYARD_URL = 'https://shipyard-sw.atlantafoundry.com/api/v1.0'
+SHIPYARD_CREDS = 'seaworthy-shipyard-iam-pw'
 
 SITE_NAME='seaworthy'
 IPMI_CREDS = 'seaworthy-ipmi'
@@ -214,10 +215,14 @@ def genesis_deploy = {
 def shipyard_deploy = { action ->
     try {
         uuid = UUID.randomUUID().toString()
-        def req = keystone.retrieveToken(SHIPYARD_PASSWD, KEYSTONE_URL, false)
+        def req = keystone.retrieveToken(SHIPYARD_CREDS, KEYSTONE_URL)
         def token = req.getHeaders()["X-Subject-Token"][0]
         shipyard2.uploadConfig(uuid, token, SHIPYARD_URL, SITE_NAME)
-        shipyard2.waitAction(action, uuid, SHIPYARD_URL, SHIPYARD_PASSWD, KEYSTONE_URL, false)
+        shipyard2.waitAction(action: action,
+                             uuid: uuid,
+                             shipyardUrl: SHIPYARD_URL,
+                             keystoneCreds: SHIPYARD_CREDS,
+                             keystoneUrl: KEYSTONE_URL)
 
     } catch (err) {
         debug_report()
@@ -298,9 +303,13 @@ def sanity_tests = {
 
 //// main flow
 
-vm(timeout: 360,
-   publicNet: 'foundry',
-   artifactoryLogs: ARTIFACTORY_LOGS.toBoolean()) {
+vm(image: 'ubuntu-16.04-server-cloudimg-amd64',
+    timeout: 360,
+    publicNet: 'foundry',
+    buildType: 'flat',
+    initScript: 'cloud-config',
+    artifactoryLogs: ARTIFACTORY_LOGS.toBoolean()) {
+
     // wait and make sure genesis is up
     ssh.wait (GENESIS_CREDS, GENESIS_IP, 'hostname')
 

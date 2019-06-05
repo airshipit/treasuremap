@@ -12,6 +12,7 @@ PEGLEG_IMAGE = 'quay.io/airshipit/pegleg:178c058474fb632806e281673d3eaf6be80fa85
 
 KEYSTONE_URL = 'http://keystone.ucp.svc.cluster.local'
 SHIPYARD_URL = 'http://shipyard-api.ucp.svc.cluster.local/api/v1.0'
+SHIPYARD_CREDS = 'airsloop-shipyard-iam-pw'
 
 uuid = UUID.randomUUID().toString()
 
@@ -96,12 +97,8 @@ def reset_bare_metal = {
 //// manifest utils
 
 def resolve_versions = {
-
     def versions = readYaml file: 'global/software/config/versions.yaml'
     PROMENADE_IMAGE = versions.data.images.ucp.promenade.promenade
-
-    def shipyard = readYaml file: "site/${SITE_NAME}/secrets/passphrases/ucp_shipyard_keystone_password.yaml"
-    SHIPYARD_PASSWD = shipyard.data
 }
 
 def pegleg_site_collect = {
@@ -214,7 +211,12 @@ def shipyard_deploy = { action ->
         def req = keystone.retrieveToken(SHIPYARD_PASSWD, KEYSTONE_URL, false)
         def token = req.getHeaders()["X-Subject-Token"][0]
         shipyard2.uploadConfig(uuid, token, SHIPYARD_URL, SITE_NAME)
-        shipyard2.waitAction(action, uuid, SHIPYARD_URL, SHIPYARD_PASSWD, KEYSTONE_URL, false)
+
+        shipyard2.waitAction(action: action,
+                             uuid: uuid,
+                             shipyardUrl: SHIPYARD_URL,
+                             keystoneCreds: SHIPYARD_CREDS,
+                             keystoneUrl: KEYSTONE_URL)
 
     } catch (err) {
         debug_report()
@@ -303,13 +305,15 @@ def sanity_tests = {
 
 //// main flow
 
-vm(timeout: 360,
+vm(image: 'ubuntu-16.04-server-cloudimg-amd64',
+   timeout: 360,
    publicNet: 'foundry',
+   buildType: 'flat',
+   initScript: 'cloud-config',
    artifactoryLogs: ARTIFACTORY_LOGS.toBoolean()) {
 
     // wait and make sure genesis is up
     ssh.wait (GENESIS_CREDS, GENESIS_IP, 'hostname')
-
 
     // disable docker/kubelet services
     // this is done to be able to properly cleanup genesis after reboot
