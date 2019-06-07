@@ -20,13 +20,22 @@ set -xe
 CURRENT_DIR="$(pwd)"
 : "${INSTALL_PATH:="../"}"
 : "${OSH_INFRA_COMMIT:="6d0a9c21b0455e9d674d525c5e0cd0d5d53f0f85"}"
+: "${CLONE_ARMADA:=true}"
+: "${CLONE_DECKHAND:=true}"
+: "${CLONE_SHIPYARD:=true}"
 
 cd ${INSTALL_PATH}
 
 # Clone Airship projects
-git clone https://opendev.org/airship/armada.git
-git clone https://opendev.org/airship/deckhand.git
-git clone https://opendev.org/airship/shipyard.git
+if [[ ${CLONE_ARMADA} = true ]] ; then
+    git clone https://opendev.org/airship/armada.git
+fi
+if [[ ${CLONE_DECKHAND} = true ]] ; then
+    git clone https://opendev.org/airship/deckhand.git
+fi
+if [[ ${CLONE_SHIPYARD} = true ]] ; then
+    git clone https://opendev.org/airship/shipyard.git
+fi
 
 # Clone dependencies
 git clone https://opendev.org/openstack/openstack-helm-infra.git
