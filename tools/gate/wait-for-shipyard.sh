@@ -16,16 +16,17 @@
 
 set -e
 
-: "${SHIPYARD:=./tools/airship shipyard}"
-
-# Source OpenStack credentials for Airship utility scripts
-. tools/deployment/airskiff/common/os-env.sh
+REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/../../ >/dev/null 2>&1 && pwd )"
+: "${SHIPYARD:=${REPO_DIR}/tools/airship shipyard}"
 
 ACTION=$(${SHIPYARD} get actions | grep -i "Processing" | awk '{ print $2 }')
 
 echo -e "\nWaiting for $ACTION..."
 
 while true; do
+        # Print the status of tasks
+        ${SHIPYARD} describe "${ACTION}"
+
         status=$(${SHIPYARD} describe "$ACTION" | grep -i "Lifecycle" | \
                 awk '{print $2}')
 

@@ -58,6 +58,7 @@
 
     - name: Wait for deployment completion
       shell: |
+        . ./tools/deployment/airskiff/common/os-env.sh
         ./tools/gate/wait-for-shipyard.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
