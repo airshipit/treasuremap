@@ -74,7 +74,7 @@ where it fails, there are two major deployment steps:
 After `Configuring Airship CLI`_, setup credentials for accessing
 Shipyard; the password is stored in ``ucp_shipyard_keystone_password``
 secret, you can find it in
-``site/airship-seaworthy/secrets/passphrases/ucp_shipyard_keystone_password.yaml``
+``site/seaworthy/secrets/passphrases/ucp_shipyard_keystone_password.yaml``
 configuration file of your site.
 
 ::

@@ -12,5 +12,5 @@ metadata:
 data:
   osh:
     # NEWSITE-CHANGEME: Replace with the site name
-    region_name: airship-seaworthy
+    region_name: seaworthy
 ...

@@ -18,13 +18,13 @@
       rtd_project_name: 'airship-treasuremap'
     check:
       jobs:
-        - treasuremap-airship-seaworthy-site-lint
+        - treasuremap-seaworthy-site-lint
         - treasuremap-airskiff-site-lint
         - treasuremap-airsloop-site-lint
         - treasuremap-airskiff-deployment-ubuntu
     gate:
       jobs:
-        - treasuremap-airship-seaworthy-site-lint
+        - treasuremap-seaworthy-site-lint
         - treasuremap-airskiff-site-lint
         - treasuremap-airsloop-site-lint
         - treasuremap-airskiff-deployment-ubuntu
@@ -42,7 +42,7 @@
 - job:
     name: treasuremap-site-lint
     description:
-      Lint a site using Pegleg. Default site is airship-seaworthy.
+      Lint a site using Pegleg. Default site is seaworthy.
     nodeset: treasuremap-single-node
     timeout: 900
     pre-run:
@@ -52,18 +52,18 @@
     required-projects:
       - airship/pegleg
     vars:
-      site: airship-seaworthy
+      site: seaworthy
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$
 
 - job:
-    name: treasuremap-airship-seaworthy-site-lint
+    name: treasuremap-seaworthy-site-lint
     description: |
-      Lint the airship-seaworthy site using Pegleg.
+      Lint the seaworthy site using Pegleg.
     parent: treasuremap-site-lint
     vars:
-      site: airship-seaworthy
+      site: seaworthy
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$
@@ -80,7 +80,7 @@
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$
-      - ^site/airship-seaworthy/.*$
+      - ^site/seaworthy/.*$
       - ^site/airsloop/.*$
 
 - job:
@@ -93,7 +93,7 @@
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$
-      - ^site/airship-seaworthy/.*$
+      - ^site/seaworthy/.*$
       - ^site/airskiff/.*$
 
 - job:
@@ -111,7 +111,7 @@
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$
-      - ^site/airship-seaworthy/.*$
+      - ^site/seaworthy/.*$
       - ^site/airsloop/.*$
 
 - secret:

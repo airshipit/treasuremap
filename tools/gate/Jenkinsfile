@@ -19,11 +19,11 @@ BUNDLE_DIR = 'bundle'
 KEYSTONE_URL = 'https://iam-sw.atlantafoundry.com'
 SHIPYARD_URL = 'https://shipyard-sw.atlantafoundry.com/api/v1.0'
 
-SITE_NAME='airship-seaworthy'
-IPMI_CREDS = 'airship-seaworthy-ipmi'
+SITE_NAME='seaworthy'
+IPMI_CREDS = 'seaworthy-ipmi'
 
 GENESIS_IP = '10.23.21.11'
-GENESIS_CREDS = 'airship-seaworthy-key'
+GENESIS_CREDS = 'seaworthy-key'
 
 GENESIS_IPMI_IP = '10.23.104.11'
 GENESIS_CEPH_DISKS = ['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
@@ -110,8 +110,8 @@ def resolve_versions = {
 def pegleg_site_collect = {
     stage('Pegleg Site Collect') {
 
-        configFileProvider([configFile(fileId: 'airship-seaworthy-site-definition',
-            targetLocation: 'site/airship-seaworthy/site-definition.yaml')]) {
+        configFileProvider([configFile(fileId: 'seaworthy-site-definition',
+            targetLocation: 'site/seaworthy/site-definition.yaml')]) {
         }
 
         withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-attcomdev-key',
@@ -154,7 +154,7 @@ def genesis_cleanup = {
                   BUNDLE_DIR,
                   "${BUNDLE_DIR}.tar.gz",
                   SITE_NAME,
-                  'airship-seaworthy.tar.gz',
+                  'seaworthy.tar.gz',
                   'debug-cab23-r720-11.tgz',
                   '/var/lib/docker',
                   '/var/lib/kubelet']
@@ -288,7 +288,7 @@ def sanity_tests = {
                  'OSH_EXT_SUBNET=',
                  'OSH_BR_EX_ADDR=',
                  'OSH_KEYSTONE_URL=https://identity-sw.atlantafoundry.com/v3',
-                 'OSH_REGION_NAME=airship-seaworthy',
+                 'OSH_REGION_NAME=seaworthy',
                  'OSH_ADMIN_PASSWD=password123']) {
             sh 'tools/tests.sh'
         }

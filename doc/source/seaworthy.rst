@@ -5,7 +5,7 @@ Airship Seaworthy is a multi-node site deployment reference
 and continuous integration pipeline.
 
 The site manifests are available at
-`site/airship-seaworthy <https://opendev.org/airship/treasuremap/src/branch/master/site/airship-seaworthy>`__.
+`site/seaworthy <https://opendev.org/airship/treasuremap/src/branch/master/site/seaworthy>`__.
 
 
 Pipeline
@@ -42,7 +42,7 @@ to align parts of the system such as Ceph replication, etcd, etc.
 
 Airship Seaworthy site has 6 DELL R720xd bare-metal servers:
 3 control, and 3 compute nodes.
-See host profiles for the servers `here <https://opendev.org/airship/treasuremap/src/branch/master/site/airship-seaworthy/profiles/host>`__.
+See host profiles for the servers `here <https://opendev.org/airship/treasuremap/src/branch/master/site/seaworthy/profiles/host>`__.
 
 Control (masters)
  - cab23-r720-11
@@ -59,7 +59,7 @@ Network
 -------
 
 Physical (underlay) networks are described in Drydock site configuration
-`here <https://opendev.org/airship/treasuremap/src/branch/master/site/airship-seaworthy/networks/physical/networks.yaml>`__.
+`here <https://opendev.org/airship/treasuremap/src/branch/master/site/seaworthy/networks/physical/networks.yaml>`__.
 It defines OOB (iLO/IPMI), untagged PXE, and multiple tagged general use networks.
 
 Calico overlay for k8s POD networking uses IPIP mesh.

@@ -1,5 +1,5 @@
 
-pipelineJob('airship-seaworthy') {
+pipelineJob('seaworthy') {
 
     displayName('Airship Seaworthy')
     description('Bare-metal continuous deployment pipeline')
@@ -11,7 +11,7 @@ pipelineJob('airship-seaworthy') {
     parameters {
         string {
             defaultValue("uplift")
-            description("Reference to airship-treasuremap, e.g. refs/changes/12/12345/12")
+            description("Reference to treasuremap, e.g. refs/changes/12/12345/12")
             name("AIRSHIP_MANIFESTS_REF")
             trim(true)
         }
@@ -36,7 +36,7 @@ pipelineJob('airship-seaworthy') {
             gerritProjects {
                 gerritProject {
                     compareType('PLAIN')
-                    pattern("openstack/airship-treasuremap")
+                    pattern("airship/treasuremap")
                     branches {
                         branch {
                             compareType("ANT")

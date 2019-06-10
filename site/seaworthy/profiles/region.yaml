@@ -5,7 +5,7 @@ schema: 'drydock/Region/v1'
 metadata:
   schema: 'metadata/Document/v1'
   # NEWSITE-CHANGEME: Replace with the site name
-  name: airship-seaworthy
+  name: seaworthy
   layeringDefinition:
     abstract: false
     layer: site
@@ -16,14 +16,14 @@ metadata:
     # account during the PXE process. Create a substitution rule for each SSH
     # key that should have access to the "ubuntu" account (useful for trouble-
     # shooting problems before UAM or UAM-lite is operational). SSH keys are
-    # stored as secrets in site/airship-seaworthy/secrets.
+    # stored as secrets in site/seaworthy/secrets.
     - dest:
         # Add/replace the first item in the list
         path: .authorized_keys[0]
       src:
         schema: deckhand/PublicKey/v1
         # This should match the "name" metadata of the SSH key which will be
-        # substituted, located in site/airship-seaworthy/secrets folder.
+        # substituted, located in site/seaworthy/secrets folder.
         name: airship_ssh_public_key
         path: .
     - dest:
