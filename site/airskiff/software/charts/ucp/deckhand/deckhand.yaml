@@ -25,9 +25,7 @@ data:
   values:
     images:
       tags:
-        # TODO(drewwalters96): Replace with Ubuntu image once openSUSE image
-        # merges.
-        api: quay.io/airshipit/deckhand:latest
+        api: quay.io/airshipit/deckhand:latest-ubuntu_xenial
     pod:
       replicas:
         deckhand: 1
