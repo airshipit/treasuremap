@@ -1,75 +1,60 @@
 Airsloop: Simple Bare-Metal Airship
 ===================================
 
-Airsloop is a two node site deployment reference and continuous integration pipeline.
-The goal of this site is to be used as a reference for mini Airship deployments
-with one controller and one or more compute nodes.
+Airsloop is a two bare-metal server site deployment reference.
 
-Airsloop is meant to get an operator up and running quickly with an Airship lab environment,
-and has some resiliency and security features tuned down.  Please see the `Seaworthy <https://opendev.org/airship/treasuremap/src/branch/master/site/seaworthy>`__
-manifests for a production-oriented example.
+The goal of this site is to be used as a reference for simplified Airship
+deployments with one control and one or more compute nodes.
 
-The site manifests are available at
-`site/airsloop <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop>`__.
+It is recommended to get familiar with the `Site Authoring and Deployment Guide`_
+documentation before deploying Airsloop in the lab. Most steps and concepts
+including setting up the Genesis node are the same.
+
+.. _Site Authoring and Deployment Guide: https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html
+
 
 .. image:: diagrams/airsloop-architecture.png
 
 
-Pipeline
---------
+Various resiliency and security features are tuned down via configuration.
 
-Airsloop pipeline automates deployment flow documented in
-`Site Authoring and Deployment Guide <https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html>`__.
+ * Two bare-metal server setup with 1 control, and 1 compute.
+   Most components are scaled to a single replica and doesn't carry
+   any HA as there is only a single control plane host.
+ * No requirements for DNS/certificates.
+   HTTP and internal cluster DNS is used.
+ * Ceph set to use the single disk.
+   This generally provides minimalistic no-touch Ceph deployment.
+   No replication of Ceph data (single copy).
+ * Simplified networking (no bonding).
+   Two network interfaces are used by default (flat PXE, and DATA network
+   with VLANs for OAM, Calico, Storage, and OpenStack Overlay).
+ * Generic hostnames used (airsloop-control-1, airsloop-compute-1) that
+   simplifies generation of k8s certificates.
+ * Usage of standard Ubuntu 16.04 GA kernel (as oppose to HWE).
 
-The pipeline is implemented as Jenkins Pipeline (Groovy), see code for the pipeline at
-`Jenkinsfile <https://opendev.org/airship/treasuremap/src/branch/master/tools/gate/airsloop/Jenkinsfile>`__.
 
-Versions
---------
-
-The manifest software version overrides (`versions.yaml <https://opendev.org/airship/treasuremap/src/branch/master/global/software/config/versions.yaml>`__)
-are setup to deploy OpenStack Ocata.
-
-The versions are kept up to date via `updater.py <https://opendev.org/airship/treasuremap/src/branch/master/tools/updater.py>`__,
-a utility that updates versions.yaml latest charts and (selected) images.
-
-Due to the limited capacity of a test environment, only Ubuntu-based images are used at the moment.
-
-The pipeline attempts to uplift and deploy latest versions on daily basis.
+Airsloop site manifests are available at
+`site/airsloop <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop>`__.
 
 
 Hardware
 --------
 
 While HW configuration is flexible, Airsloop reference manifests
-reflect a single controller and a single compute node. The aim of
+reflect a single control and a single compute node. The aim of
 this is to create a minimalistic lab/demo reference environment.
 
 Increasing the number of compute nodes will require site overrides
-to align parts of the system such as Ceph osds, etcd, etc.
+to align parts of the system such as Ceph OSDs, etcd, etc.
 
-This site is stripped down from all the complicated hardware and
-configuration requirements that Airship Seaworthy site is using and that leads
-to simplified deployments from disk,networking and hardware perspective.
-
-Airsloop site has 2 bare-metal servers:
-1 controller, and 1 compute node.
-See host profiles for the servers `here <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop/profiles/host>`__.
-
-Control (masters)
- - airsloop-control-1
-Compute (workers)
- - airsloop-compute-1
-
-For simplification of the configuration, we recommend using hostnames
-provided below.
-
-For a two node deployment the nodes and their hostnames are:
+See host profiles for the servers
+`here <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop/profiles/host>`__.
 
 +------------+-------------------------+
 | Node       | Hostnames               |
 +============+=========================+
-| controller | airsloop-controller-1   |
+| control    | airsloop-control-1      |
 +------------+-------------------------+
 | compute    | airsloop-compute-1      |
 +------------+-------------------------+
@@ -80,16 +65,15 @@ Network
 
 Physical (underlay) networks are described in Drydock site configuration
 `here <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop/networks/physical/networks.yaml>`__.
+
 It defines OOB (iLO/IPMI), untagged PXE, and multiple tagged general use networks.
-Also no bond interfaces are used in Airsloop deployment.
+Also no bonded interfaces are used in Airsloop deployment.
 
-In this deployment the networking is simplified compared to Airship Seaworthy
+The networking reference is simplified compared to Airship Seaworthy
 site. There are only two NICs required (excluding oob), one for PXE
-and another one for the rest of the networks separated using VLAN
-segmentation. The recommendation is to use the highest bandwidth device
-available to carry to carry the data networks.
+and another one for the rest of the networks separated using VLAN segmentation.
 
-Below is an example of network configuration:
+Below is the reference network configuration:
 
 +------------+------------+-----------+---------------+
 | NICs       | VLANs      | Names     |     CIDRs     |
@@ -116,6 +100,19 @@ Because Airsloop is a minimalistic deployment the required number of disks is ju
 one per node. That disk is not only used by the OS but also by Ceph Journals and OSDs.
 The way that this is achieved is by using directories and not extra
 disks for Ceph storage. Ceph OSD configuration can be changed in a `Ceph chart override <https://opendev.org/airship/treasuremap/src/branch/master/type/sloop/charts/ucp/ceph/ceph-osd.yaml>`__.
+
+The following Ceph chart configuration is used:
+
+.. code-block:: yaml
+
+    osd:
+      - data:
+          type: directory
+          location: /var/lib/openstack-helm/ceph/osd/osd-one
+        journal:
+          type: directory
+          location: /var/lib/openstack-helm/ceph/osd/journal-one
+
 
 Host Profiles
 -------------
@@ -171,60 +168,61 @@ This can be done through the promenade CLI.
 Getting Started
 ---------------
 
-TODO: Specify which node(s) the command(s) in this section are run on.
-Also if there is an assumption that we have a node with Ubuntu
-already provisioned, that assumption or steps should be specified
-along with any Ubuntu version requirements/assumptions and other
-pre-requisite steps (e.g., installing NTP)
+**Update Site Manifests.**
 
-Below are the steps that a user should follow to deploy the Airsloop site:
+Carefully review site manifests (site/airsloop) and update the configuration
+to match the hardware, networking setup and other specifics of the lab.
 
-TODO: Add the prerequisite steps that the user needs to do
-before starting executing the below steps such as:
-installing git, installing docker, clone sevral repos etc.
+See more details at `Site Authoring and Deployment Guide`_.
 
-1. Collect manifests
+.. note:: Many manifest files (YAMLs) contain documentation in comments
+          that instruct what changes are required for specific sections.
+
+1. Build Site Documents
 
 .. code-block:: bash
 
-    ./tools/airship pegleg site -r /target collect airsloop -s collect
-
-2. Generate certs
-
-.. code-block:: bash
+    tools/airship pegleg site -r /target collect airsloop -s collect
 
     mkdir certs
-    ./tools/airship promenade generate-certs -o /target/certs /target/collect/*.yaml
-
-3. Generate genesis.sh scipt
-
-.. code-block:: bash
+    tools/airship promenade generate-certs -o /target/certs /target/collect/*.yaml
 
     mkdir bundle
-    ./tools/airship promenade build-all -o /target/bundle /target/collect/*.yaml /target/certs/*.yaml
+    tools/airship promenade build-all -o /target/bundle /target/collect/*.yaml /target/certs/*.yaml
 
-4. Execute the genesis.sh script
+See more details at `Building Site documents`_, use site ``airsloop``.
 
-.. code-block:: bash
+.. _Building Site documents: https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html#building-site-documents
 
-     cd /target/bundle
-     ./genesis.sh
 
-If the genesis.sh script completed succesfully
+2. Deploy Genesis
 
-5. Deploy site through shipyard
+Execute Genesis bootstrap script on the Genesis server.
 
 .. code-block:: bash
 
-    ./tools/airship shipyard create configdocs design --directory=/target/collect
-    ./tools/airship shipyard commit configdocs
-    ./tools/airship shipyard create action deploy_site
+     sudo ./genesis.sh
 
-6. Check the actions that are already created
+See more details at `Genesis node`_.
+
+.. _Genesis node: https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html#genesis-node
+
+
+3. Deploy Site
 
 .. code-block:: bash
 
-    ./tools/shipyard get actions
+    tools/airship shipyard create configdocs design --directory=/target/collect
+    tools/airship shipyard commit configdocs
+
+    tools/airship shipyard create action deploy_site
+
+    tools/shipyard get actions
+
+See more details at `Deploy Site with Shipyard`_.
+
+.. _Deploy Site with Shipyard: https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html#deploy-site-with-shipyard
+
 
 Deploying Behind a Proxy
 ------------------------
