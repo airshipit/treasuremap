@@ -13,7 +13,7 @@ Airship site. This can be broken down into two high-level pieces:
 
 This document is an "all in one" site authoring guide + deployment guide
 for a standard Airship deployment. For the most part, the site
-authoring guidance lives within ``airship-seaworthy`` reference site in the
+authoring guidance lives within ``seaworthy`` reference site in the
 form of YAML comments.
 
 Terminology
@@ -197,19 +197,19 @@ To gain a full understanding of the pegleg structure, it is highly
 recommended to read pegleg documentation on this
 `here <https://airship-pegleg.readthedocs.io/>`__.
 
-The ``airship-seaworthy`` site may be used as reference site. It is the
+The ``seaworthy`` site may be used as reference site. It is the
 principal pipeline for integration and continuous deployment testing of Airship.
 
 Change directory to the ``airship-treasuremap/site`` folder and copy the
-``airship-seaworthy`` site as follows:
+``seaworthy`` site as follows:
 
 ::
 
     NEW_SITE=mySite # replace with the name of your site
     cd airship-treasuremap/site
-    cp -r airship-seaworthy $NEW_SITE
+    cp -r seaworthy $NEW_SITE
 
-Remove ``airship-seaworthy`` specific certificates.
+Remove ``seaworthy`` specific certificates.
 
 ::
 

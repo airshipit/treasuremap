@@ -6,7 +6,7 @@ The goal of this site is to be used as a reference for mini Airship deployments
 with one controller and one or more compute nodes.
 
 Airsloop is meant to get an operator up and running quickly with an Airship lab environment,
-and has some resiliency and security features tuned down.  Please see the `Seaworthy <https://opendev.org/airship/treasuremap/src/branch/master/site/airship-seaworthy>`__
+and has some resiliency and security features tuned down.  Please see the `Seaworthy <https://opendev.org/airship/treasuremap/src/branch/master/site/seaworthy>`__
 manifests for a production-oriented example.
 
 The site manifests are available at

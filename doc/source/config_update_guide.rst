@@ -47,8 +47,8 @@ site:
 
 ::
 
-    export SITE=airship-seaworthy
-    export SITE_PATH=treasuremap/site/airship-seaworthy
+    export SITE=seaworthy
+    export SITE_PATH=treasuremap/site/seaworthy
 
 Updating the manifests
 ----------------------
@@ -141,11 +141,11 @@ Install Airship CLI as described in `Configuring Airship CLI`_ section.
 Set the name of your site:
 
 ::
-    export SITE=airship-seaworthy
+    export SITE=seaworthy
 
 Configure credentials for accessing Shipyard; the password is stored
 in ``ucp_shipyard_keystone_password`` secret, you can find it in
-``site/airship-seaworthy/secrets/passphrases/ucp_shipyard_keystone_password.yaml``
+``site/seaworthy/secrets/passphrases/ucp_shipyard_keystone_password.yaml``
 configuration file of your site.
 
 ::

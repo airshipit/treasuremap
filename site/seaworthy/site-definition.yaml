@@ -7,7 +7,7 @@ metadata:
     abstract: false
     layer: site
   # NEWSITE-CHANGEME: Replace with the site name
-  name: airship-seaworthy
+  name: seaworthy
   storagePolicy: cleartext
 data:
   # The type layer this site will delpoy with. Type layer is found in the
