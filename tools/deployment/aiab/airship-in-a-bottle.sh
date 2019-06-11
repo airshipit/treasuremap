@@ -160,4 +160,4 @@ fi
 echo ""
 echo "Starting Airship deployment..."
 sleep 1
-../common/deploy-airship.sh demo
+common/deploy-airship.sh demo
