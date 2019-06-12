@@ -30,7 +30,7 @@ vm(flavor: 'm1.xxlarge', artifactoryLogs: true, publicNet: publicNet) {
     }
 
     stage('Run Airship') {
-        dir("${REPO_HOME}/tools/deployment/aiab/dev_single_node"){
+        dir("${REPO_HOME}/tools/deployment/aiab/"){
             try {
                 timeout(120){
                     sh 'sudo TERM_OPTS=-i ./airship-in-a-bottle.sh -y'
