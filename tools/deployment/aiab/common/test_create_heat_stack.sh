@@ -23,10 +23,8 @@ export OSH_EXT_SUBNET="172.24.8.0/24"
 # Install curl if it's not already installed
 apt -y install --no-install-recommends curl
 
-cp /root/deploy/treasuremap/tools/openstack /root/deploy/treasuremap/tools/deployment/aiab/dev_single_node
-
-# Change to the dev_single_node directory
-cd /root/deploy/treasuremap/tools/deployment/aiab/dev_single_node
+cp /root/deploy/treasuremap/tools/openstack /root/deploy/treasuremap/tools/deployment/aiab
+cd /root/deploy/treasuremap/tools/deployment/aiab
 
 printf "\nCreating KeyPair\n"
 ./openstack keypair create heat-vm-key > id_rsa

@@ -306,7 +306,7 @@ function execute_create_heat_stack() {
   echo " "
   set -x
   # Switch to directory where the script is located
-  pushd ${WORKSPACE}/treasuremap/tools/deployment/aiab/dev_single_node/
+  pushd ${WORKSPACE}/treasuremap/tools/deployment/aiab/
   bash test_create_heat_stack.sh
   popd
 }
@@ -333,7 +333,7 @@ function print_dashboards() {
   echo "  Password: password"
   echo " "
   echo "OpenStack CLI commands could be launched via \`./run_openstack_cli.sh\` script, e.g.:"
-  echo "  # cd ${WORKSPACE}/treasuremap/tools/deployment/aiab/dev_single_node"
+  echo "  # cd ${WORKSPACE}/treasuremap/tools/deployment/aiab"
   echo "  # ./run_openstack_cli.sh stack list"
   echo "  ..."
   echo "  "
