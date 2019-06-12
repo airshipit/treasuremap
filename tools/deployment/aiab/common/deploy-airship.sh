@@ -161,8 +161,10 @@ function install_dependencies() {
 }
 
 function run_pegleg_collect() {
-  # Runs pegleg collect to get the documents combined
   pushd ${WORKSPACE}
+  # Make sure certificates generated during prior runs are deleted.
+  rm -f treasuremap/site/${TARGET_SITE}/secrets/certificates.yaml
+  # Run pegleg collect to get the documents combined.
   ${PEGLEG} site -r /target/treasuremap collect ${TARGET_SITE} -s /target/collected
   popd
 }
@@ -182,7 +184,7 @@ function generate_certs() {
   # Generate certificates
   ${PROMENADE} generate-certs -o /target/genesis /target/genesis/treasuremap.yaml
   # Copy the generated certs back into the deployment_files structure
-  cp genesis/certificates.yaml treasuremap/site/${TARGET_SITE}/secrets
+  cp genesis/certificates.yaml treasuremap/site/${TARGET_SITE}/secrets/
   popd
 }
 
@@ -250,6 +252,7 @@ function setup_deploy_site() {
   cp ${WORKSPACE}/genesis/*.yaml ${WORKSPACE}/site
   print_shipyard_info2
 }
+
 function print_shipyard_info2() {
   set +x
   echo " "
