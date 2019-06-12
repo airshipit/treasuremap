@@ -12,13 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-dev_single_node, an Airship Demonstration
-=========================================
+Airship in a Bottle
+-------------------
 
 Use the airship-in-a-bottle.sh script to automatically deploy a demonstration
 version of Airship. It will attempt to detect the required environment settings
 and deploy an instance of Airship, including running a demo instance of
 OpenStack (using OpenStack Helm), and creating a simple Virtual Machine.
+
+To get started, run the following in a fresh Ubuntu 16.04 VM
+(minimum 4vCPU/20GB RAM/32GB disk). This will deploy Airship and Openstack Helm
+(OSH):
+
+.. code-block:: bash
+
+    sudo -i
+    mkdir -p /root/deploy && cd "$_"
+    git clone https://opendev.org/airship/treasuremap/
+    cd /root/deploy/treasuremap/tools/deployment/aiab/
+    ./airship-in-a-bottle.sh
 
 This demonstration uses the images pinned in the versions file:
 ./global/software/config/versions.yaml
