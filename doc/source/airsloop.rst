@@ -197,15 +197,58 @@ See more details at `Building Site documents`_, use site ``airsloop``.
 
 2. Deploy Genesis
 
+Deploy the Genesis node, see more details at `Genesis node`_.
+
+.. _Genesis node: https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html#genesis-node
+
+Genesis is the first node in the cluster and serves as a control node.
+In Airsloop configuration Genesis is the only control node (airsloop-control-1).
+
+Airsloop is using non-bonded network interfaces:
+
+.. code-block:: bash
+
+    auto lo
+    iface lo inet loopback
+
+    auto eno1
+    iface eno1 inet static
+      address 10.22.70.21/24
+
+    auto enp67s0f0
+    iface enp67s0f0 inet manual
+
+    auto enp67s0f0.71
+    iface enp67s0f0.71 inet static
+      address 10.22.71.21/24
+      gateway 10.22.71.1
+      dns-nameservers 8.8.8.8 8.8.4.4
+      vlan-raw-device enp67s0f0
+      vlan_id 71
+
+    auto enp67s0f0.72
+    iface enp67s0f0.72 inet static
+      address 10.22.72.21/24
+      vlan-raw-device enp67s0f0
+      vlan_id 72
+
+    auto enp67s0f0.73
+    iface enp67s0f0.73 inet static
+      address 10.22.73.21/24
+      vlan-raw-device enp67s0f0
+      vlan_id 73
+
+    auto enp67s0f0.74
+    iface enp67s0f0.74 inet static
+      address 10.22.74.21/24
+      vlan-raw-device enp67s0f0
+      vlan_id 74
+
 Execute Genesis bootstrap script on the Genesis server.
 
 .. code-block:: bash
 
      sudo ./genesis.sh
-
-See more details at `Genesis node`_.
-
-.. _Genesis node: https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html#genesis-node
 
 
 3. Deploy Site
