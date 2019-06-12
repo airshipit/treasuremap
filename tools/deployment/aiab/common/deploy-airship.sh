@@ -68,20 +68,13 @@ NODE_NET_IFACE=${NODE_NET_IFACE:-""}
 # Allowance for Genesis/Armada to settle in seconds:
 POST_GENESIS_DELAY=${POST_GENESIS_DELAY:-60}
 
-# Repositories
-AIRSHIP_IN_A_BOTTLE_REPO=${AIRSHIP_IN_A_BOTTLE_REPO:-"https://git.openstack.org/openstack/airship-treasuremap"}
-AIRSHIP_IN_A_BOTTLE_REFSPEC=${AIRSHIP_IN_A_BOTTLE_REFSPEC:-""}
-PEGLEG_REPO=${PEGLEG_REPO:-"https://git.openstack.org/openstack/airship-pegleg.git"}
-PEGLEG_REFSPEC=${PEGLEG_REFSPEC:-""}
-SHIPYARD_REPO=${SHIPYARD_REPO:-"https://git.openstack.org/openstack/airship-shipyard.git"}
-SHIPYARD_REFSPEC=${SHIPYARD_REFSPEC:-"46875d8ac4c549c557d7c5a0300d2e726ddb4769"}
-
-# Images
-PEGLEG_IMAGE=${PEGLEG_IMAGE:-"quay.io/airshipit/pegleg:cecd24ed38b19f6c05a8d606d045b09639cc6989"}
-PROMENADE_IMAGE=${PROMENADE_IMAGE:-"quay.io/airshipit/promenade:9b62a49eae5b29088c1f7899949df38ae91494e2"}
+# The directory of the repo where current script is located.
+REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/../../../../ >/dev/null 2>&1 && pwd )"
 
 # Command shortcuts
-PEGLEG=${WORKSPACE}/airship-pegleg/tools/pegleg.sh
+PEGLEG="${REPO_DIR}/tools/airship pegleg"
+SHIPYARD="${REPO_DIR}/tools/airship shipyard"
+PROMENADE="${REPO_DIR}/tools/airship promenade"
 
 function check_preconditions() {
   set +x
@@ -154,33 +147,6 @@ EOF
   fi
 }
 
-function get_repo() {
-  # Setup a repository in the workspace
-  #
-  # $1 = name of directory the repo will clone to
-  # $2 = repository url
-  # $3 = refspec of repo pull
-  cd ${WORKSPACE}
-  if [ ! -d "$1" ] ; then
-    git clone $2
-    if [ -n "$3" ] ; then
-      cd $1
-      git pull $2 $3
-      cd ..
-    fi
-  fi
-}
-
-function setup_repos() {
-  # Clone and pull the various git repos
-  # Get pegleg for the script only. Image is separately referenced.
-  get_repo airship-pegleg ${PEGLEG_REPO} ${PEGLEG_REFSPEC}
-  # Get airship-in-a-bottle for the design
-  get_repo airship-in-a-bottle ${AIRSHIP_IN_A_BOTTLE_REPO} ${AIRSHIP_IN_A_BOTTLE_REFSPEC}
-  # Get Shipyard for use after genesis
-  get_repo airship-shipyard ${SHIPYARD_REPO} ${SHIPYARD_REFSPEC}
-}
-
 function configure_dev_configurables() {
   cat << EOF >> ${WORKSPACE}/treasuremap/site/${TARGET_SITE}/deployment/dev-configurables.yaml
 data:
@@ -200,7 +166,9 @@ function install_dependencies() {
 
 function run_pegleg_collect() {
   # Runs pegleg collect to get the documents combined
-  IMAGE=${PEGLEG_IMAGE} TERM_OPTS="-i" ${PEGLEG} site -r /workspace/treasuremap collect ${TARGET_SITE} -s /workspace/collected
+  pushd ${WORKSPACE}
+  ${PEGLEG} site -r /target/treasuremap collect ${TARGET_SITE} -s /target/collected
+  popd
 }
 
 function generate_certs() {
@@ -212,46 +180,30 @@ function generate_certs() {
   set +x
   echo "=== Generating updated certificates ==="
   set -x
+  pushd ${WORKSPACE}
   # Copy the collected yamls into the target for the certs
-  cp "${WORKSPACE}/collected"/*.yaml ${WORKSPACE}/genesis
-
-  docker run --rm -t \
-      -e http_proxy=$http_proxy \
-      -e https_proxy=$https_proxy \
-      -e no_proxy=$no_proxy \
-      -w /target \
-      -e PROMENADE_DEBUG=false \
-      -v ${WORKSPACE}/genesis:/target \
-      ${PROMENADE_IMAGE} \
-          promenade \
-              generate-certs \
-                  -o /target \
-                  $(ls ${WORKSPACE}/genesis)
-
+  cp collected/*.yaml genesis/
+  # Generate certificates
+  ${PROMENADE} generate-certs -o /target/genesis /target/genesis/treasuremap.yaml
   # Copy the generated certs back into the deployment_files structure
-  cp ${WORKSPACE}/genesis/certificates.yaml ${WORKSPACE}/treasuremap/site/${TARGET_SITE}/secrets
+  cp genesis/certificates.yaml treasuremap/site/${TARGET_SITE}/secrets
+  popd
 }
 
 function lint_design() {
   # After the certificates are in the deployment files run a pegleg lint
-  IMAGE=${PEGLEG_IMAGE} TERM_OPTS="-i" ${PEGLEG} site -r /workspace/treasuremap lint -x P001 ${TARGET_SITE}
+  pushd ${WORKSPACE}
+  ${PEGLEG} site -r /target/treasuremap lint -x P001 ${TARGET_SITE}
+  popd
 }
 
 function generate_genesis() {
   # Generate the genesis scripts
-  docker run --rm -t \
-      -e http_proxy=$http_proxy \
-      -e https_proxy=$https_proxy \
-      -e no_proxy=$no_proxy \
-      -w /target \
-      -e PROMENADE_DEBUG=false \
-      -v ${WORKSPACE}/genesis:/target \
-      ${PROMENADE_IMAGE} \
-          promenade \
-              build-all \
-                  -o /target \
-                  --validators \
-                  $(ls ${WORKSPACE}/genesis)
+  pushd ${WORKSPACE}
+  ${PROMENADE} build-all -o /target/genesis --validators \
+    /target/genesis/treasuremap.yaml \
+    /target/genesis/certificates.yaml
+  popd
 }
 
 function run_genesis() {
@@ -300,9 +252,6 @@ function setup_deploy_site() {
   mkdir -p ${WORKSPACE}/site
   cp ${WORKSPACE}/treasuremap/tools/deployment/aiab/common/creds.sh ${WORKSPACE}/site
   cp ${WORKSPACE}/genesis/*.yaml ${WORKSPACE}/site
-  cp ${WORKSPACE}/airship-shipyard/tools/run_shipyard.sh ${WORKSPACE}/site
-  cp ${WORKSPACE}/airship-shipyard/tools/shipyard_docker_base_command.sh ${WORKSPACE}/site
-  cp ${WORKSPACE}/airship-shipyard/tools/execute_shipyard_action.sh ${WORKSPACE}/site
   print_shipyard_info2
 }
 function print_shipyard_info2() {
@@ -316,10 +265,10 @@ function print_shipyard_info2() {
   echo "----------------------------------------------------------------------------------"
   echo "cd ${WORKSPACE}/site"
   echo "source creds.sh"
-  echo "./run_shipyard.sh create configdocs design --filename=/home/shipyard/host/treasuremap.yaml"
-  echo "./run_shipyard.sh create configdocs secrets --filename=/home/shipyard/host/certificates.yaml --append"
-  echo "./run_shipyard.sh commit configdocs"
-  echo "./run_shipyard.sh create action deploy_site"
+  echo "${SHIPYARD} create configdocs design --filename=/home/shipyard/host/treasuremap.yaml"
+  echo "${SHIPYARD} create configdocs secrets --filename=/home/shipyard/host/certificates.yaml --append"
+  echo "${SHIPYARD} commit configdocs"
+  echo "${SHIPYARD} create action deploy_site"
   echo " "
   echo "-----------"
   echo "Other Notes"
@@ -337,18 +286,15 @@ function execute_deploy_site() {
   echo "This is an automated deployment using Shipyard, running commands noted previously"
   echo "Please stand by while Shipyard deploys the site"
   echo " "
-  set -x
-  #Automate the steps of deploying a site.
-  cd ${WORKSPACE}/site
+  pushd ${WORKSPACE}/site
   source creds.sh
-  ./run_shipyard.sh create configdocs design --filename=/home/shipyard/host/treasuremap.yaml
-  ./run_shipyard.sh create configdocs secrets --filename=/home/shipyard/host/certificates.yaml --append
-  ./run_shipyard.sh commit configdocs
-  # set variables used in execute_shipyard_action.sh
-  export max_shipyard_count=${max_shipyard_count:-60}
-  export shipyard_query_time=${shipyard_query_time:-90}
-  # monitor the execution of deploy_site
-  bash execute_shipyard_action.sh 'deploy_site'
+  set -x
+  ${SHIPYARD} create configdocs design --filename=/target/treasuremap.yaml
+  ${SHIPYARD} create configdocs secrets --filename=/target/certificates.yaml --append
+  ${SHIPYARD} commit configdocs
+  ${SHIPYARD} create action deploy_site
+  ${REPO_DIR}/tools/gate/wait-for-shipyard.sh
+  popd
 }
 
 function execute_create_heat_stack() {
@@ -360,8 +306,9 @@ function execute_create_heat_stack() {
   echo " "
   set -x
   # Switch to directory where the script is located
-  cd ${WORKSPACE}/treasuremap/tools/deployment/aiab/dev_single_node/
+  pushd ${WORKSPACE}/treasuremap/tools/deployment/aiab/dev_single_node/
   bash test_create_heat_stack.sh
+  popd
 }
 
 function publish_horizon_dashboard() {
@@ -449,7 +396,6 @@ trap clean EXIT
 check_preconditions || error "checking for preconditions"
 configure_apt || error "configuring apt behind proxy"
 setup_workspace || error "setting up workspace directories"
-setup_repos || error "setting up Git repos"
 configure_dev_configurables || error "adding dev-configurables values"
 install_dependencies || error "installing dependencies"
 configure_docker || error "configuring docker behind proxy"
