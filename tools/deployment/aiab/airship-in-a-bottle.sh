@@ -22,6 +22,8 @@
 #                                                                             #
 ###############################################################################
 
+AIAB_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 usage ()
 {
   echo "Usage: $(basename $0) {-y|-h}" 1>&2
@@ -148,7 +150,7 @@ get_dns_servers ()
 if grep -q "10.96.0.10" "/etc/resolv.conf"; then
   echo "Not changing DNS servers, /etc/resolv.conf already updated."
 else
-  DNS_CONFIG_FILE="../../../../site/${TARGET_SITE}/networks/common-addresses.yaml"
+  DNS_CONFIG_FILE="${AIAB_DIR}/../../../site/${TARGET_SITE}/networks/common-addresses.yaml"
   declare -a DNS_SERVERS=($(get_dns_servers))
   NS1=${DNS_SERVERS[0]:-8.8.8.8}
   NS2=${DNS_SERVERS[1]:-$NS1}
@@ -160,4 +162,4 @@ fi
 echo ""
 echo "Starting Airship deployment..."
 sleep 1
-common/deploy-airship.sh demo
+${AIAB_DIR}/common/deploy-airship.sh demo

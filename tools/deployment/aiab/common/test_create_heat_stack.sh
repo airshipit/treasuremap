@@ -15,6 +15,9 @@
 
 set -e
 
+AIAB_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" >/dev/null 2>&1 && pwd )"
+OPENSTACK="${AIAB_DIR}/../../openstack"
+
 # External subnet is local to the environment and generally can be anything
 # other then clash with default all-in-one OSH setup that uses 127.24.4.0/24
 export OSH_BR_EX_ADDR="172.24.8.1/24"
@@ -23,18 +26,17 @@ export OSH_EXT_SUBNET="172.24.8.0/24"
 # Install curl if it's not already installed
 apt -y install --no-install-recommends curl
 
-cp /root/deploy/treasuremap/tools/openstack /root/deploy/treasuremap/tools/deployment/aiab
-cd /root/deploy/treasuremap/tools/deployment/aiab
+pushd "${AIAB_DIR}"
 
 printf "\nCreating KeyPair\n"
-./openstack keypair create heat-vm-key > id_rsa
+${OPENSTACK} keypair create heat-vm-key > id_rsa
 chmod 600 id_rsa
 
 printf "Downloading heat-public-net-deployment.yaml\n"
 curl -LO https://raw.githubusercontent.com/openstack/openstack-helm/master/tools/gate/files/heat-public-net-deployment.yaml
 
 printf "Creating public-net Heat Stack\n"
-./openstack stack create --wait \
+${OPENSTACK} stack create --wait \
     --parameter subnet_cidr=${OSH_EXT_SUBNET} \
     --parameter subnet_gateway=${OSH_BR_EX_ADDR%/*} \
     -t /target/heat-public-net-deployment.yaml \
@@ -44,15 +46,16 @@ printf "Downloading heat-basic-vm-deployment.yaml\n"
 curl -LO https://raw.githubusercontent.com/openstack/openstack-helm/master/tools/gate/files/heat-basic-vm-deployment.yaml
 
 printf "Creating test-stack-01\n"
-./openstack stack create -t /target/heat-basic-vm-deployment.yaml test-stack-01 --wait
+${OPENSTACK} stack create -t /target/heat-basic-vm-deployment.yaml test-stack-01 --wait
+popd
 
 printf "Heat Stack List\n"
-./openstack stack list
+${OPENSTACK} stack list
 
 printf "Nova Server List\n"
-./openstack server list
+${OPENSTACK} server list
 
-FLOATING_IP=$(./openstack stack output show \
+FLOATING_IP=$(${OPENSTACK} stack output show \
     test-stack-01 \
     floating_ip \
     -f value -c output_value)
