@@ -49,8 +49,6 @@
       - tools/gate/playbooks/install-docker.yaml
       - tools/gate/playbooks/git-config.yaml
     run: tools/gate/playbooks/site-lint.yaml
-    required-projects:
-      - airship/pegleg
     vars:
       site: seaworthy
     irrelevant-files:
