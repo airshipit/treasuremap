@@ -85,7 +85,7 @@ data:
         namespace: ceph
     deployment:
       ceph: true
-      client_secrets: true
+      client_secrets: false
       rbd_provisioner: true
       cephfs_provisioner: true
     bootstrap:
