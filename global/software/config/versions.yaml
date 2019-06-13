@@ -75,7 +75,7 @@ data:
         type: git
       ingress:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 9efb353b83c59e891b1b85dc6567044de0f5ac17
+        reference: 596732f16bf7cfe681ce0bb2d62e529bea5eea82
         subpath: ingress
         type: git
       ingress-htk:
@@ -156,7 +156,7 @@ data:
         type: git
       ingress:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 0714b9d7ae08a88565d2c81c1b185fd77efaafca
+        reference: 596732f16bf7cfe681ce0bb2d62e529bea5eea82
         subpath: ingress
         type: git
       ingress-htk:
@@ -373,7 +373,7 @@ data:
         type: git
       ceph-rgw:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 09ae22d8493d5cef34c80cb69117c69dc0f2dc8e
+        reference: 596732f16bf7cfe681ce0bb2d62e529bea5eea82
         subpath: ceph-rgw
         type: git
       deckhand:
@@ -408,7 +408,7 @@ data:
         type: git
       ingress:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 09ae22d8493d5cef34c80cb69117c69dc0f2dc8e
+        reference: 596732f16bf7cfe681ce0bb2d62e529bea5eea82
         subpath: ingress
         type: git
       ingress-htk:
@@ -523,7 +523,7 @@ data:
         type: git
       tenant-ceph-rgw:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 09ae22d8493d5cef34c80cb69117c69dc0f2dc8e
+        reference: 596732f16bf7cfe681ce0bb2d62e529bea5eea82
         subpath: ceph-rgw
         type: git
       tiller:
