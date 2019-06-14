@@ -468,7 +468,7 @@ data:
         type: git
       promenade:
         location: https://opendev.org/airship/promenade
-        reference: 44b5fae04788c6a28de0f9a2e132204561474d47
+        reference: fefd664cd8a5de659e197694b1cfa4d243ab4fae
         subpath: charts/promenade
         type: git
       promenade-htk:
@@ -536,8 +536,6 @@ data:
         reference: 09ae22d8493d5cef34c80cb69117c69dc0f2dc8e
         subpath: helm-toolkit
         type: git
-  files:
-    kubelet: https://dl.k8s.io/v1.11.6/kubernetes-node-linux-amd64.tar.gz
   images:
     calico:
       calico: {}
@@ -568,8 +566,8 @@ data:
       haproxy:
         anchor: gcr.io/google_containers/hyperkube-amd64:v1.11.6
         haproxy: docker.io/haproxy:1.8.19
+      hyperkube: gcr.io/google-containers/hyperkube-amd64:v1.11.6
       ingress: {}
-      kubectl: gcr.io/google-containers/hyperkube-amd64:v1.11.6
       pause: gcr.io/google-containers/pause-amd64:3.1
       proxy:
         proxy: gcr.io/google-containers/hyperkube-amd64:v1.11.6
@@ -635,7 +633,8 @@ data:
         pegleg: quay.io/airshipit/pegleg:fb2f62d25a11374435d99d9f59049d5799ccab73-ubuntu_xenial
       postgresql: {}
       promenade:
-        promenade: quay.io/airshipit/promenade:9b62a49eae5b29088c1f7899949df38ae91494e2
+        monitoring_image: busybox:1.28.3
+        promenade: quay.io/airshipit/promenade:fefd664cd8a5de659e197694b1cfa4d243ab4fae
       rabbitmq: {}
       shipyard:
         airflow: quay.io/airshipit/airflow:89a8eda43e4af3cf146f89a25e96c37dbaa5fa88-ubuntu_xenial

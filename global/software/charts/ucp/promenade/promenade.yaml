@@ -26,6 +26,20 @@ metadata:
         path: .images.ucp.promenade
       dest:
         path: .values.images.tags
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.promenade.monitoring_image
+      dest:
+        path: .values.images.tags.monitoring_image
+
+    # Files
+    - src:
+        schema: promenade/HostSystem/v1
+        name: host-system
+        path: .files[0].path
+      dest:
+        path: .values.pod.mount_path
 
     # Endpoints
 

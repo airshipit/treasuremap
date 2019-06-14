@@ -132,12 +132,17 @@ no_proxy=${no_proxy:-}
 HTTP_PROXY=${HTTP_PROXY:-}
 HTTPS_PROXY=${HTTPS_PROXY:-}
 NO_PROXY=${NO_PROXY:-}
+# Promenade specific variables for downloading hyperkube image to generate genesis.sh
+PROMENADE_TMP=/tmp
+PROMENADE_TMP_LOCAL=/tmp
 EOF
 
   docker run --rm --net=host $TERM_OPTS \
       -u "${USER}:${GROUP}" \
       -w /target \
       -v $(pwd):/target \
+      -v /tmp:/tmp \
+      -v /var/run/docker.sock:/var/run/docker.sock \
       --env-file $ENV_FILE \
       $IMAGE_URL $@
 }

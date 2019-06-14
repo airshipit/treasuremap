@@ -11,6 +11,18 @@ data:
     abs_path:
       type: string
       pattern: '^/.+$'
+    systemd_unit:
+      type: object
+      properties:
+        enable:
+          type: boolean
+        disable:
+          type: boolean
+        start:
+          type: boolean
+        stop:
+          type: boolean
+      additionalProperties: false
     apt_source_line:
       type: string
       # XXX add regex
@@ -27,7 +39,12 @@ data:
           $ref: '#/definitions/url'
         tar_path:
           $ref: '#/definitions/rel_path'
-
+        docker_image:
+          $ref: '#/definitions/url'
+        file_path:
+          $ref: '#/definitions/abs_path'
+        symlink:
+          $ref: '#/definitions/abs_path'
       required:
         - mode
         - path
@@ -36,11 +53,20 @@ data:
           required:
             - content
         - type: object
+          required:
+            - symlink
+        - type: object
           allOf:
             - type: object
               required:
                 - tar_url
                 - tar_path
+        - type: object
+          allOf:
+            - type: object
+              required:
+                - docker_image
+                - file_path
       additionalProperties: false
 
     image:
@@ -68,12 +94,16 @@ data:
         type: object
         items:
           $ref: '#/definitions/file'
+    systemd_units:
+      type: object
+      additionalProperties:
+        $ref: '#/definitions/systemd_unit'
     images:
       type: object
       properties:
-        haproxy:
-          $ref: '#/definitions/image'
         coredns:
+          $ref: '#/definitions/image'
+        haproxy:
           $ref: '#/definitions/image'
         helm:
           type: object
@@ -83,52 +113,124 @@ data:
           required:
             - helm
           additionalProperties: false
-        kubernetes:
-          type: object
-          properties:
-            kubectl:
-              $ref: '#/definitions/image'
-          required:
-            - kubectl
-          additionalProperties: false
+        monitoring_image:
+          $ref: '#/definitions/image'
       required:
         - haproxy
-        - coredns
         - helm
-        - kubernetes
+        - monitoring_image
       additionalProperties: false
 
     packages:
       type: object
-      properties:
-        additional:
-          type: array
-          items:
-            $ref: '#/definitions/package'
-        keys:
-          type: array
-          items:
-            $ref: '#/definitions/public_key'
+      common:
+        type: object
+        properties:
+          additional:
+            type: array
+            items:
+              $ref: '#/definitions/package'
+          keys:
+            type: array
+            items:
+              $ref: '#/definitions/public_key'
+
+          required:
+            type: object
+            properties:
+              docker:
+                $ref: '#/definitions/package'
+              socat:
+                $ref: '#/definitions/package'
+            required:
+              - docker
+              - socat
+            additionalProperties: false
+
+          repositories:
+            type: array
+            items:
+              $ref: '#/definitions/apt_source_line'
 
         required:
+          - required
+        additionalProperties: false
+
+      genesis:
+        type: object
+        properties:
+          additional:
+            type: array
+            items:
+              $ref: '#/definitions/package'
+          keys:
+            type: array
+            items:
+              $ref: '#/definitions/public_key'
+
+          required:
+            type: object
+            properties:
+              docker:
+                $ref: '#/definitions/package'
+              socat:
+                $ref: '#/definitions/package'
+            required:
+              - docker
+              - socat
+            additionalProperties: false
+
+          repositories:
+            type: array
+            items:
+              $ref: '#/definitions/apt_source_line'
+
+        required:
+          - required
+        additionalProperties: false
+
+      join:
+        type: object
+        properties:
+          additional:
+            type: array
+            items:
+              $ref: '#/definitions/package'
+          keys:
+            type: array
+            items:
+              $ref: '#/definitions/public_key'
+
+          required:
+            type: object
+            properties:
+              docker:
+                $ref: '#/definitions/package'
+              socat:
+                $ref: '#/definitions/package'
+            required:
+              - docker
+              - socat
+            additionalProperties: false
+
+          repositories:
+            type: array
+            items:
+              $ref: '#/definitions/apt_source_line'
+
+        required:
+          - required
+        additionalProperties: false
+
+    validation:
+      type: object
+      properties:
+        pod_logs:
           type: object
           properties:
-            docker:
-              $ref: '#/definitions/package'
-            socat:
-              $ref: '#/definitions/package'
-          required:
-            - docker
-            - socat
+            image:
+              type: string
           additionalProperties: false
-
-        repositories:
-          type: array
-          items:
-            $ref: '#/definitions/apt_source_line'
-
-      required:
-        - required
       additionalProperties: false
 
   required:
