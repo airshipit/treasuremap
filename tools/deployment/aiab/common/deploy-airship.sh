@@ -24,11 +24,6 @@
 
 set -x
 
-# IMPORTANT:
-# If the directory for airship-in-a-bottle is already cloned into $WORKSPACE,
-# it will not be re-cloned. This can be used to set up different tests, like
-# changing the versions and contents of the design before running this script
-
 # The last step to run through in this script. Valid Values are "collect",
 # "genesis", "deploy", and "demo". By default this will run through to the end
 # of the genesis steps
@@ -46,8 +41,12 @@ else
   STEP_BREAKPOINT=20
 fi
 
-# The directory that will contain the copies of designs and repos from this script
-export WORKSPACE=${WORKSPACE:-"/root/deploy"}
+# The directory of the repo where current script is located.
+REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/../../../../ >/dev/null 2>&1 && pwd )"
+
+# The directory that will contain the copies of designs and repos from this
+# script. By default it is a directory where the repository is cloned.
+export WORKSPACE=${WORKSPACE:-"${REPO_DIR}/../"}
 
 # The site to deploy
 TARGET_SITE=${TARGET_SITE:-"aiab"}
@@ -67,9 +66,6 @@ HOSTCIDR=${HOSTCIDR:-""}
 NODE_NET_IFACE=${NODE_NET_IFACE:-""}
 # Allowance for Genesis/Armada to settle in seconds:
 POST_GENESIS_DELAY=${POST_GENESIS_DELAY:-60}
-
-# The directory of the repo where current script is located.
-REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/../../../../ >/dev/null 2>&1 && pwd )"
 
 # Command shortcuts
 PEGLEG="${REPO_DIR}/tools/airship pegleg"
@@ -306,7 +302,7 @@ function execute_create_heat_stack() {
   echo " "
   set -x
   # Switch to directory where the script is located
-  pushd ${WORKSPACE}/treasuremap/tools/deployment/aiab/
+  pushd ${WORKSPACE}/treasuremap/tools/deployment/aiab/common/
   bash test_create_heat_stack.sh
   popd
 }
@@ -332,9 +328,9 @@ function print_dashboards() {
   echo "  Username: admin"
   echo "  Password: password"
   echo " "
-  echo "OpenStack CLI commands could be launched via \`./run_openstack_cli.sh\` script, e.g.:"
-  echo "  # cd ${WORKSPACE}/treasuremap/tools/deployment/aiab"
-  echo "  # ./run_openstack_cli.sh stack list"
+  echo "OpenStack CLI commands could be launched via \`./openstack\` script, e.g.:"
+  echo "  # cd ${WORKSPACE}/treasuremap/tools/"
+  echo "  # ./openstack stack list"
   echo "  ..."
   echo "  "
   echo "Other dashboards:"
