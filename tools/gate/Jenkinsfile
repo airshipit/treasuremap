@@ -13,7 +13,7 @@ import groovy.json.JsonOutput
 
 PEGLEG_IMAGE = 'quay.io/airshipit/pegleg:178c058474fb632806e281673d3eaf6be80fa854'
 
-COLLECT_DIR = 'collect'
+COLLECT_DIR = 'seaworthy'
 BUNDLE_DIR = 'bundle'
 
 KEYSTONE_URL = 'https://iam-sw.atlantafoundry.com'
@@ -126,8 +126,8 @@ def pegleg_site_collect = {
             sh "sudo docker run --rm -t -v \$(pwd):/target ${PEGLEG_IMAGE} ${cmd}"
         }
 
-        sh "tar czf site-config.tar.gz ${COLLECT_DIR}"
-        archiveArtifacts 'site-config.tar.gz'
+        sh "tar czf ${COLLECT_DIR}.tar.gz ${COLLECT_DIR}"
+        archiveArtifacts "${COLLECT_DIR}.tar.gz"
     }
 }
 
@@ -218,6 +218,7 @@ def shipyard_deploy = { action ->
         def req = keystone.retrieveToken(SHIPYARD_CREDS, KEYSTONE_URL)
         def token = req.getHeaders()["X-Subject-Token"][0]
         shipyard2.uploadConfig(uuid, token, SHIPYARD_URL, SITE_NAME)
+
         shipyard2.waitAction(action: action,
                              uuid: uuid,
                              shipyardUrl: SHIPYARD_URL,
@@ -225,8 +226,9 @@ def shipyard_deploy = { action ->
                              keystoneUrl: KEYSTONE_URL)
 
     } catch (err) {
+        print err
         debug_report()
-        error(err)
+        throw err
     }
 }
 
