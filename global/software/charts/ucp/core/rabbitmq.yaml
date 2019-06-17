@@ -83,6 +83,9 @@ data:
       prometheus_rabbitmq_exporter:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
+    monitoring:
+      prometheus:
+        enabled: true
   dependencies:
     - ucp-rabbitmq-htk
 ...
