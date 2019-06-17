@@ -239,7 +239,7 @@ def uplift_versions = {
     stage('Uplift Versions') {
         sh 'sudo apt-get install python3-yaml python3-git -y'
 
-        def cmd = 'tools/updater.py --in-file global/software/config/versions.yaml --tag-filter ubuntu'
+        def cmd = 'tools/updater.py --in-file global/software/config/versions.yaml --tag-filter ubuntu_xenial'
 
         if (!UPLIFT_BLACKLIST.isEmpty()) {
            cmd += " --skip ${UPLIFT_BLACKLIST}"

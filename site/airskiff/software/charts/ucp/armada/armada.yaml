@@ -25,7 +25,7 @@ data:
   values:
     images:
       tags:
-        api: quay.io/airshipit/armada:latest-ubuntu_bionic
+        api: quay.io/airshipit/armada:latest-ubuntu_xenial
     pod:
       replicas:
         api: 1
