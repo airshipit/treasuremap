@@ -45,7 +45,7 @@ data:
         type: git
       coredns:
         location: https://opendev.org/airship/promenade
-        reference: 44b5fae04788c6a28de0f9a2e132204561474d47
+        reference: 37140647342eecfa5d02dc38dcf0474ac32a02b7
         subpath: charts/coredns
         type: git
       coredns-htk:

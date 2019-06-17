@@ -141,6 +141,18 @@ data:
   chart_name: coredns-htk
   release: coredns-htk
   namespace: coredns-htk
-  values: {}
+  values:
+    pod:
+      # TODO: replicas can be removed once we switch coredns to
+      # DaemonSet-only.  It will be deployed with both DaemonSet
+      # and Deployment-managed pods as we transition to DaemonSet.
+      replicas:
+        coredns: 2
+    manifests:
+      daemonset: true
+      # TODO: `deployment` can be set to false once we switch coredns to
+      # DaemonSet-only.  It will be deployed with both DaemonSet
+      # and Deployment-managed pods as we transition to DaemonSet.
+      deployment: true
   dependencies: []
 ...
