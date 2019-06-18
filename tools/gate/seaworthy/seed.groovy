@@ -1,5 +1,5 @@
 
-pipelineJob('seaworthy') {
+pipelineJob('Seaworthy') {
 
     displayName('Airship Seaworthy')
     description('Bare-metal continuous deployment pipeline')
@@ -78,7 +78,7 @@ pipelineJob('seaworthy') {
 
         definition {
             cps {
-                script(readFileFromWorkspace("tools/gate/Jenkinsfile"))
+                script(readFileFromWorkspace("tools/gate/seaworthy/Jenkinsfile"))
                 sandbox()
             }
         }

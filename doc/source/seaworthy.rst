@@ -15,7 +15,7 @@ Airship Seaworthy pipeline automates deployment flow documented in
 `Site Authoring and Deployment Guide <https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html>`__.
 
 The pipeline is implemented as Jenkins Pipeline (Groovy), see code for the pipeline at
-`Jenkinsfile <https://opendev.org/airship/treasuremap/src/branch/master/tools/gate/Jenkinsfile>`__.
+`Jenkinsfile <https://opendev.org/airship/treasuremap/src/branch/master/tools/gate/seaworthy/Jenkinsfile>`__.
 
 Versions
 --------
