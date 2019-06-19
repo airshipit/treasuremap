@@ -50,7 +50,7 @@ data:
     image: 'xenial'
     kernel: 'hwe-16.04'
     kernel_params:
-      kernel_package: 'linux-image-4.15.0-34-generic'
+      kernel_package: 'linux-image-4.15.0-46-generic'
 
   metadata:
     owner_data:

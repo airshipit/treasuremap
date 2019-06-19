@@ -598,7 +598,7 @@ e.g.:
     image: 'xenial'
     kernel: 'hwe-16.04'
     kernel_params:
-      kernel_package: 'linux-image-4.15.0-34-generic'
+      kernel_package: 'linux-image-4.15.0-46-generic'
 
 It is recommended to install the latest kernel. Check the latest
 available kernel, update the site specs and Regenerate collected
