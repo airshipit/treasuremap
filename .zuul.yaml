@@ -21,12 +21,14 @@
         - treasuremap-seaworthy-site-lint
         - treasuremap-airskiff-site-lint
         - treasuremap-airsloop-site-lint
+        - treasuremap-aiab-site-lint
         - treasuremap-airskiff-deployment-ubuntu
     gate:
       jobs:
         - treasuremap-seaworthy-site-lint
         - treasuremap-airskiff-site-lint
         - treasuremap-airsloop-site-lint
+        - treasuremap-aiab-site-lint
         - treasuremap-airskiff-deployment-ubuntu
     post:
       jobs:
@@ -67,6 +69,7 @@
       - ^doc/.*$
       - ^site/airskiff/.*$
       - ^site/airsloop/.*$
+      - ^site/aiab/.*$
 
 - job:
     name: treasuremap-airskiff-site-lint
@@ -80,6 +83,7 @@
       - ^doc/.*$
       - ^site/seaworthy/.*$
       - ^site/airsloop/.*$
+      - ^site/aiab/.*$
 
 - job:
     name: treasuremap-airsloop-site-lint
@@ -93,6 +97,23 @@
       - ^doc/.*$
       - ^site/seaworthy/.*$
       - ^site/airskiff/.*$
+      - ^site/aiab/.*$
+
+- job:
+    name: treasuremap-aiab-site-lint
+    description: |
+      Lint the aiab site using Pegleg.
+    parent: treasuremap-site-lint
+    pre-run:
+      - tools/gate/playbooks/generate-certs.yaml
+    vars:
+      site: aiab
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^doc/.*$
+      - ^site/seaworthy/.*$
+      - ^site/airskiff/.*$
+      - ^site/airsloop/.*$
 
 - job:
     name: treasuremap-airskiff-deployment-ubuntu
@@ -111,6 +132,7 @@
       - ^doc/.*$
       - ^site/seaworthy/.*$
       - ^site/airsloop/.*$
+      - ^site/aiab/.*$
 
 - secret:
     name: airshipit-github-secret
