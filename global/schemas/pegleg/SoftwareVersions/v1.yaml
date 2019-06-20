@@ -1069,7 +1069,6 @@ data:
                   type: string
                 dep_check:
                   type: string
-                  type: string
                 image_repo_sync:
                   type: string
             ceph-rgw:

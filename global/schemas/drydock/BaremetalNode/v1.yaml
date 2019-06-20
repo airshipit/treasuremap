@@ -63,8 +63,6 @@ data:
                         type: 'string'
                     bootable:
                       type: 'boolean'
-                    volume_group:
-                      type: 'string'
                     filesystem:
                       type: 'object'
                       properties:
