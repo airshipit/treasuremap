@@ -27,5 +27,8 @@ data:
     conf:
       elasticsearch:
         env:
-          java_opts: "-Xms768m -Xmx768m"
+          java_opts:
+            client: "-Xms768m -Xmx768m"
+            data: "-Xms768m -Xmx768m"
+            master: "-Xms768m -Xmx768m"
 ...

@@ -302,7 +302,10 @@ data:
             max_content_length: 2gb
             pipelining: false
         env:
-          java_opts: "-Xms8g -Xmx8g"
+          java_opts:
+            client: "-Xms8g -Xmx8g"
+            data: "-Xms8g -Xmx8g"
+            master: "-Xms8g -Xmx8g"
         snapshots:
           enabled: true
       curator:
