@@ -415,7 +415,9 @@ Under site/airsloop/software/config/ create a versions.yaml file in the followin
         osh_infra:
           elasticsearch:
             proxy_server: proxy.example.com:8080
-          fluent_logging:
+          fluentbit:
+            proxy_server: proxy.example.com:8080
+          fluentd:
             proxy_server: proxy.example.com:8080
           grafana:
             proxy_server: proxy.example.com:8080

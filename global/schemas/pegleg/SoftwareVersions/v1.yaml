@@ -235,7 +235,18 @@ data:
                   type: string
                 reference:
                   type: string
-            fluent_logging:
+            fluentbit:
+              type: object
+              properties:
+                type:
+                  type: string
+                location:
+                  type: string
+                subpath:
+                  type: string
+                reference:
+                  type: string
+            fluentd:
               type: object
               properties:
                 type:

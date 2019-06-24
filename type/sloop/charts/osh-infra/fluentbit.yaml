@@ -1,18 +1,22 @@
 ---
-# NOTE: This file is ignored by Airskiff and is copied from the seaworthy site.
-
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: fluent-logging
+  name: fluentbit
+  labels:
+    name: fluentbit-type
   layeringDefinition:
     abstract: false
-    layer: site
+    layer: type
     parentSelector:
-      hosttype: fluent-logging-global
+      hosttype: fluentbit-global
     actions:
       - method: merge
         path: .
   storagePolicy: cleartext
-data: {}
+data:
+  values:
+    pod:
+      replicas:
+        fluentd: 1
 ...

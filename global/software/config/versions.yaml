@@ -260,10 +260,15 @@ data:
         reference: 1f1482bcb71cd3483c6df3ac4bab09653ed6a2e1
         subpath: elasticsearch
         type: git
-      fluent_logging:
+      fluentbit:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
-        subpath: fluent-logging
+        reference: 29fc716cf3ff636a66944903fbbe9bd3f921e22f
+        subpath: fluentbit
+        type: git
+      fluentd:
+        location: https://opendev.org/openstack/openstack-helm-infra
+        reference: 29fc716cf3ff636a66944903fbbe9bd3f921e22f
+        subpath: fluentd
         type: git
       grafana:
         location: https://opendev.org/openstack/openstack-helm-infra
@@ -592,7 +597,8 @@ data:
       tempest: {}
     osh_infra:
       elasticsearch: {}
-      fluent_logging: {}
+      fluentbit: {}
+      fluentd: {}
       grafana: {}
       kibana: {}
       nagios: {}

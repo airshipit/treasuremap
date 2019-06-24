@@ -12,4 +12,5 @@ data:
   sequenced: True
   chart_group:
     - elasticsearch
-    - fluent-logging
+    - fluentbit
+    - fluentd

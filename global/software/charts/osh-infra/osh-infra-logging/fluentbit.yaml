@@ -1,0 +1,255 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: fluentbit-global
+  layeringDefinition:
+    abstract: true
+    layer: global
+  labels:
+    hosttype: fluentbit-global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.fluentbit
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh_infra.fluentbit
+      dest:
+        path: .values.images.tags
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_infra_endpoints
+        path: .osh_infra.fluentd # TODO change it in OSH repo
+      dest:
+        path: .values.endpoints.fluentbit
+
+data:
+  chart_name: fluentbit
+  release: fluentbit
+  namespace: osh-infra
+  wait:
+    timeout: 900
+    labels:
+      release_group: airship-fluentbit
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: airship-fluentbit
+      create: []
+    post:
+      create: []
+  values:
+    monitoring:
+      prometheus:
+        enabled: true
+    pod:
+      resources:
+        enabled: true
+        fluentbit:
+          limits:
+            memory: '4Gi'
+            cpu: '2000m'
+          requests:
+            memory: '2Gi'
+            cpu: '1000m'
+        jobs:
+          image_repo_sync:
+            requests:
+              memory: '0'
+              cpu: '0'
+            limits:
+              memory: '1024Mi'
+              cpu: '2000m'
+          tests:
+            requests:
+              memory: '0'
+              cpu: '0'
+            limits:
+              memory: '1024Mi'
+              cpu: '2000m'
+    labels:
+      fluentbit:
+        node_selector_key: fluentbit
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    conf:
+      fluentbit:
+        template: |
+          [SERVICE]
+              Daemon false
+              Flush 5
+              Log_Level info
+              Parsers_File parsers.conf
+
+          [INPUT]
+              Buffer_Chunk_Size 1M
+              Buffer_Max_Size 1M
+              Mem_Buf_Limit 5MB
+              Name tail
+              Path /var/log/kern.log
+              Tag kernel
+
+          [INPUT]
+              Buffer_Chunk_Size 1M
+              Buffer_Max_Size 1M
+              Mem_Buf_Limit 5MB
+              Name tail
+              Parser docker
+              Path /var/log/containers/*.log
+              Tag kube.*
+
+          [INPUT]
+              Buffer_Chunk_Size 1M
+              Buffer_Max_Size 1M
+              Mem_Buf_Limit 5MB
+              Name tail
+              Path /var/log/libvirt/libvirtd.log
+              Tag libvirt
+
+          [INPUT]
+              Buffer_Chunk_Size 1M
+              Buffer_Max_Size 1M
+              Mem_Buf_Limit 5MB
+              Name tail
+              Path /var/log/libvirt/qemu/*.log
+              Tag qemu
+
+          [INPUT]
+              Buffer_Chunk_Size 1M
+              Buffer_Max_Size 1M
+              Mem_Buf_Limit 5MB
+              Name systemd
+              Path ${JOURNAL_PATH}
+              Systemd_Filter _SYSTEMD_UNIT=kubelet.service
+              Tag journal.*
+
+          [INPUT]
+              Buffer_Chunk_Size 1M
+              Buffer_Max_Size 1M
+              Mem_Buf_Limit 5MB
+              Name systemd
+              Path ${JOURNAL_PATH}
+              Systemd_Filter _SYSTEMD_UNIT=docker.service
+              Tag journal.*
+
+          [INPUT]
+              Buffer_Chunk_Size 1M
+              Buffer_Max_Size 1M
+              Mem_Buf_Limit 5MB
+              Name tail
+              Parsers syslog
+              Path /var/log/ceph/airship-ucp-ceph-mon/ceph.log
+              Tag ceph.cluster.*
+
+          [INPUT]
+              Buffer_Chunk_Size 1M
+              Buffer_Max_Size 1M
+              Mem_Buf_Limit 5MB
+              Name tail
+              Parsers syslog
+              Path /var/log/ceph/airship-ucp-ceph-mon/ceph.audit.log
+              Tag ceph.audit.*
+
+          [INPUT]
+              Buffer_Chunk_Size 1M
+              Buffer_Max_Size 1M
+              Mem_Buf_Limit 5MB
+              Name tail
+              Parsers syslog
+              Path /var/log/ceph/airship-ucp-ceph-mon/ceph-mon**.log
+              Tag ceph.mon.*
+
+          [INPUT]
+              Buffer_Chunk_Size 1M
+              Buffer_Max_Size 1M
+              Mem_Buf_Limit 5MB
+              Name tail
+              Parsers syslog
+              Path /var/log/ceph/airship-ucp-ceph-osd/ceph-osd**.log
+              Tag ceph.osd.*
+
+          [FILTER]
+              Interval 1s
+              Match **
+              Name throttle
+              Rate 1000
+              Window 300
+
+          [FILTER]
+              Match libvirt
+              Name record_modifier
+              Record hostname ${HOSTNAME}
+
+          [FILTER]
+              Match qemu
+              Name record_modifier
+              Record hostname ${HOSTNAME}
+
+          [FILTER]
+              Match kernel
+              Name record_modifier
+              Record hostname ${HOSTNAME}
+
+          [FILTER]
+              Match journal.**
+              Name modify
+              Rename _BOOT_ID BOOT_ID
+              Rename _CAP_EFFECTIVE CAP_EFFECTIVE
+              Rename _CMDLINE CMDLINE
+              Rename _COMM COMM
+              Rename _EXE EXE
+              Rename _GID GID
+              Rename _HOSTNAME HOSTNAME
+              Rename _MACHINE_ID MACHINE_ID
+              Rename _PID PID
+              Rename _SYSTEMD_CGROUP SYSTEMD_CGROUP
+              Rename _SYSTEMD_SLICE SYSTEMD_SLICE
+              Rename _SYSTEMD_UNIT SYSTEMD_UNIT
+              Rename _TRANSPORT TRANSPORT
+              Rename _UID UID
+
+          [OUTPUT]
+              Match **.fluentd**
+              Name null
+
+          [FILTER]
+              Match kube.*
+              Merge_JSON_Log true
+              Name kubernetes
+
+          [OUTPUT]
+              Host ${FLUENTD_HOST}
+              Match *
+              Name forward
+              Port ${FLUENTD_PORT}
+      parsers:
+        template: |
+          [PARSER]
+            Name syslog
+            Format regex
+            Regex '^(?<time>.*[0-9]{2}:[0-9]{2}:[0-9]{2}) (?<host>[^ ]*) (?<app>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? (?<log>.+)$'
+            Time_Key time
+            Time_Format "%Y-%m-%dT%H:%M:%S.%L"
+            Time_Keep On
+            Types "pid:integer"
+  dependencies:
+    - osh-infra-helm-toolkit
+...

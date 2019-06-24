@@ -1,0 +1,16 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: fluentbit
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      hosttype: fluentbit-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data: {}
+...
