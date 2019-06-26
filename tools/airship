@@ -114,6 +114,10 @@ pegleg() {
 
   versions_lookup "['data']['images']['ucp']['pegleg']['pegleg']"
 
+  cat >> $ENV_FILE << EOF
+USER=pegleg
+EOF
+
   docker run --rm --net=host $TERM_OPTS \
       -u "${USER}:${GROUP}" \
       -w /target \
