@@ -137,8 +137,8 @@ which it does. So when drydock and maas try to deploy the node it will
 identify the interface by the PCI address that is written in the
 Hardware profile.
 
-A simple way to find out which PCI od SCSi address corresponds to which
-NIC or Disk is to use the lshw command. More inforamtion about that
+A simple way to find out which PCI or SCSI address corresponds to which
+NIC or Disk is to use the lshw command. More information about that
 command can be found `Here <https://linux.die.net/man/1/lshw>`__.
 
 Extend Cluster
