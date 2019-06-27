@@ -146,12 +146,12 @@ data:
         type: git
       horizon:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 66ba0be81c66c20b5ffae709358970d5937a0202
+        reference: 5ad45700f4a3287d7f55a6f5d75777b3ae744030
         subpath: horizon
         type: git
       horizon-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 0714b9d7ae08a88565d2c81c1b185fd77efaafca
+        reference: 1f1482bcb71cd3483c6df3ac4bab09653ed6a2e1
         subpath: helm-toolkit
         type: git
       ingress:
