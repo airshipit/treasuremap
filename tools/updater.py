@@ -27,6 +27,7 @@
 #
 
 import argparse
+import copy
 import datetime
 from functools import reduce
 import json
@@ -41,15 +42,15 @@ try:
     import git
     import yaml
 except ImportError as e:
-    sys.exit("Failed to import git/yaml libraries needed to run" +
+    sys.exit("Failed to import git/yaml libraries needed to run "
              "this tool %s" % str(e))
 
-descr_text = "Being run in directory with versions.yaml, will create \
-            versions.new.yaml, with updated git commit id's to the \
-            latest HEAD in references of all charts. In addition to \
-            that, the tool updates references to the container images \
-            with the tag, equal to the latest image which exists on \
-            quay.io repository and is available for download."
+descr_text = ("Being run in directory with versions.yaml, will create "
+              "versions.new.yaml, with updated git commit id's to the "
+              "latest HEAD in references of all charts. In addition to "
+              "that, the tool updates references to the container images "
+              "with the tag, equal to the latest image which exists on "
+              "quay.io repository and is available for download.")
 parser = argparse.ArgumentParser(description=descr_text)
 
 # Dictionary containing container image repository url to git url mapping
@@ -63,33 +64,39 @@ parser = argparse.ArgumentParser(description=descr_text)
 # being overloaded.
 image_repo_git_url = {
     # airflow image is built from airship-shipyard repository
-    'quay.io/airshipit/airflow': 'https://opendev.org/airship/shipyard',
-    'quay.io/airshipit/armada': 'https://opendev.org/airship/armada',
-    'quay.io/airshipit/deckhand': 'https://opendev.org/airship/deckhand',
-    # yes, divingbell image is just Ubuntu 16.04 image, and we don't check it's tag
-    #'docker.io/ubuntu': 'https://opendev.org/airship/divingbell',
-    'quay.io/airshipit/drydock': 'https://opendev.org/airship/drydock',
-    # maas-{rack,region}-controller images are built from airship-maas repository
-    'quay.io/airshipit/maas-rack-controller': 'https://opendev.org/airship/maas',
-    'quay.io/airshipit/maas-region-controller': 'https://opendev.org/airship/maas',
-    'quay.io/airshipit/pegleg': 'https://opendev.org/airship/pegleg',
-    'quay.io/airshipit/promenade': 'https://opendev.org/airship/promenade',
-    'quay.io/airshipit/shipyard': 'https://opendev.org/airship/shipyard',
+    "quay.io/airshipit/airflow": "https://opendev.org/airship/shipyard",
+    "quay.io/airshipit/armada": "https://opendev.org/airship/armada",
+    "quay.io/airshipit/deckhand": "https://opendev.org/airship/deckhand",
+    # yes, divingbell image is just Ubuntu 16.04 image,
+    # and we don't check it's tag:
+    #"docker.io/ubuntu": "https://opendev.org/airship/divingbell",
+    "quay.io/airshipit/drydock": "https://opendev.org/airship/drydock",
+    # maas-{rack,region}-controller images are built
+    # from airship-maas repository:
+    "quay.io/airshipit/maas-rack-controller":
+        "https://opendev.org/airship/maas",
+    "quay.io/airshipit/maas-region-controller":
+        "https://opendev.org/airship/maas",
+    "quay.io/airshipit/pegleg": "https://opendev.org/airship/pegleg",
+    "quay.io/airshipit/promenade": "https://opendev.org/airship/promenade",
+    "quay.io/airshipit/shipyard": "https://opendev.org/airship/shipyard",
     # sstream-cache image is built from airship-maas repository
-    'quay.io/airshipit/sstream-cache': 'https://opendev.org/airship/maas',
-    'quay.io/attcomdev/nagios': 'https://github.com/att-comdev/nagios',
-    'quay.io/attcomdev/prometheus-openstack-exporter':
-        'https://github.com/att-comdev/prometheus-openstack-exporter'
+    "quay.io/airshipit/sstream-cache": "https://opendev.org/airship/maas",
+    "quay.io/attcomdev/nagios": "https://github.com/att-comdev/nagios",
+    "quay.io/attcomdev/prometheus-openstack-exporter":
+        "https://github.com/att-comdev/prometheus-openstack-exporter"
 }
 
 logging.basicConfig(level=logging.INFO)
+LOG = logging.getLogger(__name__)
 
-# Temporary dict of git url's and cached commit id's: {'git_url': 'commit_id'}
-global git_url_commit_ids
+# Dict of git url's and cached commit id's:
+# {"git_url": "commit_id"}
 git_url_commit_ids = {}
-# Temporary dict of image repo's and status of image on quay.io
-global image_repo_status
-image_repo_status = {}
+# Dict of image repo's and (latest) tag of that image on quay.io:
+# {"image": "tag"}
+image_repo_tags = {}
+# Path in yaml dictionary
 dict_path = None
 
 
@@ -102,9 +109,9 @@ def __represent_multiline_yaml_str():
     yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str
 
     def repr_str(dumper, data):
-        if '\n' in data:
+        if "\n" in data:
             return dumper.represent_scalar(
-                'tag:yaml.org,2002:str', data, style='|')
+                "tag:yaml.org,2002:str", data, style="|")
         return dumper.org_represent_str(data)
 
     yaml.add_representer(str, repr_str, Dumper=yaml.SafeDumper)
@@ -130,9 +137,10 @@ def lsremote(url, remote_ref):
     """Accepts git url and remote reference, returns git commit id."""
     git_commit_id_remote_ref = {}
     g = git.cmd.Git()
-    logging.info("Fetching %s %s reference...", url, remote_ref)
-    hash_ref_list = g.ls_remote(url, remote_ref).split('\t')
+    LOG.info("Fetching %s %s reference...", url, remote_ref)
+    hash_ref_list = g.ls_remote(url, remote_ref).split("\t")
     git_commit_id_remote_ref[hash_ref_list[1]] = hash_ref_list[0]
+
     return git_commit_id_remote_ref[remote_ref]
 
 
@@ -140,12 +148,12 @@ def get_commit_id(url):
     """Accepts url of git repo and returns corresponding git commit hash"""
     # If we don't have this git url in our url's dictionary,
     # fetch latest commit ID and add new dictionary entry
-    logging.debug('git_url_commit_ids: %s', git_url_commit_ids)
+    LOG.debug("git_url_commit_ids: %s", git_url_commit_ids)
     if url not in git_url_commit_ids:
-        logging.debug("git url: %s" +
-                      " is not in git_url_commit_ids dict;" +
-                      " adding it with HEAD commit id", url)
-        git_url_commit_ids[url] = lsremote(url, 'HEAD')
+        LOG.debug("git url: %s " +
+                      "is not in git_url_commit_ids dict; "
+                      "adding it with HEAD commit id", url)
+        git_url_commit_ids[url] = lsremote(url, "HEAD")
 
     return git_url_commit_ids[url]
 
@@ -154,22 +162,22 @@ def get_image_tag(image):
     """Get latest image tag from quay.io,
     returns 0 (image not hosted on quay.io), True, or False
     """
-    if not image.startswith('quay.io/'):
-        logging.info("Unable to verify if image %s" +
-                     " is in containers repository: only quay.io is" +
-                     " supported at the moment", image)
+    if not image.startswith("quay.io/"):
+        LOG.info("Unable to verify if image %s "
+                     "is in containers repository: only quay.io is "
+                     "supported at the moment", image)
         return 0
 
     # If we don't have this image in our images's dictionary,
     # fetch latest tag and add new dictionary entry
-    logging.debug('image_repo_status: %s', image_repo_status)
-    if image not in image_repo_status:
-        logging.debug("image: %s" +
-                      " is not in image_repo_status dict;" +
-                      " adding it with latest tag", image)
-        image_repo_status[image] = get_image_latest_tag(image)
+    LOG.debug("image_repo_tags: %s", image_repo_tags)
+    if image not in image_repo_tags:
+        LOG.debug("image: %s " +
+                      "is not in image_repo_tags dict; "
+                      "adding it with latest tag", image)
+        image_repo_tags[image] = get_image_latest_tag(image)
 
-    return image_repo_status[image]
+    return image_repo_tags[image]
 
 
 def get_image_latest_tag(image):
@@ -179,22 +187,23 @@ def get_image_latest_tag(image):
     """
 
     attempt = 0
-    max_attempts = 5
+    max_attempts = 10
 
-    hash_image = image.split('/')
-    url = 'https://quay.io/api/v1/repository/{}/{}/tag/'
+    hash_image = image.split("/")
+    url = "https://quay.io/api/v1/repository/{}/{}/tag/"
     url = url.format(hash_image[1], hash_image[2])
-    logging.info("Fetching tags for image %s (%s)...", image, url)
+    LOG.info("Fetching tags for image %s (%s)...", image, url)
 
     while attempt < max_attempts:
-        attempt = attempt + 1
+        attempt += 1
         try:
             res = requests.get(url, timeout=5)
             if res.ok:
                 break
         except requests.exceptions.Timeout:
-            logging.warning("Timed out fetching url %s for %d attempt(s)", url, attempt)
-            time.sleep(1)
+            LOG.warning("Failed to fetch url %s for %d/%d attempt(s)",
+                             url, attempt, max_attempts)
+            time.sleep(5)
         except requests.exceptions.TooManyRedirects:
             logging.error("Failed to fetch url %s, TooManyRedirects", url)
             return 0
@@ -202,11 +211,12 @@ def get_image_latest_tag(image):
             logging.error("Failed to fetch url %s, error: %s", url, e)
             return 0
     if attempt == max_attempts:
-        logging.error("Failed to connect to quay.io for %d attempt(s)", attempt)
+        logging.error("Failed to connect to quay.io for %d attempt(s)",
+                       attempt)
         return 0
 
     if res.status_code != 200:
-        logging.error("Image %s is not available on quay.io or " +
+        logging.error("Image %s is not available on quay.io or "
                       "requires authentication", image)
         return 0
 
@@ -218,27 +228,28 @@ def get_image_latest_tag(image):
 
     try:
         possible_tag = None
-        for tag in res['tags']:
-            # skip images which are old (have 'end_ts'), and
+        for tag in res["tags"]:
+            # skip images which are old (have "end_ts"), and
             # skip images tagged with "*latest*" or "*master*"
-            if 'end_ts' in tag or any(i in tag['name'] for i in ('latest', 'master')):
+            if "end_ts" in tag or \
+            any(i in tag["name"] for i in ("latest", "master")):
                 continue
 
             # simply return first found tag is we don't have filter set
             if not tag_filter:
-                return tag['name']
+                return tag["name"]
 
             # return tag matching filter, if we have filter set
-            if tag_filter in tag['name']:
-                return tag['name']
+            if tag_filter in tag["name"]:
+                return tag["name"]
 
-            logging.info("Skipping tag %s as not matching to the filter %s",
-                        tag['name'], tag_filter)
+            LOG.info("Skipping tag %s as not matching to the filter %s",
+                        tag["name"], tag_filter)
             if not possible_tag:
-                possible_tag = tag['name']
+                possible_tag = tag["name"]
 
         if possible_tag:
-            logging.info("Couldn't find better tag than %s", possible_tag)
+            LOG.info("Couldn't find better tag than %s", possible_tag)
             return possible_tag
 
     except KeyError:
@@ -265,7 +276,7 @@ def traverse(obj, dict_path=None):
     """Accepts Python dictionary with values.yaml contents,
     updates it with latest git commit id's.
     """
-    logging.debug('traverse: dict_path: %s, object type: %s, object: %s',
+    LOG.debug("traverse: dict_path: %s, object type: %s, object: %s",
                   dict_path, type(obj), obj)
 
     if dict_path is None:
@@ -273,41 +284,45 @@ def traverse(obj, dict_path=None):
 
     if isinstance(obj, dict):
         # It's a dictionary element
-        logging.debug('this object is a dictionary')
+        LOG.debug("this object is a dictionary")
 
         for k, v in obj.items():
             # If value v we are checking is a dictionary itself, and this
-            # dictionary contains key named 'type', and a value of key 'type'
-            # equals 'git', then
-            if isinstance(v, dict) and 'type' in v and v['type'] == 'git':
+            # dictionary contains key named "type", and a value of key "type"
+            # equals "git", then
+            if isinstance(v, dict) and "type" in v and v["type"] == "git":
 
-                old_git_commit_id = v['reference']
-                git_url = v['location']
+                old_git_commit_id = v["reference"]
+                git_url = v["location"]
 
                 if skip_list and k in skip_list:
-                    logging.info("Ignoring chart %s, it is in a skip list (%s)", k, git_url)
+                    LOG.info("Ignoring chart %s, it is in a "
+                                 "skip list (%s)", k, git_url)
                     continue
 
                 new_git_commit_id = get_commit_id(git_url)
 
                 # Update git commit id in reference field of dictionary
                 if old_git_commit_id != new_git_commit_id:
-                    logging.info("Updating git reference for chart %s from %s to %s (%s)",
-                                 k, old_git_commit_id, new_git_commit_id,
-                                 git_url)
-                    v['reference'] = new_git_commit_id
+                    LOG.info("Updating git reference for "
+                                 "chart %s from %s to %s (%s)",
+                                  k, old_git_commit_id, new_git_commit_id,
+                                  git_url)
+                    v["reference"] = new_git_commit_id
                 else:
-                    logging.info("Git reference %s for chart %s is already up to date (%s)",
-                                 old_git_commit_id, k, git_url)
+                    LOG.info("Git reference %s for chart %s is already "
+                                 "up to date (%s)",
+                                  old_git_commit_id, k, git_url)
             else:
-                logging.debug("value %s inside object is not a dictionary, or it does not " +
-                              "contain key \'type\' with value \'git\', skipping", v)
+                LOG.debug("value %s inside object is not a dictionary, "
+                              "or it does not contain key \"type\" with "
+                              "value \"git\", skipping", v)
 
             # Traverse one level deeper
             traverse(v, dict_path + [k])
     elif isinstance(obj, list):
         # It's a list element
-        logging.debug('this object is a list')
+        LOG.debug("this object is a list")
 
         for elem in obj:
             # TODO: Do we have any git references or container image tags in
@@ -315,24 +330,27 @@ def traverse(obj, dict_path=None):
             traverse(elem, dict_path + [[]])
     else:
         # It's already a value
-        logging.debug('this object is a value')
+        LOG.debug("this object is a value")
         v = obj
 
         # Searching for container image repositories, we are only intrested in
-        # strings; there could also be booleans or other types we are not interested in.
+        # strings; there could also be booleans or other types
+        # we are not interested in.
         if isinstance(v, str):
             for image_repo in image_repo_git_url:
                 if image_repo in v:
-                    logging.debug('image_repo %s is in %s string', image_repo, v)
+                    LOG.debug("image_repo %s is in %s string",
+                                   image_repo, v)
 
-                    # hash_v: {'&whatever repo_url', 'git commit id tag'}
-                    # Note: 'image' below could contain not just image, but also
-                    # '&ref host.domain/path/image'
+                    # hash_v: {"&whatever repo_url", "git commit id tag"}
+                    # Note: "image" below could contain not just image,
+                    # but also "&ref host.domain/path/image"
                     hash_v = v.split(":")
                     image, old_image_tag = hash_v
 
                     if skip_list and image.endswith(skip_list):
-                        logging.info("Ignoring image %s, it is in a skip list", image)
+                        LOG.info("Ignoring image %s, "
+                                     "it is in a skip list", image)
                         continue
 
                     new_image_tag = get_image_tag(image)
@@ -342,60 +360,187 @@ def traverse(obj, dict_path=None):
 
                     # Update git commit id in tag of container image
                     if old_image_tag != new_image_tag:
-                        logging.info("Updating git commit id in " +
+                        LOG.info("Updating git commit id in "
                                      "tag of container image %s from %s to %s",
                                      image, old_image_tag, new_image_tag)
-                        set_by_path(versions_data_dict, dict_path, image + ':' + new_image_tag)
+                        set_by_path(versions_data_dict, dict_path,
+                                    image + ":" + new_image_tag)
 
                     else:
-                        logging.info("Git tag %s for container " +
+                        LOG.info("Git tag %s for container "
                                      "image %s is already up to date",
                                      old_image_tag, image)
                 else:
-                    logging.debug('image_repo %s is not in %s string, skipping', image_repo, v)
+                    LOG.debug("image_repo %s is not in %s string, "
+                                  "skipping", image_repo, v)
         else:
-            logging.debug('value %s is not string, skipping', v)
+            LOG.debug("value %s is not string, skipping", v)
 
 
-if __name__ == '__main__':
-    """Small Main program
+def debug_dicts():
+    """Print varioud dictionary contents on debug"""
+    LOG.debug("git_url_commit_ids: %s", git_url_commit_ids)
+    LOG.debug("image_repo_tags: %s", image_repo_tags)
+    LOG.debug("image_repo_git_url: %s", image_repo_git_url)
+
+
+def print_versions_table():
+    """Prints overall Git and images versions table."""
+    debug_dicts()
+
+    table_format = "{:48s} {:60s} {:54s} {:41s}\n"
+    table_content = "\n"
+    table_content += table_format.format("Image repo","Git repo",
+                                         "Image repo tag","Git repo Commit ID")
+
+    # Copy dicts for later modification
+    image_repo_tags_copy = copy.deepcopy(image_repo_tags)
+    git_url_commit_ids_copy = copy.deepcopy(git_url_commit_ids)
+
+    # Loop over
+    #   image_repo_git_url ({"image_repo", "git_repo"}),
+    # and verify it's contents against the copies of
+    #   git_url_commit_ids ({"git_repo": "commit_id"})
+    # and
+    #   image_repo_tags ({"image_repo": "tag"})
+    # dictionaries
+    for image_repo in image_repo_git_url:
+        git_repo = image_repo_git_url[image_repo]
+        if not image_repo in image_repo_tags_copy:
+            image_repo_tags_copy[image_repo] = get_image_latest_tag(image_repo)
+        if not git_repo in git_url_commit_ids_copy:
+            git_url_commit_ids_copy[git_repo] = lsremote(git_repo, "HEAD")
+
+        table_content += table_format.format(image_repo,
+                                             git_repo,
+                                             image_repo_tags_copy[image_repo],
+                                             git_url_commit_ids_copy[git_repo])
+
+    LOG.info("")
+    for line in table_content.splitlines():
+        LOG.info(line)
+    LOG.info("")
+
+
+def print_missing_references():
+    """Prints possibly missing references in versions.yaml."""
+    debug_dicts()
+
+    missing_references = {}
+
+    # Loop over
+    #   image_repo_git_url ({"image_repo", "git_repo"}),
+    # and verify it's contents against the contents of
+    #   git_url_commit_ids ({"git_repo": "commit_id"})
+    # and
+    #   image_repo_tags ({"image_repo": "tag"})
+    # dictionaries
+    for image_repo in image_repo_git_url:
+        git_repo = image_repo_git_url[image_repo]
+        if not image_repo in image_repo_tags:
+            missing_references[image_repo] = \
+                image_repo + " is not in image_repo_tags"
+        if not git_repo in git_url_commit_ids:
+            missing_references[git_repo] = \
+                git_repo + " is not in git_url_commit_ids"
+
+    if missing_references:
+        LOG.warning("")
+        LOG.warning("Missing references:")
+        for ref in missing_references:
+            LOG.warning(missing_references[ref])
+        LOG.warning("")
+        LOG.warning("Refs which are not in git_url_commit_ids mean that "
+                        "we have not been updating chart references (or "
+                        "there are no charts referred in versions.yaml)")
+        LOG.warning("Refs which are not in image_repo_tags mean that we "
+                        "have not been updating image tags (or there are no "
+                        "images referred in versions.yaml)")
+        LOG.warning("")
+
+
+def print_outdated_images():
+    """Print Git <-> image tag mismatches."""
+    debug_dicts()
+
+    possibly_outdated_images = []
+
+    # Copy dicts for later modification
+    image_repo_tags_copy = copy.deepcopy(image_repo_tags)
+    git_url_commit_ids_copy = copy.deepcopy(git_url_commit_ids)
+
+    # Loop over
+    #   image_repo_git_url ({"image_repo", "git_repo"}),
+    # and verify it's contents against the contents of
+    #   git_url_commit_ids ({"git_repo": "commit_id"})
+    # and
+    #   image_repo_tags ({"image_repo": "tag"})
+    # dictionaries
+    for image_repo in image_repo_git_url:
+        git_repo = image_repo_git_url[image_repo]
+        if not image_repo in image_repo_tags_copy:
+            image_repo_tags_copy[image_repo] = get_image_latest_tag(image_repo)
+        if not git_repo in git_url_commit_ids_copy:
+            git_url_commit_ids_copy[git_repo] = lsremote(git_repo, "HEAD")
+
+        # This is where we check if there is tag matching commit_id exists,
+        # and if not, then we append that image_repo to the list of
+        # possibly outdated images
+        if git_url_commit_ids_copy[git_repo] not in image_repo_tags_copy[image_repo]:
+            possibly_outdated_images.append(image_repo)
+
+    if possibly_outdated_images:
+        LOG.warning("")
+        LOG.warning("Possibly outdated images:")
+        for image in possibly_outdated_images:
+            LOG.warning(image)
+        LOG.warning("")
+
+
+if __name__ == "__main__":
+    """Main program
     """
 
-    parser.add_argument('--in-file', default='versions.yaml',
-                        help='/path/to/versions.yaml input file; default - "./versions.yaml"')
-    parser.add_argument('--out-file', default='versions.yaml',
-                        help='name of output file; default - "versions.yaml" (overwrite existing)')
-    parser.add_argument('--skip',
-                        help='comma-delimited list of images and charts to skip during the update')
+    parser.add_argument("--in-file", default="versions.yaml",
+                        help="/path/to/versions.yaml input file; "
+                             "default - \"./versions.yaml\"")
+    parser.add_argument("--out-file", default="versions.yaml",
+                        help="name of output file; default - "
+                             "\"versions.yaml\" (overwrite existing)")
+    parser.add_argument("--skip",
+                        help="comma-delimited list of images and charts "
+                             "to skip during the update")
     parser.add_argument('--tag-filter',
-                        help='e.g. "ubuntu"; update would use image ref. tags on quay.io matching the filter')
+                        help="e.g. \"ubuntu\"; update would use image ref. "
+                             "tags on quay.io matching the filter")
 
     args = parser.parse_args()
     in_file = args.in_file
     out_file = args.out_file
     if args.skip:
         skip_list = tuple(args.skip.strip().split(","))
-        logging.info("Skip list: %s", skip_list)
+        LOG.info("Skip list: %s", skip_list)
     else:
         skip_list = None
 
     tag_filter = args.tag_filter
-    logging.info("Tag filter: %s", tag_filter)
+    LOG.info("Tag filter: %s", tag_filter)
 
     if os.path.basename(out_file) != out_file:
-        logging.error("Name of the output file must not contain path, " +
+        logging.error("Name of the output file must not contain path, "
                       "but only the file name.")
         print("\n")
         parser.print_help()
         sys.exit(1)
 
     if os.path.isfile(in_file):
-        out_file = os.path.join(os.path.dirname(os.path.abspath(in_file)), out_file)
-        with open(in_file, 'r') as f:
+        out_file = os.path.join(os.path.dirname(os.path.abspath(in_file)),
+                                out_file)
+        with open(in_file, "r") as f:
             f_old = f.read()
             versions_data_dict = yaml.safe_load(f_old)
     else:
-        logging.error("Can\'t find versions.yaml file.")
+        logging.error("Can't find versions.yaml file.")
         print("\n")
         parser.print_help()
         sys.exit(1)
@@ -403,11 +548,15 @@ if __name__ == '__main__':
     # Traverse loaded yaml and change it
     traverse(versions_data_dict)
 
-    with open(out_file, 'w') as f:
+    print_versions_table()
+    print_missing_references()
+    print_outdated_images()
+
+    with open(out_file, "w") as f:
         if os.path.samefile(in_file, out_file):
-            logging.info("Overwriting %s", in_file)
+            LOG.info("Overwriting %s", in_file)
         f.write(yaml.safe_dump(versions_data_dict,
                                default_flow_style=False,
                                explicit_end=True, explicit_start=True,
                                width=4096))
-        logging.info("New versions.yaml created as %s", out_file)
+        LOG.info("New versions.yaml created as %s", out_file)
