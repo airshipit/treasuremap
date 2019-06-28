@@ -33,7 +33,7 @@ sudo apt-get remove --no-install-recommends -y docker docker-engine docker.io
 sudo apt-get install --allow-downgrades --no-install-recommends -y \
         apparmor \
         ca-certificates \
-        docker-ce=18.06.1~ce~3-0~ubuntu \
+        docker-ce=18.06.3~ce~3-0~ubuntu \
         git \
         make \
         jq \

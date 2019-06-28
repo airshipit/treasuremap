@@ -706,7 +706,7 @@ data:
       =0YYh
       -----END PGP PUBLIC KEY BLOCK-----
     named:
-      docker: docker-ce=17.03.3~ce-0~ubuntu-xenial
+      docker: docker-ce=18.06.3~ce~3-0~ubuntu
       socat: socat=1.7.3.1-1
     repositories:
       docker:
