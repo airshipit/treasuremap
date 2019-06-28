@@ -128,11 +128,11 @@ def pegleg_site_collect = {
 def prom_config_gen = {
     stage ("Promenade Config Gen") {
 
-        sh "mkdir -p promenade-bundle"
-
-        opts = '--rm -t -w /target -v $(pwd):/target'
-        cmd = "promenade build-all --validators -o promenade-bundle ${SITE_NAME}/*.yaml"
-        sh "sudo docker run ${opts} ${PROMENADE_IMAGE} ${cmd}"
+        withEnv(['TERM_OPTS=-t']) {
+            sh "mkdir -p promenade-bundle"
+            sh "sudo -E tools/airship promenade build-all --validators" +
+               " -o promenade-bundle /target/${SITE_NAME}/*.yaml"
+        }
 
         sh 'tar czf promenade-bundle.tar.gz promenade-bundle'
         archiveArtifacts 'promenade-bundle.tar.gz'
@@ -208,7 +208,7 @@ def genesis_deploy = {
 
 def shipyard_deploy = { action ->
     try {
-        def req = keystone.retrieveToken(SHIPYARD_PASSWD, KEYSTONE_URL, false)
+        def req = keystone.retrieveToken(SHIPYARD_CREDS, KEYSTONE_URL)
         def token = req.getHeaders()["X-Subject-Token"][0]
         shipyard2.uploadConfig(uuid, token, SHIPYARD_URL, SITE_NAME)
 
@@ -222,9 +222,6 @@ def shipyard_deploy = { action ->
         debug_report()
         error(err)
     }
-
-    ssh.cmd(GENESIS_CREDS, GENESIS_IP,
-            'sudo kubectl get pods --all-namespaces -o wide -a=false')
 }
 
 
