@@ -70,6 +70,12 @@ metadata:
 
     # Secrets
     - dest:
+        path: .values.endpoints.identity.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_keystone_admin_password
+        path: .
+    - dest:
         path: .values.endpoints.oslo_db.auth.keystone.password
       src:
         schema: deckhand/Passphrase/v1
