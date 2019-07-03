@@ -88,6 +88,8 @@ data:
         parameters:
           userSecretName: pvc-tceph-client-key
           adminSecretNamespace: tenant-ceph
+    manifests:
+      helm_tests: false
   dependencies:
     - tenant-ceph-htk
 ...
