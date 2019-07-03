@@ -257,77 +257,77 @@ data:
     osh_infra:
       elasticsearch:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 1f1482bcb71cd3483c6df3ac4bab09653ed6a2e1
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: elasticsearch
         type: git
       fluentbit:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 29fc716cf3ff636a66944903fbbe9bd3f921e22f
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: fluentbit
         type: git
       fluentd:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 29fc716cf3ff636a66944903fbbe9bd3f921e22f
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: fluentd
         type: git
       grafana:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: grafana
         type: git
       helm_toolkit:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 1f1482bcb71cd3483c6df3ac4bab09653ed6a2e1
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: helm-toolkit
         type: git
       kibana:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: kibana
         type: git
       nagios:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: nagios
         type: git
       nfs_provisioner:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: b77385c82f9853b3dfd82a9b41af23880877319b
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: nfs-provisioner
         type: git
       podsecuritypolicy:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: podsecuritypolicy
         type: git
       prometheus:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: prometheus
         type: git
       prometheus_alertmanager:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: prometheus-alertmanager
         type: git
       prometheus_kube_state_metrics:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: prometheus-kube-state-metrics
         type: git
       prometheus_node_exporter:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: prometheus-node-exporter
         type: git
       prometheus_openstack_exporter:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: prometheus-openstack-exporter
         type: git
       prometheus_process_exporter:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: prometheus-process-exporter
         type: git
     ucp:
