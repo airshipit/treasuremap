@@ -353,32 +353,32 @@ data:
         type: git
       ceph-client:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 20f4274aeec1a0d826dc43c191b56c67de06781a
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: ceph-client
         type: git
       ceph-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 20f4274aeec1a0d826dc43c191b56c67de06781a
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: helm-toolkit
         type: git
       ceph-mon:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 20f4274aeec1a0d826dc43c191b56c67de06781a
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: ceph-mon
         type: git
       ceph-osd:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 20f4274aeec1a0d826dc43c191b56c67de06781a
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: ceph-osd
         type: git
       ceph-provisioners:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 20f4274aeec1a0d826dc43c191b56c67de06781a
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: ceph-provisioners
         type: git
       ceph-rgw:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 20f4274aeec1a0d826dc43c191b56c67de06781a
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: ceph-rgw
         type: git
       deckhand:
@@ -503,32 +503,32 @@ data:
         type: git
       tenant-ceph-client:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 20f4274aeec1a0d826dc43c191b56c67de06781a
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: ceph-client
         type: git
       tenant-ceph-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 20f4274aeec1a0d826dc43c191b56c67de06781a
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: helm-toolkit
         type: git
       tenant-ceph-mon:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 20f4274aeec1a0d826dc43c191b56c67de06781a
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: ceph-mon
         type: git
       tenant-ceph-osd:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 20f4274aeec1a0d826dc43c191b56c67de06781a
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: ceph-osd
         type: git
       tenant-ceph-provisioners:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 20f4274aeec1a0d826dc43c191b56c67de06781a
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: ceph-provisioners
         type: git
       tenant-ceph-rgw:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 20f4274aeec1a0d826dc43c191b56c67de06781a
+        reference: 0c5cc1db7cd1a2a576153c31e38e732d32a93563
         subpath: ceph-rgw
         type: git
       tiller:
