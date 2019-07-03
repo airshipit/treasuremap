@@ -4,7 +4,7 @@ data:
     kubernetes:
       apiserver:
         location: https://opendev.org/airship/promenade
-        reference: 44b5fae04788c6a28de0f9a2e132204561474d47
+        reference: 32a6c15ffd6c283375bfd1cc9ae82f9232a9b501
         subpath: charts/apiserver
         type: git
       apiserver-htk:
@@ -560,6 +560,7 @@ data:
       apiserver:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.11.6
         apiserver: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+        key_rotate: gcr.io/google-containers/hyperkube-amd64:v1.11.6
       controller-manager:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.11.6
         controller_manager: gcr.io/google-containers/hyperkube-amd64:v1.11.6

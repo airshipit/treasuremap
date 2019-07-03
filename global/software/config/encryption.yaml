@@ -1,0 +1,27 @@
+---
+schema: promenade/EncryptionPolicy/v1
+metadata:
+  schema: metadata/Document/v1
+  name: encryption-policy
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: deckhand/Passphrase/v1
+        name: apiserver-encryption-key-key1
+        path: .
+      dest:
+        path: .etcd[0].providers[0].secretbox.keys[0].secret
+data:
+  etcd:
+    - resources:
+        - 'secrets'
+      providers:
+        - secretbox:
+            keys:
+             - name: key1
+               secret: null
+        - identity: {}
+...

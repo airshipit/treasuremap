@@ -44,7 +44,7 @@ metadata:
         name: common-addresses
         path: .kubernetes.service_cidr
       dest:
-        path: .values.command_prefix[1]
+        path: .values.apiserver.arguments[1]
         pattern: SERVICE_CIDR
 
     # Kubernetes Port Range
@@ -53,7 +53,7 @@ metadata:
         name: common-addresses
         path: .kubernetes.service_node_port_range
       dest:
-        path: .values.command_prefix[2]
+        path: .values.apiserver.arguments[2]
         pattern: SERVICE_NODE_PORT_RANGE
 
     # CA
@@ -102,6 +102,14 @@ metadata:
       dest:
         path: .values.secrets.service_account.public_key
 
+    # Encryption policy
+    - src:
+        schema: promenade/EncryptionPolicy/v1
+        name: encryption-policy
+        path: .etcd
+      dest:
+        path: .values.conf.encryption_provider.content.resources
+
 data:
   chart_name: apiserver
   release: kubernetes-apiserver
@@ -128,14 +136,41 @@ data:
         # https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
         # Possible values: VersionTLS10, VersionTLS11, VersionTLS12
         tls-min-version: 'VersionTLS12'
-    command_prefix:
-      - /apiserver
-      - --service-cluster-ip-range=SERVICE_CIDR
-      - --service-node-port-range=SERVICE_NODE_PORT_RANGE
-      - --authorization-mode=Node,RBAC
-      - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds
-      - --endpoint-reconciler-type=lease
-      - --feature-gates=PodShareProcessNamespace=true
+      arguments:
+        - --authorization-mode=Node,RBAC
+        - --service-cluster-ip-range=SERVICE_CIDR
+        - --service-node-port-range=SERVICE_NODE_PORT_RANGE
+        - --endpoint-reconciler-type=lease
+        - --feature-gates=PodShareProcessNamespace=true
+        - --v=3
+    conf:
+      encryption_provider:
+        file: encryption_provider.yaml
+        command_options:
+          - '--experimental-encryption-provider-config=/etc/kubernetes/apiserver/encryption_provider.yaml'
+        content:
+          kind: EncryptionConfig
+          apiVersion: v1
+      eventconfig:
+        file: eventconfig.yaml
+        content:
+          kind: Configuration
+          apiVersion: eventratelimit.admission.k8s.io/v1alpha1
+          limits:
+          - type: Server
+            qps: 100
+            burst: 1000
+      acconfig:
+        file: acconfig.yaml
+        command_options:
+          - '--enable-admission-plugins=PodSecurityPolicy,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds,NodeRestriction,EventRateLimit'
+          - '--admission-control-config-file=/etc/kubernetes/apiserver/acconfig.yaml'
+        content:
+          kind: AdmissionConfiguration
+          apiVersion: apiserver.k8s.io/v1alpha1
+          plugins:
+          - name: EventRateLimit
+            path: eventconfig.yaml
   dependencies:
     - kubernetes-apiserver-htk
 ---
