@@ -348,9 +348,9 @@ def traverse(obj, dict_path=None):
                     hash_v = v.split(":")
                     image, old_image_tag = hash_v
 
-                    if skip_list and image.endswith(skip_list):
-                        LOG.info("Ignoring image %s, "
-                                     "it is in a skip list", image)
+                    if skip_list and image in skip_list:
+                        LOG.info("Ignoring image %s, it is in a "
+                                    "skip list", image)
                         continue
 
                     new_image_tag = get_image_tag(image)
@@ -509,7 +509,9 @@ if __name__ == "__main__":
                              "\"versions.yaml\" (overwrite existing)")
     parser.add_argument("--skip",
                         help="comma-delimited list of images and charts "
-                             "to skip during the update")
+                             "to skip during the update; e.g. \"ceph\" "
+                             "will skip all charts and images which have "
+                             "\"ceph\" in the name")
     parser.add_argument('--tag-filter',
                         help="e.g. \"ubuntu\"; update would use image ref. "
                              "tags on quay.io matching the filter")
