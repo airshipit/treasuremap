@@ -13,5 +13,4 @@ metadata:
 data:
   description: Deploy Heat
   chart_group:
-    - heat-rabbitmq
     - heat

@@ -15,5 +15,4 @@ metadata:
   storagePolicy: cleartext
 data:
   chart_group:
-    - glance-rabbitmq
     - glance-aiab

@@ -18,6 +18,7 @@ data:
   chart_groups:
     - openstack-ingress-controller-airskiff
     - openstack-mariadb-airskiff
+    - openstack-rabbitmq-airskiff
     - openstack-memcached
     - openstack-keystone-airskiff
     - openstack-glance-airskiff

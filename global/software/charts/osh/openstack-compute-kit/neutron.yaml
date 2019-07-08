@@ -55,7 +55,7 @@ metadata:
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: osh_endpoints
-        path: .osh.neutron_oslo_messaging
+        path: .osh.oslo_messaging
       dest:
         path: .values.endpoints.oslo_messaging
     - src:
@@ -97,7 +97,7 @@ metadata:
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
-        path: .osh.neutron.oslo_messaging.admin
+        path: .osh.oslo_messaging.admin
       dest:
         path: .values.endpoints.oslo_messaging.auth.admin
     - src:
@@ -119,6 +119,13 @@ metadata:
       dest:
         path: .values.endpoints.oslo_db.path
         pattern: DB_NAME
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.network.name
+      dest:
+        path: .values.endpoints.oslo_messaging.path
+        pattern: VHOST_NAME
 
     # Secrets
     - dest:
@@ -143,13 +150,13 @@ metadata:
         path: .values.endpoints.oslo_messaging.auth.admin.password
       src:
         schema: deckhand/Passphrase/v1
-        name: osh_neutron_oslo_messaging_admin_password
+        name: osh_oslo_messaging_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_messaging.auth.neutron.password
       src:
         schema: deckhand/Passphrase/v1
-        name: osh_neutron_oslo_messaging_password
+        name: osh_oslo_messaging_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.neutron.password

@@ -13,5 +13,4 @@ metadata:
 data:
   description: Deploy Keystone
   chart_group:
-    - keystone-rabbitmq
     - keystone

@@ -2,10 +2,9 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: heat-rabbitmq
+  name: openstack-rabbitmq
   labels:
-    name: heat-rabbitmq-global
-    component: heat
+    name: openstack-rabbitmq-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -31,20 +30,20 @@ metadata:
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: osh_endpoints
-        path: .osh.heat_oslo_messaging
+        path: .osh.oslo_messaging
       dest:
         path: .values.endpoints.oslo_messaging
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: osh_endpoints
-        path: .osh.heat_rabbitmq_exporter
+        path: .osh.openstack_rabbitmq_exporter
       dest:
         path: .values.endpoints.prometheus_rabbitmq_exporter
     # Credentials
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
-        path: .osh.heat.oslo_messaging.admin
+        path: .osh.oslo_messaging.admin
       dest:
         path: .values.endpoints.oslo_messaging.auth.user
 
@@ -52,24 +51,24 @@ metadata:
 
     - src:
         schema: deckhand/Passphrase/v1
-        name: osh_heat_rabbitmq_erlang_cookie
+        name: osh_rabbitmq_erlang_cookie
         path: .
       dest:
         path: .values.endpoints.oslo_messaging.auth.erlang_cookie
     - src:
         schema: deckhand/Passphrase/v1
-        name: osh_heat_oslo_messaging_admin_password
+        name: osh_oslo_messaging_admin_password
         path: .
       dest:
         path: .values.endpoints.oslo_messaging.auth.user.password
 data:
-  chart_name: heat-rabbitmq
-  release: heat-rabbitmq
+  chart_name: openstack-rabbitmq
+  release: openstack-rabbitmq
   namespace: openstack
   wait:
     timeout: 900
     labels:
-      release_group: airship-heat-rabbitmq
+      release_group: airship-openstack-rabbitmq
     resources:
       - type: statefulset
   install:
@@ -80,8 +79,11 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-heat-rabbitmq
+            release_group: airship-openstack-rabbitmq
   values:
+    pod:
+      replicas:
+        server: 2
     labels:
       server:
         node_selector_key: openstack-control-plane
@@ -93,13 +95,13 @@ data:
       prometheus:
         enabled: true
   dependencies:
-    - heat-rabbitmq-htk
+    - openstack-rabbitmq-htk
 ...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: heat-rabbitmq-htk
+  name: openstack-rabbitmq-htk
   layeringDefinition:
     abstract: false
     layer: global
@@ -112,9 +114,9 @@ metadata:
       dest:
         path: .source
 data:
-  chart_name: heat-rabbitmq-htk
-  release: heat-rabbitmq-htk
-  namespace: heat-rabbitmq-htk
+  chart_name: openstack-rabbitmq-htk
+  release: openstack-rabbitmq-htk
+  namespace: openstack-rabbitmq-htk
   values: {}
   dependencies: []
 ...

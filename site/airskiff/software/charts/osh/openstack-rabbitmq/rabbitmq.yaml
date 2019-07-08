@@ -2,13 +2,12 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: heat-rabbitmq-airskiff
+  name: openstack-rabbitmq-airskiff
   layeringDefinition:
     abstract: false
     layer: site
     parentSelector:
-      name: heat-rabbitmq-global
-      component: heat
+      name: openstack-rabbitmq-global
     actions:
       - method: delete
         path: .values.labels.prometheus_rabbitmq_exporter

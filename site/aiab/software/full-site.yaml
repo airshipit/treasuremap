@@ -34,6 +34,7 @@ data:
     - ucp-shipyard
     - openstack-ingress-controller
     - openstack-mariadb
+    - openstack-rabbitmq
     - openstack-memcached
     - openstack-keystone
     - openstack-glance-aiab

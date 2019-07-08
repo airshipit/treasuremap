@@ -42,6 +42,7 @@ data:
     - openstack-ceph-config
     - openstack-tenant-ceph
     - openstack-mariadb
+    - openstack-rabbitmq
     - openstack-memcached
     - openstack-keystone
     - openstack-radosgw

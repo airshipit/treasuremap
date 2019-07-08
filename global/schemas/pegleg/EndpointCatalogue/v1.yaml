@@ -18,6 +18,13 @@ data:
             - type: "null"
         name:
           type: string
+        statefulset:
+          type: object
+          properties:
+            replicas:
+              type: number
+            name:
+              type: string
         auth:
           type: object
         hosts:

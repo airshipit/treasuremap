@@ -14,7 +14,5 @@ data:
   chart_group:
     - libvirt
     - openvswitch
-    - neutron-rabbitmq
-    - nova-rabbitmq
     - neutron
     - nova

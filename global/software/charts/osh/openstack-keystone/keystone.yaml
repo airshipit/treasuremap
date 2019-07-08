@@ -43,7 +43,7 @@ metadata:
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: osh_endpoints
-        path: .osh.keystone_oslo_messaging
+        path: .osh.oslo_messaging
       dest:
         path: .values.endpoints.oslo_messaging
     - src:
@@ -69,7 +69,7 @@ metadata:
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
-        path: .osh.keystone.oslo_messaging.admin
+        path: .osh.oslo_messaging.admin
       dest:
         path: .values.endpoints.oslo_messaging.auth.admin
     - src:
@@ -103,13 +103,13 @@ metadata:
         path: .values.endpoints.oslo_messaging.auth.admin.password
       src:
         schema: deckhand/Passphrase/v1
-        name: osh_keystone_oslo_messaging_admin_password
+        name: osh_oslo_messaging_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_messaging.auth.keystone.password
       src:
         schema: deckhand/Passphrase/v1
-        name: osh_keystone_oslo_messaging_password
+        name: osh_oslo_messaging_admin_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.keystone.password
@@ -150,6 +150,18 @@ data:
     post:
       create: []
   values:
+    dependencies:
+      static:
+        api:
+          jobs:
+            - keystone-db-sync
+            - keystone-credential-setup
+            - keystone-fernet-setup
+        db_sync:
+          jobs:
+            - keystone-db-init
+            - keystone-credential-setup
+            - keystone-fernet-setup
     bootstrap:
       script: |
         openstack role create --or-show _member_
@@ -194,14 +206,6 @@ data:
             - stdout
             - fluent
           qualname: keystone
-        logger_amqp:
-          level: WARNING
-          handlers: stderr
-          qualname: amqp
-        logger_amqplib:
-          level: WARNING
-          handlers: stderr
-          qualname: amqplib
         logger_eventletwsgi:
           level: WARNING
           handlers: stderr
@@ -237,6 +241,8 @@ data:
         formatter_default:
           format: "%(message)s"
       keystone:
+        DEFAULT:
+          transport_url: localhost
         identity:
           driver: sql
           default_domain_id: default
@@ -253,6 +259,9 @@ data:
       job:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
+    manifests:
+      job_rabbit_init: false
+      secret_rabbitmq: false
   dependencies:
     - keystone-htk
 ...

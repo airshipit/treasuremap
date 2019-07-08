@@ -18,5 +18,4 @@ metadata:
 data:
   sequenced: true
   chart_group:
-    - heat-rabbitmq-airskiff
     - heat

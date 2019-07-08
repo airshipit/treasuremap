@@ -19,7 +19,5 @@ data:
   chart_group:
     - libvirt-airskiff
     - openvswitch
-    - neutron-rabbitmq-airskiff
-    - nova-rabbitmq-airskiff
     - neutron-airskiff
     - nova

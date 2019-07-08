@@ -3,14 +3,14 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   replacement: true
-  name: heat-rabbitmq
+  name: openstack-rabbitmq
   labels:
-    name: heat-rabbitmq-type
+    name: openstack-rabbitmq-type
   layeringDefinition:
     abstract: false
     layer: type
     parentSelector:
-      name: heat-rabbitmq-global
+      name: openstack-rabbitmq-global
     actions:
       - method: merge
         path: .
