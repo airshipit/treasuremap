@@ -463,12 +463,12 @@ data:
         type: git
       postgresql:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: b2f47aabb19e1dd8b72593e0cdecc48a6a473e71
+        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: postgresql
         type: git
       postgresql-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: b2f47aabb19e1dd8b72593e0cdecc48a6a473e71
+        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: helm-toolkit
         type: git
       promenade:
