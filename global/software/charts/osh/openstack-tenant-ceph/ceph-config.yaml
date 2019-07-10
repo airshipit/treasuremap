@@ -88,6 +88,8 @@ data:
         parameters:
           userSecretName: pvc-tceph-client-key
           adminSecretNamespace: tenant-ceph
+      cephfs:
+        provision_storage_class: false
     manifests:
       helm_tests: false
   dependencies:

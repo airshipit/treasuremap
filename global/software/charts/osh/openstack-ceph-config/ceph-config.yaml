@@ -87,6 +87,8 @@ data:
         ceph_configmap_name: ceph-etc
         parameters:
           userSecretName: pvc-ceph-client-key
+      cephfs:
+        provision_storage_class: false
   dependencies:
     - ceph-htk
 ...
