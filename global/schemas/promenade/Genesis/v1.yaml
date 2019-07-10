@@ -67,10 +67,24 @@ data:
     apiserver:
       type: object
       properties:
-        command_prefix:
+        arguments:
           type: array
           items:
             type: string
+        encryption:
+          type: array
+          items:
+            type: object
+            properties:
+              resources:
+                type: array
+                items:
+                  type: string
+              providers:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
       additionalProperties: false
 
     files:

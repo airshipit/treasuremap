@@ -68,26 +68,37 @@ metadata:
         name: common-addresses
         path: .kubernetes.service_cidr
       dest:
-        path: .apiserver.command_prefix[1]
+        path: .apiserver.arguments[2]
         pattern: SERVICE_CIDR
     - src:
         schema: pegleg/CommonAddresses/v1
         name: common-addresses
         path: .kubernetes.service_node_port_range
       dest:
-        path: .apiserver.command_prefix[2]
+        path: .apiserver.arguments[3]
         pattern: SERVICE_NODE_PORT_RANGE
+
+    # Set etcd encryption policy
+    - src:
+        schema: promenade/EncryptionPolicy/v1
+        name: encryption-policy
+        path: .etcd
+      dest:
+        path: .apiserver.encryption
 
 data:
   apiserver:
-    command_prefix:
-      - /apiserver
+    arguments:
+      - --authorization-mode=Node,RBAC
+      - --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds,NodeRestriction,EventRateLimit
       - --service-cluster-ip-range=SERVICE_CIDR
       - --service-node-port-range=SERVICE_NODE_PORT_RANGE
-      - --authorization-mode=Node,RBAC
-      - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds
       - --endpoint-reconciler-type=lease
       - --feature-gates=PodShareProcessNamespace=true
+      - --v=3
+      - --admission-control-config-file=/etc/kubernetes/apiserver/acconfig.yaml
+      - --experimental-encryption-provider-config=/etc/kubernetes/apiserver/encryption_provider.yaml
+      - --requestheader-allowed-names='aggregator'
   armada:
     target_manifest: cluster-bootstrap
   labels:
@@ -118,3 +129,20 @@ data:
     - path: /var/lib/anchor/calico-etcd-bootstrap
       content: "# placeholder for triggering calico etcd bootstrapping\n# this file will be deleted"
       mode: 0644
+    - path: /etc/genesis/apiserver/acconfig.yaml
+      mode: 0444
+      content: |
+        kind: AdmissionConfiguration
+        apiVersion: apiserver.k8s.io/v1alpha1
+        plugins:
+          - name: EventRateLimit
+            path: eventconfig.yaml
+    - path: /etc/genesis/apiserver/eventconfig.yaml
+      mode: 0444
+      content: |
+        kind: Configuration
+        apiVersion: eventratelimit.admission.k8s.io/v1alpha1
+        limits:
+          - type: Server
+            qps: 1000
+            burst: 10000
