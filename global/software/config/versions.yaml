@@ -75,12 +75,12 @@ data:
         type: git
       ingress:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: b2f47aabb19e1dd8b72593e0cdecc48a6a473e71
+        reference: 596732f16bf7cfe681ce0bb2d62e529bea5eea82
         subpath: ingress
         type: git
       ingress-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: b2f47aabb19e1dd8b72593e0cdecc48a6a473e71
+        reference: 596732f16bf7cfe681ce0bb2d62e529bea5eea82
         subpath: helm-toolkit
         type: git
       proxy:
@@ -156,12 +156,12 @@ data:
         type: git
       ingress:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: b2f47aabb19e1dd8b72593e0cdecc48a6a473e71
+        reference: 596732f16bf7cfe681ce0bb2d62e529bea5eea82
         subpath: ingress
         type: git
       ingress-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: b2f47aabb19e1dd8b72593e0cdecc48a6a473e71
+        reference: 596732f16bf7cfe681ce0bb2d62e529bea5eea82
         subpath: helm-toolkit
         type: git
       keystone:
@@ -413,12 +413,12 @@ data:
         type: git
       ingress:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: b2f47aabb19e1dd8b72593e0cdecc48a6a473e71
+        reference: 596732f16bf7cfe681ce0bb2d62e529bea5eea82
         subpath: ingress
         type: git
       ingress-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: b2f47aabb19e1dd8b72593e0cdecc48a6a473e71
+        reference: 596732f16bf7cfe681ce0bb2d62e529bea5eea82
         subpath: helm-toolkit
         type: git
       keystone:
