@@ -76,7 +76,7 @@ data:
           common_name: system:node:airsloop-compute-1
           hosts:
             - airsloop-compute-1
-            - 10.23.22.14
+            - 10.22.72.22
           groups:
             - system:nodes
         # End node list
