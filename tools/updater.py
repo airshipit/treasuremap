@@ -81,10 +81,7 @@ image_repo_git_url = {
     "quay.io/airshipit/promenade": "https://opendev.org/airship/promenade",
     "quay.io/airshipit/shipyard": "https://opendev.org/airship/shipyard",
     # sstream-cache image is built from airship-maas repository
-    "quay.io/airshipit/sstream-cache": "https://opendev.org/airship/maas",
-    "quay.io/attcomdev/nagios": "https://github.com/att-comdev/nagios",
-    "quay.io/attcomdev/prometheus-openstack-exporter":
-        "https://github.com/att-comdev/prometheus-openstack-exporter"
+    "quay.io/airshipit/sstream-cache": "https://opendev.org/airship/maas"
 }
 
 logging.basicConfig(level=logging.INFO)
