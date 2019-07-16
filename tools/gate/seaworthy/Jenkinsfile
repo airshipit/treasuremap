@@ -11,8 +11,6 @@ import org.yaml.snakeyaml.DumperOptions;
 import groovy.json.JsonSlurperClassic
 import groovy.json.JsonOutput
 
-PEGLEG_IMAGE = 'quay.io/airshipit/pegleg:178c058474fb632806e281673d3eaf6be80fa854'
-
 COLLECT_DIR = 'seaworthy'
 BUNDLE_DIR = 'bundle'
 
@@ -103,11 +101,6 @@ def reset_bare_metal = {
 
 //// manifest utils
 
-def resolve_versions = {
-    def shipyard = readYaml file: "site/${SITE_NAME}/secrets/passphrases/ucp_shipyard_keystone_password.yaml"
-    SHIPYARD_PASSWD = shipyard.data
-}
-
 def pegleg_site_collect = {
     stage('Pegleg Site Collect') {
 
@@ -121,9 +114,13 @@ def pegleg_site_collect = {
 
             sh "cp ${SSH_KEY} ssh-key"
 
-            auth = "-u ${SSH_USER} -k /target/ssh-key"
-            cmd = "pegleg site ${auth} -r /target collect ${SITE_NAME} -s /target/${COLLECT_DIR}"
-            sh "sudo docker run --rm -t -v \$(pwd):/target ${PEGLEG_IMAGE} ${cmd}"
+            sh "sudo -E tools/airship pegleg site" +
+                 " -u ${SSH_USER}" +
+                 " -k /target/ssh-key" +
+                 " -r /target collect ${SITE_NAME}" +
+                 " -s /target/${COLLECT_DIR}"
+
+            sh "sudo chown -R ubuntu:ubuntu ${COLLECT_DIR}"
         }
 
         sh "tar czf ${COLLECT_DIR}.tar.gz ${COLLECT_DIR}"
@@ -137,7 +134,7 @@ def prom_config_gen = {
         withEnv(['TERM_OPTS=-t']) {
             sh "mkdir -p ${BUNDLE_DIR}"
             sh "sudo -E tools/airship promenade build-all --validators" +
-               " -o ${BUNDLE_DIR} /target/${COLLECT_DIR}/*.yaml"
+              " -o ${BUNDLE_DIR} /target/${COLLECT_DIR}/*.yaml"
         }
 
         sh "tar czf ${BUNDLE_DIR}.tar.gz ${BUNDLE_DIR}"
@@ -322,11 +319,13 @@ vm(image: 'ubuntu-16.04-server-cloudimg-amd64',
              'sudo systemctl disable kubelet')
     ssh.cmd (GENESIS_CREDS, GENESIS_IP,
              'sudo systemctl disable docker')
+    ssh.cmd (GENESIS_CREDS, GENESIS_IP,
+             'sudo touch /forcefsck')
+
+    reset_bare_metal()
 
     sh 'sudo apt-get update'
     sh 'sudo apt-get install docker.io -y'
-
-    reset_bare_metal()
 
     clone(AIRSHIP_MANIFESTS_REF)
 
@@ -334,8 +333,6 @@ vm(image: 'ubuntu-16.04-server-cloudimg-amd64',
     if (AIRSHIP_MANIFESTS_REF == 'uplift') {
         uplift_versions()
     }
-
-    resolve_versions()
 
     pegleg_site_collect()
     prom_config_gen()

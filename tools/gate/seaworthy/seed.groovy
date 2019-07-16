@@ -1,7 +1,7 @@
 
 pipelineJob('Seaworthy') {
 
-    displayName('Airship Seaworthy')
+    displayName('Seaworthy')
     description('Bare-metal continuous deployment pipeline')
 
     logRotator {
@@ -79,7 +79,7 @@ pipelineJob('Seaworthy') {
         definition {
             cps {
                 script(readFileFromWorkspace("tools/gate/seaworthy/Jenkinsfile"))
-                sandbox()
+                sandbox(false)
             }
         }
     }
