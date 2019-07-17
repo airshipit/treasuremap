@@ -26,8 +26,10 @@ else
     sudo dpkg -s python3-yaml &> /dev/null || sudo apt -y install python3-yaml
 fi
 
-ENV_FILE=$(mktemp)
-trap "{ rm -f $ENV_FILE; }" EXIT
+TMP_DIR=$(mktemp -d)
+trap "{ rm -rf $TMP_DIR; }" EXIT
+
+ENV_FILE=${TMP_DIR}/ENV
 
 export OS_PASSWORD=${OS_PASSWORD:-password123}
 # If shipyard password is defined, provide it to shipyard component
@@ -136,6 +138,16 @@ EOF
 promenade() {
 
   versions_lookup "['data']['images']['ucp']['promenade']['promenade']"
+  IMAGE_PROMENADE=$IMAGE_URL
+  versions_lookup "['data']['images']['kubernetes']['hyperkube']"
+  IMAGE_HYPERKUBE=$IMAGE_URL
+
+  # 'cache' is hardcoded in Promenade source code
+  # it's a shared directory between init and main containers in Promenade pod
+  # the purpose for it is to transfer Hyperkube binary and store file cache
+  PROMENADE_TMP_LOCAL="cache"
+  PROMENADE_TMP=${TMP_DIR}/promenade
+  mkdir $PROMENADE_TMP
 
   # support proxy for pulling k8s binary
   cat >> $ENV_FILE << EOF
@@ -146,18 +158,27 @@ HTTP_PROXY=${HTTP_PROXY:-}
 HTTPS_PROXY=${HTTPS_PROXY:-}
 NO_PROXY=${NO_PROXY:-}
 # Promenade specific variables for downloading hyperkube image to generate genesis.sh
-PROMENADE_TMP=/tmp
-PROMENADE_TMP_LOCAL=/tmp
+PROMENADE_TMP=${PROMENADE_TMP:-}
+PROMENADE_TMP_LOCAL=${PROMENADE_TMP_LOCAL:-}
 EOF
+
+  # extract Hyperkube binary before running Promenade container
+  # this is replacing internal extraction step in Promenade
+  # no need to share Docker socket
+  docker run --rm $TERM_OPTS \
+      -v "${PROMENADE_TMP}:/tmp/${PROMENADE_TMP_LOCAL}" \
+      --env-file $ENV_FILE \
+      --entrypoint /bin/cp \
+      "${IMAGE_HYPERKUBE}" \
+          /hyperkube "/tmp/${PROMENADE_TMP_LOCAL}"
 
   docker run --rm --net=host $TERM_OPTS \
       -u "${USER}:${GROUP}" \
       -w /target \
       -v $(pwd):/target \
-      -v /tmp:/tmp \
-      -v /var/run/docker.sock:/var/run/docker.sock \
+      -v "${PROMENADE_TMP}:/tmp/${PROMENADE_TMP_LOCAL}" \
       --env-file $ENV_FILE \
-      $IMAGE_URL $@
+      $IMAGE_PROMENADE $@
 }
 
 shipyard() {
