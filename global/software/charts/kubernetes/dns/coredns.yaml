@@ -71,14 +71,6 @@ metadata:
       dest:
         path: .values.conf.coredns.corefile
         pattern: '(UPSTREAM2)'
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .dns.upstream_servers[2]
-      dest:
-        path: .values.conf.coredns.corefile
-        pattern: '(UPSTREAM3)'
-
 data:
   chart_name: coredns
   release: coredns
@@ -107,10 +99,9 @@ data:
                 fallthrough in-addr.arpa ip6.arpa
                 upstream UPSTREAM1
                 upstream UPSTREAM2
-                upstream UPSTREAM3
               }
               prometheus :9153
-              forward . UPSTREAM1 UPSTREAM2 UPSTREAM3
+              forward . UPSTREAM1 UPSTREAM2
               cache 30
           }
 
