@@ -32,10 +32,9 @@ data:
     upstream_servers:
       - 8.8.8.8
       - 8.8.4.4
-      - 208.67.222.222
     # Repeat the same values as above, but formatted as a common separated
     # string
-    upstream_servers_joined: 8.8.8.8,8.8.4.4,208.67.222.222
+    upstream_servers_joined: 8.8.8.8,8.8.4.4
     # NEWSITE-CHANGEME: FQDN for ingress (i.e. "publicly facing" access point)
     # Choose FQDN according to the ingress/public FQDN naming conventions at
     # the top of this document.

@@ -60,8 +60,7 @@ data:
     upstream_servers:
       - 8.8.8.8
       - 8.8.4.4
-      - 208.67.222.222
-    upstream_servers_joined: 8.8.8.8,8.8.4.4,208.67.222.222
+    upstream_servers_joined: 8.8.8.8,8.8.4.4
 
   genesis:
     hostname: REPLACEME
