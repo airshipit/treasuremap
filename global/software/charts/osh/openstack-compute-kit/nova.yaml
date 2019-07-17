@@ -354,6 +354,10 @@ data:
         libvirt:
           cpu_mode: 'host-passthrough'
           virt_type: kvm
+        database:
+          max_pool_size: 30
+          max_retries: -1
+          max_overflow: 60
       logging:
         loggers:
           keys:
