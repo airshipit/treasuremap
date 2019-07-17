@@ -176,6 +176,8 @@ data:
           default: 15672
     oslo_messaging:
       namespace: null
+      statefulset:
+        name: airship-ucp-rabbitmq-rabbitmq
       hosts:
         default: rabbitmq
       host_fqdn_override:
@@ -550,7 +552,6 @@ data:
           default: 9104
     oslo_messaging:
       statefulset:
-        replicas: 2
         name: airship-openstack-rabbitmq-rabbitmq
       namespace: openstack
       hosts:
