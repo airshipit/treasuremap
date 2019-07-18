@@ -13,7 +13,15 @@ metadata:
       name: ucp-maas-global
     actions:
       - method: merge
-        path: .
+        path: .values.manifests
+      - method: merge
+        path: .values.network
+      - method: merge
+        path: .values.conf
+      - method: replace
+        path: .values.dependencies.static
+      - method: replace
+        path: .values.endpoints.maas_ingress.hosts
   storagePolicy: cleartext
   substitutions:
 
@@ -88,4 +96,57 @@ data:
             namespace: ucp
         url:
           maas_url: http://MAAS_IP:MAAS_PORT/MAAS
+
+    dependencies:
+      static:
+        maas_ingress: {}
+        rack_controller:
+          services:
+            - service: maas_region
+              endpoint: internal
+          jobs:
+            - maas-export-api-key
+        region_controller:
+          jobs:
+            - maas-db-sync
+          services:
+            - service: maas_db
+              endpoint: internal
+        db_init:
+          services:
+            - service: maas_db
+              endpoint: internal
+        db_sync:
+          jobs:
+            - maas-db-init
+        bootstrap_admin_user:
+          jobs:
+            - maas-db-sync
+          services:
+            - service: maas_region
+              endpoint: internal
+            - service: maas_db
+              endpoint: internal
+        import_resources:
+          jobs:
+            - maas-bootstrap-admin-user
+          services:
+            - service: maas_region
+              endpoint: internal
+            - service: maas_db
+              endpoint: internal
+        export_api_key:
+          jobs:
+            - maas-bootstrap-admin-user
+          services:
+            - service: maas_region
+              endpoint: internal
+            - service: maas_db
+              endpoint: internal
+
+    endpoints:
+      maas_ingress:
+        hosts:
+          default: maas-ingress
+          error_pages: maas-ingress-error
 ...
