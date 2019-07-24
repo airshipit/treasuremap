@@ -25,3 +25,8 @@ docs: clean build_docs
 .PHONY: build_docs
 build_docs:
 	tox -e docs
+
+# Perform auto formatting
+.PHONY: format
+format:
+	tox -e fmt
