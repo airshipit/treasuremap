@@ -17,23 +17,14 @@
 
 set -xe
 
-# Docker CE Repository
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo apt-add-repository \
-        "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-        $(lsb_release -cs) \
-        stable"
 sudo apt-get update
 
-# Purge Docker and install Docker CE
-sudo systemctl unmask docker.service
-sudo apt-get remove --no-install-recommends -y docker docker-engine docker.io
-
-# TODO(drewwalters96): Update to Docker 18.09 when supported by Minikube.
+# NOTE(danpawlik) Docker 18.09 is supported by minikube, so we can
+# leave version installed by OSH scripts.
 sudo apt-get install --allow-downgrades --no-install-recommends -y \
         apparmor \
         ca-certificates \
-        docker-ce=18.06.3~ce~3-0~ubuntu \
+        docker.io \
         git \
         make \
         jq \
