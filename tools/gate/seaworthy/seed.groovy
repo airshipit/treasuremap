@@ -33,9 +33,12 @@ pipelineJob('Seaworthy') {
         }
 
         definition {
-            cps {
-                script(readFileFromWorkspace("tools/gate/seaworthy/Jenkinsfile"))
-                sandbox(false)
+            cpsScm {
+                scm {
+                    git('https://review.opendev.org/airship/treasuremap')
+                    scriptPath('tools/gate/seaworthy/Jenkinsfile')
+                    lightweight(true)
+                }
             }
         }
     }
