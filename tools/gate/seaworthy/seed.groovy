@@ -25,7 +25,6 @@ pipelineJob('Seaworthy') {
 
     }
 
-
     concurrentBuild(false)
 
     triggers {
@@ -52,11 +51,15 @@ pipelineJob('Seaworthy') {
                         }
                         filePath {
                             compareType('ANT')
-                            pattern('type/**')
+                            pattern('type/foundry/**')
                         }
                         filePath {
                             compareType('ANT')
-                            pattern('site/**')
+                            pattern('site/seaworthy/**')
+                        }
+                        filePath {
+                            compareType('ANT')
+                            pattern('tools/**')
                         }
                     }
                 }

@@ -11,7 +11,7 @@ pipelineJob('airsloop') {
     parameters {
         string {
             defaultValue("uplift")
-            description("Reference to airship-treasuremap, e.g. refs/changes/12/12345/12")
+            description("Reference to treasuremap, e.g. refs/changes/12/12345/12")
             name("AIRSHIP_MANIFESTS_REF")
             trim(true)
         }
@@ -24,7 +24,6 @@ pipelineJob('airsloop') {
         }
 
     }
-
 
     concurrentBuild(false)
 
@@ -57,6 +56,10 @@ pipelineJob('airsloop') {
                         filePath {
                             compareType('ANT')
                             pattern('site/airsloop/**')
+                        }
+                        filePath {
+                            compareType('ANT')
+                            pattern('tools/**')
                         }
                     }
                 }
