@@ -106,12 +106,12 @@ data:
     osh:
       barbican:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 4bb6976d2c7418dc24b969a53cbce81ec0b9142a
+        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
         subpath: barbican
         type: git
       cinder:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 4bb6976d2c7418dc24b969a53cbce81ec0b9142a
+        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
         subpath: cinder
         type: git
       cinder-htk:
@@ -121,7 +121,7 @@ data:
         type: git
       glance:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 4bb6976d2c7418dc24b969a53cbce81ec0b9142a
+        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
         subpath: glance
         type: git
       glance-htk:
@@ -131,7 +131,7 @@ data:
         type: git
       heat:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 4bb6976d2c7418dc24b969a53cbce81ec0b9142a
+        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
         subpath: heat
         type: git
       heat-htk:
@@ -146,7 +146,7 @@ data:
         type: git
       horizon:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 4bb6976d2c7418dc24b969a53cbce81ec0b9142a
+        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
         subpath: horizon
         type: git
       horizon-htk:
@@ -166,7 +166,7 @@ data:
         type: git
       keystone:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 4bb6976d2c7418dc24b969a53cbce81ec0b9142a
+        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
         subpath: keystone
         type: git
       keystone-htk:
@@ -206,7 +206,7 @@ data:
         type: git
       neutron:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 4bb6976d2c7418dc24b969a53cbce81ec0b9142a
+        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
         subpath: neutron
         type: git
       neutron-htk:
@@ -216,7 +216,7 @@ data:
         type: git
       nova:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 4bb6976d2c7418dc24b969a53cbce81ec0b9142a
+        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
         subpath: nova
         type: git
       nova-htk:
@@ -246,7 +246,7 @@ data:
         type: git
       tempest:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 4bb6976d2c7418dc24b969a53cbce81ec0b9142a
+        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
         subpath: tempest
         type: git
       tempest-htk:
@@ -343,7 +343,7 @@ data:
         type: git
       barbican:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 4bb6976d2c7418dc24b969a53cbce81ec0b9142a
+        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
         subpath: barbican
         type: git
       barbican-htk:
@@ -423,7 +423,7 @@ data:
         type: git
       keystone:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 4bb6976d2c7418dc24b969a53cbce81ec0b9142a
+        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
         subpath: keystone
         type: git
       keystone-htk:
