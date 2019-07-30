@@ -24,16 +24,9 @@
         name: systemd-resolved
       become: yes
 
-    - name: Install required packages
-      shell: |
-        ./tools/deployment/airskiff/developer/000-install-packages.sh
-      args:
-        chdir: "{{ zuul.project.src_dir }}"
-      become: yes
-
     - name: Clone dependencies
       shell: |
-        ./tools/deployment/airskiff/developer/005-clone-dependencies.sh
+        ./tools/deployment/airskiff/developer/000-clone-dependencies.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
 

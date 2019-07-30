@@ -75,32 +75,12 @@ Deploy Airskiff using the deployment scripts contained in the
 ``tools/deployment/airskiff`` directory of the `airship-treasuremap`_
 repository.
 
-.. note:: Scripts should be run from the root of ``airship-treasuremap``
-  repository.
-
-Install required packages
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. literalinclude:: ../../tools/deployment/airskiff/developer/000-install-packages.sh
-    :language: shell
-    :lines: 1,18-
-
-Alternatively, this step can be performed by running the script directly:
-
-.. code-block:: shell
-
-  ./tools/deployment/airskiff/developer/000-install-packages.sh
-
-Restart your shell session
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-At this point, restart your shell session to complete adding ``$USER`` to the
-``docker`` group.
+.. note:: Scripts should be run from the root of ``treasuremap`` repository.
 
 Clone Dependencies
 ~~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: ../../tools/deployment/airskiff/developer/005-clone-dependencies.sh
+.. literalinclude:: ../../tools/deployment/airskiff/developer/000-clone-dependencies.sh
     :language: shell
     :lines: 1,18-
 
@@ -108,7 +88,7 @@ Alternatively, this step can be performed by running the script directly:
 
 .. code-block:: shell
 
-  ./tools/deployment/airskiff/developer/005-clone-dependencies.sh
+  ./tools/deployment/airskiff/developer/000-clone-dependencies.sh
 
 Deploy Kubernetes with Minikube
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -122,6 +102,12 @@ Alternatively, this step can be performed by running the script directly:
 .. code-block:: shell
 
   ./tools/deployment/airskiff/developer/010-deploy-k8s.sh
+
+Restart your shell session
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+At this point, restart your shell session to complete adding ``$USER`` to the
+``docker`` group.
 
 Setup OpenStack Client
 ~~~~~~~~~~~~~~~~~~~~~~

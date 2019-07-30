@@ -30,4 +30,14 @@ bash -c "./tools/deployment/common/005-deploy-k8s.sh"
 
 kubectl label nodes --all --overwrite ucp-control-plane=enabled
 
+# Add user to Docker group
+# NOTE: This requires re-authentication. Restart your shell.
+sudo adduser "$(whoami)" docker
+sudo su - "$USER" -c bash <<'END_SCRIPT'
+if echo $(groups) | grep -qv 'docker'; then
+    echo "You need to logout to apply group permissions"
+    echo "Please logout and login"
+fi
+END_SCRIPT
+
 cd "${CURRENT_DIR}"
