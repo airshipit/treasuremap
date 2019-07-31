@@ -4,7 +4,7 @@ data:
     kubernetes:
       apiserver:
         location: https://opendev.org/airship/promenade
-        reference: 3155a3824d0ee8a1406ae3705a9fd51f0108c94b
+        reference: 92e42922422391038bd251bbeb3f98a5b144a67e
         subpath: charts/apiserver
         type: git
       apiserver-htk:
@@ -25,7 +25,7 @@ data:
           type: git
         etcd:
           location: https://opendev.org/airship/promenade
-          reference: 3155a3824d0ee8a1406ae3705a9fd51f0108c94b
+          reference: 92e42922422391038bd251bbeb3f98a5b144a67e
           subpath: charts/etcd
           type: git
         etcd-htk:
@@ -35,7 +35,7 @@ data:
           type: git
       controller-manager:
         location: https://opendev.org/airship/promenade
-        reference: 3155a3824d0ee8a1406ae3705a9fd51f0108c94b
+        reference: 92e42922422391038bd251bbeb3f98a5b144a67e
         subpath: charts/controller_manager
         type: git
       controller-manager-htk:
@@ -45,7 +45,7 @@ data:
         type: git
       coredns:
         location: https://opendev.org/airship/promenade
-        reference: 3155a3824d0ee8a1406ae3705a9fd51f0108c94b
+        reference: 92e42922422391038bd251bbeb3f98a5b144a67e
         subpath: charts/coredns
         type: git
       coredns-htk:
@@ -55,7 +55,7 @@ data:
         type: git
       etcd:
         location: https://opendev.org/airship/promenade
-        reference: 3155a3824d0ee8a1406ae3705a9fd51f0108c94b
+        reference: 92e42922422391038bd251bbeb3f98a5b144a67e
         subpath: charts/etcd
         type: git
       etcd-htk:
@@ -65,7 +65,7 @@ data:
         type: git
       haproxy:
         location: https://opendev.org/airship/promenade
-        reference: 3155a3824d0ee8a1406ae3705a9fd51f0108c94b
+        reference: 92e42922422391038bd251bbeb3f98a5b144a67e
         subpath: charts/haproxy
         type: git
       haproxy-htk:
@@ -85,7 +85,7 @@ data:
         type: git
       proxy:
         location: https://opendev.org/airship/promenade
-        reference: 3155a3824d0ee8a1406ae3705a9fd51f0108c94b
+        reference: 92e42922422391038bd251bbeb3f98a5b144a67e
         subpath: charts/proxy
         type: git
       proxy-htk:
@@ -95,7 +95,7 @@ data:
         type: git
       scheduler:
         location: https://opendev.org/airship/promenade
-        reference: 3155a3824d0ee8a1406ae3705a9fd51f0108c94b
+        reference: 92e42922422391038bd251bbeb3f98a5b144a67e
         subpath: charts/scheduler
         type: git
       scheduler-htk:
@@ -106,12 +106,12 @@ data:
     osh:
       barbican:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
+        reference: 59a017d834d0c3b676b13406ee79ccbc81704533
         subpath: barbican
         type: git
       cinder:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
+        reference: 59a017d834d0c3b676b13406ee79ccbc81704533
         subpath: cinder
         type: git
       cinder-htk:
@@ -121,7 +121,7 @@ data:
         type: git
       glance:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
+        reference: 59a017d834d0c3b676b13406ee79ccbc81704533
         subpath: glance
         type: git
       glance-htk:
@@ -131,7 +131,7 @@ data:
         type: git
       heat:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
+        reference: 59a017d834d0c3b676b13406ee79ccbc81704533
         subpath: heat
         type: git
       heat-htk:
@@ -146,7 +146,7 @@ data:
         type: git
       horizon:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
+        reference: 59a017d834d0c3b676b13406ee79ccbc81704533
         subpath: horizon
         type: git
       horizon-htk:
@@ -166,7 +166,7 @@ data:
         type: git
       keystone:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
+        reference: 59a017d834d0c3b676b13406ee79ccbc81704533
         subpath: keystone
         type: git
       keystone-htk:
@@ -206,7 +206,7 @@ data:
         type: git
       neutron:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
+        reference: 59a017d834d0c3b676b13406ee79ccbc81704533
         subpath: neutron
         type: git
       neutron-htk:
@@ -216,7 +216,7 @@ data:
         type: git
       nova:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
+        reference: 59a017d834d0c3b676b13406ee79ccbc81704533
         subpath: nova
         type: git
       nova-htk:
@@ -246,7 +246,7 @@ data:
         type: git
       tempest:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
+        reference: 59a017d834d0c3b676b13406ee79ccbc81704533
         subpath: tempest
         type: git
       tempest-htk:
@@ -333,7 +333,7 @@ data:
     ucp:
       armada:
         location: https://opendev.org/airship/armada
-        reference: caa75e403e1c6a671e65fe68c167ba0e9638f51e
+        reference: d404e3c034d6c30c20bf6bb2f37162ef6fe6a432
         subpath: charts/armada
         type: git
       armada-htk:
@@ -343,7 +343,7 @@ data:
         type: git
       barbican:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
+        reference: 59a017d834d0c3b676b13406ee79ccbc81704533
         subpath: barbican
         type: git
       barbican-htk:
@@ -393,7 +393,7 @@ data:
         type: git
       divingbell:
         location: https://opendev.org/airship/divingbell
-        reference: 49fc3ccc7e29395b3f9fed79402d7b2a3d0d1e00
+        reference: f727f6adf1a8470f73e1028d4e98fa25d9716e44
         subpath: divingbell
         type: git
       divingbell-htk:
@@ -423,7 +423,7 @@ data:
         type: git
       keystone:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 777e5994e82eff4efbc43bd916c8fa7974a0266c
+        reference: 59a017d834d0c3b676b13406ee79ccbc81704533
         subpath: keystone
         type: git
       keystone-htk:
@@ -473,7 +473,7 @@ data:
         type: git
       promenade:
         location: https://opendev.org/airship/promenade
-        reference: 3155a3824d0ee8a1406ae3705a9fd51f0108c94b
+        reference: 92e42922422391038bd251bbeb3f98a5b144a67e
         subpath: charts/promenade
         type: git
       promenade-htk:
@@ -533,7 +533,7 @@ data:
         type: git
       tiller:
         location: https://opendev.org/airship/armada
-        reference: caa75e403e1c6a671e65fe68c167ba0e9638f51e
+        reference: d404e3c034d6c30c20bf6bb2f37162ef6fe6a432
         subpath: charts/tiller
         type: git
       tiller-htk:
@@ -612,7 +612,7 @@ data:
       prometheus_process_exporter: {}
     ucp:
       armada:
-        api: quay.io/airshipit/armada:caa75e403e1c6a671e65fe68c167ba0e9638f51e-ubuntu_xenial
+        api: quay.io/airshipit/armada:d404e3c034d6c30c20bf6bb2f37162ef6fe6a432-ubuntu_xenial
         helm: docker.io/lachlanevenson/k8s-helm:v2.13.1
         tiller: gcr.io/kubernetes-helm/tiller:v2.13.1
       barbican: {}
@@ -640,7 +640,7 @@ data:
       postgresql: {}
       promenade:
         monitoring_image: busybox:1.28.3
-        promenade: quay.io/airshipit/promenade:3155a3824d0ee8a1406ae3705a9fd51f0108c94b
+        promenade: quay.io/airshipit/promenade:92e42922422391038bd251bbeb3f98a5b144a67e
       rabbitmq: {}
       shipyard:
         airflow: quay.io/airshipit/airflow:fe037700310450355a5f448eb39c9e3c993278f1-ubuntu_xenial
