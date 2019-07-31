@@ -28,53 +28,6 @@ pipelineJob('Seaworthy') {
     concurrentBuild(false)
 
     triggers {
-        gerritTrigger {
-            serverName('OS-CommunityGerrit')
-            silentMode(true)
-
-            gerritProjects {
-                gerritProject {
-                    compareType('PLAIN')
-                    pattern("airship/treasuremap")
-                    branches {
-                        branch {
-                            compareType("ANT")
-                            pattern("**")
-                        }
-                    }
-                    disableStrictForbiddenFileVerification(false)
-
-                    filePaths {
-                        filePath {
-                            compareType('ANT')
-                            pattern('global/**')
-                        }
-                        filePath {
-                            compareType('ANT')
-                            pattern('type/foundry/**')
-                        }
-                        filePath {
-                            compareType('ANT')
-                            pattern('site/seaworthy/**')
-                        }
-                        filePath {
-                            compareType('ANT')
-                            pattern('tools/**')
-                        }
-                    }
-                }
-            }
-
-            triggerOnEvents {
-                patchsetCreated {
-                    excludeDrafts(false)
-                    excludeTrivialRebase(false)
-                    excludeNoCodeChange(false)
-                }
-                commentAddedContains {
-                    commentAddedCommentContains('recheck')
-                }
-            }
 
             cron('H H * * *')
         }

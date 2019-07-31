@@ -241,40 +241,6 @@ def uplift_versions = {
     }
 }
 
-def uplift_review = {
-    withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-uplifter-key',
-            keyFileVariable: 'SSH_KEY',
-            usernameVariable: 'SSH_USER')]) {
-
-        sh 'sudo apt-get install git-review -y'
-
-        sh "cp ${SSH_KEY} ~/.ssh/id_rsa"
-
-        sh "ssh-keyscan -p 29418 review.opendev.org >> ~/.ssh/known_hosts"
-
-        sh "git clone ssh://${SSH_USER}@review.opendev.org:29418/airship/treasuremap"
-        sh "scp -p -P 29418 ${SSH_USER}@review.opendev.org:hooks/commit-msg treasuremap/.git/hooks/"
-
-        sh "cp global/software/config/versions.yaml treasuremap/global/software/config/versions.yaml"
-
-        dir ('treasuremap') {
-            sh "git config --global user.name 'Jenkins Uplifter'"
-            sh "git config --global user.email ${SSH_USER}@gmail.com"
-            sh "git config --global gitreview.username ${SSH_USER}"
-
-            sh 'git checkout -b versions/uplift'
-
-            sh 'git add global/software/config/versions.yaml'
-            sh 'git status'
-            sh 'git commit -m "Auto chart/image uplift to latest"'
-
-            sh 'git review -s'
-            sh 'git review'
-        }
-    }
-}
-
-
 //// test utils
 
 def sanity_tests = {
@@ -363,9 +329,5 @@ vm(image: 'ubuntu-16.04-server-cloudimg-amd64',
     }
 
     sanity_tests()
-
-    if (AIRSHIP_MANIFESTS_REF == 'uplift') {
-        uplift_review()
-    }
 }
 
