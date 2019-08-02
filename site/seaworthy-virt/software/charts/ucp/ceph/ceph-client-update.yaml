@@ -1,0 +1,18 @@
+---
+# The purpose of this file is to define environment-specific parameters for ceph
+# client update
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-ceph-client-update
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-ceph-client-update-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data: {}
+...

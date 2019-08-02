@@ -1,0 +1,23 @@
+---
+schema: 'drydock/HardwareProfile/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: GenericVM
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  vendor: 'Dell'
+  generation: '1'
+  hw_version: '2'
+  bios_version: '2.2.3'
+  boot_mode: 'bios'
+  bootstrap_protocol: 'pxe'
+  pxe_interface: 0
+  device_aliases:
+    pnic01:
+      bus_type: 'pci'
+      dev_type: 'Intel 10Gbps NIC'
+      address: '0000:00:03.0'
+...

@@ -19,6 +19,7 @@
     check:
       jobs:
         - treasuremap-seaworthy-site-lint
+        - treasuremap-seaworthy-virt-site-lint
         - treasuremap-airskiff-site-lint
         - treasuremap-airsloop-site-lint
         - treasuremap-aiab-site-lint
@@ -26,6 +27,7 @@
     gate:
       jobs:
         - treasuremap-seaworthy-site-lint
+        - treasuremap-seaworthy-virt-site-lint
         - treasuremap-airskiff-site-lint
         - treasuremap-airsloop-site-lint
         - treasuremap-aiab-site-lint
@@ -67,6 +69,22 @@
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$
+      - ^site/seaworthy-virt/.*$
+      - ^site/airskiff/.*$
+      - ^site/airsloop/.*$
+      - ^site/aiab/.*$
+
+- job:
+    name: treasuremap-seaworthy-virt-site-lint
+    description: |
+      Lint the seaworthy site using Pegleg.
+    parent: treasuremap-site-lint
+    vars:
+      site: seaworthy-virt
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^doc/.*$
+      - ^site/seaworthy/.*$
       - ^site/airskiff/.*$
       - ^site/airsloop/.*$
       - ^site/aiab/.*$
@@ -82,6 +100,7 @@
       - ^.*\.rst$
       - ^doc/.*$
       - ^site/seaworthy/.*$
+      - ^site/seaworthy-virt/.*$
       - ^site/airsloop/.*$
       - ^site/aiab/.*$
 
@@ -96,6 +115,7 @@
       - ^.*\.rst$
       - ^doc/.*$
       - ^site/seaworthy/.*$
+      - ^site/seaworthy-virt/.*$
       - ^site/airskiff/.*$
       - ^site/aiab/.*$
 
@@ -112,6 +132,7 @@
       - ^.*\.rst$
       - ^doc/.*$
       - ^site/seaworthy/.*$
+      - ^site/seaworthy-virt/.*$
       - ^site/airskiff/.*$
       - ^site/airsloop/.*$
 

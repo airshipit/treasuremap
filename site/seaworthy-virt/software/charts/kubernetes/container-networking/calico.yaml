@@ -1,0 +1,160 @@
+---
+# This is a copy-n-paste
+# from globals as this document must layer from type
+# so it can replace type, but really wants the content
+# from global. Refactor after the gate emulates fabric
+# BGP peering
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-calico
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: kubernetes-calico-global
+    actions:
+      - method: replace
+        path: .
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.calico.calico
+      dest:
+        path: .source
+    # Image versions
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.calico.calico
+      dest:
+        path: .values.images.tags
+    # IP addresses
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.etcd.service_ip
+      dest:
+        path: .values.endpoints.etcd.host_fqdn_override.default
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.pod_cidr
+      dest:
+        path: .values.networking.podSubnet
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.api_service_ip
+      dest:
+        path: .values.conf.controllers.K8S_API
+        pattern: SUB_KUBERNETES_IP
+
+    # Other site-specific configuration
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.ip_autodetection_method
+      dest:
+        path: .values.conf.node.IP_AUTODETECTION_METHOD
+
+    # Certificates
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: calico-etcd
+        path: .
+      dest:
+        path: .values.endpoints.etcd.auth.client.tls.ca
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-node
+        path: .
+      dest:
+        path: .values.endpoints.etcd.auth.client.tls.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-node
+        path: .
+      dest:
+        path: .values.endpoints.etcd.auth.client.tls.key
+data:
+  chart_name: calico
+  release: kubernetes-calico
+  namespace: kube-system
+  protected:
+    continue_processing: true
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-kubernetes-calico
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: airship-kubernetes-calico
+  values:
+    conf:
+      cni_network_config:
+        name: k8s-pod-network
+        cniVersion: 0.3.0
+        plugins:
+          - type: calico
+            etcd_endpoints: __ETCD_ENDPOINTS__
+            etcd_ca_cert_file: /etc/calico/pki/ca
+            etcd_cert_file: /etc/calico/pki/crt
+            etcd_key_file: /etc/calico/pki/key
+            log_level: info
+            mtu: 1500
+            ipam:
+              type: calico-ipam
+            policy:
+              type: k8s
+            kubernetes:
+              kubeconfig: __KUBECONFIG_FILEPATH__
+          - type: portmap
+            snat: true
+            capabilities:
+              portMappings: true
+
+      controllers:
+        K8S_API: "https://SUB_KUBERNETES_IP:443"
+
+      node:
+        CALICO_STARTUP_LOGLEVEL: INFO
+        CLUSTER_TYPE: "k8s,bgp"
+        ETCD_CA_CERT_FILE: /etc/calico/pki/ca
+        ETCD_CERT_FILE: /etc/calico/pki/crt
+        ETCD_KEY_FILE: /etc/calico/pki/key
+        WAIT_FOR_STORAGE: "true"
+
+    endpoints:
+      etcd:
+        hosts:
+          default: calico-etcd
+        scheme:
+          default: https
+
+    networking:
+      settings:
+        mesh: "on"
+        ippool:
+          ipip:
+            enabled: "true"
+            mode: "Always"
+          nat_outgoing: "true"
+          disabled: "false"
+
+    manifests:
+      daemonset_calico_etcd: false
+      job_image_repo_sync: false
+      pod_calicoctl: false
+      service_calico_etcd: false
+  dependencies:
+    - calico-htk
+...
