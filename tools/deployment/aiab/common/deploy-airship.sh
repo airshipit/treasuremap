@@ -319,6 +319,7 @@ function print_dashboards() {
   HORIZON_PORT=$(kubectl -n openstack get service horizon-dashboard -o jsonpath="{.spec.ports[0].nodePort}")
   MAAS_PORT=$(kubectl -n ucp get service maas-region-ui -o jsonpath="{.spec.ports[0].nodePort}")
   MASS_PASS=$(awk '/^data:/ {print $2}' ${WORKSPACE}/treasuremap/site/${TARGET_SITE}/secrets/passphrases/ucp_maas_admin_password.yaml)
+  HORIZON_PASS=$(awk '/^data:/ {print $2}' ${WORKSPACE}/treasuremap/site/${TARGET_SITE}/secrets/passphrases/osh_horizon_oslo_db_password.yaml)
   set +x
   echo " "
   echo "OpenStack Horizon dashboard is available on this host at the following URL:"
@@ -329,7 +330,7 @@ function print_dashboards() {
   echo "Credentials:"
   echo "  Domain: default"
   echo "  Username: admin"
-  echo "  Password: password"
+  echo "  Password: ${HORIZON_PASS}"
   echo " "
   echo "OpenStack CLI commands could be launched via \`./openstack\` script, e.g.:"
   echo "  # cd ${WORKSPACE}/treasuremap/tools/"
