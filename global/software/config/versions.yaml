@@ -1,4 +1,14 @@
 ---
+schema: pegleg/SoftwareVersions/v1
+metadata:
+  schema: metadata/Document/v1
+  name: software-versions
+  labels:
+    name: software-versions-global
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
 data:
   charts:
     kubernetes:
@@ -737,14 +747,4 @@ data:
         url: http://us.archive.ubuntu.com/ubuntu
     unnamed:
     - ceph-common
-metadata:
-  labels:
-    name: software-versions-global
-  layeringDefinition:
-    abstract: false
-    layer: global
-  name: software-versions
-  schema: metadata/Document/v1
-  storagePolicy: cleartext
-schema: pegleg/SoftwareVersions/v1
 ...

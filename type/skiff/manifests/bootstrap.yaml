@@ -3,20 +3,25 @@ schema: armada/Manifest/v1
 metadata:
   schema: metadata/Document/v1
   replacement: true
-  name: full-site
+  name: cluster-bootstrap
   labels:
-    name: full-site-type
+    name: cluster-bootstrap-type
   layeringDefinition:
     abstract: false
     layer: type
     parentSelector:
-      name: full-site-global
+      name: cluster-bootstrap-global
     actions:
       - method: replace
         path: .chart_groups
   storagePolicy: cleartext
 data:
+  release_prefix: airship
   chart_groups:
-    - openstack-ingress-controller
-    - openstack-memcached
+    - osh-infra-nfs-provisioner
+    - ucp-core
+    - ucp-keystone
+    - ucp-shipyard
+    - ucp-armada
+    - ucp-deckhand
 ...

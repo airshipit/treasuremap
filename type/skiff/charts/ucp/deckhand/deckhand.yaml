@@ -1,0 +1,31 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-deckhand
+  replacement: true
+  labels:
+    name: ucp-deckhand-type
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-deckhand-global
+    actions:
+      - method: replace
+        path: .source
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  wait:
+    timeout: 1800
+  source:
+    type: local
+    location: /airship-components/deckhand
+    subpath: charts/deckhand
+  values:
+    pod:
+      replicas:
+        deckhand: 1
+...

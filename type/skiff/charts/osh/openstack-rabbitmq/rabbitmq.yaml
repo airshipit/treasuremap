@@ -1,0 +1,30 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-rabbitmq
+  replacement: true
+  labels:
+    name: openstack-rabbitmq-type
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: openstack-rabbitmq-global
+    actions:
+      - method: delete
+        path: .values.labels.prometheus_rabbitmq_exporter
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  test:
+    enabled: false
+  values:
+    pod:
+      replicas:
+        server: 1
+    monitoring:
+      prometheus:
+        enabled: false
+...

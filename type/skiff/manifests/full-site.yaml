@@ -18,5 +18,11 @@ metadata:
 data:
   chart_groups:
     - openstack-ingress-controller
+    - openstack-mariadb
+    - openstack-rabbitmq
     - openstack-memcached
+    - openstack-keystone
+    - openstack-glance
+    - openstack-compute-kit
+    - openstack-heat
 ...

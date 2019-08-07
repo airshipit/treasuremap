@@ -20,7 +20,7 @@ set -xe
 : "${INSTALL_PATH:="$(pwd)/../"}"
 : "${PEGLEG:="./tools/airship pegleg"}"
 : "${PL_SITE:="airskiff"}"
-: "${TARGET_MANIFEST:="ucp-bootstrap"}"
+: "${TARGET_MANIFEST:="cluster-bootstrap"}"
 
 # Render documents
 ${PEGLEG} site -r . render "${PL_SITE}" -o airskiff.yaml
