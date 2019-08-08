@@ -25,6 +25,11 @@ set -xe
 # Render documents
 ${PEGLEG} site -r . render "${PL_SITE}" -o airskiff.yaml
 
+# Set permissions o+r, beacause it need to be readable
+# for Armada in the container
+AIRSKIFF_PERMISSIONS=$(stat --format '%a' airskiff.yaml)
+sudo chmod 0644 airskiff.yaml
+
 # Download latest Armada image and deploy Airship components
 docker run --rm --net host -p 8000:8000 --name armada \
     -v ~/.kube/config:/armada/.kube/config \
@@ -32,3 +37,6 @@ docker run --rm --net host -p 8000:8000 --name armada \
     -v "${INSTALL_PATH}":/airship-components \
     quay.io/airshipit/armada:latest \
     apply /airskiff.yaml --target-manifest $TARGET_MANIFEST
+
+# Set back permissions of the file
+sudo chmod "${AIRSKIFF_PERMISSIONS}" airskiff.yaml
