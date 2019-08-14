@@ -15,22 +15,21 @@
 #    under the License
 
 set -e
+set -o pipefail
 
 REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/../../ >/dev/null 2>&1 && pwd )"
 : "${SHIPYARD:=${REPO_DIR}/tools/airship shipyard}"
 
-ACTION=$(${SHIPYARD} get actions | tail -n +2 | grep "action\/" | grep -iE "Processing|Complete" | awk '{ print $2 }')
+ACTION=$(${SHIPYARD} get actions | grep -i "Processing" | awk '{ print $2 }')
+
+# Exit earlier if there is nothing to wait for.
+if [ -z "${ACTION}" ]; then
+        echo "No actions in Processing state, exiting..."
+        exit 0
+fi
 
 echo -e "\nWaiting for $ACTION..."
-
 while true; do
-        # Check if there is just one action ongoing or completed.
-        # If yes, break the loop.
-        if [ "$(echo "${ACTION}" | wc -l)" -eq 1 ]; then
-            echo -e "\n$ACTION has been completed"
-            break
-        fi
-
         # Print the status of tasks
         ${SHIPYARD} describe "${ACTION}"
 
