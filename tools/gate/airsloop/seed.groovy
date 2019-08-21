@@ -80,9 +80,12 @@ pipelineJob('airsloop') {
         }
 
         definition {
-            cps {
-                script(readFileFromWorkspace("tools/gate/airsloop/Jenkinsfile"))
-                sandbox(false)
+            cpsScm {
+                scm {
+                    git('https://review.opendev.org/airship/treasuremap')
+                    scriptPath('tools/gate/airsloop/Jenkinsfile')
+                    lightweight(true)
+                }
             }
         }
     }

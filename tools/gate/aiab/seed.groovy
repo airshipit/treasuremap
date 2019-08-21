@@ -43,9 +43,12 @@ pipelineJob("treasuremap-aiab") {
         }
 
         definition {
-            cps {
-                script(readFileFromWorkspace("${JOB_BASE}/Jenkinsfile"))
-                sandbox(false)
+            cpsScm {
+                scm {
+                    git('https://review.opendev.org/airship/treasuremap')
+                    scriptPath('tools/gate/aiab/Jenkinsfile')
+                    lightweight(true)
+                }
             }
         }
     }
