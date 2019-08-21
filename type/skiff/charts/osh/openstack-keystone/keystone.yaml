@@ -1,22 +1,24 @@
 ---
-schema: armada/Manifest/v1
+schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
+  name: keystone
   replacement: true
-  name: full-site
   labels:
-    name: full-site-type
+    name: keystone-type
   layeringDefinition:
     abstract: false
     layer: type
     parentSelector:
-      name: full-site-global
+      name: keystone-global
+      component: keystone
     actions:
       - method: replace
-        path: .chart_groups
+        path: .values.pod
   storagePolicy: cleartext
 data:
-  chart_groups:
-    - openstack-ingress-controller
-    - openstack-memcached
+  values:
+    pod:
+      replicas:
+        api: 1
 ...

@@ -17,6 +17,6 @@
     - name: Replace Armada manifest
       shell: |
         mv tools/gate/manifests/full-site.yaml \
-            site/airskiff/software/manifests/full-site.yaml
+            type/skiff/manifests/full-site.yaml
       args:
         chdir: "{{ zuul.project.src_dir }}"

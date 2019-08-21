@@ -1,22 +1,21 @@
 ---
-schema: armada/Manifest/v1
+schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
+  name: ucp-armada
   replacement: true
-  name: full-site
   labels:
-    name: full-site-type
+    name: ucp-armada-chart-group-type
   layeringDefinition:
     abstract: false
     layer: type
     parentSelector:
-      name: full-site-global
+      name: ucp-armada-chart-group-global
     actions:
       - method: replace
-        path: .chart_groups
+        path: .chart_group
   storagePolicy: cleartext
 data:
-  chart_groups:
-    - openstack-ingress-controller
-    - openstack-memcached
+  chart_group:
+    - ucp-armada
 ...
