@@ -18,6 +18,8 @@ metadata:
 data:
   wait:
     timeout: 1800
+  test:
+    timeout: 600
   values:
     pod:
       replicas:

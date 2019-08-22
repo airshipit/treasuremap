@@ -1,0 +1,51 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-keystone-suse
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-keystone-type
+      component: keystone
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  wait:
+    timeout: 600
+  test:
+    timeout: 600
+  values:
+    pod:
+      security_context:
+        keystone:
+          pod:
+            runAsUser: 0
+          container:
+            keystone_api:
+              readOnlyRootFilesystem: false
+    conf:
+      software:
+        apache2:
+          binary: apache2ctl
+          start_parameters: -DFOREGROUND -k start
+          site_dir: /etc/apache2/vhosts.d
+          conf_dir: /etc/apache2/conf.d
+          a2enmod:
+            - version
+      security: |
+        <Directory "/var/www">
+          Options Indexes FollowSymLinks
+          AllowOverride All
+          <IfModule !mod_access_compat.c>
+            Require all granted
+          </IfModule>
+          <IfModule mod_access_compat.c>
+            Order allow,deny
+            Allow from all
+          </IfModule>
+        </Directory>
+...

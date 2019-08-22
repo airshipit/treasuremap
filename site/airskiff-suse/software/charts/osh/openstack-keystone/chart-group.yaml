@@ -1,25 +1,19 @@
 ---
-schema: armada/Chart/v1
+schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
-  name: keystone
+  name: openstack-keystone
   replacement: true
-  labels:
-    name: keystone-type
-    component: keystone
   layeringDefinition:
     abstract: false
-    layer: type
+    layer: site
     parentSelector:
-      name: keystone-global
+      name: openstack-keystone-chart-group-global
       component: keystone
     actions:
       - method: replace
-        path: .values.pod
+        path: .chart_group
   storagePolicy: cleartext
 data:
-  values:
-    pod:
-      replicas:
-        api: 1
-...
+  chart_group:
+    - keystone-suse

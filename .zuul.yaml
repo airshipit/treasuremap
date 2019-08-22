@@ -20,18 +20,20 @@
       jobs:
         - treasuremap-seaworthy-site-lint
         - treasuremap-seaworthy-virt-site-lint
-        - treasuremap-airskiff-site-lint
+        - treasuremap-airskiff-ubuntu-site-lint
+        - treasuremap-airskiff-suse-site-lint
         - treasuremap-airsloop-site-lint
         - treasuremap-aiab-site-lint
         - treasuremap-airskiff-deployment-ubuntu
+        - treasuremap-airskiff-deployment-suse
     gate:
       jobs:
         - treasuremap-seaworthy-site-lint
         - treasuremap-seaworthy-virt-site-lint
-        - treasuremap-airskiff-site-lint
+        - treasuremap-airskiff-ubuntu-site-lint
+        - treasuremap-airskiff-suse-site-lint
         - treasuremap-airsloop-site-lint
         - treasuremap-aiab-site-lint
-        - treasuremap-airskiff-deployment-ubuntu
     post:
       jobs:
         - treasuremap-upload-git-mirror
@@ -90,12 +92,27 @@
       - ^site/aiab/.*$
 
 - job:
-    name: treasuremap-airskiff-site-lint
+    name: treasuremap-airskiff-ubuntu-site-lint
     description: |
       Lint the airskiff site using Pegleg.
     parent: treasuremap-site-lint
     vars:
       site: airskiff
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^doc/.*$
+      - ^site/seaworthy/.*$
+      - ^site/seaworthy-virt/.*$
+      - ^site/airsloop/.*$
+      - ^site/aiab/.*$
+
+- job:
+    name: treasuremap-airskiff-suse-site-lint
+    description: |
+      Lint the airskiff-suse site using Pegleg.
+    parent: treasuremap-site-lint
+    vars:
+      site: airskiff-suse
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$
@@ -147,6 +164,29 @@
       - tools/gate/playbooks/git-config.yaml
       - tools/gate/playbooks/airskiff-reduce-site.yaml
     run: tools/gate/playbooks/airskiff-deploy-gate.yaml
+    post-run: tools/gate/playbooks/debug-report.yaml
+    vars:
+       site: airskiff
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^doc/.*$
+      - ^site/seaworthy/.*$
+      - ^site/airsloop/.*$
+      - ^site/aiab/.*$
+
+- job:
+    name: treasuremap-airskiff-deployment-suse
+    nodeset: treasuremap-single-node
+    description: |
+      Deploy Memcached using Airskiff-suse and latest Treasuremap changes.
+    voting: false
+    timeout: 9600
+    pre-run:
+      - tools/gate/playbooks/git-config.yaml
+      - tools/gate/playbooks/airskiff-reduce-site.yaml
+    run: tools/gate/playbooks/airskiff-deploy-gate.yaml
+    vars:
+      site: airskiff-suse
     post-run: tools/gate/playbooks/debug-report.yaml
     irrelevant-files:
       - ^.*\.rst$

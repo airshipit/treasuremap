@@ -13,7 +13,7 @@ metadata:
       name: libvirt-global
       component: libvirt
     actions:
-      - method: replace
+      - method: merge
         path: .values
   storagePolicy: cleartext
 data:

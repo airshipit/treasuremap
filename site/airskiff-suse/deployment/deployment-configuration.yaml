@@ -1,0 +1,13 @@
+---
+schema: shipyard/DeploymentConfiguration/v1
+metadata:
+  schema: metadata/Document/v1
+  name: deployment-configuration
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  armada:
+    manifest: full-site
+...

@@ -1,0 +1,23 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: neutron-suse
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: neutron-type
+      component: neutron
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    # Required for Rocky, the version openSUSE neutron image used here is based on.
+    conf:
+      paste:
+        app:neutronversions:
+          paste.app_factory: neutron.pecan_wsgi.app:versions_factory
+...

@@ -1,0 +1,21 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-keystone
+  replacement: true
+  labels:
+    name: ucp-keystone-chart-group-suse
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-keystone-chart-group-global
+    actions:
+      - method: replace
+        path: .chart_group
+  storagePolicy: cleartext
+data:
+  chart_group:
+    - ucp-keystone-memcached
+    - ucp-keystone-suse
