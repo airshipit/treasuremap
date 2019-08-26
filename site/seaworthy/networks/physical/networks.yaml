@@ -139,10 +139,11 @@ data:
     # Choose FQDN according to the node FQDN naming conventions at the top of
     # this document.
     domain: atlantafoundry.com
-    # List of upstream DNS forwards. Verify you can reach them from your
-    # environment. If so, you should not need to change them.
-    # TODO: This should be populated via substitution from common-addresses
-    servers: '8.8.8.8,8.8.4.4,208.67.222.222'
+    # NEWSITE-CHANGEME: Use MAAS VIP as the DNS server.
+    # MAAS has inbuilt DNS server and Debian mirror that allows nodes to be
+    # deployed without requiring routed/internet access for the PXE interface.
+    # See data.vip.maas_vip in networks/common-addresses.yaml
+    servers: '10.23.20.9'
 ...
 ---
 schema: 'drydock/NetworkLink/v1'

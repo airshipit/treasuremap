@@ -20,5 +20,13 @@ metadata:
         path: .vip.maas_vip
       dest:
         path: .values.network.maas_ingress.addr
-data: {}
+data:
+  values:
+    network:
+      region_api:
+        # Enable NodePort for initial genesis deployment.
+        # This helps with early deployment of bare-metal servers
+        # and is later removed by maas-scaled overrides
+        node_port:
+          enabled: true
 ...
