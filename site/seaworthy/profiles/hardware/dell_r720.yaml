@@ -32,23 +32,23 @@ data:
       # type could identify expected hardware - used for hardware manifest validation
       dev_type: 'I350 Gigabit Network Connection'
       bus_type: 'pci'
-    # enp67s0f0
-    data_nic01:
+    # enp67s0f0 - for data plane traffic
+    dp_nic01:
       address: '0000:43:00.0'
       dev_type: 'Ethernet 10G 2P X520 Adapter'
       bus_type: 'pci'
-    # enp67s0f1
-    data_nic02:
+    # enp67s0f1 - for control plane traffic
+    cp_nic01:
       address: '0000:43:00.1'
       dev_type: 'Ethernet 10G 2P X520 Adapter'
       bus_type: 'pci'
-    # enp68s0f0
-    data_nic03:
+    # enp68s0f0 - for control plane traffic
+    cp_nic02:
       address: '0000:44:00.0'
       dev_type: 'Ethernet 10G 2P X520 Adapter'
       bus_type: 'pci'
-    # enp68s0f1
-    data_nic04:
+    # enp68s0f1 - for data plane traffic
+    dp_nic02:
       address: '0000:44:00.1'
       dev_type: 'Ethernet 10G 2P X520 Adapter'
       bus_type: 'pci'
