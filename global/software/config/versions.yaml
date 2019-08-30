@@ -493,7 +493,7 @@ data:
         type: git
       shipyard:
         location: https://opendev.org/airship/shipyard
-        reference: fed3407634c662720885658d179274b74c37f576
+        reference: c21555fce0d4f9dffce219d1be70e5d5cebca2a7
         subpath: charts/shipyard
         type: git
       shipyard-htk:
@@ -643,10 +643,10 @@ data:
         promenade: quay.io/airshipit/promenade:b3533b8522ac67f581837a1a5033d3b9777e9e89
       rabbitmq: {}
       shipyard:
-        airflow: quay.io/airshipit/airflow:fed3407634c662720885658d179274b74c37f576-ubuntu_xenial
-        airflow_db_sync: quay.io/airshipit/airflow:fed3407634c662720885658d179274b74c37f576-ubuntu_xenial
-        shipyard: quay.io/airshipit/shipyard:fed3407634c662720885658d179274b74c37f576-ubuntu_xenial
-        shipyard_db_sync: quay.io/airshipit/shipyard:fed3407634c662720885658d179274b74c37f576-ubuntu_xenial
+        airflow: quay.io/airshipit/airflow:c21555fce0d4f9dffce219d1be70e5d5cebca2a7-ubuntu_xenial
+        airflow_db_sync: quay.io/airshipit/airflow:c21555fce0d4f9dffce219d1be70e5d5cebca2a7-ubuntu_xenial
+        shipyard: quay.io/airshipit/shipyard:c21555fce0d4f9dffce219d1be70e5d5cebca2a7-ubuntu_xenial
+        shipyard_db_sync: quay.io/airshipit/shipyard:c21555fce0d4f9dffce219d1be70e5d5cebca2a7-ubuntu_xenial
       tiller: {}
   packages:
     gpgkey: |-

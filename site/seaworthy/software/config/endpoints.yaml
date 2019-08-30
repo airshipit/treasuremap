@@ -163,6 +163,8 @@ data:
           public: 80
     airflow_oslo_messaging:
       namespace: null
+      statefulset:
+        name: airship-ucp-rabbitmq-rabbitmq
       hosts:
         default: rabbitmq
       host_fqdn_override:
