@@ -558,27 +558,27 @@ data:
       tenant-ceph-rgw: {}
     kubernetes:
       apiserver:
-        anchor: gcr.io/google-containers/hyperkube-amd64:v1.11.6
-        apiserver: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+        anchor: &hyperkube gcr.io/google-containers/hyperkube-amd64:v1.12.9
+        apiserver: *hyperkube
       controller-manager:
-        anchor: gcr.io/google-containers/hyperkube-amd64:v1.11.6
-        controller_manager: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+        anchor: *hyperkube
+        controller_manager: *hyperkube
       coredns:
         coredns: docker.io/coredns/coredns:1.1.3
       etcd:
-        etcd: quay.io/coreos/etcd:v3.2.18
-        etcdctl: quay.io/coreos/etcd:v3.2.18
+        etcd: &etcd quay.io/coreos/etcd:v3.3.12
+        etcdctl: *etcd
       haproxy:
-        anchor: gcr.io/google_containers/hyperkube-amd64:v1.11.6
+        anchor: *hyperkube
         haproxy: docker.io/haproxy:1.8.19
-      hyperkube: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+      hyperkube: *hyperkube
       ingress: {}
       pause: gcr.io/google-containers/pause-amd64:3.1
       proxy:
-        proxy: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+        proxy: *hyperkube
       scheduler:
-        anchor: gcr.io/google-containers/hyperkube-amd64:v1.11.6
-        scheduler: gcr.io/google-containers/hyperkube-amd64:v1.11.6
+        anchor: *hyperkube
+        scheduler: *hyperkube
     osh:
       barbican: {}
       cinder: {}
