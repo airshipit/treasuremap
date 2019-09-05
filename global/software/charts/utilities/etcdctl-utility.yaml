@@ -1,0 +1,111 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: etcdctl-utility
+  layeringDefinition:
+    abstract: false
+    layer: global
+  labels:
+    name: etcdctl-utility-global
+    component: utility
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.utility.etcdctl-utility
+      dest:
+        path: .source
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.utility.etcdctl-utility
+      dest:
+        path: .values.images.tags
+    # CAs
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: kubernetes-etcd
+        path: .
+      dest:
+        path: .values.endpoints.etcd.auth.client.tls.ca
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubernetes-etcd-anchor
+        path: .
+      dest:
+        path: .values.endpoints.etcd.auth.client.tls.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubernetes-etcd-anchor
+        path: .
+      dest:
+        path: .values.endpoints.etcd.auth.client.tls.key
+    # IP addresses
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.etcd_service_ip
+      dest:
+        path: .values.endpoints.etcd.host_fqdn_override.default
+data:
+  chart_name: etcdctl-utility
+  release: etcdctl-utility
+  namespace: utility
+  protected:
+    continue_processing: true
+  wait:
+    timeout: 600
+    labels:
+      release_group: airship-etcdctl-utility
+  install:
+   no_hooks: false
+  upgrade:
+   no_hooks: false
+  values:
+    labels:
+      utility:
+        node_selector_key: utility
+        node_selector_value: enabled
+    endpoints:
+      etcd:
+        hosts:
+          default: kubernetes-etcd
+        scheme:
+          default: https
+    manifests:
+      configmap_bin: true
+      configmap_etc_client: true
+      configmap_etc_sudoers: true
+      deployment_etcdctl_utility: true
+      job_image_repo_sync: false
+      secret_certificates: true
+  dependencies:
+    - etcdctl-utility-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: etcdctl-utility-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.utility.etcdctl-utility-htk
+      dest:
+        path: .source
+data:
+  chart_name: etcdctl-utility-htk
+  release: etcdctl-utility-htk
+  namespace: etcdctl-utility-htk
+  values: {}
+  dependencies: []
+...
