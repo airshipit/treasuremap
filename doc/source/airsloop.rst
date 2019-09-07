@@ -31,7 +31,6 @@ Various resiliency and security features are tuned down via configuration.
    with VLANs for OAM, Calico, Storage, and OpenStack Overlay).
  * Generic hostnames used (airsloop-control-1, airsloop-compute-1) that
    simplifies generation of k8s certificates.
- * Usage of standard Ubuntu 16.04 GA kernel (as oppose to HWE).
 
 
 Airsloop site manifests are available at

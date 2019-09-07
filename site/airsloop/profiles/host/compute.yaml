@@ -71,10 +71,4 @@ data:
               mountpoint: '/var'
               fstype: 'ext4'
               mount_options: 'defaults'
-
-  platform:
-    image: 'xenial'
-    kernel: 'ga-16.04'
-    kernel_params:
-      kernel_package: 'linux-image-4.4.0-137-generic'
 ...
