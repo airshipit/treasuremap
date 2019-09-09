@@ -1,0 +1,92 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ceph-utility-config
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.ceph-provisioners
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ceph.ceph-provisioners
+      dest:
+        path: .values.images.tags
+
+    # IP addresses
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .storage.ceph.public_cidr
+      dest:
+        path: .values.network.public
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .storage.ceph.cluster_cidr
+      dest:
+        path: .values.network.cluster
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ceph.ceph_mon
+      dest:
+        path: .values.endpoints.ceph_mon
+
+data:
+  chart_name: ceph-utility-config
+  release: ceph-utility-config
+  namespace: utility
+  protected:
+    continue_processing: true
+  wait:
+    timeout: 3600
+    labels:
+      release_group: airship-ceph-utility-config
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: airship-ceph-utility-config
+  values:
+    labels:
+      job:
+        node_selector_key: utility
+        node_selector_value: enabled
+      provisioner:
+        node_selector_key: utility
+        node_selector_value: enabled
+    deployment:
+      ceph: false
+      client_secrets: true
+      rbd_provisioner: false
+      cephfs_provisioner: false
+    bootstrap:
+      enabled: false
+    conf:
+      rgw_ks:
+        enabled: true
+    storageclass:
+      rbd:
+        ceph_configmap_name: ceph-etc
+        user_secret_name: pvc-ceph-client-key
+  dependencies:
+    - ceph-htk
+...

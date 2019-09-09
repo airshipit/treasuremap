@@ -12,3 +12,5 @@ data:
   sequenced: false
   chart_group:
     - calicoctl-utility
+#    - ceph-utility-config
+#    - ceph-utility

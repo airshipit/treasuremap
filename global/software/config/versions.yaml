@@ -552,6 +552,16 @@ data:
         reference: ef58054dff356334cdbfd96f04dc7c149768c76d
         subpath: helm-toolkit
         type: git
+      ceph-utility:
+        location: https://opendev.org/airship/porthole
+        reference: cb5d6cfba3541b48cdc1a494cd04cc8ac3fd86c8
+        subpath: charts/ceph-utility
+        type: git
+      ceph-utility-htk:
+        location: https://opendev.org/openstack/openstack-helm-infra
+        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        subpath: helm-toolkit
+        type: git
   images:
     calico:
       calico:
@@ -1037,6 +1047,9 @@ data:
     utility:
       calicoctl-utility:
         calicoctl_utility: quay.io/airshipit/porthole-calicoctl-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-alpine
+        image_repo_sync: docker.io/docker:18.09.02
+      ceph-utility:
+        ceph_utility: quay.io/airshipit/porthole-ceph-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-ubuntu_xenial
         image_repo_sync: docker.io/docker:18.09.02
   packages:
     gpgkey: |-
