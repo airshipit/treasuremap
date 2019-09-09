@@ -1,0 +1,45 @@
+---
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: full-site-utilities
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: full-site-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  release_prefix: airship
+  chart_groups:
+    - podsecuritypolicy
+    - kubernetes-proxy
+    - kubernetes-container-networking
+    - kubernetes-dns
+    - kubernetes-etcd
+    - kubernetes-haproxy
+    - kubernetes-core
+    - ingress-kube-system
+    - osh-infra-nfs-provisioner
+    - ucp-core
+    - ucp-keystone
+    - ucp-divingbell
+    - ucp-armada
+    - ucp-deckhand
+    - ucp-drydock
+    - ucp-promenade
+    - ucp-shipyard
+    - openstack-ingress-controller
+    - openstack-mariadb
+    - openstack-rabbitmq
+    - openstack-memcached
+    - openstack-keystone
+    - openstack-glance-aiab
+    - openstack-compute-kit
+    - openstack-heat-aiab
+    - openstack-horizon
+    - utilities
+...

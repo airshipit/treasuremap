@@ -113,4 +113,5 @@ data:
       kube-ingress: enabled
       beta.kubernetes.io/fluentd-ds-ready: 'true'
       node-exporter: enabled
+      utility: enabled
 ...

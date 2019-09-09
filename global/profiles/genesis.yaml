@@ -127,6 +127,7 @@ data:
       - maas-rack=enabled
       - maas-region=enabled
       - node-exporter=enabled
+      - utility=enabled
   files:
     - path: /var/lib/anchor/calico-etcd-bootstrap
       content: "# placeholder for triggering calico etcd bootstrapping\n# this file will be deleted"

@@ -40,4 +40,5 @@ data:
       - openstack-control-plane=enabled
       - openstack-nova-compute=enabled
       - openstack-libvirt=kernel
+      - utility=enabled
 ...

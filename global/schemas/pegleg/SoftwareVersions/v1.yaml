@@ -807,6 +807,20 @@ data:
                   type: string
                 reference:
                   type: string
+        utility:
+          type: object
+          properties:
+            calicoctl-utility:
+              type: object
+              properties:
+                type:
+                  type: string
+                  location:
+                    type: string
+                  subpath:
+                    type: string
+                  reference:
+                    type: string
     files:
       type: object
       properties:
@@ -1004,6 +1018,16 @@ data:
                 rabbitmq:
                   type: string
                 dep_check:
+                  type: string
+        utility:
+          type: object
+          properties:
+            calicoctl-utility:
+              type: object
+              properties:
+                calicoctl_utility:
+                  type: string
+                image_repo_sync:
                   type: string
         ceph:
           type: object
