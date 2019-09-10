@@ -47,6 +47,7 @@
       shell: |
         mkdir ~/.kube
         cp -rp /home/zuul/.kube/config ~/.kube/config
+        export PL_SITE="{{ site }}"
         ./tools/deployment/airskiff/developer/030-armada-bootstrap.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
@@ -54,6 +55,7 @@
 
     - name: Deploy Software using Airship
       shell: |
+        export PL_SITE="{{ site }}"
         ./tools/deployment/airskiff/developer/100-deploy-osh.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"

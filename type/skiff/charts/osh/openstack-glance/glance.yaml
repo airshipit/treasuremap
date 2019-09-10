@@ -6,6 +6,7 @@ metadata:
   replacement: true
   labels:
     name: glance-type
+    component: glance
   layeringDefinition:
     abstract: false
     layer: type

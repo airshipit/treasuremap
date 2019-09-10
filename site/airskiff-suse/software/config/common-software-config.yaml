@@ -1,0 +1,13 @@
+---
+schema: pegleg/CommonSoftwareConfig/v1
+metadata:
+  schema: metadata/Document/v1
+  name: common-software-config
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  osh:
+    region_name: RegionOne
+...

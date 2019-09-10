@@ -1,0 +1,159 @@
+---
+schema: pegleg/SoftwareVersions/v1
+metadata:
+  labels:
+    name: software-versions-airskiff-suse
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: software-versions-global
+    actions:
+      - method: merge
+        path: .
+  name: software-versions
+  replacement: true
+  schema: metadata/Document/v1
+  storagePolicy: cleartext
+data:
+  images:
+    osh:
+      glance:
+        glance_db_sync: "docker.io/openstackhelm/glance:rocky-opensuse_15-20190819"
+        db_init: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        db_drop: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_user: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_service: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_endpoints: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        glance_api: "docker.io/openstackhelm/glance:rocky-opensuse_15-20190819"
+        glance_registry: "docker.io/openstackhelm/glance:rocky-opensuse_15-20190819"
+        bootstrap: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        glance_storage_init: "docker.io/openstackhelm/ceph-config-helper:latest-opensuse_15"
+      keystone:
+        bootstrap: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        db_init: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        keystone_db_sync: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+        db_drop: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_user: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        keystone_fernet_setup: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+        keystone_fernet_rotate: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+        keystone_credential_setup: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+        keystone_credential_rotate: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+        keystone_api: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+        keystone_domain_manage: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+      heat:
+        bootstrap: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        db_init: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        heat_db_sync: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        db_drop: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_user: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_service: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_endpoints: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        heat_api: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        heat_cfn: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        heat_cloudwatch: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        heat_engine: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        heat_engine_cleaner: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        heat_purge_deleted: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+      ingress:
+        ingress_module_init: "docker.io/openstackhelm/neutron:rocky-opensuse_15-20190819"
+        ingress_routed_vip: "docker.io/openstackhelm/neutron:rocky-opensuse_15-20190819"
+      libvirt:
+        libvirt: "docker.io/openstackhelm/libvirt:latest-opensuse_15"
+      mariadb:
+        prometheus_mysql_exporter_helm_tests: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+      neutron:
+        bootstrap: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        db_init: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        db_drop: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_user: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_service: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_endpoints: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        neutron_db_sync: "docker.io/openstackhelm/neutron:rocky-opensuse_15-20190819"
+        neutron_dhcp: "docker.io/openstackhelm/neutron:rocky-opensuse_15-20190819"
+        neutron_l3: "docker.io/openstackhelm/neutron:rocky-opensuse_15-20190819"
+        neutron_linuxbridge_agent: "docker.io/openstackhelm/neutron:rocky-opensuse_15-20190819"
+        neutron_metadata: "docker.io/openstackhelm/neutron:rocky-opensuse_15-20190819"
+        neutron_openvswitch_agent: "docker.io/openstackhelm/neutron:rocky-opensuse_15-20190819"
+        neutron_server: "docker.io/openstackhelm/neutron:rocky-opensuse_15-20190819"
+        neutron_sriov_agent: "docker.io/openstackhelm/neutron:rocky-opensuse_15-20190819-sriov-1804"
+        neutron_sriov_agent_init: "docker.io/openstackhelm/neutron:rocky-opensuse_15-20190819-sriov-1804"
+      nova:
+        bootstrap: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        db_drop: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        db_init: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_user: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_service: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_endpoints: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        nova_api: "docker.io/openstackhelm/nova:rocky-opensuse_15-20190819"
+        nova_cell_setup: "docker.io/openstackhelm/nova:rocky-opensuse_15-20190819"
+        nova_cell_setup_init: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        nova_compute: "docker.io/openstackhelm/nova:rocky-opensuse_15-20190819"
+        nova_compute_ssh: "docker.io/openstackhelm/nova:rocky-opensuse_15-20190819"
+        nova_conductor: "docker.io/openstackhelm/nova:rocky-opensuse_15-20190819"
+        nova_consoleauth: "docker.io/openstackhelm/nova:rocky-opensuse_15-20190819"
+        nova_db_sync: "docker.io/openstackhelm/nova:rocky-opensuse_15-20190819"
+        nova_novncproxy: "docker.io/openstackhelm/nova:rocky-opensuse_15-20190819"
+        nova_novncproxy_assets: "docker.io/openstackhelm/nova:rocky-opensuse_15-20190819"
+        nova_placement: "docker.io/openstackhelm/nova:rocky-opensuse_15-20190819"
+        nova_scheduler: "docker.io/openstackhelm/nova:rocky-opensuse_15-20190819"
+        nova_spiceproxy: "docker.io/openstackhelm/nova:rocky-opensuse_15-20190819"
+        nova_spiceproxy_assets: "docker.io/openstackhelm/nova:rocky-opensuse_15-20190819"
+        nova_service_cleaner: "docker.io/openstackhelm/ceph-config-helper:latest-opensuse_15"
+      openvswitch:
+        openvswitch_db_server: "docker.io/openstackhelm/openvswitch:latest-opensuse_15"
+        openvswitch_vswitchd: "docker.io/openstackhelm/openvswitch:latest-opensuse_15"
+      rabbitmq:
+        prometheus_rabbitmq_exporter_helm_tests: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        rabbitmq_init: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+    ucp:
+      armada:
+        api: "quay.io/airshipit/armada:master-opensuse_15"
+        ks_user: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_service: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_endpoints: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+      barbican:
+        bootstrap: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        scripted_test: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        db_init: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        barbican_db_sync: "docker.io/openstackhelm/barbican:rocky-opensuse_15-20190819"
+        db_drop: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_user: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_service: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_endpoints: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        barbican_api: "docker.io/openstackhelm/barbican:rocky-opensuse_15-20190819"
+      deckhand:
+        deckhand: "quay.io/airshipit/deckhand:master-opensuse_15"
+        db_sync: "quay.io/airshipit/deckhand:master-opensuse_15"
+        ks_user: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_service: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_endpoints: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+      ingress:
+        ingress_module_init: "docker.io/openstackhelm/neutron:rocky-opensuse_15-20190819"
+        ingress_routed_vip: "docker.io/openstackhelm/neutron:rocky-opensuse_15-20190819"
+      keystone:
+        bootstrap: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        db_init: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        keystone_db_sync: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+        db_drop: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_user: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        keystone_fernet_setup: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+        keystone_fernet_rotate: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+        keystone_credential_setup: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+        keystone_credential_rotate: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+        keystone_api: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+        keystone_domain_manage: "docker.io/openstackhelm/keystone:rocky-opensuse_15-20190819"
+      mariadb:
+        prometheus_mysql_exporter_helm_tests: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+      rabbitmq:
+        prometheus_rabbitmq_exporter_helm_tests: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        rabbitmq_init: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+      shipyard:
+        shipyard: "quay.io/airshipit/shipyard:master-opensuse_15"
+        shipyard_db_sync: "quay.io/airshipit/shipyard:master-opensuse_15"
+        airflow: "quay.io/airshipit/airflow:master-opensuse_15"
+        airflow_db_sync: "quay.io/airshipit/airflow:master-opensuse_15"
+        ks_user: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_service: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+        ks_endpoints: "docker.io/openstackhelm/heat:rocky-opensuse_15-20190819"
+...

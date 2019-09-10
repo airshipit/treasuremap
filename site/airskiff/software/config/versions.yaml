@@ -5,7 +5,7 @@ metadata:
   replacement: true
   name: software-versions
   labels:
-    name: software-versions-airskiff-ubuntu
+    name: software-versions-airskiff
   layeringDefinition:
     abstract: false
     layer: site

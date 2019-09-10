@@ -5,6 +5,7 @@ metadata:
   name: nova
   labels:
     name: nova-type
+    component: nova
   layeringDefinition:
     abstract: false
     layer: type
