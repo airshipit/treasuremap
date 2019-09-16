@@ -3,7 +3,6 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: neutron
-  replacement: true
   labels:
     name: neutron-type
     component: neutron

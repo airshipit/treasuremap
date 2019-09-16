@@ -2,7 +2,7 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: neutron-fixme
+  name: neutron
   labels:
     name: neutron-type
   layeringDefinition:

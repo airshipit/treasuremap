@@ -2,7 +2,7 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: neutron
+  name: neutron-global
   labels:
     name: neutron-global
     component: neutron
