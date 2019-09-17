@@ -615,25 +615,11 @@ definition used to deploy other control plane nodes by searching for
     kernel_params:
       kernel_package: 'linux-image-4.15.0-46-generic'
 
-It is recommended to install the latest kernel. Check the latest
-available kernel, update the site specs and regenerate collected
-YAML files.
-
-Define any proxy environment variables needed for your environment to
-reach public Ubuntu package repos, and install the matching kernel on the
-genesis host (make sure to run on genesis host, not on the build host):
-
-To install the latest hwe-16.04 kernel:
+It is recommended to install matching (and previously tested) kernel
 
 .. code-block:: bash
 
-    sudo apt-get install --install-recommends linux-generic-hwe-16.04
-
-To install the latest ga-16.04 kernel:
-
-.. code-block:: bash
-
-    sudo apt-get install --install-recommends linux-generic
+    sudo apt-get install linux-image-4.15.0-46-generic
 
 Check the installed packages on the genesis host with ``dpkg --list``.
 If there are any later kernel versions installed, remove them with
