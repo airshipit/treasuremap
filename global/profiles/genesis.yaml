@@ -101,6 +101,8 @@ data:
       - --requestheader-allowed-names='aggregator'
   armada:
     target_manifest: cluster-bootstrap
+  haproxy:
+    run_as_user: 65534
   labels:
     dynamic:
       - beta.kubernetes.io/fluentd-ds-ready=true
