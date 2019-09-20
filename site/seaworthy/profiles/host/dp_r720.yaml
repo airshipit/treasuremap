@@ -31,12 +31,10 @@ data:
       networks:
         - pxe
     bond0:
-      device_link: data
+      device_link: bond0
       slaves:
-        - data_nic01
-        - data_nic02
-        - data_nic03
-        - data_nic04
+        - cp_nic01
+        - cp_nic02
       networks:
         - oam
         - storage

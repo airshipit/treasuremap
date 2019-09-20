@@ -148,7 +148,7 @@ data:
 schema: 'drydock/NetworkLink/v1'
 metadata:
   schema: 'metadata/Document/v1'
-  name: data
+  name: bond0
   layeringDefinition:
     abstract: false
     layer: site
