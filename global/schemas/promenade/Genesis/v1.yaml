@@ -92,6 +92,13 @@ data:
       items:
         $ref: '#/definitions/file'
 
+    haproxy:
+      type: object
+      properties:
+        run_as_user:
+          type: integer
+      additionalProperties: false
+
     hostname:
       $ref: '#/definitions/hostname'
 
