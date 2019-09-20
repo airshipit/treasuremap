@@ -119,6 +119,8 @@ data:
   chart_name: ucp-keystone
   release: ucp-keystone
   namespace: ucp
+  test:
+    timeout: 600
   wait:
     timeout: 600
     labels:
