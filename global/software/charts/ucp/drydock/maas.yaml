@@ -139,6 +139,13 @@ data:
       replicas:
         region: 1
         rack: 1
+      security_context:
+        ingress:
+          container:
+            maas_ingress:
+              runAsUser: 0
+            maas_ingress_vip:
+              runAsUser: 0
     labels:
       rack:
         node_selector_key: maas-rack
