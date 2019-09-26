@@ -113,11 +113,17 @@ data:
           required:
             - helm
           additionalProperties: false
+        kubernetes:
+          type: object
+          properties:
+            hyperkube:
+              $ref: '#/definitions/image'
         monitoring_image:
           $ref: '#/definitions/image'
       required:
         - haproxy
         - helm
+        - kubernetes
         - monitoring_image
       additionalProperties: false
 

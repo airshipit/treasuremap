@@ -647,7 +647,6 @@ data:
         airflow_db_sync: quay.io/airshipit/airflow:f42e85d7cedb0a22c2f90f53ad4902cc4a62d9a9-ubuntu_xenial
         shipyard: quay.io/airshipit/shipyard:f42e85d7cedb0a22c2f90f53ad4902cc4a62d9a9-ubuntu_xenial
         shipyard_db_sync: quay.io/airshipit/shipyard:f42e85d7cedb0a22c2f90f53ad4902cc4a62d9a9-ubuntu_xenial
-      tiller: {}
   packages:
     gpgkey: |-
       -----BEGIN PGP PUBLIC KEY BLOCK-----
