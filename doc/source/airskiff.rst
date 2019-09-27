@@ -247,7 +247,7 @@ Update Airship components:
 .. code-block:: shell
 
   cd ${TREASUREMAP}
-  ./tools/deployment/developer/airskiff/030-armada-bootstrap.sh
+  ./tools/deployment/airskiff/developer/030-armada-bootstrap.sh
 
 Troubleshooting
 ---------------
