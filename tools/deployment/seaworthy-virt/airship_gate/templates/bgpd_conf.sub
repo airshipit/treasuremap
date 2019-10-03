@@ -1,0 +1,20 @@
+log file /var/log/quagga/bgpd.log
+!
+!
+router bgp ${QUAGGA_AS}
+ bgp router-id ${QUAGGA_IP}
+ neighbor calico peer-group
+ neighbor calico remote-as ${CALICO_AS}
+ bgp listen range 0.0.0.0/0 peer-group calico
+ !
+ address-family ipv4 unicast
+  neighbor calico route-map calico-node-fix-same-as out
+ exit-address-family
+!
+route-map calico-node-fix-same-as permit 100
+ set as-path exclude ${CALICO_AS}
+ set as-path prepend ${QUAGGA_AS}
+!
+line vty
+!
+

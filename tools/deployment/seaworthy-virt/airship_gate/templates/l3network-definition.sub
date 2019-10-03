@@ -1,0 +1,7 @@
+<network>
+  <name>${NETNAME}</name>
+  <bridge name='${NETNAME}' stp='on' delay='0'/>
+  <ip address="${NETIP}" netmask="${NETMASK}" />
+  <mac address='${NETMAC}'/>
+  <forward mode="nat"/>
+</network>

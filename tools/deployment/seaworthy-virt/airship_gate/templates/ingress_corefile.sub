@@ -1,0 +1,9 @@
+${DNS_DOMAIN} {
+    file ${ZONE_FILE}
+    log
+}
+
+. {
+    forward . ${DNS_SERVERS}
+    log
+}

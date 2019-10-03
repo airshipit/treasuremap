@@ -1,0 +1,20 @@
+#cloud-config
+
+disable_root: false
+
+hostname: ${NAME}
+manage_etc_hosts: false
+package_update: true
+apt_preserve_sources_list: true
+
+ssh_authorized_keys:
+  - ${SSH_PUBLIC_KEY}
+
+chpasswd:
+  list: |
+    root:password
+  expire: false
+
+ntp:
+  pools: [${NTP_POOLS}]
+  servers: [${NTP_SERVERS}]

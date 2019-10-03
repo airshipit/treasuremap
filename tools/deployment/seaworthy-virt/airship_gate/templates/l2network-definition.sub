@@ -1,0 +1,4 @@
+<network>
+  <name>${NETNAME}</name>
+  <bridge name='${NETNAME}' stp='on' delay='0'/>
+</network>
