@@ -1,2 +1,5 @@
+# output for generated manifest
+peggles/
+
 # Unit test / coverage reports
 .tox/
