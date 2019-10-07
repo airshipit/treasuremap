@@ -433,7 +433,7 @@ data:
         type: git
       maas:
         location: https://opendev.org/airship/maas
-        reference: a8887a93b4fea102aeaa8aa17bfaa648126049a9
+        reference: 418d66da102514ae3085947dbb245ca8023e92b1
         subpath: charts/maas
         type: git
       maas-htk:
@@ -627,12 +627,12 @@ data:
       ingress: {}
       keystone: {}
       maas:
-        bootstrap: quay.io/airshipit/maas-region-controller:a8887a93b4fea102aeaa8aa17bfaa648126049a9
-        db_sync: quay.io/airshipit/maas-region-controller:a8887a93b4fea102aeaa8aa17bfaa648126049a9
-        export_api_key: quay.io/airshipit/maas-region-controller:a8887a93b4fea102aeaa8aa17bfaa648126049a9
-        maas_cache: quay.io/airshipit/sstream-cache:a8887a93b4fea102aeaa8aa17bfaa648126049a9
-        maas_rack: quay.io/airshipit/maas-rack-controller:a8887a93b4fea102aeaa8aa17bfaa648126049a9
-        maas_region: quay.io/airshipit/maas-region-controller:a8887a93b4fea102aeaa8aa17bfaa648126049a9
+        bootstrap: quay.io/airshipit/maas-region-controller:418d66da102514ae3085947dbb245ca8023e92b1
+        db_sync: quay.io/airshipit/maas-region-controller:418d66da102514ae3085947dbb245ca8023e92b1
+        export_api_key: quay.io/airshipit/maas-region-controller:418d66da102514ae3085947dbb245ca8023e92b1
+        maas_cache: quay.io/airshipit/sstream-cache:418d66da102514ae3085947dbb245ca8023e92b1
+        maas_rack: quay.io/airshipit/maas-rack-controller:418d66da102514ae3085947dbb245ca8023e92b1
+        maas_region: quay.io/airshipit/maas-region-controller:418d66da102514ae3085947dbb245ca8023e92b1
       mariadb: {}
       memcached: {}
       pegleg:
