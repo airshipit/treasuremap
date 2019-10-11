@@ -19,7 +19,7 @@ data:
   images:
     ucp:
       armada:
-        api: "quay.io/airshipit/armada:latest-ubuntu_xenial"
+        api: "quay.io/airshipit/armada:latest-ubuntu_bionic"
       deckhand:
         deckhand: "quay.io/airshipit/deckhand:latest-ubuntu_xenial"
       shipyard:
