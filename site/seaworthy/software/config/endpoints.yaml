@@ -777,7 +777,7 @@ data:
         public:
           host: compute-sw.DOMAIN
       path:
-        default: "/v2/%(tenant_id)s"
+        default: "/v2.1/%(tenant_id)s"
       scheme:
         default: "http"
         public: "https"
