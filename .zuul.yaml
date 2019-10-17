@@ -9,14 +9,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+---
 - project:
     check:
       jobs:
-        - noop
+        - treasuremap-lint
     gate:
       jobs:
-        - noop
+        - treasuremap-lint
     post:
       jobs:
         - treasuremap-upload-git-mirror
@@ -27,6 +27,14 @@
     nodes:
       - name: ubuntu-bionic
         label: ubuntu-bionic
+- job:
+    name: treasuremap-lint
+    description: Lint treasuremap using kubeval
+    nodeset: treasuremap-single-node
+    timeout: 900
+    pre-run:
+      - tools/gate/playbooks/deploy-kubeval.yaml
+    run: tools/gate/playbooks/yaml-lint.yaml
 
 - secret:
     name: airshipit-github-secret
@@ -86,4 +94,3 @@
       - name: git_mirror_credentials
         secret: airshipit-github-secret
         pass-to-parent: true
-
