@@ -560,6 +560,7 @@ data:
       apiserver:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.12.9
         apiserver: gcr.io/google-containers/hyperkube-amd64:v1.12.9
+        key_rotate: gcr.io/google-containers/hyperkube-amd64:v1.12.9
       controller-manager:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.12.9
         controller_manager: gcr.io/google-containers/hyperkube-amd64:v1.12.9

@@ -188,6 +188,40 @@ schema: 'drydock/BaremetalNode/v1'
 metadata:
   schema: 'metadata/Document/v1'
   # NEWSITE-CHANGEME: The next node's hostname
+  name: cab23-r720-16
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: The next node's IPv4 addressing
+  addressing:
+    - network: oob
+      address: 10.23.104.16
+    - network: pxe
+      address: 10.23.20.16
+    - network: oam
+      address: 10.23.21.16
+    - network: storage
+      address: 10.23.23.16
+    - network: overlay
+      address: 10.23.24.16
+    - network: calico
+      address: 10.23.22.16
+  # NEWSITE-CHANGEME: The next node's host profile
+  host_profile: dp_r720
+  metadata:
+    # NEWSITE-CHANGEME: The next node's rack designation
+    rack: cab23
+    # NEWSITE-CHANGEME: The next node's role desigatnion
+    tags:
+      - 'workers'
+...
+---
+schema: 'drydock/BaremetalNode/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  # NEWSITE-CHANGEME: The next node's hostname
   name: cab23-r720-17
   layeringDefinition:
     abstract: false
@@ -210,40 +244,6 @@ data:
       address: 10.23.22.17
   # NEWSITE-CHANGEME: The next node's host profile
   # This is the one and only appearance of the "secondary" control plane profile
-  host_profile: dp_r720
-  metadata:
-    # NEWSITE-CHANGEME: The next node's rack designation
-    rack: cab23
-    # NEWSITE-CHANGEME: The next node's role desigatnion
-    tags:
-      - 'workers'
-...
----
-schema: 'drydock/BaremetalNode/v1'
-metadata:
-  schema: 'metadata/Document/v1'
-  # NEWSITE-CHANGEME: The next node's hostname
-  name: cab23-r720-19
-  layeringDefinition:
-    abstract: false
-    layer: site
-  storagePolicy: cleartext
-data:
-  # NEWSITE-CHANGEME: The next node's IPv4 addressing
-  addressing:
-    - network: oob
-      address: 10.23.104.19
-    - network: pxe
-      address: 10.23.20.19
-    - network: oam
-      address: 10.23.21.19
-    - network: storage
-      address: 10.23.23.19
-    - network: overlay
-      address: 10.23.24.19
-    - network: calico
-      address: 10.23.22.19
-  # NEWSITE-CHANGEME: The next node's host profile
   host_profile: dp_r720
   metadata:
     # NEWSITE-CHANGEME: The next node's rack designation

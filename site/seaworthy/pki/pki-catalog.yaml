@@ -84,20 +84,20 @@ data:
             - 10.23.22.14
           groups:
             - system:nodes
+        - document_name: kubelet-cab23-r720-16
+          common_name: system:node:cab23-r720-16
+          hosts:
+            - cab23-r720-16
+            - 10.23.21.16
+            - 10.23.22.16
+          groups:
+            - system:nodes
         - document_name: kubelet-cab23-r720-17
           common_name: system:node:cab23-r720-17
           hosts:
             - cab23-r720-17
             - 10.23.21.17
             - 10.23.22.17
-          groups:
-            - system:nodes
-        - document_name: kubelet-cab23-r720-19
-          common_name: system:node:cab23-r720-19
-          hosts:
-            - cab23-r720-19
-            - 10.23.21.19
-            - 10.23.22.19
           groups:
             - system:nodes
         # End node list

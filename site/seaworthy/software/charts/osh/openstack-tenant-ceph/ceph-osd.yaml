@@ -62,11 +62,11 @@ data:
               conf:
                 storage:
                   failure_domain_name: "cab23_rack_1"
-            - name: cab23-r720-17
+            - name: cab23-r720-16
               conf:
                 storage:
                   failure_domain_name: "cab23_rack_2"
-            - name: cab23-r720-19
+            - name: cab23-r720-17
               conf:
                 storage:
                   failure_domain_name: "cab23_rack_3"

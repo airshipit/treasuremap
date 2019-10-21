@@ -30,8 +30,8 @@ GENESIS_CEPH_DISKS = ['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
 IPMI_IPS = ['10.23.104.12',
             '10.23.104.13',
             '10.23.104.14',
-            '10.23.104.17',
-            '10.23.104.19']
+            '10.23.104.16',
+            '10.23.104.17']
 
 AIRSHIP_MANIFESTS_REPO = 'https://review.opendev.org/airship/treasuremap'
 
