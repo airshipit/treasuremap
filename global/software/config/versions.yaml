@@ -554,90 +554,423 @@ data:
         type: git
   images:
     calico:
-      calico: {}
-      etcd: {}
+      calico:
+        calico_etcd: quay.io/coreos/etcd:v3.3.9
+        calico_node: quay.io/calico/node:v3.4.0
+        calico_cni: quay.io/calico/cni:v3.4.0
+        calico_ctl: docker.io/calico/ctl:v3.4.0
+        calico_settings: docker.io/calico/ctl:v3.4.0
+        calico_kube_controllers: quay.io/calico/kube-controllers:v3.4.0
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      etcd:
+        etcd: quay.io/coreos/etcd:v3.4.0
+        etcdctl: quay.io/coreos/etcd:v3.4.0
     ceph:
-      ceph-client: {}
-      ceph-mon: {}
-      ceph-osd: {}
-      ceph-provisioners: {}
-      ceph-rgw: {}
-      tenant-ceph-client: {}
-      tenant-ceph-mon: {}
-      tenant-ceph-osd: {}
-      tenant-ceph-provisioners: {}
-      tenant-ceph-rgw: {}
+      ceph-client:
+        ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        ceph_mds: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_mgr: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_rbd_pool: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      ceph-mon:
+        ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        ceph_mon: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_mon_check: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      ceph-osd:
+        ceph_osd: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      ceph-provisioners:
+        ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_cephfs_provisioner: docker.io/openstackhelm/ceph-cephfs-provisioner:latest-ubuntu_xenial
+        ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        ceph_rbd_provisioner: docker.io/openstackhelm/ceph-rbd-provisioner:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      ceph-rgw:
+        ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        ceph_rgw: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        rgw_s3_admin: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        ks_endpoints: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+      tenant-ceph-client:
+        ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        ceph_mds: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_mgr: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_rbd_pool: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      tenant-ceph-mon:
+        ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        ceph_mon: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_mon_check: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      tenant-ceph-osd:
+        ceph_osd: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      tenant-ceph-provisioners:
+        ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_cephfs_provisioner: docker.io/openstackhelm/ceph-cephfs-provisioner:latest-ubuntu_xenial
+        ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        ceph_rbd_provisioner: docker.io/openstackhelm/ceph-rbd-provisioner:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      tenant-ceph-rgw:
+        ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        ceph_rgw: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        rgw_s3_admin: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        ks_endpoints: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:newton-ubuntu_xenial
     kubernetes:
       apiserver:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.12.9
         apiserver: gcr.io/google-containers/hyperkube-amd64:v1.12.9
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         key_rotate: gcr.io/google-containers/hyperkube-amd64:v1.12.9
       controller-manager:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.12.9
         controller_manager: gcr.io/google-containers/hyperkube-amd64:v1.12.9
       coredns:
         coredns: docker.io/coredns/coredns:1.1.3
+        test: docker.io/coredns/coredns:1.1.3
       etcd:
         etcd: quay.io/coreos/etcd:v3.3.12
         etcdctl: quay.io/coreos/etcd:v3.3.12
       haproxy:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.12.9
-        haproxy: docker.io/haproxy:1.8.19
+        haproxy: docker.io/library/haproxy:1.8.19
+        test: docker.io/library/python:3.6
       hyperkube: gcr.io/google-containers/hyperkube-amd64:v1.12.9
-      ingress: {}
+      ingress:
+        entrypoint: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0
+        ingress_module_init: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        ingress_routed_vip: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        error_pages: gcr.io/google_containers/defaultbackend:1.0
+        keepalived: docker.io/osixia/keepalived:1.4.5
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       pause: gcr.io/google-containers/pause-amd64:3.1
       proxy:
         proxy: gcr.io/google-containers/hyperkube-amd64:v1.12.9
       scheduler:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.12.9
         scheduler: gcr.io/google-containers/hyperkube-amd64:v1.12.9
+      validation:
+        pod_logs:
+          image: docker.io/library/busybox:1.28.3
     osh:
-      barbican: {}
-      cinder: {}
-      glance: {}
-      heat: {}
-      horizon: {}
-      ingress: {}
-      keystone: {}
-      libvirt: {}
-      mariadb: {}
-      memcached: {}
-      neutron: {}
-      nova: {}
-      openvswitch: {}
-      rabbitmq: {}
-      tempest: {}
+      barbican:
+        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        scripted_test: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        barbican_db_sync: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        barbican_api: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+      cinder:
+        test: docker.io/xrally/xrally-openstack:1.3.0
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        cinder_db_sync: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        cinder_api: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
+        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        cinder_scheduler: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
+        cinder_volume: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
+        cinder_volume_usage_audit: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
+        cinder_storage_init: docker.io/port/ceph-config-helper:v1.10.3
+        cinder_backup: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
+        cinder_backup_storage_init: docker.io/port/ceph-config-helper:v1.10.3
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      glance:
+        test: docker.io/xrally/xrally-openstack:1.3.0
+        glance_storage_init: docker.io/port/ceph-config-helper:v1.10.3
+        glance_metadefs_load: docker.io/openstackhelm/glance:ocata-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        glance_db_sync: docker.io/openstackhelm/glance:ocata-ubuntu_xenial
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        glance_api: docker.io/openstackhelm/glance:ocata-ubuntu_xenial
+        glance_registry: docker.io/openstackhelm/glance:ocata-ubuntu_xenial
+        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        # image used for glance rally tests
+        cirros_image: https://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img
+      heat:
+        test: docker.io/xrally/xrally-openstack:1.3.0
+        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        heat_db_sync: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        heat_api: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        heat_cfn: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        heat_cloudwatch: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        heat_engine: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        heat_engine_cleaner: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        heat_purge_deleted: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      horizon:
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        horizon_db_sync: docker.io/openstackhelm/horizon:ocata-ubuntu_xenial
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        horizon: docker.io/openstackhelm/horizon:ocata-ubuntu_xenial
+        test: docker.io/openstackhelm/osh-selenium:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      ingress:
+        entrypoint: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0
+        ingress_module_init: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        ingress_routed_vip: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        error_pages: gcr.io/google_containers/defaultbackend:1.0
+        keepalived: docker.io/osixia/keepalived:1.4.5
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      keystone:
+        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        test: docker.io/xrally/xrally-openstack:1.3.0
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        keystone_db_sync: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        keystone_fernet_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_fernet_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_credential_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_credential_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_credential_cleanup: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        keystone_api: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_domain_manage: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      libvirt:
+        libvirt: docker.io/openstackhelm/libvirt:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      mariadb:
+        mariadb: docker.io/openstackhelm/mariadb:10.2.18
+        ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
+        error_pages: gcr.io/google_containers/defaultbackend:1.0
+        prometheus_create_mysql_user: docker.io/library/mariadb:10.2.13
+        prometheus_mysql_exporter: docker.io/prom/mysqld-exporter:v0.10.0
+        prometheus_mysql_exporter_helm_tests: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        mariadb_backup: docker.io/openstackhelm/mariadb:latest-ubuntu_xenial
+        scripted_test: docker.io/openstackhelm/mariadb:latest-ubuntu_xenial
+      memcached:
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        memcached: docker.io/library/memcached:1.5.5
+        prometheus_memcached_exporter: docker.io/prom/memcached-exporter:v0.4.1
+      neutron:
+        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        test: docker.io/xrally/xrally-openstack:1.3.0
+        purge_test: docker.io/openstackhelm/ospurge:latest
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        neutron_db_sync: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        neutron_server: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_dhcp: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_metadata: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_l3: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_l2gw: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_openvswitch_agent: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_linuxbridge_agent: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_sriov_agent: docker.io/openstackhelm/neutron:ocata-18.04-sriov
+        neutron_sriov_agent_init: docker.io/openstackhelm/neutron:ocata-18.04-sriov
+        neutron_bagpipe_bgp: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_ironic_agent: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      nova:
+        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        nova_api: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
+        nova_cell_setup: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
+        nova_cell_setup_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        nova_compute: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
+        nova_compute_ironic: docker.io/kolla/ubuntu-source-nova-compute-ironic:ocata
+        nova_compute_ssh: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
+        nova_conductor: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
+        nova_consoleauth: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
+        nova_db_sync: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
+        nova_novncproxy: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
+        nova_novncproxy_assets: docker.io/kolla/ubuntu-source-nova-novncproxy:ocata
+        nova_placement: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
+        nova_scheduler: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
+        nova_service_cleaner: docker.io/port/ceph-config-helper:v1.10.3
+        nova_spiceproxy: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
+        nova_spiceproxy_assets: docker.io/kolla/ubuntu-source-nova-spicehtml5proxy:ocata
+        test: docker.io/xrally/xrally-openstack:1.3.0
+      openvswitch:
+        openvswitch_db_server: docker.io/openstackhelm/openvswitch:latest-ubuntu_bionic
+        openvswitch_vswitchd: docker.io/openstackhelm/openvswitch:latest-ubuntu_bionic
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      rabbitmq:
+        prometheus_rabbitmq_exporter: docker.io/kbudde/rabbitmq-exporter:v0.21.0
+        prometheus_rabbitmq_exporter_helm_tests: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbitmq_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbitmq: docker.io/library/rabbitmq:3.7.13
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        scripted_test: docker.io/library/rabbitmq:3.7.13-management
+      tempest:
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        tempest_run_tests: docker.io/openstackhelm/tempest:latest-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
     osh_infra:
-      elasticsearch: {}
-      fluentbit: {}
-      fluentd: {}
-      grafana: {}
-      kibana: {}
-      nagios: {}
+      elasticsearch:
+        apache_proxy: docker.io/library/httpd:2.4
+        memory_init: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        curator:  docker.io/bobrik/curator:5.6.0
+        elasticsearch: docker.io/openstackhelm/elasticsearch-s3:latest-5_6_4
+        ceph_key_placement: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        s3_bucket: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        s3_user: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        helm_tests: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        prometheus_elasticsearch_exporter: docker.io/justwatch/elasticsearch_exporter:1.0.1
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        snapshot_repository: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        es_cluster_wait: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        elasticsearch_templates: docker.io/openstackhelm/heat:newton
+      fluentbit:
+        fluentbit: docker.io/fluent/fluent-bit:0.14.2
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      fluentd:
+        fluentd: docker.io/openstackhelm/fluentd:latest-debian
+        prometheus_fluentd_exporter: docker.io/bitnami/fluentd-exporter:0.2.0
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        helm_tests: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        elasticsearch_template: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+      grafana:
+        grafana: docker.io/grafana/grafana:5.0.0
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        db_init: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        grafana_db_session_sync: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        selenium_tests: docker.io/openstackhelm/osh-selenium:latest-ubuntu_xenial
+      kibana:
+        apache_proxy: docker.io/library/httpd:2.4
+        kibana: docker.io/library/kibana:5.6.4
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        register_kibana_indexes: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+      nagios:
+        apache_proxy: docker.io/library/httpd:2.4
+        nagios: docker.io/openstackhelm/nagios:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.2.1
+        selenium_tests: docker.io/openstackhelm/osh-selenium:latest-ubuntu_xenial
       nfs_provisioner:
-        nfs_provisioner: quay.io/kubernetes_incubator/nfs-provisioner:v2.1.0-k8s1.11
-      prometheus: {}
-      prometheus_alertmanager: {}
-      prometheus_kube_state_metrics: {}
-      prometheus_node_exporter: {}
-      prometheus_openstack_exporter: {}
-      prometheus_process_exporter: {}
+        nfs_provisioner: quay.io/kubernetes_incubator/nfs-provisioner:v2.2.1-k8s1.12
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      prometheus:
+        apache_proxy: docker.io/library/httpd:2.4
+        prometheus: docker.io/prom/prometheus:v2.3.2
+        helm_tests: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      prometheus_alertmanager:
+        alertmanager: docker.io/prom/alertmanager:v0.11.0
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      prometheus_kube_state_metrics:
+        kube_state_metrics: docker.io/bitnami/kube-state-metrics:1.3.1
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      prometheus_node_exporter:
+        node_exporter: docker.io/prom/node-exporter:v0.15.0
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      prometheus_openstack_exporter:
+        prometheus_openstack_exporter: quay.io/attcomdev/prometheus-openstack-exporter:3231f14419f0c47547ce2551b7d884cd222104e6
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        ks_user: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+      prometheus_process_exporter:
+        process_exporter: docker.io/ncabatoff/process-exporter:0.2.11
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
     ucp:
       armada:
         api: quay.io/airshipit/armada:7ef4905c445bff58bd315ed7820bbbb68b863d8f-ubuntu_xenial
         helm: docker.io/lachlanevenson/k8s-helm:v2.14.1
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        ks_endpoints: docker.io/openstackhelm/heat:newton
+        ks_service: docker.io/openstackhelm/heat:newton
+        ks_user: docker.io/openstackhelm/heat:newton
         tiller: gcr.io/kubernetes-helm/tiller:v2.14.1
-      barbican: {}
+      barbican:
+        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        scripted_test: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        barbican_db_sync: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        barbican_api: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
       deckhand:
         db_sync: quay.io/airshipit/deckhand:51dcea4fa12b0bcce65c381c286e61378a0826e2-ubuntu_xenial
         deckhand: quay.io/airshipit/deckhand:51dcea4fa12b0bcce65c381c286e61378a0826e2-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        db_init: docker.io/library/postgres:9.5
+        ks_endpoints: docker.io/openstackhelm/heat:newton
+        ks_service: docker.io/openstackhelm/heat:newton
+        ks_user: docker.io/openstackhelm/heat:newton
       divingbell:
-        divingbell: docker.io/ubuntu:16.04
+        divingbell: docker.io/library/ubuntu:16.04
       drydock:
         drydock: quay.io/airshipit/drydock:b7d4b121165827309bf0a274e306631d865f5f54
         drydock_db_sync: quay.io/airshipit/drydock:b7d4b121165827309bf0a274e306631d865f5f54
-      ingress: {}
-      keystone: {}
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        ks_user: docker.io/openstackhelm/heat:newton
+        ks_service: docker.io/openstackhelm/heat:newton
+        ks_endpoints: docker.io/openstackhelm/heat:newton
+        drydock_db_init: docker.io/library/postgres:9.5
+      ingress:
+        entrypoint: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0
+        ingress_module_init: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        ingress_routed_vip: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        error_pages: gcr.io/google_containers/defaultbackend:1.0
+        keepalived: docker.io/osixia/keepalived:1.4.5
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      keystone:
+        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        test: docker.io/xrally/xrally-openstack:1.3.0
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        keystone_db_sync: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        keystone_fernet_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_fernet_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_credential_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_credential_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_credential_cleanup: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        keystone_api: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_domain_manage: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       maas:
         bootstrap: quay.io/airshipit/maas-region-controller:628ca509bc3ba7988ef2847a446a5930e4b53e9e
         db_sync: quay.io/airshipit/maas-region-controller:628ca509bc3ba7988ef2847a446a5930e4b53e9e
@@ -645,20 +978,62 @@ data:
         maas_cache: quay.io/airshipit/sstream-cache:628ca509bc3ba7988ef2847a446a5930e4b53e9e
         maas_rack: quay.io/airshipit/maas-rack-controller:628ca509bc3ba7988ef2847a446a5930e4b53e9e
         maas_region: quay.io/airshipit/maas-region-controller:628ca509bc3ba7988ef2847a446a5930e4b53e9e
-      mariadb: {}
-      memcached: {}
+        maas_syslog: quay.io/airshipit/maas-region-controller:628ca509bc3ba7988ef2847a446a5930e4b53e9e
+        db_init: docker.io/library/postgres:9.5
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.20.0
+        ingress_vip: docker.io/library/busybox:1.28.3
+        error_pages: gcr.io/google_containers/ingress-gce-404-server-with-metrics-amd64:v1.6.0
+      mariadb:
+        mariadb: docker.io/openstackhelm/mariadb:10.2.18
+        ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
+        error_pages: gcr.io/google_containers/defaultbackend:1.0
+        prometheus_create_mysql_user: docker.io/library/mariadb:10.2.13
+        prometheus_mysql_exporter: docker.io/prom/mysqld-exporter:v0.10.0
+        prometheus_mysql_exporter_helm_tests: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        mariadb_backup: docker.io/openstackhelm/mariadb:latest-ubuntu_xenial
+        scripted_test: docker.io/openstackhelm/mariadb:latest-ubuntu_xenial
+      memcached:
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        memcached: docker.io/library/memcached:1.5.5
+        prometheus_memcached_exporter: docker.io/prom/memcached-exporter:v0.4.1
       pegleg:
         pegleg: quay.io/airshipit/pegleg:85fdcd497afecc1274cebaeb07ab9384c3afdf15-ubuntu_xenial
-      postgresql: {}
+      postgresql:
+        postgresql: docker.io/openstackhelm/patroni:latest-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        prometheus_postgresql_exporter: docker.io/wrouesnel/postgres_exporter:v0.4.6
+        prometheus_postgresql_exporter_create_user: docker.io/library/postgres:9.5
+        postgresql_backup: docker.io/library/postgres:9.5
       promenade:
-        monitoring_image: busybox:1.28.3
+        monitoring_image: docker.io/library/busybox:1.28.3
         promenade: quay.io/airshipit/promenade:9a50a59bf612a44fbba2e9aef1dfe666dc28de39
-      rabbitmq: {}
+        hyperkube: gcr.io/google_containers/hyperkube-amd64:v1.11.6
+        ks_user: docker.io/openstackhelm/heat:newton
+        ks_service: docker.io/openstackhelm/heat:newton
+        ks_endpoints: docker.io/openstackhelm/heat:newton
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+      rabbitmq:
+        prometheus_rabbitmq_exporter: docker.io/kbudde/rabbitmq-exporter:v0.21.0
+        prometheus_rabbitmq_exporter_helm_tests: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbitmq_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbitmq: docker.io/library/rabbitmq:3.7.13
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        scripted_test: docker.io/library/rabbitmq:3.7.13-management
       shipyard:
         airflow: quay.io/airshipit/airflow:0cbb5cf9b7ea7e517e034e3ccb105b183ada08d9-ubuntu_xenial
         airflow_db_sync: quay.io/airshipit/airflow:0cbb5cf9b7ea7e517e034e3ccb105b183ada08d9-ubuntu_xenial
         shipyard: quay.io/airshipit/shipyard:0cbb5cf9b7ea7e517e034e3ccb105b183ada08d9-ubuntu_xenial
         shipyard_db_sync: quay.io/airshipit/shipyard:0cbb5cf9b7ea7e517e034e3ccb105b183ada08d9-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        shipyard_db_init: docker.io/library/postgres:9.5
+        shipyard_db_auxiliary: docker.io/library/postgres:9.5
+        airflow_db_init: docker.io/library/postgres:9.5
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        ks_user: docker.io/openstackhelm/heat:ocata
+        ks_service: docker.io/openstackhelm/heat:ocata
+        ks_endpoints: docker.io/openstackhelm/heat:ocata
     utility:
       calicoctl-utility:
         calicoctl_utility: quay.io/airshipit/porthole-calicoctl-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-alpine

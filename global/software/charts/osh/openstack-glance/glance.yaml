@@ -133,6 +133,17 @@ metadata:
         path: .values.endpoints.oslo_messaging.path
         pattern: VHOST_NAME
 
+    # Glance Image
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh.glance.cirros_image
+      dest:
+        - path: .values.conf.rally_tests.tests
+          pattern: CIRROS_IMAGE_LOCATION
+          recurse:
+            depth: -1
+
     # Secrets
     - dest:
         path: .values.endpoints.identity.auth.admin.password
@@ -232,6 +243,33 @@ data:
       configmap: tenant-ceph-etc
       user_secret_name: pvc-tceph-client-key
     conf:
+      rally_tests:
+        run_tempest: false
+        tests:
+          GlanceImages.create_and_delete_image:
+            - args:
+                container_format: bare
+                disk_format: qcow2
+                image_location: CIRROS_IMAGE_LOCATION
+              runner:
+                concurrency: 1
+                times: 1
+                type: constant
+              sla:
+                failure_rate:
+                  max: 0
+          GlanceImages.create_and_list_image:
+            - args:
+                container_format: bare
+                disk_format: qcow2
+                image_location: CIRROS_IMAGE_LOCATION
+              runner:
+                concurrency: 1
+                times: 1
+                type: constant
+              sla:
+                failure_rate:
+                  max: 0
       logging:
         loggers:
           keys:
