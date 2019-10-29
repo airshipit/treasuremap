@@ -1,0 +1,77 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: compute-utility
+  layeringDefinition:
+    abstract: false
+    layer: global
+  labels:
+    name: compute-utility-global
+    component: utility
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.utility.compute-utility
+      dest:
+        path: .source
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.utility.compute-utility
+      dest:
+        path: .values.images.tags
+data:
+  chart_name: compute-utility
+  release: compute-utility
+  namespace: utility
+  protected:
+    continue_processing: true
+  wait:
+    timeout: 600
+    labels:
+      release_group: airship-compute-utility
+  install:
+   no_hooks: false
+  upgrade:
+   no_hooks: false
+  values:
+    labels:
+      utility:
+        node_selector_key: utility
+        node_selector_value: enabled
+    manifests:
+      configmap_bin: true
+      configmap_etc_client: true
+      configmap_etc_sudoers: true
+      deployment_utility: true
+  dependencies:
+    - compute-utility-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: compute-utility-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.utility.compute-utility-htk
+      dest:
+        path: .source
+data:
+  chart_name: compute-utility-htk
+  release: compute-utility-htk
+  namespace: compute-utility-htk
+  values: {}
+  dependencies: []
+...

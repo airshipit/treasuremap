@@ -14,4 +14,5 @@ data:
     - calicoctl-utility
 #    - ceph-utility-config
 #    - ceph-utility
+    - compute-utility
     - etcdctl-utility

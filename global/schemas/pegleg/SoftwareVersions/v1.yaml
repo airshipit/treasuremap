@@ -806,6 +806,17 @@ data:
                   type: string
                 reference:
                   type: string
+            compute-utility:
+              type: object
+              properties:
+                type:
+                  type: string
+                location:
+                  type: string
+                subpath:
+                  type: string
+                reference:
+                  type: string
             etcdctl-utility:
               type: object
               properties:
@@ -1029,6 +1040,13 @@ data:
               type: object
               properties:
                 ceph_utility:
+                  type: string
+                image_repo_sync:
+                  type: string
+            compute-utility:
+              type: object
+              properties:
+                compute_utility:
                   type: string
                 image_repo_sync:
                   type: string
