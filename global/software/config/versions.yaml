@@ -545,7 +545,7 @@ data:
       calicoctl-utility:
         location: https://opendev.org/airship/porthole
         reference: cb5d6cfba3541b48cdc1a494cd04cc8ac3fd86c8
-        subpath: calicoctl-utility
+        subpath: charts/calicoctl-utility
         type: git
       calicoctl-utility-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
