@@ -1,0 +1,2 @@
+resources:
+- github.com/argoproj/argo//manifests/namespace-install?ref=v2.4.2
