@@ -17,3 +17,4 @@ data:
     - compute-utility
     - etcdctl-utility
     - openstack-utility
+    - mysqlclient-utility

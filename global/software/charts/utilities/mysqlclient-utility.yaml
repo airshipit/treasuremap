@@ -1,0 +1,74 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: mysqlclient-utility
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.utility.mysqlclient-utility
+      dest:
+        path: .source
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.utility.mysqlclient-utility
+      dest:
+        path: .values.images.tags
+data:
+  chart_name: mysqlclient-utility
+  release: mysqlclient-utility
+  namespace: utility
+  protected:
+    continue_processing: true
+  wait:
+    timeout: 600
+    labels:
+      release_group: airship-mysqlclient-utility
+  install:
+   no_hooks: false
+  upgrade:
+   no_hooks: false
+  values:
+    labels:
+      utility:
+        node_selector_key: utility
+        node_selector_value: enabled
+    manifests:
+      configmap_bin: true
+      configmap_etc_client: true
+      deployment_utility: true
+      job_image_repo_sync: false
+  dependencies:
+    - mysqlclient-utility-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: mysqlclient-utility-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.utility.mysqlclient-utility-htk
+      dest:
+        path: .source
+data:
+  chart_name: mysqlclient-utility-htk
+  release: mysqlclient-utility-htk
+  namespace: mysqlclient-utility-htk
+  values: {}
+  dependencies: []
+...
