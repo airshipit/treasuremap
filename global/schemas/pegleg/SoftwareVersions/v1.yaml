@@ -817,6 +817,17 @@ data:
                   type: string
                 reference:
                   type: string
+            openstack-utility:
+              type: object
+              properties:
+                type:
+                  type: string
+                location:
+                  type: string
+                subpath:
+                  type: string
+                reference:
+                  type: string
     files:
       type: object
       properties:
@@ -1036,6 +1047,13 @@ data:
               type: object
               properties:
                 etcdctl_utility:
+                  type: string
+                image_repo_sync:
+                  type: string
+            openstack-utility:
+              type: object
+              properties:
+                openstack-utility:
                   type: string
                 image_repo_sync:
                   type: string

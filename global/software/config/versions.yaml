@@ -572,6 +572,16 @@ data:
         reference: ef58054dff356334cdbfd96f04dc7c149768c76d
         subpath: helm-toolkit
         type: git
+      openstack-utility:
+        location: https://opendev.org/airship/porthole
+        reference: 2de4ed3da8d0c49d33fcab5817f3f8dff5bcd5f9
+        subpath: charts/openstack-utility
+        type: git
+      openstack-utility-htk:
+        location: https://opendev.org/openstack/openstack-helm-infra
+        subpath: helm-toolkit
+        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        type: git
   images:
     calico:
       calico:
@@ -1063,6 +1073,9 @@ data:
         image_repo_sync: docker.io/docker:18.09.02
       etcdctl-utility:
         etcdctl_utility: quay.io/airshipit/porthole-etcdctl-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-ubuntu_xenial
+        image_repo_sync: docker.io/docker:18.09.02
+      openstack-utility:
+        openstack-utility: quay.io/airshipit/porthole-openstack-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-ubuntu_xenial
         image_repo_sync: docker.io/docker:18.09.02
   packages:
     gpgkey: |-
