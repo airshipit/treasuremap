@@ -562,6 +562,16 @@ data:
         reference: ef58054dff356334cdbfd96f04dc7c149768c76d
         subpath: helm-toolkit
         type: git
+      compute-utility:
+        location: https://opendev.org/airship/porthole
+        reference: 2de4ed3da8d0c49d33fcab5817f3f8dff5bcd5f9
+        subpath: charts/compute-utility
+        type: git
+      compute-utility-htk:
+        location: https://opendev.org/openstack/openstack-helm-infra
+        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        subpath: helm-toolkit
+        type: git
       etcdctl-utility:
         location: https://opendev.org/airship/porthole
         reference: cb5d6cfba3541b48cdc1a494cd04cc8ac3fd86c8
@@ -1070,6 +1080,9 @@ data:
         image_repo_sync: docker.io/docker:18.09.02
       ceph-utility:
         ceph_utility: quay.io/airshipit/porthole-ceph-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-ubuntu_xenial
+        image_repo_sync: docker.io/docker:18.09.02
+      compute-utility:
+        compute_utility: quay.io/airshipit/porthole-compute-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-ubuntu_xenial
         image_repo_sync: docker.io/docker:18.09.02
       etcdctl-utility:
         etcdctl_utility: quay.io/airshipit/porthole-etcdctl-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-ubuntu_xenial
