@@ -26,6 +26,8 @@ data:
       type: array
       items:
         type: string
+    config_file_overrides:
+      type: object
   required:
     - images
   additionalProperties: false
