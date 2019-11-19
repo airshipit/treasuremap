@@ -4,381 +4,381 @@ data:
     kubernetes:
       apiserver:
         location: https://opendev.org/airship/promenade
-        reference: 9a50a59bf612a44fbba2e9aef1dfe666dc28de39
+        reference: 5b2fec3b645fb342c212a92c2ab85267c8b5d795
         subpath: charts/apiserver
         type: git
       apiserver-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       calico:
         calico:
           location: https://opendev.org/openstack/openstack-helm-infra
-          reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+          reference: 3e18a436d25919039599afa8ec077fe73ef7956e
           subpath: calico
           type: git
         calico-htk:
           location: https://opendev.org/openstack/openstack-helm-infra
-          reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+          reference: 3e18a436d25919039599afa8ec077fe73ef7956e
           subpath: helm-toolkit
           type: git
         etcd:
           location: https://opendev.org/airship/promenade
-          reference: 9a50a59bf612a44fbba2e9aef1dfe666dc28de39
+          reference: 5b2fec3b645fb342c212a92c2ab85267c8b5d795
           subpath: charts/etcd
           type: git
         etcd-htk:
           location: https://opendev.org/openstack/openstack-helm-infra
-          reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+          reference: 3e18a436d25919039599afa8ec077fe73ef7956e
           subpath: helm-toolkit
           type: git
       controller-manager:
         location: https://opendev.org/airship/promenade
-        reference: 9a50a59bf612a44fbba2e9aef1dfe666dc28de39
+        reference: 5b2fec3b645fb342c212a92c2ab85267c8b5d795
         subpath: charts/controller_manager
         type: git
       controller-manager-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       coredns:
         location: https://opendev.org/airship/promenade
-        reference: 9a50a59bf612a44fbba2e9aef1dfe666dc28de39
+        reference: 5b2fec3b645fb342c212a92c2ab85267c8b5d795
         subpath: charts/coredns
         type: git
       coredns-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       etcd:
         location: https://opendev.org/airship/promenade
-        reference: 9a50a59bf612a44fbba2e9aef1dfe666dc28de39
+        reference: 5b2fec3b645fb342c212a92c2ab85267c8b5d795
         subpath: charts/etcd
         type: git
       etcd-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       haproxy:
         location: https://opendev.org/airship/promenade
-        reference: 9a50a59bf612a44fbba2e9aef1dfe666dc28de39
+        reference: 5b2fec3b645fb342c212a92c2ab85267c8b5d795
         subpath: charts/haproxy
         type: git
       haproxy-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       ingress:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: ingress
         type: git
       ingress-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       proxy:
         location: https://opendev.org/airship/promenade
-        reference: 9a50a59bf612a44fbba2e9aef1dfe666dc28de39
+        reference: 5b2fec3b645fb342c212a92c2ab85267c8b5d795
         subpath: charts/proxy
         type: git
       proxy-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       scheduler:
         location: https://opendev.org/airship/promenade
-        reference: 9a50a59bf612a44fbba2e9aef1dfe666dc28de39
+        reference: 5b2fec3b645fb342c212a92c2ab85267c8b5d795
         subpath: charts/scheduler
         type: git
       scheduler-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
     osh:
       barbican:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 6e7b7bcdacfad8febcdf0aba9846e2c35fd18795
+        reference: ab0058c1a304c243042f3d59fe1ad46279a96403
         subpath: barbican
         type: git
       cinder:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 6e7b7bcdacfad8febcdf0aba9846e2c35fd18795
+        reference: ab0058c1a304c243042f3d59fe1ad46279a96403
         subpath: cinder
         type: git
       cinder-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       glance:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 6e7b7bcdacfad8febcdf0aba9846e2c35fd18795
+        reference: ab0058c1a304c243042f3d59fe1ad46279a96403
         subpath: glance
         type: git
       glance-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       heat:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 6e7b7bcdacfad8febcdf0aba9846e2c35fd18795
+        reference: ab0058c1a304c243042f3d59fe1ad46279a96403
         subpath: heat
         type: git
       heat-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       helm_toolkit:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       horizon:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 6e7b7bcdacfad8febcdf0aba9846e2c35fd18795
+        reference: ab0058c1a304c243042f3d59fe1ad46279a96403
         subpath: horizon
         type: git
       horizon-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       ingress:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: ingress
         type: git
       ingress-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       keystone:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 6e7b7bcdacfad8febcdf0aba9846e2c35fd18795
+        reference: ab0058c1a304c243042f3d59fe1ad46279a96403
         subpath: keystone
         type: git
       keystone-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       libvirt:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: libvirt
         type: git
       libvirt-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       mariadb:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: mariadb
         type: git
       mariadb-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       memcached:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: memcached
         type: git
       memcached-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       neutron:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 6e7b7bcdacfad8febcdf0aba9846e2c35fd18795
+        reference: ab0058c1a304c243042f3d59fe1ad46279a96403
         subpath: neutron
         type: git
       neutron-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       nova:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 6e7b7bcdacfad8febcdf0aba9846e2c35fd18795
+        reference: ab0058c1a304c243042f3d59fe1ad46279a96403
         subpath: nova
         type: git
       nova-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       openvswitch:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: openvswitch
         type: git
       openvswitch-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       rabbitmq:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: rabbitmq
         type: git
       rabbitmq-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       tempest:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 6e7b7bcdacfad8febcdf0aba9846e2c35fd18795
+        reference: ab0058c1a304c243042f3d59fe1ad46279a96403
         subpath: tempest
         type: git
       tempest-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
     osh_infra:
       elasticsearch:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: elasticsearch
         type: git
       fluentbit:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: fluentbit
         type: git
       fluentd:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: fluentd
         type: git
       grafana:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: grafana
         type: git
       helm_toolkit:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       kibana:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: kibana
         type: git
       nagios:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: nagios
         type: git
       nfs_provisioner:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: nfs-provisioner
         type: git
       podsecuritypolicy:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: podsecuritypolicy
         type: git
       prometheus:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: prometheus
         type: git
       prometheus_alertmanager:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: prometheus-alertmanager
         type: git
       prometheus_kube_state_metrics:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: prometheus-kube-state-metrics
         type: git
       prometheus_node_exporter:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: prometheus-node-exporter
         type: git
       prometheus_openstack_exporter:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: prometheus-openstack-exporter
         type: git
       prometheus_process_exporter:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: prometheus-process-exporter
         type: git
     ucp:
       armada:
         location: https://opendev.org/airship/armada
-        reference: 7ef4905c445bff58bd315ed7820bbbb68b863d8f
+        reference: 6a9b3bf9c9ffb80f244db242b3760f69fca9729f
         subpath: charts/armada
         type: git
       armada-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       barbican:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 6e7b7bcdacfad8febcdf0aba9846e2c35fd18795
+        reference: ab0058c1a304c243042f3d59fe1ad46279a96403
         subpath: barbican
         type: git
       barbican-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       ceph-client:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: ceph-client
         type: git
       ceph-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       ceph-mon:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: ceph-mon
         type: git
       ceph-osd:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: ceph-osd
         type: git
       ceph-provisioners:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: ceph-provisioners
         type: git
       ceph-rgw:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: ceph-rgw
         type: git
       deckhand:
@@ -388,229 +388,229 @@ data:
         type: git
       deckhand-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       divingbell:
         location: https://opendev.org/airship/divingbell
-        reference: e541ec72b7672a2e5ef036d6e5663b34f178ecbc
+        reference: 010b5c6c0392971dbff4ac635e03fa440a936001
         subpath: divingbell
         type: git
       divingbell-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       drydock:
         location: https://opendev.org/airship/drydock
-        reference: b7d4b121165827309bf0a274e306631d865f5f54
+        reference: 3b4738efd1359c195f096e4901a2812b1b4d8ea8
         subpath: charts/drydock
         type: git
       drydock-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       ingress:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: ingress
         type: git
       ingress-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       keystone:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 6e7b7bcdacfad8febcdf0aba9846e2c35fd18795
+        reference: ab0058c1a304c243042f3d59fe1ad46279a96403
         subpath: keystone
         type: git
       keystone-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       maas:
         location: https://opendev.org/airship/maas
-        reference: 418d66da102514ae3085947dbb245ca8023e92b1
+        reference: d79b355188203ae994d6de64d1cc21b34b3d86f0
         subpath: charts/maas
         type: git
       maas-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       mariadb:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: mariadb
         type: git
       mariadb-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       memcached:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: memcached
         type: git
       memcached-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       postgresql:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: postgresql
         type: git
       postgresql-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       promenade:
         location: https://opendev.org/airship/promenade
-        reference: 9a50a59bf612a44fbba2e9aef1dfe666dc28de39
+        reference: 5b2fec3b645fb342c212a92c2ab85267c8b5d795
         subpath: charts/promenade
         type: git
       promenade-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       rabbitmq:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: rabbitmq
         type: git
       rabbitmq-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       shipyard:
         location: https://opendev.org/airship/shipyard
-        reference: 0cbb5cf9b7ea7e517e034e3ccb105b183ada08d9
+        reference: 72ca47e5c9ae8b7b1dcccd7742be6499f0411650
         subpath: charts/shipyard
         type: git
       shipyard-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       tenant-ceph-client:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: ceph-client
         type: git
       tenant-ceph-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       tenant-ceph-mon:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: ceph-mon
         type: git
       tenant-ceph-osd:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: ceph-osd
         type: git
       tenant-ceph-provisioners:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: ceph-provisioners
         type: git
       tenant-ceph-rgw:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: ceph-rgw
         type: git
       tiller:
         location: https://opendev.org/airship/armada
-        reference: 7ef4905c445bff58bd315ed7820bbbb68b863d8f
+        reference: 6a9b3bf9c9ffb80f244db242b3760f69fca9729f
         subpath: charts/tiller
         type: git
       tiller-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
     utility:
       calicoctl-utility:
         location: https://opendev.org/airship/porthole
-        reference: cb5d6cfba3541b48cdc1a494cd04cc8ac3fd86c8
+        reference: 5e7492b94c8f88eeae54d7dc8c9914f38560b6dc
         subpath: charts/calicoctl-utility
         type: git
       calicoctl-utility-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       ceph-utility:
         location: https://opendev.org/airship/porthole
-        reference: cb5d6cfba3541b48cdc1a494cd04cc8ac3fd86c8
+        reference: 5e7492b94c8f88eeae54d7dc8c9914f38560b6dc
         subpath: charts/ceph-utility
         type: git
       ceph-utility-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       compute-utility:
         location: https://opendev.org/airship/porthole
-        reference: 2de4ed3da8d0c49d33fcab5817f3f8dff5bcd5f9
+        reference: 5e7492b94c8f88eeae54d7dc8c9914f38560b6dc
         subpath: charts/compute-utility
         type: git
       compute-utility-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
       etcdctl-utility:
         location: https://opendev.org/airship/porthole
-        reference: cb5d6cfba3541b48cdc1a494cd04cc8ac3fd86c8
+        reference: 5e7492b94c8f88eeae54d7dc8c9914f38560b6dc
         subpath: charts/etcdctl-utility
         type: git
       etcdctl-utility-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
-        type: git
-      openstack-utility:
-        location: https://opendev.org/airship/porthole
-        reference: 2de4ed3da8d0c49d33fcab5817f3f8dff5bcd5f9
-        subpath: charts/openstack-utility
-        type: git
-      openstack-utility-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        subpath: helm-toolkit
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
         type: git
       mysqlclient-utility:
         location: https://opendev.org/airship/porthole
-        reference: 2de4ed3da8d0c49d33fcab5817f3f8dff5bcd5f9
+        reference: 5e7492b94c8f88eeae54d7dc8c9914f38560b6dc
         subpath: charts/mysqlclient-utility
         type: git
       mysqlclient-utility-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: ef58054dff356334cdbfd96f04dc7c149768c76d
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
+        subpath: helm-toolkit
+        type: git
+      openstack-utility:
+        location: https://opendev.org/airship/porthole
+        reference: 5e7492b94c8f88eeae54d7dc8c9914f38560b6dc
+        subpath: charts/openstack-utility
+        type: git
+      openstack-utility-htk:
+        location: https://opendev.org/openstack/openstack-helm-infra
+        reference: 3e18a436d25919039599afa8ec077fe73ef7956e
         subpath: helm-toolkit
         type: git
   images:
     calico:
       calico:
-        calico_etcd: quay.io/coreos/etcd:v3.3.9
-        calico_node: quay.io/calico/node:v3.4.0
         calico_cni: quay.io/calico/cni:v3.4.0
         calico_ctl: docker.io/calico/ctl:v3.4.0
-        calico_settings: docker.io/calico/ctl:v3.4.0
+        calico_etcd: quay.io/coreos/etcd:v3.3.9
         calico_kube_controllers: quay.io/calico/kube-controllers:v3.4.0
+        calico_node: quay.io/calico/node:v3.4.0
+        calico_settings: docker.io/calico/ctl:v3.4.0
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       etcd:
         etcd: quay.io/coreos/etcd:v3.4.0
@@ -630,9 +630,9 @@ data:
         ceph_mon_check: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       ceph-osd:
-        ceph_osd: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
         ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
         ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        ceph_osd: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       ceph-provisioners:
         ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
@@ -644,10 +644,10 @@ data:
         ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
         ceph_rgw: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        rgw_s3_admin: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
         ks_endpoints: docker.io/openstackhelm/heat:newton-ubuntu_xenial
         ks_service: docker.io/openstackhelm/heat:newton-ubuntu_xenial
         ks_user: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        rgw_s3_admin: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
       tenant-ceph-client:
         ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
         ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
@@ -662,9 +662,9 @@ data:
         ceph_mon_check: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       tenant-ceph-osd:
-        ceph_osd: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
         ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
         ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        ceph_osd: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       tenant-ceph-provisioners:
         ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
@@ -676,10 +676,10 @@ data:
         ceph_config_helper: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
         ceph_rgw: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        rgw_s3_admin: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
         ks_endpoints: docker.io/openstackhelm/heat:newton-ubuntu_xenial
         ks_service: docker.io/openstackhelm/heat:newton-ubuntu_xenial
         ks_user: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        rgw_s3_admin: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
     kubernetes:
       apiserver:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.12.9
@@ -690,8 +690,8 @@ data:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.12.9
         controller_manager: gcr.io/google-containers/hyperkube-amd64:v1.12.9
       coredns:
-        coredns: docker.io/coredns/coredns:1.1.3
-        test: docker.io/coredns/coredns:1.1.3
+        coredns: docker.io/coredns/coredns:1.6.2
+        test: quay.io/airshipit/promenade:5b2fec3b645fb342c212a92c2ab85267c8b5d795
       etcd:
         etcd: quay.io/coreos/etcd:v3.3.12
         etcdctl: quay.io/coreos/etcd:v3.3.12
@@ -701,13 +701,13 @@ data:
         test: docker.io/library/python:3.6
       hyperkube: gcr.io/google-containers/hyperkube-amd64:v1.12.9
       ingress:
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         entrypoint: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        error_pages: gcr.io/google_containers/defaultbackend:1.0
         ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0
         ingress_module_init: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
         ingress_routed_vip: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
-        error_pages: gcr.io/google_containers/defaultbackend:1.0
         keepalived: docker.io/osixia/keepalived:1.4.5
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       pause: gcr.io/google-containers/pause-amd64:3.1
       proxy:
         proxy: gcr.io/google-containers/hyperkube-amd64:v1.12.9
@@ -719,112 +719,111 @@ data:
           image: docker.io/library/busybox:1.28.3
     osh:
       barbican:
-        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        scripted_test: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        barbican_db_sync: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
-        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         barbican_api: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
-        rabbit_init: docker.io/library/rabbitmq:3.7-management
-      cinder:
-        test: docker.io/xrally/xrally-openstack:1.3.0
-        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        cinder_db_sync: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
-        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        rabbit_init: docker.io/library/rabbitmq:3.7-management
-        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        cinder_api: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
+        barbican_db_sync: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
         bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        cinder_scheduler: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
-        cinder_volume: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
-        cinder_volume_usage_audit: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
-        cinder_storage_init: docker.io/port/ceph-config-helper:v1.10.3
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        scripted_test: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+      cinder:
+        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        cinder_api: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
         cinder_backup: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
         cinder_backup_storage_init: docker.io/port/ceph-config-helper:v1.10.3
+        cinder_db_sync: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
+        cinder_scheduler: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
+        cinder_storage_init: docker.io/port/ceph-config-helper:v1.10.3
+        cinder_volume: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
+        cinder_volume_usage_audit: docker.io/openstackhelm/cinder:ocata-ubuntu_xenial
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        test: docker.io/xrally/xrally-openstack:1.3.0
       glance:
-        test: docker.io/xrally/xrally-openstack:1.3.0
-        glance_storage_init: docker.io/port/ceph-config-helper:v1.10.3
-        glance_metadefs_load: docker.io/openstackhelm/glance:ocata-ubuntu_xenial
-        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        glance_db_sync: docker.io/openstackhelm/glance:ocata-ubuntu_xenial
-        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        rabbit_init: docker.io/library/rabbitmq:3.7-management
-        glance_api: docker.io/openstackhelm/glance:ocata-ubuntu_xenial
-        glance_registry: docker.io/openstackhelm/glance:ocata-ubuntu_xenial
         bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        # image used for glance rally tests
         cirros_image: https://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img
-      heat:
-        test: docker.io/xrally/xrally-openstack:1.3.0
-        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        heat_db_sync: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        rabbit_init: docker.io/library/rabbitmq:3.7-management
-        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        glance_api: docker.io/openstackhelm/glance:ocata-ubuntu_xenial
+        glance_db_sync: docker.io/openstackhelm/glance:ocata-ubuntu_xenial
+        glance_metadefs_load: docker.io/openstackhelm/glance:ocata-ubuntu_xenial
+        glance_registry: docker.io/openstackhelm/glance:ocata-ubuntu_xenial
+        glance_storage_init: docker.io/port/ceph-config-helper:v1.10.3
         ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        test: docker.io/xrally/xrally-openstack:1.3.0
+      heat:
+        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         heat_api: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         heat_cfn: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         heat_cloudwatch: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        heat_db_sync: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         heat_engine: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         heat_engine_cleaner: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         heat_purge_deleted: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        test: docker.io/xrally/xrally-openstack:1.3.0
       horizon:
-        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        horizon_db_sync: docker.io/openstackhelm/horizon:ocata-ubuntu_xenial
         db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        horizon: docker.io/openstackhelm/horizon:ocata-ubuntu_xenial
-        test: docker.io/openstackhelm/osh-selenium:latest-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        horizon: docker.io/openstackhelm/horizon:ocata-ubuntu_xenial
+        horizon_db_sync: docker.io/openstackhelm/horizon:ocata-ubuntu_xenial
+        test: docker.io/openstackhelm/osh-selenium:latest-ubuntu_bionic
       ingress:
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         entrypoint: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        error_pages: gcr.io/google_containers/defaultbackend:1.0
         ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0
         ingress_module_init: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
         ingress_routed_vip: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
-        error_pages: gcr.io/google_containers/defaultbackend:1.0
         keepalived: docker.io/osixia/keepalived:1.4.5
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       keystone:
         bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        test: docker.io/xrally/xrally-openstack:1.3.0
-        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        keystone_db_sync: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
         db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        keystone_api: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_credential_cleanup: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        keystone_credential_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_credential_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_db_sync: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_domain_manage: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_fernet_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_fernet_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
         ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         rabbit_init: docker.io/library/rabbitmq:3.7-management
-        keystone_fernet_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_fernet_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_credential_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_credential_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_credential_cleanup: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        keystone_api: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_domain_manage: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        test: docker.io/xrally/xrally-openstack:1.3.0
       libvirt:
-        libvirt: docker.io/openstackhelm/libvirt:latest-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        libvirt: docker.io/openstackhelm/libvirt:latest-ubuntu_xenial
       mariadb:
-        mariadb: docker.io/openstackhelm/mariadb:10.2.18
-        ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         error_pages: gcr.io/google_containers/defaultbackend:1.0
+        ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
+        mariadb: docker.io/openstackhelm/mariadb:10.2.18
+        mariadb_backup: docker.io/openstackhelm/mariadb:latest-ubuntu_xenial
         prometheus_create_mysql_user: docker.io/library/mariadb:10.2.13
         prometheus_mysql_exporter: docker.io/prom/mysqld-exporter:v0.10.0
         prometheus_mysql_exporter_helm_tests: docker.io/openstackhelm/heat:newton-ubuntu_xenial
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        mariadb_backup: docker.io/openstackhelm/mariadb:latest-ubuntu_xenial
         scripted_test: docker.io/openstackhelm/mariadb:latest-ubuntu_xenial
       memcached:
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
@@ -832,36 +831,35 @@ data:
         prometheus_memcached_exporter: docker.io/prom/memcached-exporter:v0.4.1
       neutron:
         bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        test: docker.io/xrally/xrally-openstack:1.3.0
-        purge_test: docker.io/openstackhelm/ospurge:latest
-        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        neutron_db_sync: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
         db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        rabbit_init: docker.io/library/rabbitmq:3.7-management
-        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        neutron_server: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        neutron_bagpipe_bgp: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_db_sync: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
         neutron_dhcp: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
-        neutron_metadata: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
-        neutron_l3: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_ironic_agent: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
         neutron_l2gw: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
-        neutron_openvswitch_agent: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_l3: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
         neutron_linuxbridge_agent: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_metadata: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_openvswitch_agent: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
+        neutron_server: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
         neutron_sriov_agent: docker.io/openstackhelm/neutron:ocata-18.04-sriov
         neutron_sriov_agent_init: docker.io/openstackhelm/neutron:ocata-18.04-sriov
-        neutron_bagpipe_bgp: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
-        neutron_ironic_agent: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        purge_test: docker.io/openstackhelm/ospurge:latest
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        test: docker.io/xrally/xrally-openstack:1.3.0
       nova:
         bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        rabbit_init: docker.io/library/rabbitmq:3.7-management
-        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         nova_api: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
         nova_cell_setup: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
         nova_cell_setup_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
@@ -878,212 +876,213 @@ data:
         nova_service_cleaner: docker.io/port/ceph-config-helper:v1.10.3
         nova_spiceproxy: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
         nova_spiceproxy_assets: docker.io/kolla/ubuntu-source-nova-spicehtml5proxy:ocata
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
         test: docker.io/xrally/xrally-openstack:1.3.0
       openvswitch:
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         openvswitch_db_server: docker.io/openstackhelm/openvswitch:latest-ubuntu_bionic
         openvswitch_vswitchd: docker.io/openstackhelm/openvswitch:latest-ubuntu_bionic
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       rabbitmq:
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         prometheus_rabbitmq_exporter: docker.io/kbudde/rabbitmq-exporter:v0.21.0
         prometheus_rabbitmq_exporter_helm_tests: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        rabbitmq_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         rabbitmq: docker.io/library/rabbitmq:3.7.13
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        rabbitmq_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         scripted_test: docker.io/library/rabbitmq:3.7.13-management
       tempest:
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        tempest_run_tests: docker.io/openstackhelm/tempest:latest-ubuntu_xenial
         ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        tempest_run_tests: docker.io/openstackhelm/tempest:latest-ubuntu_xenial
     osh_infra:
       elasticsearch:
         apache_proxy: docker.io/library/httpd:2.4
-        memory_init: docker.io/openstackhelm/heat:newton-ubuntu_xenial
-        curator:  docker.io/bobrik/curator:5.6.0
-        elasticsearch: docker.io/openstackhelm/elasticsearch-s3:latest-5_6_4
         ceph_key_placement: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        curator: docker.io/bobrik/curator:5.6.0
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        elasticsearch: docker.io/openstackhelm/elasticsearch-s3:latest-5_6_4
+        elasticsearch_templates: docker.io/openstackhelm/heat:newton
+        es_cluster_wait: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+        helm_tests: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        memory_init: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        prometheus_elasticsearch_exporter: docker.io/justwatch/elasticsearch_exporter:1.0.1
         s3_bucket: docker.io/openstackhelm/ceph-daemon:latest-ubuntu_xenial
         s3_user: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
-        helm_tests: docker.io/openstackhelm/heat:newton-ubuntu_xenial
-        prometheus_elasticsearch_exporter: docker.io/justwatch/elasticsearch_exporter:1.0.1
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         snapshot_repository: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
-        es_cluster_wait: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
-        elasticsearch_templates: docker.io/openstackhelm/heat:newton
       fluentbit:
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         fluentbit: docker.io/fluent/fluent-bit:0.14.2
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       fluentd:
-        fluentd: docker.io/openstackhelm/fluentd:latest-debian
-        prometheus_fluentd_exporter: docker.io/bitnami/fluentd-exporter:0.2.0
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        helm_tests: docker.io/openstackhelm/heat:newton-ubuntu_xenial
         elasticsearch_template: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        fluentd: docker.io/openstackhelm/fluentd:latest-debian
+        helm_tests: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        prometheus_fluentd_exporter: docker.io/bitnami/fluentd-exporter:0.2.0
       grafana:
-        grafana: docker.io/grafana/grafana:5.0.0
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         db_init: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        grafana: docker.io/grafana/grafana:6.2.0
         grafana_db_session_sync: docker.io/openstackhelm/heat:newton-ubuntu_xenial
-        selenium_tests: docker.io/openstackhelm/osh-selenium:latest-ubuntu_xenial
+        selenium_tests: docker.io/openstackhelm/osh-selenium:latest-ubuntu_bionic
       kibana:
         apache_proxy: docker.io/library/httpd:2.4
-        kibana: docker.io/library/kibana:5.6.4
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        kibana: docker.io/library/kibana:5.6.4
         register_kibana_indexes: docker.io/openstackhelm/heat:newton-ubuntu_xenial
       nagios:
         apache_proxy: docker.io/library/httpd:2.4
-        nagios: docker.io/openstackhelm/nagios:latest-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.2.1
-        selenium_tests: docker.io/openstackhelm/osh-selenium:latest-ubuntu_xenial
+        nagios: docker.io/openstackhelm/nagios:latest-ubuntu_xenial
+        selenium_tests: docker.io/openstackhelm/osh-selenium:latest-ubuntu_bionic
       nfs_provisioner:
-        nfs_provisioner: quay.io/kubernetes_incubator/nfs-provisioner:v2.2.1-k8s1.12
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        nfs_provisioner: quay.io/kubernetes_incubator/nfs-provisioner:v2.2.1-k8s1.12
       prometheus:
         apache_proxy: docker.io/library/httpd:2.4
-        prometheus: docker.io/prom/prometheus:v2.3.2
-        helm_tests: docker.io/openstackhelm/heat:newton-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        helm_tests: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        prometheus: docker.io/prom/prometheus:v2.3.2
       prometheus_alertmanager:
         alertmanager: docker.io/prom/alertmanager:v0.11.0
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       prometheus_kube_state_metrics:
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         kube_state_metrics: docker.io/bitnami/kube-state-metrics:1.3.1
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       prometheus_node_exporter:
-        node_exporter: docker.io/prom/node-exporter:v0.15.0
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        node_exporter: docker.io/prom/node-exporter:v0.15.0
       prometheus_openstack_exporter:
-        prometheus_openstack_exporter: quay.io/attcomdev/prometheus-openstack-exporter:3231f14419f0c47547ce2551b7d884cd222104e6
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         ks_user: docker.io/openstackhelm/heat:newton-ubuntu_xenial
+        prometheus_openstack_exporter: openstackhelm/prometheus-openstack-exporter:ubuntu_xenial-20191017
       prometheus_process_exporter:
-        process_exporter: docker.io/ncabatoff/process-exporter:0.2.11
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        process_exporter: docker.io/ncabatoff/process-exporter:0.2.11
     ucp:
       armada:
-        api: quay.io/airshipit/armada:7ef4905c445bff58bd315ed7820bbbb68b863d8f-ubuntu_xenial
-        helm: docker.io/lachlanevenson/k8s-helm:v2.14.1
+        api: quay.io/airshipit/armada:6a9b3bf9c9ffb80f244db242b3760f69fca9729f-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        helm: docker.io/lachlanevenson/k8s-helm:v2.14.1
         ks_endpoints: docker.io/openstackhelm/heat:newton
         ks_service: docker.io/openstackhelm/heat:newton
         ks_user: docker.io/openstackhelm/heat:newton
         tiller: gcr.io/kubernetes-helm/tiller:v2.14.1
       barbican:
-        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        scripted_test: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        barbican_db_sync: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
-        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         barbican_api: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
+        barbican_db_sync: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
+        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         rabbit_init: docker.io/library/rabbitmq:3.7-management
+        scripted_test: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
       deckhand:
+        db_init: docker.io/library/postgres:9.5
         db_sync: quay.io/airshipit/deckhand:51dcea4fa12b0bcce65c381c286e61378a0826e2-ubuntu_xenial
         deckhand: quay.io/airshipit/deckhand:51dcea4fa12b0bcce65c381c286e61378a0826e2-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        db_init: docker.io/library/postgres:9.5
         ks_endpoints: docker.io/openstackhelm/heat:newton
         ks_service: docker.io/openstackhelm/heat:newton
         ks_user: docker.io/openstackhelm/heat:newton
       divingbell:
         divingbell: docker.io/library/ubuntu:16.04
       drydock:
-        drydock: quay.io/airshipit/drydock:b7d4b121165827309bf0a274e306631d865f5f54
-        drydock_db_sync: quay.io/airshipit/drydock:b7d4b121165827309bf0a274e306631d865f5f54
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        ks_user: docker.io/openstackhelm/heat:newton
-        ks_service: docker.io/openstackhelm/heat:newton
-        ks_endpoints: docker.io/openstackhelm/heat:newton
+        drydock: quay.io/airshipit/drydock:3b4738efd1359c195f096e4901a2812b1b4d8ea8
         drydock_db_init: docker.io/library/postgres:9.5
+        drydock_db_sync: quay.io/airshipit/drydock:3b4738efd1359c195f096e4901a2812b1b4d8ea8
+        ks_endpoints: docker.io/openstackhelm/heat:newton
+        ks_service: docker.io/openstackhelm/heat:newton
+        ks_user: docker.io/openstackhelm/heat:newton
       ingress:
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         entrypoint: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        error_pages: gcr.io/google_containers/defaultbackend:1.0
         ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0
         ingress_module_init: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
         ingress_routed_vip: docker.io/openstackhelm/neutron:ocata-ubuntu_xenial
-        error_pages: gcr.io/google_containers/defaultbackend:1.0
         keepalived: docker.io/osixia/keepalived:1.4.5
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       keystone:
         bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        test: docker.io/xrally/xrally-openstack:1.3.0
-        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        keystone_db_sync: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
         db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        keystone_api: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_credential_cleanup: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        keystone_credential_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_credential_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_db_sync: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_domain_manage: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_fernet_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
+        keystone_fernet_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
         ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         rabbit_init: docker.io/library/rabbitmq:3.7-management
-        keystone_fernet_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_fernet_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_credential_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_credential_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_credential_cleanup: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        keystone_api: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_domain_manage: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        test: docker.io/xrally/xrally-openstack:1.3.0
       maas:
-        bootstrap: quay.io/airshipit/maas-region-controller:628ca509bc3ba7988ef2847a446a5930e4b53e9e
-        db_sync: quay.io/airshipit/maas-region-controller:628ca509bc3ba7988ef2847a446a5930e4b53e9e
-        export_api_key: quay.io/airshipit/maas-region-controller:628ca509bc3ba7988ef2847a446a5930e4b53e9e
-        maas_cache: quay.io/airshipit/sstream-cache:628ca509bc3ba7988ef2847a446a5930e4b53e9e
-        maas_rack: quay.io/airshipit/maas-rack-controller:628ca509bc3ba7988ef2847a446a5930e4b53e9e
-        maas_region: quay.io/airshipit/maas-region-controller:628ca509bc3ba7988ef2847a446a5930e4b53e9e
-        maas_syslog: quay.io/airshipit/maas-region-controller:628ca509bc3ba7988ef2847a446a5930e4b53e9e
+        bootstrap: quay.io/airshipit/maas-region-controller:d79b355188203ae994d6de64d1cc21b34b3d86f0
         db_init: docker.io/library/postgres:9.5
+        db_sync: quay.io/airshipit/maas-region-controller:d79b355188203ae994d6de64d1cc21b34b3d86f0
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        error_pages: gcr.io/google_containers/ingress-gce-404-server-with-metrics-amd64:v1.6.0
+        export_api_key: quay.io/airshipit/maas-region-controller:d79b355188203ae994d6de64d1cc21b34b3d86f0
         ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.20.0
         ingress_vip: docker.io/library/busybox:1.28.3
-        error_pages: gcr.io/google_containers/ingress-gce-404-server-with-metrics-amd64:v1.6.0
+        maas_cache: quay.io/airshipit/sstream-cache:d79b355188203ae994d6de64d1cc21b34b3d86f0
+        maas_rack: quay.io/airshipit/maas-rack-controller:d79b355188203ae994d6de64d1cc21b34b3d86f0
+        maas_region: quay.io/airshipit/maas-region-controller:d79b355188203ae994d6de64d1cc21b34b3d86f0
+        maas_syslog: quay.io/airshipit/maas-region-controller:d79b355188203ae994d6de64d1cc21b34b3d86f0
       mariadb:
-        mariadb: docker.io/openstackhelm/mariadb:10.2.18
-        ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         error_pages: gcr.io/google_containers/defaultbackend:1.0
+        ingress: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
+        mariadb: docker.io/openstackhelm/mariadb:10.2.18
+        mariadb_backup: docker.io/openstackhelm/mariadb:latest-ubuntu_xenial
         prometheus_create_mysql_user: docker.io/library/mariadb:10.2.13
         prometheus_mysql_exporter: docker.io/prom/mysqld-exporter:v0.10.0
         prometheus_mysql_exporter_helm_tests: docker.io/openstackhelm/heat:newton-ubuntu_xenial
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        mariadb_backup: docker.io/openstackhelm/mariadb:latest-ubuntu_xenial
         scripted_test: docker.io/openstackhelm/mariadb:latest-ubuntu_xenial
       memcached:
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         memcached: docker.io/library/memcached:1.5.5
         prometheus_memcached_exporter: docker.io/prom/memcached-exporter:v0.4.1
       pegleg:
-        pegleg: quay.io/airshipit/pegleg:85fdcd497afecc1274cebaeb07ab9384c3afdf15-ubuntu_xenial
+        pegleg: quay.io/airshipit/pegleg:980de8fd3041b0556813da7461ffbc36e8599618-ubuntu_xenial
       postgresql:
-        postgresql: docker.io/openstackhelm/patroni:latest-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        postgresql: docker.io/openstackhelm/patroni:latest-ubuntu_xenial
+        postgresql_backup: docker.io/library/postgres:9.5
         prometheus_postgresql_exporter: docker.io/wrouesnel/postgres_exporter:v0.4.6
         prometheus_postgresql_exporter_create_user: docker.io/library/postgres:9.5
-        postgresql_backup: docker.io/library/postgres:9.5
       promenade:
-        monitoring_image: docker.io/library/busybox:1.28.3
-        promenade: quay.io/airshipit/promenade:9a50a59bf612a44fbba2e9aef1dfe666dc28de39
-        hyperkube: gcr.io/google_containers/hyperkube-amd64:v1.11.6
-        ks_user: docker.io/openstackhelm/heat:newton
-        ks_service: docker.io/openstackhelm/heat:newton
-        ks_endpoints: docker.io/openstackhelm/heat:newton
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        hyperkube: gcr.io/google_containers/hyperkube-amd64:v1.11.6
+        ks_endpoints: docker.io/openstackhelm/heat:newton
+        ks_service: docker.io/openstackhelm/heat:newton
+        ks_user: docker.io/openstackhelm/heat:newton
+        monitoring_image: docker.io/library/busybox:1.28.3
+        promenade: quay.io/airshipit/promenade:5b2fec3b645fb342c212a92c2ab85267c8b5d795
       rabbitmq:
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         prometheus_rabbitmq_exporter: docker.io/kbudde/rabbitmq-exporter:v0.21.0
         prometheus_rabbitmq_exporter_helm_tests: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        rabbitmq_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         rabbitmq: docker.io/library/rabbitmq:3.7.13
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
+        rabbitmq_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         scripted_test: docker.io/library/rabbitmq:3.7.13-management
       shipyard:
-        airflow: quay.io/airshipit/airflow:0cbb5cf9b7ea7e517e034e3ccb105b183ada08d9-ubuntu_xenial
-        airflow_db_sync: quay.io/airshipit/airflow:0cbb5cf9b7ea7e517e034e3ccb105b183ada08d9-ubuntu_xenial
-        shipyard: quay.io/airshipit/shipyard:0cbb5cf9b7ea7e517e034e3ccb105b183ada08d9-ubuntu_xenial
-        shipyard_db_sync: quay.io/airshipit/shipyard:0cbb5cf9b7ea7e517e034e3ccb105b183ada08d9-ubuntu_xenial
-        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        shipyard_db_init: docker.io/library/postgres:9.5
-        shipyard_db_auxiliary: docker.io/library/postgres:9.5
+        airflow: quay.io/airshipit/airflow:72ca47e5c9ae8b7b1dcccd7742be6499f0411650-ubuntu_xenial
         airflow_db_init: docker.io/library/postgres:9.5
-        rabbit_init: docker.io/library/rabbitmq:3.7-management
-        ks_user: docker.io/openstackhelm/heat:ocata
-        ks_service: docker.io/openstackhelm/heat:ocata
+        airflow_db_sync: quay.io/airshipit/airflow:72ca47e5c9ae8b7b1dcccd7742be6499f0411650-ubuntu_xenial
+        dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         ks_endpoints: docker.io/openstackhelm/heat:ocata
+        ks_service: docker.io/openstackhelm/heat:ocata
+        ks_user: docker.io/openstackhelm/heat:ocata
+        rabbit_init: docker.io/library/rabbitmq:3.7-management
+        shipyard: quay.io/airshipit/shipyard:72ca47e5c9ae8b7b1dcccd7742be6499f0411650-ubuntu_xenial
+        shipyard_db_auxiliary: docker.io/library/postgres:9.5
+        shipyard_db_init: docker.io/library/postgres:9.5
+        shipyard_db_sync: quay.io/airshipit/shipyard:72ca47e5c9ae8b7b1dcccd7742be6499f0411650-ubuntu_xenial
     utility:
       calicoctl-utility:
         calicoctl_utility: quay.io/airshipit/porthole-calicoctl-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-alpine
@@ -1097,12 +1096,12 @@ data:
       etcdctl-utility:
         etcdctl_utility: quay.io/airshipit/porthole-etcdctl-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-ubuntu_xenial
         image_repo_sync: docker.io/docker:18.09.02
-      openstack-utility:
-        openstack-utility: quay.io/airshipit/porthole-openstack-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-ubuntu_xenial
-        image_repo_sync: docker.io/docker:18.09.02
       mysqlclient-utility:
-        mysqlclient_utility: quay.io/airshipit/porthole-mysqlclient-utility:f165082caf47cc3cc487138081589a373a36ac36-ubuntu_xenial
         image_repo_sync: docker.io/docker:18.09.02
+        mysqlclient_utility: quay.io/airshipit/porthole-mysqlclient-utility:f165082caf47cc3cc487138081589a373a36ac36-ubuntu_xenial
+      openstack-utility:
+        image_repo_sync: docker.io/docker:18.09.02
+        openstack-utility: quay.io/airshipit/porthole-openstack-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-ubuntu_xenial
   packages:
     gpgkey: |-
       -----BEGIN PGP PUBLIC KEY BLOCK-----
