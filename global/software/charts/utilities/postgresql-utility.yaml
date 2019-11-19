@@ -1,0 +1,84 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: postgresql-utility
+  layeringDefinition:
+    abstract: false
+    layer: global
+  labels:
+    name: postgresql-utility
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.utility.postgresql-utility
+      dest:
+        path: .source
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.utility.postgresql-utility
+      dest:
+        path: .values.images.tags
+    # CAs
+    -
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_postgres_admin_password
+        path: .
+      dest:
+        path: .values.secrets.postgresql.admin
+data:
+  chart_name: postgresql-utility
+  release: postgresql-utility
+  namespace: utility
+  protected:
+    continue_processing: true
+  wait:
+    timeout: 600
+    labels:
+      release_group: airship-postgresql-utility
+  install:
+   no_hooks: false
+  upgrade:
+   no_hooks: false
+  values:
+    labels:
+      utility:
+        node_selector_key: utility
+        node_selector_value: enabled
+    manifests:
+      configmap_bin: true
+      configmap_etc_client: true
+      configmap_etc_sudoers: true
+      deployment_utility: true
+  dependencies:
+    - postgresql-utility-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: postgresql-utility-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.utility.postgresql-utility-htk
+      dest:
+        path: .source
+data:
+  chart_name: postgresql-utility-htk
+  release: postgresql-utility-htk
+  namespace: postgresql-utility-htk
+  values: {}
+  dependencies: []
+...

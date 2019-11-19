@@ -602,6 +602,17 @@ data:
         reference: 03580ec90afa162c166661acf27f351b83565375
         subpath: helm-toolkit
         type: git
+      postgresql-utility:
+        location: https://opendev.org/airship/porthole
+        reference: 0546a3aff7af4541e07630589a15a3d172c8ff5c
+        subpath: charts/postgresql-utility
+        type: git
+      postgresql-utility-htk:
+        location: https://opendev.org/openstack/openstack-helm-infra
+        reference: 03580ec90afa162c166661acf27f351b83565375
+        subpath: helm-toolkit
+        type: git
+
   images:
     calico:
       calico:
@@ -1089,23 +1100,26 @@ data:
         shipyard_db_sync: quay.io/airshipit/shipyard:72ca47e5c9ae8b7b1dcccd7742be6499f0411650-ubuntu_xenial
     utility:
       calicoctl-utility:
-        calicoctl_utility: quay.io/airshipit/porthole-calicoctl-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-alpine
+        calicoctl_utility: quay.io/airshipit/porthole-calicoctl-utility:744e4bb10acccaa8722f9e05fb0a39a1b5b35731-ubuntu_bionic
         image_repo_sync: docker.io/docker:18.09.02
       ceph-utility:
-        ceph_utility: quay.io/airshipit/porthole-ceph-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-ubuntu_xenial
+        ceph_utility: quay.io/airshipit/porthole-ceph-utility:744e4bb10acccaa8722f9e05fb0a39a1b5b35731-ubuntu_bionic
         image_repo_sync: docker.io/docker:18.09.02
       compute-utility:
-        compute_utility: quay.io/airshipit/porthole-compute-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-ubuntu_xenial
+        compute_utility: quay.io/airshipit/porthole-compute-utility:744e4bb10acccaa8722f9e05fb0a39a1b5b35731-ubuntu_bionic
         image_repo_sync: docker.io/docker:18.09.02
       etcdctl-utility:
-        etcdctl_utility: quay.io/airshipit/porthole-etcdctl-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-ubuntu_xenial
+        etcdctl_utility: quay.io/airshipit/porthole-etcdctl-utility:744e4bb10acccaa8722f9e05fb0a39a1b5b35731-ubuntu_bionic
         image_repo_sync: docker.io/docker:18.09.02
       mysqlclient-utility:
         image_repo_sync: docker.io/docker:18.09.02
-        mysqlclient_utility: quay.io/airshipit/porthole-mysqlclient-utility:f165082caf47cc3cc487138081589a373a36ac36-ubuntu_xenial
+        mysqlclient_utility: quay.io/airshipit/porthole-mysqlclient-utility:744e4bb10acccaa8722f9e05fb0a39a1b5b35731-ubuntu_bionic
       openstack-utility:
         image_repo_sync: docker.io/docker:18.09.02
-        openstack-utility: quay.io/airshipit/porthole-openstack-utility:8a08f26f4ae409d985c0c123e293a1ac7ccd3a8b-ubuntu_xenial
+        openstack-utility: quay.io/airshipit/porthole-openstack-utility:744e4bb10acccaa8722f9e05fb0a39a1b5b35731-ubuntu_bionic
+      postgresql-utility:
+        postgresql_utility: quay.io/airshipit/porthole-postgresql-utility:744e4bb10acccaa8722f9e05fb0a39a1b5b35731-ubuntu_bionic
+        image_repo_sync: docker.io/docker:18.09.02
   packages:
     gpgkey: |-
       -----BEGIN PGP PUBLIC KEY BLOCK-----

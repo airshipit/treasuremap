@@ -16,5 +16,6 @@ data:
 #    - ceph-utility
     - compute-utility
     - etcdctl-utility
-    - openstack-utility
     - mysqlclient-utility
+    - openstack-utility
+    - postgresql-utility

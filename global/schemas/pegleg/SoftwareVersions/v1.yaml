@@ -828,17 +828,6 @@ data:
                   type: string
                 reference:
                   type: string
-            openstack-utility:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
             mysqlclient-utility:
               type: object
               properties:
@@ -850,6 +839,28 @@ data:
                     type: string
                   reference:
                     type: string
+            openstack-utility:
+              type: object
+              properties:
+                type:
+                  type: string
+                location:
+                  type: string
+                subpath:
+                  type: string
+                reference:
+                  type: string
+            postgresql-utility:
+              type: object
+              properties:
+                type:
+                  type: string
+                location:
+                  type: string
+                subpath:
+                  type: string
+                reference:
+                  type: string
     files:
       type: object
       properties:
@@ -1079,17 +1090,24 @@ data:
                   type: string
                 image_repo_sync:
                   type: string
-            openstack-utility:
-              type: object
-              properties:
-                openstack-utility:
-                  type: string
-                image_repo_sync:
-                  type: string
             mysqlclient-utility:
               type: object
               properties:
                 mysqlclient_utility:
+                  type: string
+                image_repo_sync:
+                  type: string
+            openstack-utility:
+              type: object
+              properties:
+                openstack_utility:
+                  type: string
+                image_repo_sync:
+                  type: string
+            postgresql-utility:
+              type: object
+              properties:
+                postgresql_utility:
                   type: string
                 image_repo_sync:
                   type: string
