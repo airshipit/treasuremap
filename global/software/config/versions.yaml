@@ -473,7 +473,7 @@ data:
         type: git
       promenade:
         location: https://opendev.org/airship/promenade
-        reference: 5b2fec3b645fb342c212a92c2ab85267c8b5d795
+        reference: 7e7d334794fb7b7e4b6c6706463aa0c70134c5dd
         subpath: charts/promenade
         type: git
       promenade-htk:
@@ -1062,7 +1062,7 @@ data:
         ks_service: docker.io/openstackhelm/heat:newton
         ks_user: docker.io/openstackhelm/heat:newton
         monitoring_image: docker.io/library/busybox:1.28.3
-        promenade: quay.io/airshipit/promenade:5b2fec3b645fb342c212a92c2ab85267c8b5d795
+        promenade: quay.io/airshipit/promenade:7e7d334794fb7b7e4b6c6706463aa0c70134c5dd
       rabbitmq:
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         prometheus_rabbitmq_exporter: docker.io/kbudde/rabbitmq-exporter:v0.21.0
