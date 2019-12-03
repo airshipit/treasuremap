@@ -965,7 +965,7 @@ data:
         ks_endpoints: docker.io/openstackhelm/heat:newton
         ks_service: docker.io/openstackhelm/heat:newton
         ks_user: docker.io/openstackhelm/heat:newton
-        tiller: gcr.io/kubernetes-helm/tiller:v2.14.1
+        tiller: gcr.io/kubernetes-helm/tiller:v2.16.1
       barbican:
         barbican_api: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
         barbican_db_sync: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
