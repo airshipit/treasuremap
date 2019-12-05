@@ -318,6 +318,16 @@ Run the following command to get an up-to-date list of required DNS names:
 Update Secrets
 ~~~~~~~~~~~~~~
 
+Replace public SSH key under
+``site/${NEW_SITE}/secrets/publickey/airship_ssh_public_key.yaml``
+with a lab specific SSH public key. This key is used for MAAS initial
+deployment as well as the default user for Divingbell
+``site/${NEW_SITE}/software/charts/ucp/divingbell/divingbell.yaml``.
+
+Add additional keys and Divingbell substitutions for any other users
+that require SSH access to the deployed servers. See more details at
+`<https://airship-divingbell.readthedocs.io/en/latest/>`__.
+
 Replace passphrases under ``site/${NEW_SITE}/secrets/passphrases/``
 with random generated ones:
 
