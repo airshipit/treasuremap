@@ -297,10 +297,6 @@ data:
           </Proxy>
         </VirtualHost>
       elasticsearch:
-        config:
-          http:
-            max_content_length: 2gb
-            pipelining: false
         env:
           java_opts:
             client: "-Xms8g -Xmx8g"

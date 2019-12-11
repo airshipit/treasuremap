@@ -242,6 +242,11 @@ data:
     ceph_client:
       configmap: tenant-ceph-etc
       user_secret_name: pvc-tceph-client-key
+
+    # disable bootstrap of Cirros image
+    bootstrap:
+      enabled: false
+
     conf:
       rally_tests:
         run_tempest: false
@@ -270,6 +275,7 @@ data:
               sla:
                 failure_rate:
                   max: 0
+
       logging:
         loggers:
           keys:

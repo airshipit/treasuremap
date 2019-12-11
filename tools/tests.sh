@@ -38,11 +38,18 @@ tools/openstack stack create --wait \
 
 : ${OSH_VM_KEY_STACK:="heat-vm-key"}
 : ${OSH_PRIVATE_SUBNET:="10.0.0.0/24"}
-# NOTE(portdirect): We do this fancy, and seemingly pointless, footwork to get
-# the full image name for the cirros Image without having to be explicit.
-IMAGE_NAME=$(tools/openstack image show -f value -c name \
-  $(tools/openstack image list -f csv | awk -F ',' '{ print $2 "," $1 }' | \
-    grep "^\"Cirros" | head -1 | awk -F ',' '{ print $2 }' | tr -d '"'))
+
+: ${OSH_CIRROS_IMAGE_URL:="https://download.cirros-cloud.net/0.3.5/"}
+: ${OSH_CIRROS_IMAGE_NAME:="cirros-0.3.5-x86_64-disk.img"}
+
+IMAGE_NAME="cirros-0.3.5-x86_64-test"
+wget "${OSH_CIRROS_IMAGE_URL}/${OSH_CIRROS_IMAGE_NAME}"
+
+tools/openstack image create --public \
+    --container-format bare \
+    --disk-format qcow2 \
+    --file /target/${OSH_CIRROS_IMAGE_NAME} \
+    $IMAGE_NAME
 
 rm -rf ${OSH_VM_KEY_STACK}*
 ssh-keygen -t rsa -N '' -f $OSH_VM_KEY_STACK
