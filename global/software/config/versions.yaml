@@ -901,7 +901,7 @@ data:
       elasticsearch:
         apache_proxy: docker.io/library/httpd:2.4
         ceph_key_placement: docker.io/openstackhelm/ceph-config-helper:ubuntu_xenial-20191119
-        curator: docker.io/bobrik/curator:7.1.0
+        curator: docker.io/bobrik/curator:5.8.1
         dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
         elasticsearch: docker.io/openstackhelm/elasticsearch-s3:7_1_0-20191119
         elasticsearch_templates: docker.io/openstackhelm/heat:newton
