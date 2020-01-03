@@ -42,7 +42,7 @@ docker run --rm --net host -p 8000:8000 --name armada \
     -v ~/.kube/config:/armada/.kube/config \
     -v "$(pwd)"/airskiff.yaml:/airskiff.yaml \
     -v "${INSTALL_PATH}":/airship-components \
-    quay.io/airshipit/armada:latest \
+    quay.io/airshipit/armada:latest-ubuntu_bionic \
     apply /airskiff.yaml --target-manifest $TARGET_MANIFEST
 
 # Set back permissions of the files
