@@ -3,7 +3,7 @@ set -ex
 
 CLUSTER_DNS=${CLUSTER_DNS:-10.96.0.10}
 
-KUBECTL_IMAGE=${KUBECTL_IMAGE:-gcr.io/google-containers/hyperkube-amd64:v1.11.6}
+KUBECTL_IMAGE=${KUBECTL_IMAGE:-gcr.io/google-containers/hyperkube-amd64:v1.17.3}
 UBUNTU_IMAGE=${UBUNTU_IMAGE:-docker.io/ubuntu:16.04}
 
 cat > /tmp/rbd-roomba-scanner.yaml << 'EOF'
@@ -48,7 +48,7 @@ data:
 EOF
 cat >> /tmp/rbd-roomba-scanner.yaml << EOF
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: rbd-roomba-scanner
@@ -98,4 +98,4 @@ docker run --rm -i \
         -v /etc/kubernetes/admin:/etc/kubernetes/admin \
         -e KUBECONFIG=/etc/kubernetes/admin/kubeconfig.yaml \
         ${KUBECTL_IMAGE} \
-            /kubectl apply -f /work/rbd-roomba-scanner.yaml
+            kubectl apply -f /work/rbd-roomba-scanner.yaml

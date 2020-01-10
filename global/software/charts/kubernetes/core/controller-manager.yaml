@@ -103,7 +103,7 @@ data:
             release_group: airship-kubernetes-controller-manager
   values:
     command_prefix:
-      - /controller-manager
+      - kube-controller-manager
       - --cluster-cidr=SUB_POD_CIDR
       - --service-cluster-ip-range=SUB_SERVICE_CIDR
       - --node-monitor-period=5s

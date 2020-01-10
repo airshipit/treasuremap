@@ -97,7 +97,7 @@ data:
       - --feature-gates=PodShareProcessNamespace=true
       - --v=3
       - --admission-control-config-file=/etc/kubernetes/apiserver/acconfig.yaml
-      - --experimental-encryption-provider-config=/etc/kubernetes/apiserver/encryption_provider.yaml
+      - --encryption-provider-config=/etc/kubernetes/apiserver/encryption_provider.yaml
       - --requestheader-allowed-names='aggregator'
   armada:
     target_manifest: cluster-bootstrap

@@ -147,10 +147,10 @@ data:
       encryption_provider:
         file: encryption_provider.yaml
         command_options:
-          - '--experimental-encryption-provider-config=/etc/kubernetes/apiserver/encryption_provider.yaml'
+          - '--encryption-provider-config=/etc/kubernetes/apiserver/encryption_provider.yaml'
         content:
-          kind: EncryptionConfig
-          apiVersion: v1
+          kind: EncryptionConfiguration
+          apiVersion: apiserver.config.k8s.io/v1
       eventconfig:
         file: eventconfig.yaml
         content:

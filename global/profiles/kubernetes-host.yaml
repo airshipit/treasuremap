@@ -15,6 +15,14 @@ metadata:
       dest:
         path: .files[0].docker_image
 
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .files.kubernetes
+      dest:
+        - path: .files[1].tar_url
+        - path: .files[2].tar_url
+
     # Initial CoreDNS image (used during node Genesis and node join)
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -108,10 +116,10 @@ data:
       file_path: /hyperkube
       mode: 0555
     - path: /opt/kubernetes/bin/kubelet
-      symlink: /opt/kubernetes/bin/hyperkube
+      tar_path: kubernetes/node/bin/kubelet
       mode: 0555
     - path: /usr/local/bin/kubectl
-      symlink: /opt/kubernetes/bin/hyperkube
+      tar_path: kubernetes/node/bin/kubectl
       mode: 0555
     - path: /etc/logrotate.d/json-logrotate
       mode: 0444

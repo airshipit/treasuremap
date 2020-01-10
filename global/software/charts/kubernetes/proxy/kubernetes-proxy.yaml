@@ -59,7 +59,7 @@ data:
             release_group: airship-kubernetes-proxy
   values:
     command_prefix:
-      - /proxy
+      - kube-proxy
       - --cluster-cidr=POD_CIDR
       - --proxy-mode=iptables
     kube_service:
