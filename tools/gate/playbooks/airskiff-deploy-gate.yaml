@@ -36,6 +36,12 @@
       args:
         chdir: "{{ zuul.project.src_dir }}"
 
+    - name: Setup AppArmor
+      shell: |
+        ./tools/deployment/airskiff/developer/015-setup-apparmor.sh
+      args:
+        chdir: "{{ zuul.project.src_dir }}"
+
     - name: Setup OpenStack Client
       shell: |
         ./tools/deployment/airskiff/developer/020-setup-client.sh

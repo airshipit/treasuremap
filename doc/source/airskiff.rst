@@ -103,6 +103,19 @@ Alternatively, this step can be performed by running the script directly:
 
   ./tools/deployment/airskiff/developer/010-deploy-k8s.sh
 
+Setup AppArmor
+~~~~~~~~~~~~~~
+
+.. literalinclude:: ../../tools/deployment/airskiff/developer/015-setup-apparmor.sh
+    :language: shell
+    :lines: 1,18-
+
+Alternatively, this step can be performed by running the script directly:
+
+.. code-block:: shell
+
+  ./tools/deployment/airskiff/developer/015-setup-apparmor.sh
+
 Restart your shell session
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
