@@ -40,4 +40,8 @@ if echo $(groups) | grep -qv 'docker'; then
 fi
 END_SCRIPT
 
+# clean up /etc/resolv.conf, if it includes a localhost dns address
+sudo sed -i.bkp '/^nameserver.*127.0.0.1/d
+                 w /dev/stdout' /etc/resolv.conf
+
 cd "${CURRENT_DIR}"

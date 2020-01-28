@@ -19,7 +19,7 @@ set -xe
 
 CURRENT_DIR="$(pwd)"
 : "${INSTALL_PATH:="../"}"
-: "${OSH_INFRA_COMMIT:="8ba46703ee9fab0115e4b7f62ea43e0798c36872"}"
+: "${OSH_INFRA_COMMIT:="eacf93722136636dcfbd2b68c59b71f071ffc085"}"
 : "${CLONE_ARMADA:=true}"
 : "${CLONE_DECKHAND:=true}"
 : "${CLONE_SHIPYARD:=true}"
