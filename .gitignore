@@ -3,3 +3,4 @@ peggles/
 
 # Unit test / coverage reports
 .tox/
+config-ssh

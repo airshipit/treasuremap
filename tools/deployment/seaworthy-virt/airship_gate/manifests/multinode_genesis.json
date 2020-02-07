@@ -1,0 +1,105 @@
+{
+  "configuration": {
+    "site": "seaworthy-virt",
+    "primary_repo": "./",
+    "aux_repos": []
+  },
+  "ingress": {
+    "domain": "gate.local",
+    "ca": "-----BEGIN CERTIFICATE-----\nMIIDIDCCAgigAwIBAgIUfikFVpFSQKVjACP9i8P4tUMnQbcwDQYJKoZIhvcNAQEL\nBQAwKDERMA8GA1UEChMIU25ha2VvaWwxEzARBgNVBAMTCmluZ3Jlc3MtY2EwHhcN\nMTgxMjAzMjEzOTAwWhcNMjMxMjAyMjEzOTAwWjAoMREwDwYDVQQKEwhTbmFrZW9p\nbDETMBEGA1UEAxMKaW5ncmVzcy1jYTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC\nAQoCggEBAOR6+3dCF5mtKvu2TlaYNHc6/v8VPvw3I0+EI+jRskXVQHZxF0kcLAVH\n/LM2maTMzNc1sZnxCnj8YYHxfhdIco+zwzCbG1YGolSPrPaslYmMmDjR0eVl1+tb\nmLnEHDZ88ds5rXNlUXDhAURzYPJivG2aYBVImvaS4GHztndaFFNE0Q7HQpldCs1Q\n5+xbFlKWHBt/xPM4QjoD/ReLEE5m5HhkT4WN0hWC0NC1OwW6bBhVkrk4D2kDTq8d\n/b5MH4FG2HHJYHXKR4caasrCHUrmuq7m6WoicwF7z53FvlM782EsNx6vSoBKYs39\n/AC4meM/9D8rjUlWaG3AjP0KFrFCLYECAwEAAaNCMEAwDgYDVR0PAQH/BAQDAgEG\nMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFJFfhFd1reBWgmrWe6PBV2z5W/Ee\nMA0GCSqGSIb3DQEBCwUAA4IBAQAZygjSCRSJrvgPllyWDpyKN1fg2r7P2ioI0WR9\nWkSrPKzdhi2hR8VdJxkMvRpEmWRhkQT7jNGEIWgy2jtyWiYKnKYobbY/kMU86QgL\nZazh2DiIeJim+Vt3RREyfOcNDwGMX7NpfwMTz7Dzl+jvtlBwKLFN0L15d0X+4J9V\ndRp5ZkooVjiOJb6vNcozDWxBrRPAowrvzLlJkFMaKgJQmGigEpgEygnCRH++NCle\n/ivGbdFuCsYzUTlR77xf9kGXMh3socMXcdu5SOtaDS7sl52DAJnAPxo9S6l0270G\na0989is2yCgDNmld5lpphVPaQSusGa8/XTaXR7YH+oc7qn1l\n-----END CERTIFICATE-----",
+    "172.24.1.5": ["maas"],
+    "172.24.1.6": ["drydock","shipyard","iam"]
+  },
+  "stages": [
+    {
+      "name": "Gate Setup",
+      "script": "gate-setup.sh"
+    },
+    {
+      "name": "Pegleg Collection",
+      "script": "pegleg-collect.sh"
+    },
+    {
+      "name": "Pegleg Render",
+      "script": "pegleg-render.sh"
+    },
+    {
+      "name": "Generate Certificates",
+      "script": "generate-certificates.sh"
+    },
+    {
+      "name": "Build Scripts",
+      "script": "build-scripts.sh"
+    },
+    {
+      "name": "Create VMs",
+      "script": "create-vms.sh"
+    },
+    {
+      "name": "Register Ingress",
+      "script": "ingress-dns.sh",
+      "arguments": ["build"]
+    },
+    {
+      "name": "Create BGP router",
+      "script": "bgp-router.sh",
+      "arguments": ["build"]
+    },
+    {
+      "name": "Pre Genesis Setup",
+      "script": "genesis-setup.sh"
+    },
+    {
+      "name": "Genesis",
+      "script": "genesis.sh",
+      "on_error": "collect_genesis_info.sh"
+    },
+    {
+      "name": "Validate Genesis",
+      "script": "validate-genesis.sh",
+      "on_error": "collect_genesis_info.sh"
+    }
+  ],
+  "vm": {
+    "build": {
+      "memory": 2048,
+      "vcpus": 2,
+      "mac": "52:54:00:00:be:31",
+      "ip": "172.24.1.9",
+      "bootstrap": true,
+      "userdata": "packages: [docker.io]"
+    },
+    "n0" : {
+      "memory": 16384,
+      "vcpus": 12,
+      "mac": "52:54:00:00:a4:31",
+      "ip": "172.24.1.10",
+      "bootstrap": true
+    },
+    "n1" : {
+      "memory": 3072,
+      "vcpus": 2,
+      "mac": "52:54:00:00:a3:31",
+      "ip": "172.24.1.11",
+      "bootstrap": false
+    },
+    "n2" : {
+      "memory": 3072,
+      "vcpus": 2,
+      "mac": "52:54:00:1a:95:0d",
+      "ip": "172.24.1.12",
+      "bootstrap": false
+    },
+    "n3" : {
+      "memory": 3072,
+      "vcpus": 2,
+      "mac": "52:54:00:31:c2:36",
+      "ip": "172.24.1.13",
+      "bootstrap": false
+    }
+  },
+  "bgp" : {
+    "quagga_as": 64688,
+    "calico_as": 64671
+  }
+}

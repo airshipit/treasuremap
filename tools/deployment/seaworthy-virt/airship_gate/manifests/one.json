@@ -1,0 +1,22 @@
+{
+  "configuration": {},
+  "stages": [
+    {
+      "name": "Gate Setup",
+      "script": "gate-setup.sh"
+    },
+    {
+      "name": "Create VMs",
+      "script": "create-vms.sh"
+    }
+  ],
+  "vm": {
+    "n0" : {
+      "memory": 20000,
+      "vcpus": 8,
+      "mac": "52:54:00:00:a4:31",
+      "ip": "172.24.1.10",
+      "bootstrap": true
+    }
+  }
+}

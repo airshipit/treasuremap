@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+
+  "definitions": {
+    "publish": {
+      "type": "object",
+      "properties": {
+        "junit": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/relativePath"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "relativePath": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\.-]*(/[A-Za-z0-9_\\.-]+)*[A-Za-z0-9_-]$"
+    }
+  },
+
+  "type": "object",
+  "properties": {
+    "configuration": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/relativePath"
+      }
+    },
+    "publish": {
+      "$ref": "#/definitions/publish"
+    },
+    "ingress": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string"
+        },
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "required": ["domain"]
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "arguments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "on_error": {
+            "$ref": "#/definitions/relativePath"
+          },
+          "publish": {
+            "$ref": "#/definitions/publish"
+          },
+          "script": {
+            "$ref": "#/definitions/relativePath"
+          }
+        },
+        "required": [
+          "name",
+          "script"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "vm": {
+      "type": "object",
+      "properties": {
+        "memory": {
+          "type": "integer",
+          "minimum": 1024
+        },
+        "names": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "n0",
+              "n1",
+              "n2",
+              "n3"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "non_genesis": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "n1",
+              "n2",
+              "n3"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "vcpus": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        }
+      },
+      "required": [
+        "memory",
+        "names",
+        "vcpus"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "stages"
+  ],
+  "additionalProperties": false
+}

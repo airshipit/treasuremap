@@ -1,0 +1,4 @@
+    - label: 'None'
+      filesystem: ${FS_TYPE}
+      device: /dev/${DISK_DEVICE}
+      overwrite: true
