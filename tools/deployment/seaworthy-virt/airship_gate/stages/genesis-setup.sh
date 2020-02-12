@@ -17,10 +17,13 @@ set -e
 
 source "${GATE_UTILS}"
 
+GENESIS_HOST_PROFILE=${GENESIS_HOST_PROFILE:-}
+
 # Copies script and virtmgr private key to genesis VM
 rsync_cmd "${REPO_ROOT}/tools/deployment/seaworthy-virt/airship_gate/lib/bootaction-runner.sh" "${GENESIS_NAME}:/root/airship/"
 rsync_cmd "${RENDERED_DEPOT}/rendered.yaml" "${GENESIS_NAME}:/root/airship/"
 
 set -o pipefail
-ssh_cmd "${GENESIS_NAME}" /root/airship/bootaction-runner.sh /root/airship/rendered.yaml 2>&1 | tee -a "${LOG_FILE}"
+ssh_cmd "${GENESIS_NAME}" /root/airship/bootaction-runner.sh /root/airship/rendered.yaml "${GENESIS_HOST_PROFILE}" 2>&1 | tee -a "${LOG_FILE}"
+ssh_wait "${GENESIS_NAME}"
 set +o pipefail

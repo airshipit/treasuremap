@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+export GENESIS_HOST_PROFILE=${2:-}
 
 ###############################################################################
 # Helper functions
@@ -64,8 +65,8 @@ install_file(){
   local path="$1"
   local content="$2"
   local permissions="$3"
-  local dirname
-  dirname=$(dirname "$path")
+  local reboot="${4:-false}"
+  local dirname=$(dirname "$path")
 
   if [[ ! -d $dirname ]]; then
     mkdir -p "$dirname"
@@ -74,9 +75,13 @@ install_file(){
   if [[ ! -f $path ]] || [ "$(cat "$path")" != "$content" ]; then
     echo "$content" > "$path"
     chmod "$permissions" "$path"
-    export FILE_UPDATED=true
+    if [[ $reboot = reboot ]]; then
+      REBOOT=true
+      echo '*** System restart required ***' > /run/reboot-required
+    fi
+    FILE_UPDATED=true
   else
-    export FILE_UPDATED=false
+    FILE_UPDATED=false
   fi
 }
 
@@ -136,6 +141,7 @@ if [[ ! $DISABLE_SECCOMP_PROFILE ]]; then
   install_file "$path" "$content" "$permissions"
 fi
 
+
 ###############################################################################
 # bootaction: apparmor-profiles
 ###############################################################################
@@ -170,4 +176,48 @@ if [[ ! $DISABLE_APPARMOR_PROFILES ]]; then
     # reload all apparmor profiles
     systemctl reload apparmor.service
   fi
+fi
+
+
+###############################################################################
+# bootaction: Additional kernel parameters and hugepages for OVS-DPDK
+###############################################################################
+
+if [[ ! -z "$GENESIS_HOST_PROFILE" ]]; then
+
+  manifests_lookup "$rendered_file" "drydock/HostProfile/v1" \
+                   "$GENESIS_HOST_PROFILE" \
+                   "['data']['platform']['kernel_params']" \
+                   "dict_keys" "true"
+  kernel_params=$RESULT
+
+  grub_args=()
+  # NOTE: reverse sort is to ensure hugepagesz is before hugepages
+  for kp in $(echo $kernel_params | tr ' ' '\n' | sort -r); do
+    manifests_lookup "$rendered_file" "drydock/HostProfile/v1" \
+                     "$GENESIS_HOST_PROFILE" \
+                     "['data']['platform']['kernel_params']['$kp']"
+    if [[ $(tr '[:lower:]' '[:upper:]' <<< "$RESULT") == "TRUE" ]]; then
+      grub_args+=("$kp")
+    else
+      grub_args+=("$kp=$RESULT")
+    fi
+  done
+
+  path="/etc/default/grub.d/50-curtin-settings.cfg"
+  content="GRUB_CMDLINE_LINUX_DEFAULT=\"${grub_args[@]}\""
+
+  install_file "$path" "$content" '644' reboot
+
+  update-grub
+fi
+
+
+###############################################################################
+# Reboot node
+###############################################################################
+
+if [[ ! $DISABLE_REBOOT ]] && ([[ $REBOOT = true ]] || [[ -f /run/reboot-required ]]); then
+  echo Rebooting node $(hostname)...
+  reboot now &
 fi
