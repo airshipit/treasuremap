@@ -30,15 +30,15 @@
       args:
         chdir: "{{ zuul.project.src_dir }}"
 
-    - name: Deploy Kubernetes with Minikube
+    - name: Setup AppArmor
       shell: |
-        ./tools/deployment/airskiff/developer/010-deploy-k8s.sh
+        ./tools/deployment/airskiff/developer/009-setup-apparmor.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
 
-    - name: Setup AppArmor
+    - name: Deploy Kubernetes with Minikube
       shell: |
-        ./tools/deployment/airskiff/developer/015-setup-apparmor.sh
+        ./tools/deployment/airskiff/developer/010-deploy-k8s.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
 
