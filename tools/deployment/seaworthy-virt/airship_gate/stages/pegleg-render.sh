@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -xe
+set -e
 
 source "${GATE_UTILS}"
 
@@ -53,7 +53,7 @@ render_pegleg_cli() {
         done
     fi
 
-    cli_string+=("render" "-o" "/collect/rendered.yaml")
+    cli_string+=("render" "-s" "/collect/rendered.yaml")
 
     cli_string+=("$(config_pegleg_sitename)")
 
@@ -69,6 +69,8 @@ collect_rendered_doc() {
     -v "${HOME}/.ssh":/root/.ssh \
     -v "${REPO_ROOT}":/workspace \
     -v "${RENDERED_DEPOT}":/collect \
+    -e "PEGLEG_PASSPHRASE=$PEGLEG_PASSPHRASE" \
+    -e "PEGLEG_SALT=$PEGLEG_SALT" \
     "${IMAGE_PEGLEG_CLI}" \
     $(render_pegleg_cli)
 }
