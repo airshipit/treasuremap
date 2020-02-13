@@ -70,7 +70,11 @@ manifests_lookup(){
   RESULT=`python3 -c "
 
 import yaml,sys
-y = yaml.load_all(open('$file'))
+from distutils.version import StrictVersion
+if StrictVersion(yaml.__version__) < StrictVersion('5.1'):
+  y = yaml.load_all(open('$file'))
+else:
+  y = yaml.load_all(open('$file'), Loader=yaml.FullLoader)
 for x in y:
   if x.get('schema') == '$schema':
     if x['metadata']['name'] == '$mdata_name':
