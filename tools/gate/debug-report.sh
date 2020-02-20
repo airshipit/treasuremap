@@ -23,7 +23,7 @@ function get_namespaces () {
 
 function get_pods () {
     NAMESPACE=$1
-    kubectl get pods -n "${NAMESPACE}" -o name --show-all | awk -F '/' '{ print $NF }' | xargs -L1 -P 1 -I {} echo "${NAMESPACE}" {}
+    kubectl get pods -n "${NAMESPACE}" -o name | awk -F '/' '{ print $NF }' | xargs -L1 -P 1 -I {} echo "${NAMESPACE}" {}
 }
 export -f get_pods
 
