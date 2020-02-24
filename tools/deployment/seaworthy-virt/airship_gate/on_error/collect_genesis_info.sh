@@ -15,7 +15,6 @@
 
 # NOTE(mark-burnett): Keep trying to collect info even if there's an error
 set +e
-set -x
 
 KUBECONFIG="${KUBECONFIG:-/etc/kubernetes/admin/kubeconfig.yaml}"
 source "${GATE_UTILS}"

@@ -27,6 +27,8 @@ export UPSTREAM_DNS=${UPSTREAM_DNS:-"8.8.8.8 8.8.4.4"}
 export NTP_POOLS=${NTP_POOLS:-"0.ubuntu.pool.ntp.org 1.ubuntu.pool.ntp.org"}
 export NTP_SERVERS=${NTP_SERVERS:-""}
 export PROMENADE_ENCRYPTION_KEY=${PROMENADE_ENCRYPTION_KEY:-MjI1N2ZiMjMzYjI0ZmVkZDU4}
+export PEGLEG_PASSPHRASE=${PEGLEG_PASSPHRASE:-ewd?egnPWL0Q?hzzGwEBmII5}
+export PEGLEG_SALT=${PEGLEG_SALT:-9EX&uapdz1ka17WOQMG-FjTA}
 
 # key-pair used for drydock/maas auth towards libvirt and access to
 # the virtual nodes; auto-generated if no value provided

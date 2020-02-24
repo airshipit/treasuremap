@@ -484,7 +484,6 @@ vol_create_disk() {
 }
 
 vm_create() {
-    set -x
     NAME=${1}
     DISK_OPTS="$(vm_create_vols "${NAME}")"
     NETWORK_OPTS="$(vm_create_interfaces "${NAME}")"
