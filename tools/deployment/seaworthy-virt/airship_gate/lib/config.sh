@@ -43,7 +43,15 @@ export AIRSHIP_KEYSTONE_URL=${AIRSHIP_KEYSTONE_URL:-'http://keystone.gate.local:
 
 config_vm_memory() {
     nodename=${1}
-    jq -cr ".vm.${nodename}.memory" < "${GATE_MANIFEST}"
+    mem=$(jq -cr ".vm.${nodename}.memory" < "${GATE_MANIFEST}")
+    mem_backing=$(jq -cr ".vm.${nodename}.memorybacking" < "${GATE_MANIFEST}")
+
+    if [[ "${mem_backing}" != "null" ]]
+    then
+      echo "memory=${mem},${mem_backing}=yes"
+    else
+      echo "${mem}"
+    fi
 }
 
 config_vm_names() {
@@ -53,6 +61,19 @@ config_vm_names() {
 config_vm_iface_list() {
     nodename="$1"
     jq -cr ".vm.${nodename}.networking | del(.addresses) | keys | .[]" < "${GATE_MANIFEST}"
+}
+
+config_vm_iface_model() {
+    nodename="$1"
+    interface="$2"
+    iface_model=$(jq -cr ".vm.${nodename}.networking.${interface}.model" < "${GATE_MANIFEST}")
+
+    if [[ "${iface_model}" != "null" ]]
+    then
+      echo "${iface_model}"
+    else
+      echo "virtio"
+    fi
 }
 
 config_vm_iface_mac() {
@@ -112,9 +133,42 @@ config_vm_net_ip() {
     jq -cr "$query" < "${GATE_MANIFEST}"
 }
 
+config_vm_cpu() {
+    nodename=${1}
+    cpu_mode=$(jq -cr ".vm.${nodename}.cpu_mode" < "${GATE_MANIFEST}")
+    cpu_cells=$(jq -cr ".vm.${nodename}.cpu_cells" < "${GATE_MANIFEST}")
+
+    if [[ "${cpu_mode}" != "null" ]]
+    then
+      config_string="mode=${cpu_mode}"
+      if [[ "${cpu_cells}" != "null" ]]
+        then
+        cpu_cells_to_s=$(echo "${cpu_cells}" | jq -cr "[to_entries[] | [.key + \".cpus=\" + .value.cpus, .key + \".memory=\" + .value.memory]] | add | join (\",\")")
+        config_string="${config_string},${cpu_cells_to_s}"
+      fi
+    else
+      config_string=${VIRSH_CPU_OPTS}
+    fi
+    echo -n "$config_string"
+}
+
 config_vm_vcpus() {
     nodename=${1}
-    jq -cr ".vm.${nodename}.vcpus" < "${GATE_MANIFEST}"
+    vcpus=$(jq -cr ".vm.${nodename}.vcpus" < "${GATE_MANIFEST}")
+    sockets=$(jq -cr ".vm.${nodename}.sockets" < "${GATE_MANIFEST}")
+    threads=$(jq -cr ".vm.${nodename}.threads" < "${GATE_MANIFEST}")
+
+    if [[ "${sockets}" != "null" ]]
+    then
+      config_string="vcpus=${vcpus},sockets=${sockets}"
+      if [[ "${threads}" != "null" ]]
+      then
+        config_string="${config_string},threads=${threads}"
+      fi
+      echo -n "$config_string"
+    else
+      echo "${vcpus}"
+    fi
 }
 
 config_vm_bootstrap() {

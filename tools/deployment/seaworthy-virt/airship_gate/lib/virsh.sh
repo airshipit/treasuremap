@@ -378,12 +378,13 @@ vm_render_interface() {
   namekey="$(get_namekey)"
 
   mac="$(config_vm_iface_mac "$vm" "$iface")"
+  model="$(config_vm_iface_model "$vm" "$iface")"
   network="$(config_vm_iface_network "$vm" "$iface")"
   network="${namekey}_${network}"
   slot="$(config_vm_iface_slot "$vm" "$iface")"
   port="$(config_vm_iface_port "$vm" "$iface")"
 
-  config_string="model=virtio,network=${network}"
+  config_string="model=${model},network=${network}"
 
   if [[ ! -z "$mac" ]]
   then
@@ -498,7 +499,7 @@ vm_create() {
             --name "${NAME}" \
             --os-variant ubuntu16.04 \
             --virt-type kvm \
-            --cpu "${VIRSH_CPU_OPTS}" \
+            --cpu "$(config_vm_cpu "${NAME}")" \
             --serial "file,path=${TEMP_DIR}/console/${NAME}.log" \
             --graphics vnc,listen=0.0.0.0 \
             --noautoconsole \
@@ -520,7 +521,7 @@ vm_create() {
             --name "${NAME}" \
             --os-variant ubuntu16.04 \
             --virt-type kvm \
-            --cpu "${VIRSH_CPU_OPTS}" \
+            --cpu "$(config_vm_cpu "${NAME}")" \
             --graphics vnc,listen=0.0.0.0 \
             --serial file,path="${TEMP_DIR}/console/${NAME}.log" \
             --noautoconsole \
