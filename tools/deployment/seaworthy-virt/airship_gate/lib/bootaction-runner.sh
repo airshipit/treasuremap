@@ -84,6 +84,11 @@ install_file(){
   fi
 }
 
+apt_install(){
+  for pkg in $@; do
+    dpkg -s $pkg 2> /dev/null | grep 'Status: install ok installed' || DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold install $pkg
+  done
+}
 
 ###############################################################################
 # Script inputs and validations
@@ -177,6 +182,35 @@ if [[ ! $DISABLE_APPARMOR_PROFILES ]]; then
   fi
 fi
 
+###############################################################################
+# Install matching kernel version - v2 = get kernel ver from manifests
+###############################################################################
+
+# If manifests don't specify a kernel package, use this one
+: ${KERNEL_PACKAGE:=linux-image-4.15.0-64-generic}
+
+if [[ ! -z "$GENESIS_HOST_PROFILE" ]]; then
+
+  # Fetch kernel image type
+  manifests_lookup "$rendered_file" "drydock/HostProfile/v1" \
+                   "$GENESIS_HOST_PROFILE" \
+                   "['data']['platform']['kernel_params']['kernel_package']" \
+                   "none" "true"
+  kernel_package="$RESULT"
+  if [[ $FAIL = true ]]; then
+    echo "Manifests lookup of kernel version failed; using $KERNEL_PACKAGE"
+    kernel_package=$KERNEL_PACKAGE
+  else
+    echo "Kernel package located: '$kernel_package'"
+  fi
+
+  # install kernel
+  apt_install $kernel_package
+
+  # install headers
+  kernel_headers_pkg="linux-headers-$(echo "$kernel_package" | grep -o '[0-9].*')"
+  apt_install $kernel_headers_pkg
+fi
 
 ###############################################################################
 # bootaction: Additional kernel parameters and hugepages for OVS-DPDK
