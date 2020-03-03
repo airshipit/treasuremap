@@ -174,10 +174,14 @@ via Airship. Each key is the name of a VM and value is a JSON object:
     {
       "memory": integer,
       "vcpus": integer,
+      "sockets": integer,
+      "threads": integer,
       "disk_layout": "simple",
+      "cpu_mode": "host-passthrough",
       "networking": {
         "ens3": {
           "mac": "52:54:00:00:be:31",
+          "model": "e1000",
           "pci": {
             "slot": 3,
             "port": 0
@@ -193,18 +197,33 @@ via Airship. Each key is the name of a VM and value is a JSON object:
         }
       },
       "bootstrap": true,
+      "cpu_cells": {
+        "cell0": {
+          "cpus": "0-11",
+          "memory": "25165824"
+        },
+        "cell1": {
+          "cpus": "12-23",
+          "memory": "25165824"
+        }
+      },
       "userdata": "packages: [docker.io]"
     }
 
   * memory - VM RAM in megabytes
   * vcpus - Number of VM CPUs
+  * sockets - Number of sockets. (Optional)
+  * threads - Number of threads. (Optional)
   * disk_layout - A disk profile for the VM matching one defined under ``.disk_layouts``
   * bootstrap - True/False for whether the framework should bootstrap the VM's OS
+  * cpu_cells - Parameter to setup NUMA nodes and allocate RAM memory. (Optional)
+  * cpu_mode - CPU mode for the VM. (if not specified, default: host)
   * userdata - Cloud-init userdata to feed the VM when bootstrapped for further customization
-  * networking - Network attachment and addressing configuration.  Every key but ``addresses``
+  * networking - Network attachment and addressing configuration. Every key but ``addresses``
     is assumed to be a desired NIC on the VM. For each NIC stanza, the following fields are respected:
 
       * mac - A MAC address for the NIC
+      * model - A model for the NIC (if not specified, default: virtio)
       * pci - A JSON object specifying ``slot`` and ``port`` specifying the PCI address for the NIC
       * attachment - What network from ``.networking`` is attached to this NIC
 
