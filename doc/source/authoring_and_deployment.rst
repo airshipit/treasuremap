@@ -658,7 +658,7 @@ Then, install the NTP client:
 
 Add the list of NTP servers specified in ``data.ntp.servers_joined`` in
 file
-``site/${NEW_SITE}/networks/common-address.yaml``
+``site/${NEW_SITE}/networks/common-addresses.yaml``
 to ``/etc/ntp.conf`` as follows:
 
 ::
