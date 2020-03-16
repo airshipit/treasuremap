@@ -444,6 +444,9 @@ vm_create_vols(){
       elif [[ "$io_prof" == "safe" ]]
       then
         DISK_OPTS="bus=virtio,cache=directsync,discard=unmap,format=qcow2,io=native"
+      elif [[ "$io_prof" == "unsafe" ]]
+      then
+        DISK_OPTS="bus=virtio,cache=unsafe,format=qcow2"
       else
         DISK_OPTS="bus=virtio,format=qcow2"
       fi
