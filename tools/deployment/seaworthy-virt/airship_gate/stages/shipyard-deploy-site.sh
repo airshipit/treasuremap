@@ -19,4 +19,4 @@ source "${GATE_UTILS}"
 
 cd "${TEMP_DIR}"
 
-shipyard_action_wait deploy_site 7200
+shipyard_action_wait deploy_site "${SHIPYARD_DEPLOY_TIMEOUT}"

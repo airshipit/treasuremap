@@ -29,6 +29,8 @@ export NTP_SERVERS=${NTP_SERVERS:-""}
 export PROMENADE_ENCRYPTION_KEY=${PROMENADE_ENCRYPTION_KEY:-MjI1N2ZiMjMzYjI0ZmVkZDU4}
 export PEGLEG_PASSPHRASE=${PEGLEG_PASSPHRASE:-ewd?egnPWL0Q?hzzGwEBmII5}
 export PEGLEG_SALT=${PEGLEG_SALT:-9EX&uapdz1ka17WOQMG-FjTA}
+export SHIPYARD_DEPLOY_TIMEOUT=${SHIPYARD_DEPLOY_TIMEOUT:-"7600"}
+export SHIPYARD_UPDATE_TIMEOUT=${SHIPYARD_UPDATE_TIMEOUT:-"1800"}
 
 # key-pair used for drydock/maas auth towards libvirt and access to
 # the virtual nodes; auto-generated if no value provided
