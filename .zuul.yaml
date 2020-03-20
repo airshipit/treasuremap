@@ -37,6 +37,9 @@
     post:
       jobs:
         - treasuremap-upload-git-mirror
+    promote:
+      jobs:
+        - promote-airship-docs-website
 
 
 - nodeset:
