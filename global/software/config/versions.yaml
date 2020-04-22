@@ -544,72 +544,72 @@ data:
     utility:
       calicoctl-utility:
         location: https://opendev.org/airship/porthole
-        reference: 9c2038cb59bfbb3ff5c3bbf11c7001d621437b98
+        reference: 16d96ffb643a21d937160a82099e8c6b32ac578a
         subpath: charts/calicoctl-utility
         type: git
       calicoctl-utility-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 03580ec90afa162c166661acf27f351b83565375
+        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
         subpath: helm-toolkit
         type: git
       ceph-utility:
         location: https://opendev.org/airship/porthole
-        reference: 9c2038cb59bfbb3ff5c3bbf11c7001d621437b98
+        reference: 16d96ffb643a21d937160a82099e8c6b32ac578a
         subpath: charts/ceph-utility
         type: git
       ceph-utility-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 03580ec90afa162c166661acf27f351b83565375
+        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
         subpath: helm-toolkit
         type: git
       compute-utility:
         location: https://opendev.org/airship/porthole
-        reference: 9c2038cb59bfbb3ff5c3bbf11c7001d621437b98
+        reference: 16d96ffb643a21d937160a82099e8c6b32ac578a
         subpath: charts/compute-utility
         type: git
       compute-utility-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 03580ec90afa162c166661acf27f351b83565375
+        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
         subpath: helm-toolkit
         type: git
       etcdctl-utility:
         location: https://opendev.org/airship/porthole
-        reference: 9c2038cb59bfbb3ff5c3bbf11c7001d621437b98
+        reference: 16d96ffb643a21d937160a82099e8c6b32ac578a
         subpath: charts/etcdctl-utility
         type: git
       etcdctl-utility-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 03580ec90afa162c166661acf27f351b83565375
+        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
         subpath: helm-toolkit
         type: git
       mysqlclient-utility:
         location: https://opendev.org/airship/porthole
-        reference: 9c2038cb59bfbb3ff5c3bbf11c7001d621437b98
+        reference: 16d96ffb643a21d937160a82099e8c6b32ac578a
         subpath: charts/mysqlclient-utility
         type: git
       mysqlclient-utility-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 03580ec90afa162c166661acf27f351b83565375
+        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
         subpath: helm-toolkit
         type: git
       openstack-utility:
         location: https://opendev.org/airship/porthole
-        reference: 9c2038cb59bfbb3ff5c3bbf11c7001d621437b98
+        reference: 16d96ffb643a21d937160a82099e8c6b32ac578a
         subpath: charts/openstack-utility
         type: git
       openstack-utility-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 03580ec90afa162c166661acf27f351b83565375
+        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
         subpath: helm-toolkit
         type: git
       postgresql-utility:
         location: https://opendev.org/airship/porthole
-        reference: 0546a3aff7af4541e07630589a15a3d172c8ff5c
+        reference: 16d96ffb643a21d937160a82099e8c6b32ac578a
         subpath: charts/postgresql-utility
         type: git
       postgresql-utility-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 03580ec90afa162c166661acf27f351b83565375
+        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
         subpath: helm-toolkit
         type: git
 
