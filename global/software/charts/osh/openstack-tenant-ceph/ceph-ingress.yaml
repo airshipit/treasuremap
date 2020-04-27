@@ -31,7 +31,7 @@ data:
   wait:
     timeout: 300
     labels:
-      release_group: airship-tenant-ceph-ingress
+      release_group: clcp-tenant-ceph-ingress
   install:
     no_hooks: false
   upgrade:
@@ -40,7 +40,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-tenant-ceph-ingress
+            release_group: clcp-tenant-ceph-ingress
   values:
     conf:
       ingress:
@@ -62,5 +62,33 @@ data:
           nginx.ingress.kubernetes.io/proxy-body-size: 20m
           nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
   dependencies:
-    - ucp-ingress-htk
+    - tenant-ceph-ingress-htk 
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: tenant-ceph-ingress-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.ingress-htk
+      dest:
+        path: .source
+  storagePolicy: cleartext
+data:
+  chart_name: tenant-ceph-ingress-htk
+  release: tenant-ceph-ingress-htk
+  namespace: tenant-ceph-ingress-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []
 ...

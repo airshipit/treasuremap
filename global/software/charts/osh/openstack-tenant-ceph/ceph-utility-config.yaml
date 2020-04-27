@@ -1,0 +1,98 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: tenant-ceph-utility-config
+  labels:
+    name: tenant-ceph-utility-config-global
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.tenant-ceph-provisioners
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ceph.tenant-ceph-provisioners
+      dest:
+        path: .values.images.tags
+
+    # IP addresses
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .storage.ceph.public_cidr
+      dest:
+        path: .values.network.public
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .storage.ceph.cluster_cidr
+      dest:
+        path: .values.network.cluster
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ceph.tenant_ceph_mon
+      dest:
+        path: .values.endpoints.ceph_mon
+
+data:
+  chart_name: tenant-ceph-utility-config
+  release: tenant-ceph-utility-config
+  namespace: utility
+  wait:
+    timeout: 900
+    labels:
+      release_group: clcp-tenant-ceph-utility-config
+    resources:
+      - type: job
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: clcp-tenant-ceph-utility-config
+  values:
+    labels:
+      job:
+        node_selector_key: tenant-ceph-control-plane
+        node_selector_value: enabled
+      provisioner:
+        node_selector_key: tenant-ceph-control-plane
+        node_selector_value: enabled
+    deployment:
+      ceph: false
+      client_secrets: true
+      rbd_provisioner: false
+      cephfs_provisioner: false
+    bootstrap:
+      enabled: false
+    conf:
+      rgw_ks:
+        enabled: true
+    storageclass:
+      rbd:
+        ceph_configmap_name: tenant-ceph-etc
+        parameters:
+          userSecretName: pvc-tceph-client-key
+          adminSecretNamespace: tenant-ceph
+    manifests:
+      helm_tests: false
+  dependencies:
+    - ceph-htk
+...

@@ -4,13 +4,12 @@ metadata:
   schema: metadata/Document/v1
   name: openstack-rabbitmq
   labels:
-    name: openstack-rabbitmq-chart-group-global
-    component: keystone
+    name: openstack-rabbitmq-global
   layeringDefinition:
     abstract: false
     layer: global
   storagePolicy: cleartext
 data:
-  description: Deploy Keystone
+  description: Deploy RabbitMQ
   chart_group:
     - openstack-rabbitmq

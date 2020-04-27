@@ -1,0 +1,37 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: tenant-ceph-osd-sdh
+  replacement: true
+  labels:
+    name: tenant-ceph-osd-sdh
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: tenant-ceph-osd-sdh-nc
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      overrides:
+        ceph_clcp-tenant-ceph-osd-sdh:
+          hosts:
+            - name: stl1r01s05
+              conf:
+                storage:
+                  failure_domain_name: "stl01_rack1"
+            - name: stl1r01s06
+              conf:
+                storage:
+                  failure_domain_name: "stl01_rack2"
+            - name: stl1r01s07
+              conf:
+                storage:
+                  failure_domain_name: "stl01_rack3"
+...
+

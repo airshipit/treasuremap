@@ -5,7 +5,28 @@ metadata:
   name: pegleg/SoftwareVersions/v1
 data:
   $schema: 'http://json-schema.org/schema#'
+  definitions:
+    chart_source:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+        location:
+          type: string
+        subpath:
+          type: string
+        reference:
+          type: string
+        proxy_server:
+          type: string
+        auth_method:
+          type: string
+      required:
+        - location
+        - type
   type: object
+  additionalProperties: false
   properties:
     charts:
       type: object
@@ -17,850 +38,179 @@ data:
               type: object
               properties:
                 etcd:
-                  type: object
-                  properties:
-                    type:
-                      type: string
-                    location:
-                      type: string
-                    subpath:
-                      type: string
-                    reference:
-                      type: string
-                etcd-htk:
-                  type: object
-                  properties:
-                    type:
-                      type: string
-                    location:
-                      type: string
-                    subpath:
-                      type: string
-                    reference:
-                      type: string
+                  $ref: '#/definitions/chart_source'
                 calico:
-                  type: object
-                  properties:
-                    type:
-                      type: string
-                    location:
-                      type: string
-                    subpath:
-                      type: string
-                    reference:
-                      type: string
+                  $ref: '#/definitions/chart_source'
+                tigera-secure-ee:
+                  $ref: '#/definitions/chart_source'
             apiserver:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
-            apiserver-htk:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             controller-manager:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
-            controller-manager-htk:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             coredns:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
-            coredns-htk:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             haroxy:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-            haroxy-htk:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
+              $ref: '#/definitions/chart_source'
             etcd:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
-            etcd-htk:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             ingress:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
-            ingress-htk:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             proxy:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
-            proxy-htk:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             scheduler:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
-            scheduler-htk:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
         osh_infra:
           type: object
           properties:
             elasticsearch:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
-            fluentbit:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             fluentd:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             kibana:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             prometheus:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             prometheus_node_exporter:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             prometheus_kube_state_metrics:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             prometheus_alertmanager:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             grafana:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             prometheus_openstack_exporter:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             nagios:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
+        ro:
+          type: object
+          properties:
+            ro_inventory_notifier:
+              $ref: '#/definitions/chart_source'
+        nc-aggregator:
+          type: object
+          properties:
+            nc-aggregator-htk:
+              $ref: '#/definitions/chart_source'
+            nc-aggregator:
+              $ref: '#/definitions/chart_source'
+        ozone:
+          type: object
+          properties:
+            ozone-api:
+              $ref: '#/definitions/chart_source'
+            ozone-collector:
+              $ref: '#/definitions/chart_source'
+        osh_addons:
+          type: object
+          properties:
+            ranger:
+              $ref: '#/definitions/chart_source'
+            ranger-agent:
+              $ref: '#/definitions/chart_source'
         osh:
           type: object
           properties:
             barbican:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             cinder:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             glance:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             heat:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             horizon:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             ingress:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             keystone:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             libvirt:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             mariadb:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             memcached:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             neutron:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             nova:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             openvswitch:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             rabbitmq:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
         ucp:
           type: object
           properties:
             armada:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             barbican:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             ceph-mon:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             ceph-osd:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             ceph-client:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             ceph-provisioners:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             ceph-rgw:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             tenant-ceph-mon:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             tenant-ceph-osd:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             tenant-ceph-client:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             tenant-ceph-provisioners:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             tenant-ceph-rgw:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             deckhand:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             drydock:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             ingress:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             postgresql:
-              type: object
-
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             promenade:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             keystone:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             maas:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             mariadb:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             memcached:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             rabbitmq:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             rabbitmq-etcd:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             shipyard:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             tiller:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
         utility:
           type: object
           properties:
             calicoctl-utility:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             ceph-utility:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             compute-utility:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             etcdctl-utility:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             mysqlclient-utility:
-              type: object
-              properties:
-                type:
-                  type: string
-                  location:
-                    type: string
-                  subpath:
-                    type: string
-                  reference:
-                    type: string
+              $ref: '#/definitions/chart_source'
             openstack-utility:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
             postgresql-utility:
-              type: object
-              properties:
-                type:
-                  type: string
-                location:
-                  type: string
-                subpath:
-                  type: string
-                reference:
-                  type: string
+              $ref: '#/definitions/chart_source'
+            ncct-utility:
+              $ref: '#/definitions/chart_source'
     files:
       type: object
       properties:
@@ -970,6 +320,8 @@ data:
                   type: string
                 shipyard_db_init:
                   type: string
+                shipyard_db_auxiliary:
+                  type: string
                 shipyard_db_sync:
                   type: string
                 airflow_db_init:
@@ -1038,6 +390,8 @@ data:
                   type: string
                 dep_check:
                   type: string
+                scripted_test:
+                  type: string
             postgresql:
               type: object
               properties:
@@ -1062,17 +416,17 @@ data:
         utility:
           type: object
           properties:
-            calicoctl-utility:
-              type: object
-              properties:
-                calicoctl_utility:
-                  type: string
-                image_repo_sync:
-                  type: string
             ceph-utility:
               type: object
               properties:
                 ceph_utility:
+                  type: string
+                image_repo_sync:
+                  type: string
+            calicoctl-utility:
+              type: object
+              properties:
+                calicoctl_utility:
                   type: string
                 image_repo_sync:
                   type: string
@@ -1086,7 +440,7 @@ data:
             etcdctl-utility:
               type: object
               properties:
-                etcdctl_utility:
+                etcdctl-utility:
                   type: string
                 image_repo_sync:
                   type: string
@@ -1108,6 +462,13 @@ data:
               type: object
               properties:
                 postgresql_utility:
+                  type: string
+                image_repo_sync:
+                  type: string
+            ncct-utility:
+              type: object
+              properties:
+                ncct_utility:
                   type: string
                 image_repo_sync:
                   type: string
@@ -1147,12 +508,6 @@ data:
             ceph-client:
               type: object
               properties:
-                ks_endpoints:
-                  type: string
-                ks_service:
-                  type: string
-                ks_user:
-                  type: string
                 ceph_bootstrap:
                   type: string
                 dep_check:
@@ -1161,15 +516,9 @@ data:
                   type: string
                 ceph_mgr:
                   type: string
-                ceph_rgw:
-                  type: string
                 ceph_config_helper:
                   type: string
                 ceph_rbd_pool:
-                  type: string
-                ceph_rbd_provisioner:
-                  type: string
-                ceph_cephfs_provisioner:
                   type: string
                 image_repo_sync:
                   type: string
@@ -1365,6 +714,20 @@ data:
                   type: string
                 policy_controller:
                   type: string
+        cicd:
+          type: object
+          properties:
+            generic_pipe:
+              type: object
+              properties:
+                ipmi_tools:
+                  type: string
+        nc-aggregator:
+          type: object
+          properties:
+            nc-aggregator:
+              type: string
+
     packages:
       type: object
       properties:
@@ -1398,4 +761,25 @@ data:
           type: array
           items:
             type: string
+
+    validation:
+      type: object
+      properties:
+        pod_logs:
+          type: object
+          properties:
+            image:
+              type: string
+
+    kernel_drivers:
+      type: object
+
+    images_refs:
+      type: object
+      properties:
+        images:
+          type: object
+        # TODO: Remove keystone: when it has been moved under images_refs.images
+        keystone:
+          type: object
 ...

@@ -2,18 +2,17 @@
 schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
-  name: ucp-core
-  labels:
-    name: ucp-core-chart-group-global
+  name: ucp-infra
   layeringDefinition:
     abstract: false
     layer: global
   storagePolicy: cleartext
 data:
-  description: Common Airship Components
+  description: Common UCP Components
   chart_group:
     - ucp-ingress
     - ucp-mariadb
     - ucp-postgresql
     - ucp-rabbitmq
+    - ucp-keystone-memcached
 ...

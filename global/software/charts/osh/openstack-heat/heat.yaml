@@ -71,12 +71,6 @@ metadata:
       dest:
         path: .values.endpoints.oslo_cache
     - src:
-        schema: pegleg/EndpointCatalogue/v1
-        name: osh_infra_endpoints
-        path: .osh_infra.fluentd
-      dest:
-        path: .values.endpoints.fluentd
-    - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
         path: .osh.keystone.admin
@@ -88,6 +82,12 @@ metadata:
         path: .osh.heat.heat
       dest:
         path: .values.endpoints.identity.auth.heat
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.heat.test
+      dest:
+        path: .values.endpoints.identity.auth.test
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
@@ -147,6 +147,12 @@ metadata:
         name: osh_heat_password
         path: .
     - dest:
+        path: .values.endpoints.identity.auth.test.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_heat_test_password
+        path: .
+    - dest:
         path: .values.endpoints.identity.auth.heat_trustee.password
       src:
         schema: deckhand/Passphrase/v1
@@ -168,7 +174,7 @@ metadata:
         path: .values.endpoints.oslo_messaging.auth.heat.password
       src:
         schema: deckhand/Passphrase/v1
-        name: osh_oslo_messaging_admin_password
+        name: osh_heat_oslo_messaging_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.heat.password
@@ -193,9 +199,15 @@ data:
   release: heat
   namespace: openstack
   wait:
-    timeout: 900
+    timeout: 1800
     labels:
-      release_group: airship-heat
+      release_group: clcp-heat
+    resources:
+      - type: job
+      - type: deployment
+        min_ready: 100%
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -204,16 +216,54 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-heat
+            release_group: clcp-heat
     post:
       create: []
+  test:
+    enabled: false
   values:
+    dependencies:
+      static:
+        rabbit_init:
+          services:
+            - endpoint: internal
+              service: oslo_messaging
+          jobs:
+            - clcp-openstack-rabbitmq-cluster-wait
     pod:
+      security_context:
+        #FIXME(pb269f): these needs to be changed to true once the upstream
+        # chart has been fixed.
+        heat:
+          container:
+            heat_api:
+              readOnlyRootFilesystem: false
+            heat_cfn:
+              readOnlyRootFilesystem: false
+            heat_cloudwatch:
+              readOnlyRootFilesystem: false
+            heat_engine:
+              readOnlyRootFilesystem: false
+      #NOTE(rk760n): replicas number is based on AIC3.x openstack services workers configuration
       replicas:
-        api: 2
-        cfn: 2
-        cloudwatch: 2
-        engine: 4
+        api: 4
+        cfn: 4
+        cloudwatch: 4
+        engine: 32
+      affinity:
+        anti:
+          type:
+            api: requiredDuringSchedulingIgnoredDuringExecution
+            cfn: requiredDuringSchedulingIgnoredDuringExecution
+            cloudwatch: requiredDuringSchedulingIgnoredDuringExecution
+          weight:
+            default: 100
+      lifecycle:
+        upgrades:
+          deployments:
+            pod_replacement_strategy: RollingUpdate
+            rolling_update:
+              max_unavailable: 50%
     labels:
       api:
         node_selector_key: openstack-control-plane
@@ -231,31 +281,72 @@ data:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
     conf:
+      rabbitmq:
+        policies:
+          - vhost: "heat"
+            name: "ha_ttl_heat"
+            definition:
+              ha-mode: "all"
+              ha-sync-mode: "automatic"
+              message-ttl: 70000
+            priority: 0
+            apply-to: all
+            pattern: '^(?!(amq\.|reply_)).*'
+      api_audit_map:
+        DEFAULT:
+          target_endpoint_type: None
+        path_keywords:
+          stacks: stack
+          resources: resource
+          preview: None
+          detail: None
+          abandon: None
+          snapshots: snapshot
+          restore: None
+          outputs: output
+          metadata: server
+          signal: None
+          events: event
+          template: None
+          template_versions: template_version
+          functions: None
+          validate: None
+          resource_types: resource_type
+          build_info: None
+          actions: None
+          software_configs: software_config
+          software_deployments: software_deployment
+          services: None
+        service_endpoints:
+          orchestration:service/orchestration
       logging:
         loggers:
           keys:
             - root
             - heat
+            - oslo.messaging
         handlers:
           keys:
             - stdout
             - stderr
-            - 'null'
-            - fluent
+            - "null"
         formatters:
           keys:
             - context
             - default
-            - fluent
         logger_root:
           level: WARNING
-          handlers: stdout
+          handlers: "null"
         logger_heat:
           level: INFO
           handlers:
             - stdout
-            - fluent
           qualname: heat
+        logger_oslo.messaging:
+          level: INFO
+          handlers:
+            - stdout
+          qualname: oslo.messaging
         logger_amqp:
           level: WARNING
           handlers: stderr
@@ -288,28 +379,123 @@ data:
           class: StreamHandler
           args: (sys.stderr,)
           formatter: context
-        handler_fluent:
-          class: fluent.handler.FluentHandler
-          args: ('openstack.heat', 'fluentd-logging.osh-infra', 24224)
-          formatter: fluent
-        formatter_fluent:
-          class: oslo_log.formatters.FluentFormatter
         formatter_context:
           class: oslo_log.formatters.ContextFormatter
         formatter_default:
           format: "%(message)s"
+      policy:
+        deny_stack_user: not role:heat_stack_user
+        default: role:admin
+        context_is_admin: role:admin or role:admin_support or role:admin_viewer
+        tenant_create: role:_member_ or role:sriov_member or role:snapshot_member or role:support_member or role:admin or role:admin_support
+        tenant_read: role:_member_ or role:sriov_member or role:snapshot_member or role:support_member or role:viewer or role:admin or role:admin_support or role:admin_viewer
+        tenant_update: role:_member_ or role:sriov_member or role:snapshot_member or role:admin
+        tenant_delete: role:_member_ or role:sriov_member or role:snapshot_member or role:admin
+        tenant_snapshot: role:snapshot_member or role:admin
+        actions:action: rule:tenant_update or role:tenant_heat_update
+        build_info:build_info: rule:tenant_read or role:tenant_heat_read
+        events:index: rule:tenant_read or role:tenant_heat_read
+        events:show: rule:tenant_read or role:tenant_heat_read
+        resource:index: rule:tenant_read or role:tenant_heat_read
+        resource:metadata: rule:tenant_create or role:tenant_heat_create
+        resource:signal: rule:tenant_create or role:tenant_heat_create or role:heat_stack_user
+        resource:mark_unhealthy: rule:tenant_create or role:tenant_heat_create
+        resource:show: rule:tenant_read or role:tenant_heat_read
+        stacks:abandon: rule:tenant_delete or role:tenant_heat_delete
+        stacks:create: rule:tenant_create or role:tenant_heat_create
+        stacks:delete: rule:tenant_delete or role:tenant_heat_delete
+        stacks:detail: rule:tenant_read or role:tenant_heat_read
+        stacks:export: rule:tenant_read or role:tenant_heat_read
+        stacks:files: rule:tenant_read or role:tenant_heat_read
+        stacks:generate_template: rule:tenant_read or role:tenant_heat_read
+        stacks:global_index: rule:tenant_read or role:tenant_heat_read
+        stacks:index: rule:tenant_read or role:tenant_heat_read
+        stacks:list_resource_types: rule:tenant_read or role:tenant_heat_read
+        stacks:list_template_versions: rule:tenant_read or role:tenant_heat_read
+        stacks:list_template_functions: rule:tenant_read or role:tenant_heat_read
+        stacks:lookup: rule:tenant_read or role:tenant_heat_read
+        stacks:preview: rule:tenant_create or role:tenant_heat_create
+        stacks:resource_schema: rule:tenant_read or role:tenant_heat_read
+        stacks:show: rule:tenant_read or role:tenant_heat_read
+        stacks:template: rule:tenant_read or role:tenant_heat_read
+        stacks:environment: rule:tenant_read or role:tenant_heat_read
+        stacks:update: rule:tenant_update or role:tenant_heat_update
+        stacks:update_patch: rule:tenant_update or role:tenant_heat_update
+        stacks:preview_update: rule:tenant_update or role:tenant_heat_update
+        stacks:preview_update_patch: rule:tenant_update or role:tenant_heat_update
+        stacks:validate_template: rule:tenant_create or role:tenant_heat_create
+        stacks:snapshot: rule:tenant_snapshot or role:tenant_heat_create
+        stacks:show_snapshot: rule:tenant_snapshot or role:tenant_heat_read
+        stacks:delete_snapshot: rule:tenant_snapshot or role:tenant_heat_delete
+        stacks:list_snapshots: rule:tenant_snapshot or role:tenant_heat_read
+        stacks:restore_snapshot: rule:tenant_snapshot or role:tenant_heat_create
+        stacks:list_outputs: rule:tenant_snapshot or role:tenant_heat_read
+        stacks:show_output: rule:tenant_snapshot or role:tenant_heat_read
+        software_configs:global_index: rule:tenant_read or role:tenant_heat_read
+        software_configs:index: rule:tenant_read or role:tenant_heat_read
+        software_configs:create: rule:tenant_create or role:tenant_heat_create
+        software_configs:show: rule:tenant_read or role:tenant_heat_read
+        software_configs:delete: rule:tenant_delete or role:tenant_heat_delete
+        software_deployments:index: rule:tenant_read or role:tenant_heat_read
+        software_deployments:create: rule:tenant_create or role:tenant_heat_create
+        software_deployments:show: rule:tenant_read or role:tenant_heat_read
+        software_deployments:update: rule:tenant_update or role:tenant_heat_update
+        software_deployments:delete: rule:tenant_delete or role:tenant_heat_delete
+        software_deployments:metadata: rule:tenant_read or role:tenant_heat_read
+        service:index: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Blazar::Host: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Cinder::EncryptedVolumeType: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Cinder::QoSAssociation: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Cinder::QoSSpecs: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Cinder::Quota: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Cinder::VolumeType: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Keystone::*: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Manila::ShareType: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Neutron::ProviderNet: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Neutron::QoSBandwidthLimitRule: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Neutron::QoSPolicy: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Neutron::Quota: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Neutron::Segment: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Nova::Flavor: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Nova::HostAggregate: rule:tenant_read or role:tenant_heat_read
+        resource_types:OS::Nova::Quota: rule:tenant_read or role:tenant_heat_read
+        cloudformation:ListStacks: rule:deny_stack_user
+        cloudformation:CreateStack: rule:deny_stack_user
+        cloudformation:DescribeStacks: rule:deny_stack_user
+        cloudformation:DeleteStack: rule:deny_stack_user
+        cloudformation:UpdateStack: rule:deny_stack_user
+        cloudformation:CancelUpdateStack: rule:deny_stack_user
+        cloudformation:DescribeStackEvents: rule:deny_stack_user
+        cloudformation:ValidateTemplate: rule:deny_stack_user
+        cloudformation:GetTemplate: rule:deny_stack_user
+        cloudformation:EstimateTemplateCost: rule:deny_stack_user
+        cloudformation:DescribeStackResource: role:heat_stack_user
+        cloudformation:DescribeStackResources: rule:deny_stack_user
+        cloudformation:ListStackResources: rule:deny_stack_user
+      heat:
+        DEFAULT:
+          max_stacks_per_tenant: 100000
+          max_resources_per_stack: -1
+          max_template_size: "5440000"
+          stack_action_timeout: 7200
+          enable_stack_abandon: "True"
+        oslo_messaging_rabbit:
+          heartbeat_timeout_threshold: 60
+        oslo_middleware:
+          enable_proxy_headers_parsing: true
+        audit_middleware_notifications:
+          driver: log
   dependencies:
-    - heat-htk
+    - os-heat-htk
 ...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: heat-htk
+  name: os-heat-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -317,10 +503,16 @@ metadata:
         path: .charts.osh.heat-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: heat-htk
-  release: heat-htk
-  namespace: heat-htk
+  chart_name: os-heat-htk
+  release: os-heat-htk
+  namespace: os-heat-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

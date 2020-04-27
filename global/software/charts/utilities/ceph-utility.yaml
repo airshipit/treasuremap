@@ -6,6 +6,9 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
+  labels:
+    name: ceph-utility-global
+    component: utility
   storagePolicy: cleartext
   substitutions:
     # Chart source
@@ -24,16 +27,24 @@ metadata:
       dest:
         path: .values.images.tags
 
+    # Log User Ceph Utility Container
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .utility.always_log_user
+      dest:
+        path: .values.conf.utility.always_log_user
+
 data:
   chart_name: ceph-utility
   release: ceph-utility
   namespace: utility
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
     timeout: 600
     labels:
-      release_group: airship-ceph-utility
+      release_group: clcp-ceph-utility
   install:
    no_hooks: false
   upgrade:
@@ -43,29 +54,86 @@ data:
       utility:
         node_selector_key: utility
         node_selector_value: enabled
-  dependencies:
-    - ceph-utility-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: ceph-utility-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.utility.ceph-utility-htk
-      dest:
-        path: .source
-data:
-  chart_name: ceph-utility-htk
-  release: ceph-utility-htk
-  namespace: ceph-utility-htk
-  values: {}
-  dependencies: []
+    conf:
+      cephfilter:
+        Filters:
+          #RADOS Commands
+          rados00: RegExpFilter, rados, root, rados, --help
+          rados01: RegExpFilter, rados, root, rados, df
+          rados02: RegExpFilter, rados, root, rados, --pool, .*, ls
+          rados03: RegExpFilter, rados, root, rados, lspools
+          rados04: RegExpFilter, rados, root, rados, listxattr, name
+          rados05: RegExpFilter, rados, root, rados, getxattr, name, attr
+          rados06: RegExpFilter, rados, root, rados, setxattr, name, attr, value
+          rados07: RegExpFilter, rados, root, rados, stat, .*
+          rados08: RegExpFilter, rados, root, rados, stat2, .*
+          rados09: RegExpFilter, rados, root, rados, listomapkeys, .*
+          rados10: RegExpFilter, rados, root, rados, listomapvals, .*
+          rados11: RegExpFilter, rados, root, rados, getomapval, .*, .*
+          rados12: RegExpFilter, rados, root, rados, setomapval, .*, .*
+          rados13: RegExpFilter, rados, root, rados, listwatchers, .*
+          rados14: RegExpFilter, rados, root, rados, getomapheader, .*
+          rados15: RegExpFilter, rados, root, rados, setomapheader, .*, .*
+          rados16: RegExpFilter, rados, root, rados, list-inconsistent-pg, pool
+          rados17: RegExpFilter, rados, root, rados, list-inconsistent-obj, pgid
+          rados18: RegExpFilter, rados, root, rados, list-inconsistent-snapset, pgid
+          rados19: RegExpFilter, rados, root, rados, get, name, outfile
+          rados20: RegExpFilter, rados, root, rados, ls, outfile
+          rados21: RegExpFilter, rados, root, rados, lssnap
+          rados22: RegExpFilter, rados, root, rados, clonedata, srcname, dstname, .*, key
+          rados23: RegExpFilter, rados, root, rados, bench, seconds, mode
+          rados24: RegExpFilter, rados, root, rados, cleanup
+          rados25: RegExpFilter, rados, root, rados, mkpool, foo
+          rados26: RegExpFilter, rados, root, rados, mksnap, foo
+          rados27: RegExpFilter, rados, root, rados, put, name, infile
+          rados28: RegExpFilter, rados, root, rados, append, name, infile
+          #help menu
+          help: CommandFilter, help, root
+          #osd-maintenance
+          osd-maintenance: CommandFilter, osd-maintenance, root
+          #rbd_pv
+          rbd_pv: CommandFilter, rbd_pv, root
+          #radosge-admin commands
+          rgwadm00: RegExpFilter, radosgw-admin, root, radosgw-admin, --help
+          rgwadm01: RegExpFilter, radosgw-admin, root, radosgw-admin, user, list
+          rgwadm02: RegExpFilter, radosgw-admin, root, radosgw-admin, user, info, --uid=.*
+          rgwadm03: RegExpFilter, radosgw-admin, root, radosgw-admin, user, stats, --uid=.*
+          rgwadm04: RegExpFilter, radosgw-admin, root, radosgw-admin, bucket, stats, --bucket=.*
+          rgwadm05: RegExpFilter, radosgw-admin, root, radosgw-admin, bucket, limit, check, --bucket=.*
+          rgwadm06: RegExpFilter, radosgw-admin, root, radosgw-admin, bucket, list
+          #rbd commands
+          rbd00: RegExpFilter, rbd, root, rbd, ls, -l
+          rbd01: RegExpFilter, rbd, root, rbd, ls, -l, .*
+          rbd02: RegExpFilter, rbd, root, rbd, --image, .*, info
+          rbd03: RegExpFilter, rbd, root, rbd, snap, ls, .*
+          rbd04: RegExpFilter, rbd, root, rbd, --pool, .*, snap, ls, .*
+          rbd05: RegExpFilter, rbd, root, rbd, device, ls
+          rbd06: RegExpFilter, rbd, root, rbd, help
+          rbd07: RegExpFilter, rbd, root, rbd, info, .*
+          #ceph commands
+          ceph00: RegExpFilter, ceph, root, ceph, --help
+          ceph01: RegExpFilter, ceph, root, ceph, health
+          ceph02: RegExpFilter, ceph, root, ceph, heap, .*
+          ceph03: RegExpFilter, ceph, root, ceph, injectargs
+          ceph04: RegExpFilter, ceph, root, ceph, log
+          ceph05: RegExpFilter, ceph, root, ceph, mds, .*
+          ceph06: RegExpFilter, ceph, root, ceph, quorum_status
+          ceph07: RegExpFilter, ceph, root, ceph, mon_status
+          ceph08: RegExpFilter, ceph, root, ceph, status
+          ceph09: RegExpFilter, ceph, root, ceph, df
+          ceph10: RegExpFilter, ceph, root, ceph, fsid
+          ceph11: RegExpFilter, ceph, root, ceph, --watch
+          ceph12: RegExpFilter, ceph, root, ceph, mon, .*
+          ceph13: RegExpFilter, ceph, root, ceph, auth, list
+          ceph14: RegExpFilter, ceph, root, ceph, osd, .*
+          ceph15: RegExpFilter, ceph, root, ceph, osd, crush, .*
+          ceph16: RegExpFilter, ceph, root, ceph, osd, pool, .*
+          ceph17: RegExpFilter, ceph, root, ceph, osd, tier, .*
+          ceph18: RegExpFilter, ceph, root, ceph, pg, .*
+          ceph19: RegExpFilter, ceph, root, ceph, quorum, .*
+          ceph20: RegExpFilter, ceph, root, ceph, report
+          ceph21: RegExpFilter, ceph, root, ceph, scrub
+          ceph22: RegExpFilter, ceph, root, ceph, sync, force
+          ceph23: RegExpFilter, ceph, root, ceph, tell
+          ceph24: RegExpFilter, ceph, root, ceph, version
 ...

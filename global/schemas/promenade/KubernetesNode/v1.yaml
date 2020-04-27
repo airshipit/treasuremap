@@ -26,6 +26,9 @@ data:
     ip:
       $ref: '#/definitions/ip_address'
 
+    domain:
+      type: string
+
     join_ip:
       $ref: '#/definitions/ip_address'
 
@@ -45,3 +48,4 @@ data:
     - ip
     - join_ip
   additionalProperties: false
+...

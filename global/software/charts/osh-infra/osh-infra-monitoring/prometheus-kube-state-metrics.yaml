@@ -3,6 +3,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: prometheus-kube-state-metrics
+  labels:
+    name: prometheus-kube-state-metrics-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -51,7 +53,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-prometheus-kube-state-metrics
+      release_group: clcp-prometheus-kube-state-metrics
   install:
     no_hooks: false
   upgrade:
@@ -60,11 +62,21 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-prometheus-kube-state-metrics
+            release_group: clcp-prometheus-kube-state-metrics
       create: []
     post:
       create: []
   values:
+    pod:
+      resources:
+        enabled: true
+        kube_state_metrics:
+          requests:
+            memory: "512Mi"
+            cpu: "100m"
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
     labels:
       kube_state_metrics:
         node_selector_key: openstack-control-plane
@@ -73,5 +85,33 @@ data:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
   dependencies:
-    - osh-infra-helm-toolkit
+    - prometheus_kube_state_metrics-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: prometheus_kube_state_metrics-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.prometheus_kube_state_metrics-htk
+      dest:
+        path: .source
+  storagePolicy: cleartext
+data:
+  chart_name: prometheus_kube_state_metrics-htk
+  release: prometheus_kube_state_metrics-htk
+  namespace: prometheus_kube_state_metrics-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []
 ...

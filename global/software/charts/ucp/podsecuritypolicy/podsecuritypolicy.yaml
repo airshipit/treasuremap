@@ -17,6 +17,24 @@ metadata:
         path: .charts.osh_infra.podsecuritypolicy
       dest:
         path: .source
+    - src:
+        schema: pegleg/SeccompProfile/v1
+        name: seccomp-default
+        path: .allowedProfileNames
+      dest:
+        path: .values.data.psp-default.annotations
+        pattern: ALLOWED_PROFILE_NAMES
+        recurse:
+          depth: 1
+    - src:
+        schema: pegleg/SeccompProfile/v1
+        name: seccomp-default
+        path: .defaultProfileName
+      dest:
+        path: .values.data.psp-default.annotations
+        pattern: DEFAULT_PROFILE_NAME
+        recurse:
+          depth: 1
 data:
   chart_name: podsecuritypolicy
   release: podsecuritypolicy
@@ -48,6 +66,10 @@ data:
       # Note: you can define as many PSPs here as you need.
       #
       psp-default:  # This will be the `metadata.name` of the PodSecurityPolicy
+       annotations:
+         seccomp.security.alpha.kubernetes.io/allowedProfileNames: ALLOWED_PROFILE_NAMES
+         seccomp.security.alpha.kubernetes.io/defaultProfileName: DEFAULT_PROFILE_NAME
+       spec:
         privileged: true
         allowPrivilegeEscalation: true
         hostNetwork: true
@@ -69,5 +91,5 @@ data:
         - min: 1
           max: 65536
   dependencies:
-    - osh-infra-helm-toolkit
+    - podsecuritypolicy-htk
 ...

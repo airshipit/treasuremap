@@ -3,8 +3,6 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-tiller
-  labels:
-    name: ucp-tiller-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -22,22 +20,26 @@ metadata:
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .images.ucp.armada.tiller
+        path: .images.ucp.tiller
       dest:
-        path: .values.images.tags.tiller
+        path: .values.images.tags
 
 data:
   chart_name: tiller
   release: ucp-tiller
   namespace: kube-system
+  protected:
+    continue_processing: false
   wait:
-    timeout: 100
+    timeout: 600
     labels:
-      release_group: airship-ucp-tiller
+      release_group: clcp-ucp-tiller
     native:
-      # Allows tiller to update its own release's status to DEPLOYED before it
-      # goes away during an upgrade, otherwise it can get stuck in
-      # PENDING_UPGRADE status.
+      # Note(seaneagan): This allows the stnadalone tiller to update the tiller
+      # chart's release status to DEPLOYED before the standalone tiller goes
+      # away, in case armada is using it (as opposed to the armada sidecar
+      # tiller), otherwise the tiller chart can get stuck in PENDING_UPGRADE
+      # status.
       enabled: false
   install:
     no_hooks: false
@@ -47,31 +49,12 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-tiller
-  values: {}
+            release_group: clcp-ucp-tiller
+  values:
+    conf:
+      tiller:
+        storage: secret
+
   dependencies:
     - tiller-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: tiller-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.tiller-htk
-      dest:
-        path: .source
-data:
-  chart_name: tiller-htk
-  release: tiller-htk
-  namespace: tiller-htk
-  values: {}
-  dependencies: []
 ...

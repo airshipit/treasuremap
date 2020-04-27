@@ -1,0 +1,23 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: horizon
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: horizon-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      horizon:
+        local_settings:
+          config:
+            log_level: "INFO"
+...

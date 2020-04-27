@@ -1,0 +1,70 @@
+---
+schema: pegleg/Script/v1
+metadata:
+  schema: metadata/Document/v1
+  name: node-reboot
+  storagePolicy: cleartext
+  layeringDefinition:
+    abstract: false
+    layer: global
+data: |-
+  #!/bin/bash
+  set -ex
+
+  REBOOT_HISTORY=/var/lib/node-reboot-history.txt
+
+  rrr="/run/reboot-required"
+  rrpkgs="/run/reboot-required.pkgs"
+
+  safety_valve() {
+    declare -i window
+    window="$1"
+    window_secs=$(( window * 60 ))
+
+    if [ -f "$REBOOT_HISTORY" ]
+    then
+      declare -i last_boot
+      last_boot=$(cat "$REBOOT_HISTORY")
+      since_last_reboot=$(( $(date +%s) - last_boot ))
+      if [[ $since_last_reboot -lt $window_secs ]]
+      then
+        echo "Still in reboot safety window, refusing to reboot!"
+        return 1
+      else
+        return 0
+      fi
+    fi
+
+    return 0
+  }
+
+  SAFETY_DURATION=30
+
+  while getopts ":s:" opt;
+  do
+    case ${opt} in
+      s )
+        SAFETY_DURATION=$OPTARG
+        ;;
+      \? )
+        echo "Usage: node-reboot [-s mins]"
+        echo ""
+        echo "  -s - Safety window in minutes to avoid reboot loops."
+        echo ""
+        ;;
+    esac
+  done
+
+  if [[ -f $rrr && $(grep "System restart required" "$rrr") ]]; then
+    if safety_valve "$SAFETY_DURATION"; then
+      pkgs=$(tr '\n' ' ' < "$rrpkgs")
+      wall "'$pkgs installed - rebooting"
+      rm -vf $rrr $rrpkgs
+      date +%s > "$REBOOT_HISTORY"
+      /sbin/reboot
+      # don't exit successfully, doing that would allow prom to start a few
+      # seconds before reboot takes effect
+      sleep infinity
+      exit 1
+    fi
+  fi

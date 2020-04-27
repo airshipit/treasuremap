@@ -1,0 +1,70 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openvswitch
+  labels:
+    name: openvswitch-cruiser
+    component: openvswitch
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: openvswitch-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+  replacement: true
+  substitutions:
+    # OVS-DPDK config
+    - src:
+        schema: drydock/HardwareProfile/v1
+        name: dell_r740_purley_adv_nc
+        path: .cpu_sets.dpdk-lcore-mask
+      dest:
+        path: .values.conf.ovs_dpdk.lcore_mask
+    - src:
+        schema: drydock/HardwareProfile/v1
+        name: dell_r740_purley_adv_nc
+        path: .cpu_sets.pmd-cpu-mask
+      dest:
+        path: .values.conf.ovs_dpdk.pmd_cpu_mask
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .ovs-dpdk.ovs_bridge_dpdk
+      dest:
+        - path: .values.network.external_bridge
+        - path: .values.network.interface.external
+data:
+  values:
+    pod:
+      resources:
+        enabled: true
+        ovs:
+          vswitchd:
+            requests:
+              memory: "4096Mi"
+            limits:
+              memory: "4096Mi"
+              hugepages-1Gi: "4Gi"
+    conf:
+      ovs_dpdk:
+        enabled: true
+        socket_memory: 4096,4096
+        vhostuser_socket_dir: vhostuser
+        hugepages_mountpath: /dev/hugepages
+        # WIP(pk734q) upstream: https://review.opendev.org/#/c/692390/
+        vhost_iommu_support: true
+        driver: vfio-pci
+    # Need to wait for sriov agent to come up and configure VFs first
+    dependencies:
+      static:
+        vswitchd:
+          pod:
+            - requireSameNode: true
+              labels:
+                application: neutron
+                component: neutron-sriov-agent
+...

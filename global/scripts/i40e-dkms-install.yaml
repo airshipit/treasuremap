@@ -1,0 +1,305 @@
+---
+schema: pegleg/Script/v1
+metadata:
+  schema: metadata/Document/v1
+  name: i40e-dkms-install
+  storagePolicy: cleartext
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .kernel_drivers.i40e_driver.location
+      dest:
+        path: .
+        pattern: DH_SUB_DRVURL
+data: |-
+  #!/bin/bash
+  set -ex
+
+  # defaults
+  DRVURL="DH_SUB_DRVURL"
+  PREP=0
+  TEMPDIR=1
+  HDRFIX=1
+  REBOOT=1
+  ERR=0
+  ARCH=x86_64
+  DRV=i40e
+
+  apt_install(){
+    for pkg in $@; do
+      dpkg -s $pkg 2> /dev/null | grep 'Status:.*install' || DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold install $pkg
+    done
+  }
+
+  apt_reinstall(){
+    for pkg in $@; do
+      DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold install --reinstall $pkg
+    done
+  }
+
+  function usage() {
+  cat <<EOF >&2
+  Usage: $(basename $0) [-h] [-u driver-url] [-p http://proxy.to.use:port] [ -T ] [ -x ] [ -s ]
+   -s  Prep system / install packages (default: no)
+   -h  help
+   -u  URL to fetch, known to work:
+       https://pilotfiber.dl.sourceforge.net/project/e1000/i40e%20stable/2.11.29/i40e-2.11.29.tar.gz (default)
+   -p  proxy string to use; sets both http_proxy and https_proxy (default: nothing set)
+   -T  don't use a temporary directory (default: do use a temp directory)
+   -x  don't try to install missing kernel headers (default: do install missing headers)
+   -r  mark the operating system for deferred reboot (default: reboot immediately)
+  EOF
+  exit 1
+  }
+
+  # ###########################################################################
+
+  while getopts ":Thp:su:xr" opt; do
+      case ${opt} in
+          T )
+              TEMPDIR=0
+              ;;
+          s )
+              PREP=1
+              ;;
+          h )
+              usage;
+              ;;
+          u )
+              DRVURL=$OPTARG
+              ;;
+          p )
+              export http_proxy=$OPTARG
+              export https_proxy=$OPTARG
+              ;;
+          x )
+              HDRFIX=0
+              ;;
+          r )
+              REBOOT=0
+              ;;
+          \?)
+              echo "Invalid: $OPTARG" 1>&2
+              ERR=1
+              ;;
+          : )
+              echo "Invalid: $OPTARG requires an argument" 1>&2
+              ERR=1
+              ;;
+      esac
+  done
+
+  [ $ERR -ne 0 ] && exit 1
+
+  echo "URL:   $DRVURL"
+  echo "PROXY: ${https_proxy:-(not set)}"
+
+  # pkgs to make dkms work
+  if [ $PREP -ne 0 ] ; then
+      echo "Prepping system"
+      apt_install wget build-essential dkms curl rsync
+  fi
+
+  # DKMS operations that iterates over all the available driver versions in
+  # /var/lib/dkms causes DKMS to break/fail if even one driver version's dkms.conf
+  # is missing. This also causes kernel header install to fail, because is runs
+  # DKMS hooks during installation. And despite the incomplete header install, apt
+  # does not register this as a failure and exits 0 thinking all is well.
+  # Therefore to work around DKMS fragility, we iterate through each driver version
+  # directory and remove any folders for driver versions that do not contain a
+  # dkms.conf file.
+
+  # Get all /var/lib/dkms/<module>/<module-version> directories. We don't limit the
+  # search to ${DRV} modules because missing dkms.conf in any of them can break DKMS
+  # and kernel headers install.
+  dkms_dirs="$(find /var/lib/dkms -maxdepth 2 -mindepth 2 -type d)"
+  for dir in $dkms_dirs; do
+      # DKMS will complain and fail to do anything useful if one of its drivers is
+      # missing its dkms.conf file.
+      # Also, headers will fail to install properly if driver in /var/lib/dkms are
+      # missing a *.ko file
+      if [[ ! -f $dir/source/dkms.conf ]] || [[ -z $(find $dir -name "*.ko") ]]; then
+          rm -r $dir
+      fi
+  done
+
+  # missing kernel headers for all kernel versions
+  if [ $HDRFIX -ne 0 ] ; then
+      # Perform for each kernel on the system. That way we are covered if a new
+      # kernel had been installed, but wasn't active yet before rebooting.
+      for krel in $(ls /lib/modules/) ; do
+          apt_install linux-headers-$krel
+          # Check to see if headers were *really* installed, and try
+          # re-installing them if not (to fix environments that previously
+          # did not have the above DKMS fix applied).
+          ## e.g. linux-headers-x.y.z-ab
+          base_header_name="$(echo "linux-headers-$krel" | grep -o 'linux-headers-[0-9.-]*[^-a-z]')"
+          if [ ! -d /usr/src/$base_header_name ]; then
+              apt_reinstall $base_header_name
+          fi
+          ## e.g. linux-headers-x.y.z-generic
+          if [ ! -d /usr/src/linux-headers-$krel ]; then
+              apt_reinstall linux-headers-$krel
+          fi
+      done
+  fi
+
+  if [ $TEMPDIR -ne 0 ] ; then
+          tmpdir=$(mktemp -d /tmp/i40-install.XXXXXX)
+          function cleanup {
+              rm -rf "$tmpdir"
+          }
+          trap cleanup EXIT
+          cd $tmpdir
+  fi
+
+  # it's been observed when testing the fetch from sf.net it fails frequently
+  trycount=1
+  while : ; do
+      if curl -L --silent $DRVURL | tar -xz ; then
+          break
+      fi
+      if [ $trycount -ge 3 ] ; then
+          echo 1>&2
+          echo "Fetching $DRVURL failed after $trycount attempts" 1>&2
+          exit 1
+      fi
+      sleep 10
+      trycount=$(($trycount+1))
+  done
+
+  # base dir (name)
+  bdir=$(ls|grep ${DRV})
+  if [ "$(echo $bdir | wc -w)" -ne 1 ] ; then
+          echo "Unable to determine correct module directory, I see $bdir" 2>&1
+          exit 1
+  fi
+
+  # i40e.spec contains the driver version; get it from there
+  DRVVER="$(find . -name ${DRV}.spec | xargs grep Version | awk '{print $2}' | head -1)"
+
+  # target dir
+  tdir="/usr/src/${bdir}"
+
+  echo "VERSION: $DRVVER"
+  echo "TARGET:  $tdir"
+
+  add_dkms_moudle() {
+      # We do not loop through kernels here because this is not a kernel-specific check.
+      # We are just seeing if this $DRVVER of $DRV is added to the DKMS tree or not.
+      is_added="$(dkms status -m $DRV -v $DRVVER -k null | wc -l)"
+      # add dkms modules only if they are not alreay added.
+      if [[ ${is_added} == 0 ]]; then
+          # We have seen some cases where the is_added dkms check above
+          # gives a false-positive, so as an added layer we check here
+          # for an error message the the module is already added, and
+          # ignore the error if that happens.
+          dkms_add_output="$(dkms add -m ${DRV} -v "${DRVVER}" 2>&1)" || \
+          echo "$dkms_add_output" | grep 'Error! DKMS tree already contains:' || \
+          (echo "$dkms_add_output" 1>&2 && exit 1)
+      else
+          echo "The target dkms module is already loaded to the dkms tree."
+      fi
+  }
+
+  install_dkms_module() {
+      # dkms install for each kernel on the system. That way we are covered if a new
+      # kernel had been installed, but wasn't active yet before rebooting.
+      for krel in $(ls /lib/modules/) ; do
+          # install dkms modules only if they are not alreay installed for this kernel.
+          is_installed="$(dkms status -m $DRV -v $DRVVER -k $krel | grep installed | wc -l)"
+          # install for other kernels ('dkms install' won't do this)
+          #for krel in $(ls /lib/modules/) ; do dkms install -k $krel ; done
+          if [[ ${is_installed} == 0 ]]; then
+              dkms_install_output="$(dkms install ${DRV}/${DRVVER} -k $krel 2>&1)" || \
+              echo "$dkms_install_output" | grep 'Error! This module/version combo is already installed' || \
+              (echo "$dkms_install_output" 1>&2 && exit 1)
+          else
+              echo "The target dkms module is already installed."
+          fi
+      done
+  }
+
+  # if there are exising kernel modules for this driver, repalce them with
+  # module from dkms tree
+  replace_driver_module() {
+      # Perform for each kernel on the system. That way we are covered if a new
+      # kernel had been installed, but wasn't active yet before rebooting.
+      for krel in $(ls /lib/modules/) ; do
+          for file in $(find /lib/modules/$krel -type f -name '${DRV}.ko'); do
+              cp /var/lib/dkms/${DRV}/${DRVVER}/$krel/${ARCH}/module/${DRV}.ko $file
+          done
+      done
+  }
+
+  # DO NOT remove or rename the directory under /usr/src, as this completes breaks DKMS.
+  # In general if the target directory already exists, there's no need to re-copy
+  # because the target directory contains the driver name (i40e) and driver version
+  # (e.g. 2.7.12). So unless there's another 2.7.12 driver verison that's different
+  # than the first, this should not be an issue. For a simple idempotent solution,
+  # we just rsync the files to the target, and only move in files that don't exist
+  # at the dst.
+  rsync -a --ignore-existing "${bdir}/src"/ "${tdir}"/
+  cat <<EOF > "${tdir}/dkms.conf"
+  PACKAGE_NAME="${DRV}"
+  PACKAGE_VERSION="${DRVVER}"
+  BUILT_MODULE_NAME[0]="${DRV}"
+  DEST_MODULE_LOCATION[0]="/updates/"
+  REMAKE_INITRD="yes"
+  AUTOINSTALL="yes"
+  EOF
+  add_dkms_moudle
+  install_dkms_module
+  replace_driver_module
+  # make sure modprobe sees the 'right' module version
+  pver=$(modinfo ${DRV} | grep ^version | awk '{print $2}')
+
+  # this extra step is to support any patched driver version from Intel
+  # as they like to add "_att" to the version that is patched, and will
+  # break the check below otherwise. (i.e. "2.9.23" vs "2.9.23_att")
+  read vMaj vMin vUpd  <<<${DRVVER//[^0-9]/ }
+  cver=$vMaj.$vMin.$vUpd
+
+  if [[ "${cver}" != ${pver} ]] ; then
+      # not really sure if this can ever happen
+      echo "ERROR: Module system does not see the version we just built" 2>&1
+      exit 1
+  fi
+
+  # If we've already installed this driver version, we don't need to reboot or mark for reboot.
+  # We still run the idempotent steps above, because there is the possibility that someone will
+  # have installed a new kernel version (possibly without the needed headers), in which case this
+  # script should run again for that new kernel version even though the i40e version has not changed.
+  # In the case of a newly installed/staged kernel that is pending reboot, that kernel will have
+  # already marked the node for reboot, so we can skip doing that here.
+  [ -e /var/lib/${DRV}.done ] && [ "$(cat /var/lib/${DRV}.done)" = "$DRVVER" ] && cleanup && exit 0
+
+  # Marker the driver version installation as done to avoid flagging the node for needing reboots
+  # on this same driver version again (unless they are because a different kernel version was
+  # installed with no change in the driver version, in which case the kernel update will have
+  # marked the node for needing reboot).
+  touch /var/lib/${DRV}.done
+  # save the driver version in the i40e.done file for the verify driver
+  # script to read and validate the expected against the actual driver
+  # version
+  echo "${pver}" | tee /var/lib/${DRV}.done
+  sync
+
+  systemctl disable i40e-dkms-install.service
+  if [ $REBOOT -ne 0 ]; then
+    # we can't rely on rmmod/insmod; the driver may not be robust or the
+    # interface is in use in complicated ways
+    wall "${DRV} driver updated - rebooting"
+    /sbin/reboot
+    # don't exit successfully, doing that would allow prom to start a few
+    # seconds before reboot takes effect
+    sleep infinity
+    exit 1
+  else
+    echo '*** System restart required ***' > /run/reboot-required
+    echo "$(basename ${DRVURL})" >> /run/reboot-required.pkgs
+  fi

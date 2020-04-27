@@ -3,17 +3,19 @@ schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
   name: osh-infra-monitoring
+  labels:
+    name: osh-infra-monitoring-global
   layeringDefinition:
     abstract: false
     layer: global
   storagePolicy: cleartext
 data:
   description: OSH Infra Monitoring
+  sequenced: true
   chart_group:
+    - prometheus-data-local-ssd
     - prometheus
-    - prometheus-alertmanager
     - prometheus-node-exporter
-    - prometheus-process-exporter
     - prometheus-kube-state-metrics
+    - prometheus-process-exporter
     - nagios
-...

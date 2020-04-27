@@ -1,0 +1,52 @@
+---
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: linux-crashdump-install
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: global
+  labels:
+    application: 'drydock'
+    name: linux-crashdump-install-global
+  substitutions:
+    - src:
+        schema: pegleg/Script/v1
+        name: linux-crashdump-install
+        path: .
+      dest:
+        path: .assets[2].data
+data:
+  signaling: false
+  assets:
+    - type: pkg_list
+      data:
+        linux-crashdump: null
+    - path: /etc/systemd/system/linux-crashdump-install.service
+      type: unit
+      permissions: '444'
+      data: |
+        [Unit]
+        Description=Service to update /run/reboot-required to trigger reboot
+        DefaultDependencies=no
+        Before=promjoin.service node-reboot.service
+        After=network-online.target local-fs.target cloud-init.target
+        ConditionPathExists=!/var/lib/linux-crashdump-reboot.done
+
+        [Service]
+        Type=oneshot
+        ExecStart=/opt/linux-crashdump-install.sh
+        RemainAfterExit=true
+
+        [Install]
+        WantedBy=airship.target
+
+      data_pipeline:
+        - utf8_decode
+    - path: /opt/linux-crashdump-install.sh
+      type: file
+      permissions: '700'
+      data_pipeline:
+        - utf8_decode
+...

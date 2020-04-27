@@ -1,0 +1,40 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-ceph-osd-sdf
+  replacement: true
+  labels:
+    name: ucp-ceph-osd-sdf
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-ceph-osd-sdf-nc
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      overrides:
+        ceph_clcp-ucp-ceph-osd-sdf:
+          hosts:
+            - name: stl1r01s01
+              conf:
+                storage:
+                  failure_domain_name: "stl1r01s01_1"
+            - name: stl1r01s02
+              conf:
+                storage:
+                  failure_domain_name: "stl1r01s02_1"
+            - name: stl1r01s03
+              conf:
+                storage:
+                  failure_domain_name: "stl1r01s03_1"
+            - name: stl1r01s04
+              conf:
+                storage:
+                  failure_domain_name: "stl1r01s04_1"
+...

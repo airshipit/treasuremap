@@ -3,8 +3,6 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: kubernetes-scheduler
-  labels:
-    name: kubernetes-scheduler-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -25,6 +23,14 @@ metadata:
         path: .images.kubernetes.scheduler
       dest:
         path: .values.images.tags
+
+    # Kube-scheduler Log Level
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .kubernetes_components.scheduler_log_level
+      dest:
+        path: .values.scheduler.logging.log_level
 
     # CA
     - src:
@@ -53,32 +59,41 @@ data:
   release: kubernetes-scheduler
   namespace: kube-system
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
-    timeout: 600
+    timeout: 900
     labels:
-      release_group: airship-kubernetes-scheduler
+      release_group: clcp-kubernetes-scheduler
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: airship-kubernetes-scheduler
+            release_group: clcp-kubernetes-scheduler
   values:
     network:
       kubernetes_netloc: 127.0.0.1:6553
+    pod:
+      lifecycle:
+        upgrades:
+          daemonsets:
+            pod_replacement_strategy: RollingUpdate
+            scheduler:
+              enabled: true
+              min_ready_seconds: 0
+              max_unavailable: 50%
   dependencies:
-    - kubernetes-scheduler-htk
+    - scheduler-htk
+...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: kubernetes-scheduler-htk
+  name: scheduler-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -86,10 +101,16 @@ metadata:
         path: .charts.kubernetes.scheduler-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: kubernetes-scheduler-htk
-  release: kubernetes-scheduler-htk
-  namespace: kubernetes-scheduler-htk
+  chart_name: scheduler-htk
+  release: scheduler-htk
+  namespace: scheduler-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

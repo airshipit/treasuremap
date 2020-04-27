@@ -7,7 +7,8 @@ metadata:
     abstract: false
     layer: global
   labels:
-    name: postgresql-utility
+    name: postgresql-utility-global
+    component: utility
   storagePolicy: cleartext
   substitutions:
     # Chart source
@@ -17,6 +18,7 @@ metadata:
         path: .charts.utility.postgresql-utility
       dest:
         path: .source
+
     # Images
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -24,28 +26,43 @@ metadata:
         path: .images.utility.postgresql-utility
       dest:
         path: .values.images.tags
+
     # CAs
-    -
-      src:
+    - src:
         schema: deckhand/Passphrase/v1
         name: ucp_postgres_admin_password
         path: .
       dest:
-        path: .values.secrets.postgresql.admin
+        path: .values.secrets.password.admin
+
+    # Log User postgresql Utility Container
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .utility.always_log_user
+      dest:
+        path: .values.conf.utility.always_log_user
 data:
   chart_name: postgresql-utility
   release: postgresql-utility
+  test:
+    enabled: false
   namespace: utility
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
     timeout: 600
     labels:
-      release_group: airship-postgresql-utility
+      release_group: clcp-postgresql-utility
   install:
    no_hooks: false
   upgrade:
    no_hooks: false
+   pre:
+      delete:
+        - type: job
+          labels:
+            release_group: clcp-postgresql-utility
   values:
     labels:
       utility:

@@ -3,11 +3,11 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-drydock
-  labels:
-    name: ucp-drydock-global
   layeringDefinition:
     abstract: false
     layer: global
+  labels:
+    name: ucp-drydock-global
   storagePolicy: cleartext
   substitutions:
 
@@ -54,19 +54,13 @@ metadata:
       dest:
         path: .values.endpoints.maas_region
 
-    # Drydock IPs
+    # Drydock log level
     - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .node_ports.drydock_api
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .airship.log_level
       dest:
-        path: .values.network.drydock.node_port.port
-    - src:
-        schema: pegleg/CommonAddresses/v1
-        name: common-addresses
-        path: .node_ports.drydock_api
-      dest:
-        path: .values.endpoints.physicalprovisioner.port.api.nodeport
+        path: .values.conf.drydock.logging.log_level
 
     # Credentials
 
@@ -92,15 +86,9 @@ metadata:
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: ucp_service_accounts
-        path: .ucp.keystone.admin
-      dest:
-        path: .values.endpoints.identity.auth.admin
-    - src:
-        schema: pegleg/AccountCatalogue/v1
-        name: ucp_service_accounts
         path: .ucp.drydock.keystone
       dest:
-        path: .values.endpoints.identity.auth.drydock
+        path: .values.endpoints.identity.drydock.user
 
     # Secrets
     - dest:
@@ -133,9 +121,11 @@ data:
   release: drydock
   namespace: ucp
   wait:
-    timeout: 600
+    timeout: 1800
     labels:
-      release_group: airship-drydock
+      release_group: clcp-drydock
+  test:
+    enabled: true
   install:
     no_hooks: false
   upgrade:
@@ -144,44 +134,60 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-drydock
+            release_group: clcp-drydock
   values:
+    replicas:
+      drydock: 2
     labels:
       node_selector_key: ucp-control-plane
       node_selector_value: enabled
+    # TODO(sh8121): Refactor chart to support stricter security
+    # but still support libvirt+ssh for virtual testing
+    pod:
+      security_context:
+        drydock:
+          pod:
+            runAsUser: 0
+          container:
+            drydock_api:
+              readOnlyRootFilesystem: false
     network:
       api:
-        nodeport:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+          classes:
+            cluster: "maas-ingress"
+      drydock:
+        node_port:
           enabled: false
     conf:
+      uwsgi:
+        threads: 1
+        workers: 1
       drydock:
         database:
           pool_size: 200
         plugins:
           ingester: drydock_provisioner.ingester.plugins.deckhand.DeckhandIngester
+        policy.override:
+          admin_api: role:admin or role:admin_ucp
+          admin_viewer: role:admin_ucp_viewer or rule:admin_api
+          drydock:read_task: rule:admin_viewer
+          drydock:create_task: rule:admin_api
+          drydock:validate_design: rule:admin_viewer
+          drydock:verify_site: rule:admin_viewer
+          drydock:prepare_site: rule:admin_api
+          drydock:verify_node: rule:admin_viewer
+          drydock:prepare_node: rule:admin_api
+          drydock:deploy_node: rule:admin_api
+          drydock:destroy_node: rule:admin_api
+          drydock:relabel_node: rule:admin_api
+          drydock:read_build_data: rule:admin_viewer
+          drydockd:read_data: rule:admin_viewer
+          drydock:ingest_data: rule:admin_api
+          drydock:health_data: rule:admin_api
+          drydock:validate_site_design: rule:admin_viewer
   dependencies:
     - drydock-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: drydock-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.drydock-htk
-      dest:
-        path: .source
-data:
-  chart_name: drydock-htk
-  release: drydock-htk
-  namespace: drydock-htk
-  values: {}
-  dependencies: []
 ...

@@ -2,9 +2,9 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: kubernetes-calico
+  name: kubernetes-calico-base
   layeringDefinition:
-    abstract: false
+    abstract: true
     layer: global
   labels:
     name: kubernetes-calico-global
@@ -53,6 +53,27 @@ metadata:
       dest:
         path: .values.conf.node.IP_AUTODETECTION_METHOD
 
+    # Calico log level
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .calico.calico_startup_loglevel
+      dest:
+        path: .values.conf.node.CALICO_STARTUP_LOGLEVEL
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .calico.calico_startup_loglevel
+      dest:
+        path: .values.conf.node.FELIX_LOGSEVERITYSCREEN
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .calico.calico_startup_loglevel
+      dest:
+        path: .values.conf.cni_network_config.plugins[0].log_level
+
+
     # Certificates
     - src:
         schema: deckhand/CertificateAuthority/v1
@@ -73,6 +94,7 @@ metadata:
       dest:
         path: .values.endpoints.etcd.auth.client.tls.key
 
+
 data:
   chart_name: calico
   release: kubernetes-calico
@@ -80,17 +102,22 @@ data:
   protected:
     continue_processing: true
   wait:
-    timeout: 600
+    timeout: 1800
     labels:
-      release_group: airship-kubernetes-calico
+      release_group: clcp-kubernetes-calico
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: airship-kubernetes-calico
+            release_group: clcp-kubernetes-calico
   values:
+    pod:
+      mandatory_access_control:
+        calico-node:
+          calico-node: unconfined
+
     conf:
       cni_network_config:
         name: k8s-pod-network
@@ -102,6 +129,7 @@ data:
             etcd_cert_file: /etc/calico/pki/crt
             etcd_key_file: /etc/calico/pki/key
             log_level: info
+            mtu: 1500
             ipam:
               type: calico-ipam
             policy:
@@ -123,6 +151,8 @@ data:
         ETCD_CERT_FILE: /etc/calico/pki/crt
         ETCD_KEY_FILE: /etc/calico/pki/key
         WAIT_FOR_STORAGE: "true"
+        FELIX_FAILSAFEINBOUNDHOSTPORTS: "none"
+        FELIX_FAILSAFEOUTBOUNDHOSTPORTS: "none"
 
     endpoints:
       etcd:
@@ -132,19 +162,19 @@ data:
           default: https
 
     networking:
-      mtu: 1500
       settings:
         mesh: "on"
         ippool:
           ipip:
             enabled: "true"
-            mode: "Always"
+            mode: "Never"
           nat_outgoing: "true"
           disabled: "false"
 
     manifests:
       daemonset_calico_etcd: false
       job_image_repo_sync: false
+      pod_calicoctl: false
       service_calico_etcd: false
   dependencies:
     - calico-htk

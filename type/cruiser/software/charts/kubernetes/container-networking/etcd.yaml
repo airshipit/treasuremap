@@ -1,0 +1,145 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-calico-etcd
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: kubernetes-calico-etcd-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+  substitutions:
+    # Master 0
+    - src:
+        schema: nc/ControlPlaneAddresses/v1
+        name: control-plane-addresses
+        path: .masters[0].hostname
+      dest:
+        path: .values.nodes[0].name
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd-master-0
+        path: .
+      dest:
+        path: .values.nodes[0].tls.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd-master-0
+        path: .
+      dest:
+        path: .values.nodes[0].tls.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd-master-0-peer
+        path: .
+      dest:
+        path: .values.nodes[0].tls.peer.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd-master-0-peer
+        path: .
+      dest:
+        path: .values.nodes[0].tls.peer.key
+
+    # Master 1
+    - src:
+        schema: nc/ControlPlaneAddresses/v1
+        name: control-plane-addresses
+        path: .masters[1].hostname
+      dest:
+        path: .values.nodes[1].name
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd-master-1
+        path: .
+      dest:
+        path: .values.nodes[1].tls.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd-master-1
+        path: .
+      dest:
+        path: .values.nodes[1].tls.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd-master-1-peer
+        path: .
+      dest:
+        path: .values.nodes[1].tls.peer.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd-master-1-peer
+        path: .
+      dest:
+        path: .values.nodes[1].tls.peer.key
+
+    # Master 2
+    - src:
+        schema: nc/ControlPlaneAddresses/v1
+        name: control-plane-addresses
+        path: .masters[2].hostname
+      dest:
+        path: .values.nodes[2].name
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd-master-2
+        path: .
+      dest:
+        path: .values.nodes[2].tls.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd-master-2
+        path: .
+      dest:
+        path: .values.nodes[2].tls.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd-master-2-peer
+        path: .
+      dest:
+        path: .values.nodes[2].tls.peer.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd-master-2-peer
+        path: .
+      dest:
+        path: .values.nodes[2].tls.peer.key
+
+    # Alternate master
+    - src:
+        schema: nc/ControlPlaneAddresses/v1
+        name: control-plane-addresses
+        path: .masters[3].hostname
+      dest:
+        path: .values.nodes[3].name
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd-master-3
+        path: .
+      dest:
+        path: .values.nodes[3].tls.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd-master-3
+        path: .
+      dest:
+        path: .values.nodes[3].tls.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd-master-3-peer
+        path: .
+      dest:
+        path: .values.nodes[3].tls.peer.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd-master-3-peer
+        path: .
+      dest:
+        path: .values.nodes[3].tls.peer.key
+
+data: {}
+...

@@ -1,0 +1,22 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: cinder
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: cinder-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      logging:
+        logger_cinder:
+          level: INFO
+...

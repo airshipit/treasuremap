@@ -1,0 +1,289 @@
+---
+schema: nc/Policy/v1
+metadata:
+  schema: metadata/Document/v1
+  name: site-policy
+  labels:
+    name: site-policy
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: type-policy
+    actions:
+    - method: merge
+      path: .
+  storagePolicy: cleartext
+data:
+  policy:
+    sitelevel:
+      priority: 5
+      rules: []
+    hostendpoints:
+      priority: 9
+      rules:
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s01-oam
+          labels:
+            host: nc-control
+            intf-alias: oam
+        spec:
+          interfaceName: bond1.41
+          node: stl1r01s01
+          expectedIPs:
+          - 10.254.125.141
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s01-ksn
+          labels:
+            host: nc-control
+            intf-alias: ksn
+        spec:
+          interfaceName: bond1.44
+          node: stl1r01s01
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s02-oam
+          labels:
+            host: nc-control
+            intf-alias: oam
+        spec:
+          interfaceName: bond1.41
+          node: stl1r01s02
+          expectedIPs:
+          - 10.254.125.142
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s02-ksn
+          labels:
+            host: nc-control
+            intf-alias: ksn
+        spec:
+          interfaceName: bond1.44
+          node: stl1r01s02
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s03-oam
+          labels:
+            host: nc-control
+            intf-alias: oam
+        spec:
+          interfaceName: bond1.41
+          node: stl1r01s03
+          expectedIPs:
+          - 10.254.125.143
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s03-ksn
+          labels:
+            host: nc-control
+            intf-alias: ksn
+        spec:
+          interfaceName: bond1.44
+          node: stl1r01s03
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s04-oam
+          labels:
+            host: nc-control
+            intf-alias: oam
+        spec:
+          interfaceName: bond1.41
+          node: stl1r01s04
+          expectedIPs:
+          - 10.254.125.144
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s04-ksn
+          labels:
+            host: nc-control
+            intf-alias: ksn
+        spec:
+          interfaceName: bond1.44
+          node: stl1r01s04
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s05-oam
+          labels:
+            host: nc-compute
+            intf-alias: oam
+        spec:
+          interfaceName: bond1.41
+          node: stl1r01s05
+          expectedIPs:
+          - 10.254.125.145
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s05-ksn
+          labels:
+            host: nc-compute
+            intf-alias: ksn
+        spec:
+          interfaceName: bond1.44
+          node: stl1r01s05
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s06-oam
+          labels:
+            host: nc-compute
+            intf-alias: oam
+        spec:
+          interfaceName: bond1.41
+          node: stl1r01s06
+          expectedIPs:
+          - 10.254.125.146
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s06-ksn
+          labels:
+            host: nc-compute
+            intf-alias: ksn
+        spec:
+          interfaceName: bond1.44
+          node: stl1r01s06
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s07-oam
+          labels:
+            host: nc-compute
+            intf-alias: oam
+        spec:
+          interfaceName: bond1.41
+          node: stl1r01s07
+          expectedIPs:
+          - 10.254.125.147
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s07-ksn
+          labels:
+            host: nc-compute
+            intf-alias: ksn
+        spec:
+          interfaceName: bond1.44
+          node: stl1r01s07
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s08-oam
+          labels:
+            host: nc-compute
+            intf-alias: oam
+        spec:
+          interfaceName: bond1.41
+          node: stl1r01s08
+          expectedIPs:
+          - 10.254.125.148
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s08-ksn
+          labels:
+            host: nc-compute
+            intf-alias: ksn
+        spec:
+          interfaceName: bond1.44
+          node: stl1r01s08
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s09-oam
+          labels:
+            host: nc-compute
+            intf-alias: oam
+        spec:
+          interfaceName: bond1.41
+          node: stl1r01s09
+          expectedIPs:
+          - 10.254.125.149
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s09-ksn
+          labels:
+            host: nc-compute
+            intf-alias: ksn
+        spec:
+          interfaceName: bond1.44
+          node: stl1r01s09
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s10-oam
+          labels:
+            host: nc-compute
+            intf-alias: oam
+        spec:
+          interfaceName: bond1.41
+          node: stl1r01s10
+          expectedIPs:
+          - 10.254.125.150
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s10-ksn
+          labels:
+            host: nc-compute
+            intf-alias: ksn
+        spec:
+          interfaceName: bond1.44
+          node: stl1r01s10
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s11-oam
+          labels:
+            host: nc-compute
+            intf-alias: oam
+        spec:
+          interfaceName: bond1.41
+          node: stl1r01s11
+          expectedIPs:
+          - 10.254.125.151
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s11-ksn
+          labels:
+            host: nc-compute
+            intf-alias: ksn
+        spec:
+          interfaceName: bond1.44
+          node: stl1r01s11
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s12-oam
+          labels:
+            host: nc-compute
+            intf-alias: oam
+        spec:
+          interfaceName: bond1.41
+          node: stl1r01s12
+          expectedIPs:
+          - 10.254.125.152
+      - apiVersion: projectcalico.org/v3
+        kind: HostEndpoint
+        metadata:
+          name: stl1r01s12-ksn
+          labels:
+            host: nc-compute
+            intf-alias: ksn
+        spec:
+          interfaceName: bond1.44
+          node: stl1r01s12
+...

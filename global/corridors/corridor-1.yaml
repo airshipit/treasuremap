@@ -1,0 +1,155 @@
+---
+schema: nc/CorridorConfig/v1
+metadata:
+  schema: metadata/Document/v1
+  name: corridor-1
+  layeringDefinition:
+    abstract: false
+    layer: global
+  labels:
+    corridor: '1'
+    region: 'global'
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/CommonSoftwareConfig/v1
+        name: common-software-config
+        path: .osh.region_name
+      dest:
+        path:  .infrastructure.dmaap.topic
+        pattern: REGION
+
+data:
+  corridor: 'c1'
+  artifactory:
+    artfactory_ip: 1.1.1.1
+    hostnames:
+      artifacts: artifacts-example.com
+      docker-open: docker.io
+      docker: docker.io
+    repo_urls:
+      artfactory_web_url: artifacts-example.com/artifactory
+  infrastructure:
+    dns:
+      upstream_servers:
+        - 8.8.8.8
+        - 1.1.1.1
+      # Repeat the same values as above, but formatted as a common separated
+      # string
+      upstream_servers_joined: 8.8.8.8,1.1.1.1
+    ntp:
+      # Verify that a minimum of three (3) ATT NTP servers are reachable in your
+      # environment; otherwise override them at the site level
+      # with the correct values for your environment.
+      #
+      # NOTE: We use IPs for NTP instead of FQDN because:
+      # 1. We found problems with large numbers of pools configured for NTP (nodes
+      #    would refuse to time sync). When MaaS sees an FQDN, it configures them
+      #    as "pool", whereas when MaaS sees IPv4 addresses it configures them as
+      #    "server", which does not have this problem with large NTP lists.
+      # 2. A DNS failure scenario would not result in the common-mode failure of
+      #    nodes to be able to maintain accurate time.
+      servers:
+        # time WWT
+        - 10.255.0.1
+        # cloudfare
+        - 1.1.1.1
+
+    smtp:
+        server: smtp.test.com
+    ldap:
+      auth_path: ""
+      common_name: AP-NC_Test_Users
+      domain: exampledomian
+      fqdn: 'its-a'
+      subdomain: testitservices
+    proxy:
+      no_proxy: localhost,127.0.0.1,[::1],0.0.0.0,10.96.0.1,.cluster.local,172.17.0.1,172.18.0.1
+    scm:
+      port: 8888
+      ssh: ssh://user@.example.com:8888
+      ssh_codecloud: ssh://example.com
+      url: gerrit.example.com
+      credentials: jenkins-gerrit-mtn5-key
+    dmaap:
+      fqdn: example.com
+      user: user@example.com
+      namespace: com.example.com
+      topic: 29002-NC-astra-log-22790-corr1-REGION-v1
+  ozone:
+    ozone-collector:
+      user: admin-nc
+  threec:
+    threec-api:
+      user: admin-nc
+      corridor: 1
+      jenkins:
+        url: "https://jenkins-example.com"
+      siteScm:
+        url: "ssh://:userId@gerrit.example.com/treasuremap"
+      scm:
+        security:
+          url: "ssh://:userId@grrit.example.com/treasuremap"
+      ldap:
+        url: "ldaps://example.com:636"
+  keystone:
+    ucp:
+      groups: "AP-NC-NC-Lab-Deployment"
+      ldap:
+        group_filter: "(CN=AP-NC-NC-Lab-Deployment)"
+  airship:
+    log_level: 'INFO'
+    log_level_numeric: 20
+    maas:
+      ingress_disable_gui: false
+  ranger:
+    ranger:
+      debug_level: ERROR
+      ranger_keystone_user: admin-nc
+      customer_domain: nc
+      user: admin-nc
+      user_home: /home/admin-nc
+      ranger_agent_client_cert_path: ''
+      ranger_agent_client_cert: ''
+    ranger-agent:
+      debug_level: ERROR
+      user: admin-nc
+      user_home: /home/aic-ord
+      ranger_agent_keystone_user: ranger-agent-admin
+      rds_listener_endpoint: https://ranger.example.com/v1/rds/status
+  calico:
+    calico_startup_loglevel: 'Debug'
+    felix_logseverity: 'Info'
+    cni_log_level: 'Info'
+  kubernetes_components:
+    # https://github.com/kubernetes/community/blob/master/contributors/devel/sig-instrumentation/logging.md
+    # The above link describes different log levels and their respective values.
+    apiserver_log_level: 2
+    controller_manager_log_level: 2
+    scheduler_log_level: 2
+    proxy_log_level: 2
+    apiserver_webhook_log_level: 2
+  nagios:
+    notification:
+      snmp:
+        primary_target: 130.8.117.171:16162
+        secondary_target: 130.8.117.171:16162
+      http:
+        primary_target: http://example.com/events/NC-INFRA-NAGIOS-ALARMS
+        secondary_target: http://example.com/events/NC-INFRA-NAGIOS-ALARMS
+  utility:
+    always_log_user: true
+  cicd:
+    generic_pipe:
+      user: admin
+      required_role: admin
+  jenkins:
+    global_env_vars:
+      conf_package_path: com.nccicd.config.conf
+      internal_gerrit_key: jenkins-gerrit-mtn5-key
+      jenkins_cli: /var/jenkins_home/war/WEB-INF/jenkins-cli.jar
+      os_project_name: admin
+      ssh_data: '{"jenkins-gerrit-mtn5-key": {"user": "admin", "resource": "gerrit.example.com"}}'
+  mylogins:
+    user: admin
+...

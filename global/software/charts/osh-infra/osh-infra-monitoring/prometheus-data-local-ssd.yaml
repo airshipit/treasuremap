@@ -1,0 +1,89 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: prometheus-data-local-ssd
+  labels:
+    name: prometheus-data-local-ssd
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.local-storage
+      dest:
+        path: .source
+
+data:
+  chart_name: local-storage
+  release: prometheus-data-local-ssd
+  namespace: osh-infra
+  wait:
+    resources: []
+  test:
+    enabled: false
+  install:
+    no_hooks: true
+  upgrade:
+    no_hooks: true
+  values:
+    labels:
+      node_affinity:
+        node_selector_key: prometheus-server
+        node_selector_value: enabled
+    conf:
+      persistent_volumes:
+        - name: prometheus-data-ssd-volume-0
+          reclaim_policy: Retain
+          storage_capacity: "500G"
+          access_modes: [ "ReadWriteOnce" ]
+          local_path: /srv/prometheus-data
+        - name: prometheus-data-ssd-volume-1
+          reclaim_policy: Retain
+          storage_capacity: "500G"
+          access_modes: [ "ReadWriteOnce" ]
+          local_path: /srv/prometheus-data
+        - name: prometheus-data-ssd-volume-2
+          reclaim_policy: Retain
+          storage_capacity: "500G"
+          access_modes: [ "ReadWriteOnce" ]
+          local_path: /srv/prometheus-data
+    manifests:
+      storage_class: true
+      persistent_volumes: true
+  dependencies:
+    - local-storage-htk
+...
+
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: local-storage-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.local-storage-htk
+      dest:
+        path: .source
+  storagePolicy: cleartext
+data:
+  chart_name: local-storage-htk
+  release: local-storage-htk
+  namespace: local-storage-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []
+...

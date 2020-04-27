@@ -1,0 +1,26 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-ceph-client
+  labels:
+    name: ucp-ceph-client-nc
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-ceph-client-global
+    actions:
+      - method: replace
+        path: .values.conf.pool.target.osd
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      pool:
+        target:
+          osd: 6
+...
+

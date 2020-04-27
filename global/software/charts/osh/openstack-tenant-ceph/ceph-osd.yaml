@@ -39,6 +39,8 @@ metadata:
         path: .storage.ceph.cluster_cidr
       dest:
         path: .values.network.cluster
+
+    # Endpoints
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: ucp_endpoints
@@ -59,16 +61,37 @@ data:
   release: tenant-ceph-osd
   namespace: tenant-ceph
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
-    timeout: 900
+    timeout: 9000
     labels:
-      release_group: airship-tenant-ceph-osd
+      release_group: clcp-tenant-ceph-osd
+    resources:
+      - type: daemonset
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
     no_hooks: false
+    pre:
+      delete:
+        - type: pod
+          labels:
+            release_group: clcp-tenant-ceph-osd
+            component: test
+  test:
+    enabled: true
   values:
+    pod:
+      mandatory_access_control:
+        type: apparmor
+        ceph-osd-default:
+          ceph-osd-default: unconfined
+    deploy:
+      tool: "ceph-volume"
+    manifests:
+      cronjob_defragosds: false
     labels:
       osd:
         node_selector_key: tenant-ceph-osd
@@ -78,8 +101,6 @@ data:
         namespace: tenant-ceph
       ceph_mgr:
         namespace: tenant-ceph
-      fluentd:
-        namespace: osh-infra
     monitoring:
       ceph_mgr:
         port: 9284
@@ -87,7 +108,8 @@ data:
       enabled: true
     conf:
       storage:
-        osd_log_directory: /var/log/tenant-ceph
+        failure_domain: rack
+        failure_domain_by_hostname: 1-7
         mon:
           directory: /var/lib/openstack-helm/tenant-ceph/mon
         osd:
@@ -106,6 +128,7 @@ data:
         osd:
           osd_op_num_threads_per_hdd: 2
           osd_op_num_threads_per_ssd: 4
+          osd_max_backfills: 5
   dependencies:
-    - tenant-ceph-htk
+    - ceph-htk
 ...

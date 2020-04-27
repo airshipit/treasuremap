@@ -7,7 +7,7 @@ metadata:
     name: neutron-global
     component: neutron
   layeringDefinition:
-    abstract: false
+    abstract: true
     layer: global
   storagePolicy: cleartext
   substitutions:
@@ -71,12 +71,6 @@ metadata:
       dest:
         path: .values.endpoints.network
     - src:
-        schema: pegleg/EndpointCatalogue/v1
-        name: osh_infra_endpoints
-        path: .osh_infra.fluentd
-      dest:
-        path: .values.endpoints.fluentd
-    - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
         path: .osh.keystone.admin
@@ -88,6 +82,12 @@ metadata:
         path: .osh.neutron.neutron
       dest:
         path: .values.endpoints.identity.auth.neutron
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.neutron.test
+      dest:
+        path: .values.endpoints.identity.auth.test
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
@@ -141,6 +141,12 @@ metadata:
         name: osh_neutron_password
         path: .
     - dest:
+        path: .values.endpoints.identity.auth.test.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_neutron_test_password
+        path: .
+    - dest:
         path: .values.endpoints.identity.auth.nova.password
       src:
         schema: deckhand/Passphrase/v1
@@ -156,7 +162,7 @@ metadata:
         path: .values.endpoints.oslo_messaging.auth.neutron.password
       src:
         schema: deckhand/Passphrase/v1
-        name: osh_oslo_messaging_admin_password
+        name: osh_neutron_oslo_messaging_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.neutron.password
@@ -196,13 +202,41 @@ metadata:
         name: common-addresses
         path: .neutron.external_iface
       dest:
-        path: .values.conf.auto_bridge_add.br-ex
+        path: .values.network.interface.external
         pattern: 'EXTERNAL_INTERFACE'
+
+    # MTU settings for neutron
+    - src:
+        schema: pegleg/NetworkSettings/v1
+        name: network-settings
+        path: .mtu.neutron
+      dest:
+        path: .values.conf.neutron.DEFAULT.global_physnet_mtu
+    - src:
+        schema: pegleg/NetworkSettings/v1
+        name: network-settings
+        path: .mtu.neutron
+      dest:
+        path: .values.conf.plugins.ml2_conf.ml2.path_mtu
 
 data:
   chart_name: neutron
   release: neutron
   namespace: openstack
+  wait:
+    timeout: 2700
+    labels:
+      release_group: clcp-neutron
+    resources:
+      - type: job
+      - type: deployment
+        min_ready: 100%
+      - type: daemonset
+        min_ready: 100%
+    native:
+      enabled: false
+  test:
+    timeout: 720
   install:
     no_hooks: false
   upgrade:
@@ -211,22 +245,93 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-neutron
+            release_group: clcp-neutron
     post:
       create: []
-  test:
-    timeout: 500
-  wait:
-    labels:
-      release_group: airship-neutron
   values:
+    dependencies:
+      static:
+        rabbit_init:
+          services:
+            - endpoint: internal
+              service: oslo_messaging
+          jobs:
+            - clcp-openstack-rabbitmq-cluster-wait
     pod:
+      security_context:
+        neutron_sriov_agent:
+          pod:
+            runAsUser: 42424
+          container:
+            neutron_sriov_agent_init:
+              privileged: true
+              runAsUser: 0
+              readOnlyRootFilesystem: false
+            neutron_sriov_agent:
+              readOnlyRootFilesystem: true
+              privileged: true
+      #NOTE(rk760n): replicas number is based on AIC3.x openstack services workers configuration
       replicas:
-        server: 2
+        server: 32
+      affinity:
+        anti:
+          weight:
+            default: 100
+      lifecycle:
+        upgrades:
+          deployments:
+            pod_replacement_strategy: RollingUpdate
+            rolling_update:
+              max_unavailable: 50%
+          daemonsets:
+            pod_replacement_strategy: RollingUpdate
+            dhcp_agent:
+              enabled: true
+              max_unavailable: 1
+            l3_agent:
+              enabled: true
+              max_unavailable: 100%
+            lb_agent:
+              max_unavailable: 100%
+            metadata_agent:
+              max_unavailable: 100%
+            ovs_agent:
+              max_unavailable: 100%
+            sriov_agent:
+              max_unavailable: 100%
+            netns_cleanup_cron:
+              max_unavailable: 100%
+      probes:
+        dhcp_agent:
+          dhcp_agent:
+            readiness:
+              enabled: false
+            liveness:
+              enabled: false
+        l3_agent:
+          l3_agent:
+            readiness:
+              enabled: false
+            liveness:
+              enabled: false
+        metadata_agent:
+          metadata_agent:
+            readiness:
+              enabled: false
+            liveness:
+              enabled: false
+        ovs_agent:
+          ovs_agent:
+            liveness:
+              enabled: false
+        sriov_agent:
+          sriov_agent:
+            readiness:
+              enabled: false
     labels:
       agent:
         dhcp:
-          node_selector_key: openstack-control-plane
+          node_selector_key: openstack-dhcp-agent
           node_selector_value: enabled
         l3:
           # To enable the forcing of routers onto controllers that have
@@ -234,10 +339,10 @@ data:
           node_selector_key: openstack-l3-agent
           node_selector_value: enabled
         metadata:
-          node_selector_key: openstack-control-plane
+          node_selector_key: openstack-metadata-agent
           node_selector_value: enabled
       job:
-        node_selector_key: openstack-control-plane
+        node_selector_key: openstack-neutron-server
         node_selector_value: enabled
       lb:
         node_selector_key: linuxbridge
@@ -246,42 +351,120 @@ data:
         node_selector_key: openvswitch
         node_selector_value: enabled
       server:
+        node_selector_key: openstack-neutron-server
+        node_selector_value: enabled
+      netns_cleanup_cron:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
       test:
-        node_selector_key: openstack-control-plane
+        node_selector_key: openstack-neutron-server
         node_selector_value: enabled
     network:
       interface:
         tunnel: 'TUNNEL_DEVICE'
+        external: 'EXTERNAL_INTERFACE'
     conf:
-      auto_bridge_add:
-        br-ex: 'EXTERNAL_INTERFACE'
+      rootwrap_filters:
+        dhcp:
+          content: |
+            # neutron-rootwrap command filters for nodes on which neutron is
+            # expected to control network
+            #
+            # This file should be owned by (and only-writeable by) the root user
+
+            # format seems to be
+            # cmd-name: filter-name, raw-command, user, args
+
+            [Filters]
+
+            # dhcp-agent
+            dnsmasq: CommandFilter, dnsmasq, root
+            ethtool: CommandFilter, ethtool, root
+            # dhcp-agent uses kill as well, that's handled by the generic KillFilter
+            # it looks like these are the only signals needed, per
+            # neutron/agent/linux/dhcp.py
+            kill_dnsmasq: KillFilter, root, /sbin/dnsmasq, -9, -HUP, -15
+            kill_dnsmasq_usr: KillFilter, root, /usr/sbin/dnsmasq, -9, -HUP, -15
+
+            ovs-vsctl: CommandFilter, ovs-vsctl, root
+            ivs-ctl: CommandFilter, ivs-ctl, root
+            mm-ctl: CommandFilter, mm-ctl, root
+            dhcp_release: CommandFilter, dhcp_release, root
+            dhcp_release6: CommandFilter, dhcp_release6, root
+
+            # metadata proxy
+            metadata_proxy: CommandFilter, neutron-ns-metadata-proxy, root
+            # RHEL invocation of the metadata proxy will report /usr/bin/python
+            kill_metadata: KillFilter, root, python, -9
+            kill_metadata2: KillFilter, root, python2, -9
+            kill_metadata7: KillFilter, root, python2.7, -9
+            kill_metadata3: KillFilter, root, python3, -9
+            kill_metadata35: KillFilter, root, python3.5, -9
+            kill_metadata36: KillFilter, root, python3.6, -9
+            kill_metadata37: KillFilter, root, python3.7, -9
+
+            # ip_lib
+            ip: IpFilter, ip, root
+            find: RegExpFilter, find, root, find, /sys/class/net, -maxdepth, 1, -type, l, -printf, %.*
+            ip_exec: IpNetnsExecFilter, ip, root
+        taas:
+          content: |
+            # taas-i40e-sysfs filters
+            # This file should be owned by (and only-writeable by) the root user
+            [Filters]
+            # This is needed to allow taas to insert/remove vlan id to the
+            # target vf under /sys/class/net/[device-name]/device/sriov/[vf-index]/[mirror]
+            i40e_sysfs_command: RegExpFilter, i40e_sysfs_command, root, i40e_sysfs_command, (?!.*\.\..*|.*\/.*).*, [0-9]+, (vlan|egress|ingress)_mirror, (?i)(add|rem), .*
+      paste:
+        app:neutronversions:
+          paste.app_factory: neutron.pecan_wsgi.app:versions_factory
+      rabbitmq:
+        policies:
+          - vhost: "neutron"
+            name: "ha_ttl_neutron"
+            definition:
+              #mirror messges to other nodes in rmq cluster
+              ha-mode: "all"
+              ha-sync-mode: "automatic"
+              #70s
+              message-ttl: 70000
+            priority: 0
+            apply-to: all
+            pattern: '^(?!(amq\.|reply_)).*'
       logging:
         loggers:
           keys:
             - root
             - neutron
+            - neutron_taas
+            - oslo.messaging
         handlers:
           keys:
             - stdout
             - stderr
-            - 'null'
-            - fluent
+            - "null"
         formatters:
           keys:
             - context
             - default
-            - fluent
         logger_root:
           level: WARNING
-          handlers: stdout
+          handlers: "null"
         logger_neutron:
           level: INFO
           handlers:
             - stdout
-            - fluent
           qualname: neutron
+        logger_neutron_taas:
+          level: INFO
+          handlers:
+            - stdout
+          qualname: neutron_taas
+        logger_oslo.messaging:
+          level: INFO
+          handlers:
+            - stdout
+          qualname: oslo.messaging
         logger_amqp:
           level: WARNING
           handlers: stderr
@@ -314,12 +497,6 @@ data:
           class: StreamHandler
           args: (sys.stderr,)
           formatter: context
-        handler_fluent:
-          class: fluent.handler.FluentHandler
-          args: ('openstack.neutron', 'fluentd-logging.osh-infra', 24224)
-          formatter: fluent
-        formatter_fluent:
-          class: oslo_log.formatters.FluentFormatter
         formatter_context:
           class: oslo_log.formatters.ContextFormatter
         formatter_default:
@@ -327,11 +504,15 @@ data:
       neutron:
         DEFAULT:
           l3_ha: True
-          max_l3_agents_per_router: 3
+          max_l3_agents_per_router: 5
           l3_ha_network_type: vxlan
           dhcp_agents_per_network: 2
         oslo_messaging_rabbit:
-          heartbeat_timeout_threshold: 0
+          heartbeat_timeout_threshold: 60
+        oslo_middleware:
+          enable_proxy_headers_parsing: true
+        audit_middleware_notifications:
+          driver: log
       plugins:
         ml2_conf:
           ml2:
@@ -340,19 +521,334 @@ data:
             type_drivers: vlan,flat,vxlan
             tenant_network_types: vxlan
           ml2_type_vlan:
-            network_vlan_ranges: external
+            network_vlan_ranges: bond1
+        openvswitch_agent:
+          agent:
+            tunnel_types: vxlan
+          ovs:
+            bridge_mappings: bond1:br-bond1
+      policy:
+        tenant_neutron_create: role:tenant_neutron_create
+        tenant_neutron_update: role:tenant_neutron_update
+        tenant_neutron_read: role:tenant_neutron_read
+        tenant_neutron_delete: role:tenant_neutron_delete
+        admin_neutron_create: role:admin_neutron_create
+        admin_neutron_update: role:admin_neutron_update
+        admin_neutron_read: role:admin_neutron_read
+        admin_neutron_delete: role:admin_neutron_delete
+        rapid_group : role:tenant_neutron_create and role:tenant_neutron_update and role:tenant_neutron_read and role:tenant_neutron_delete and role:admin_neutron_create and role:admin_neutron_update and role:admin_neutron_read and role:admin_neutron_delete
+        context_is_admin: role:admin or role:admin_support or role:admin_viewer
+        owner: tenant_id:%(tenant_id)s
+        admin_or_owner: role:admin or (tenant_id:%(tenant_id)s and (role:_member_ or role:sriov_member or role:snapshot_member))
+        context_is_advsvc: role:advsvc
+        admin_or_network_owner: rule:context_is_admin or tenant_id:%(network:tenant_id)s
+        admin_owner_or_network_owner: rule:owner or rule:admin_or_network_owner
+        admin_only: role:admin
+        admin_tap: role:admin_tap or rule:admin_only
+        shared: field:networks:shared=True
+        shared_firewalls: field:firewalls:shared=True
+        shared_firewall_policies: field:firewall_policies:shared=True
+        shared_subnetpools: field:subnetpools:shared=True
+        shared_address_scopes: field:address_scopes:shared=True
+        external: field:networks:router:external=True
+        external_and_public: rule:external
+        admin_create: role:admin or role:admin_support
+        admin_read: role:admin or role:admin_support or role:admin_viewer
+        admin_update: role:admin
+        admin_delete: role:admin
+        tenant_create: rule:admin_create or (tenant_id:%(tenant_id)s and (role:support_member or role:sriov_member or role:_member_ or role:snapshot_member))
+        tenant_create_network: rule:admin_create or (tenant_id:%(network:tenant_id)s and (role:support_member or role:sriov_member or role:_member_ or role:snapshot_member))
+        tenant_read: rule:admin_read or (tenant_id:%(tenant_id)s and (role:viewer or role:_member_ or role:sriov_member or role:snapshot_member or role:support_member))
+        tenant_update: rule:admin_update or (tenant_id:%(tenant_id)s and (role:_member_ or role:sriov_member or role:snapshot_member))
+        tenant_update_network: rule:admin_update or (tenant_id:%(network:tenant_id)s and (role:_member_ or role:sriov_member or role:snapshot_member))
+        tenant_update_security_group: rule:admin_create or (tenant_id:%(tenant_id)s and (role:_member_ or role:sriov_member or role:support_member or role:snapshot_member))
+        tenant_delete: rule:admin_delete or (tenant_id:%(tenant_id)s and (role:_member_ or role:sriov_member or role:snapshot_member))
+        tenant_delete_network: rule:admin_delete or (tenant_id:%(network:tenant_id)s and (role:_member_ or role:sriov_member or role:snapshot_member))
+        tenant_admin_or_network_owner: rule:admin_owner_or_network_owner and (not role:support_member) and (not role:viewer) and (not role:admin_support) and (not role:admin_viewer) and (not role:admin_orm) and (not rule:rapid_group)
+        sriov_create: rule:admin_create or role:sriov_member
+        sriov_read: rule:admin_read or role:sriov_member
+        sriov_delete: rule:tenant_delete or role:sriov_member
+        default: rule:admin_or_owner
+        create_subnet: rule:tenant_create_network or rule:tenant_neutron_create
+        get_subnet: rule:tenant_read or rule:shared or rule:tenant_neutron_read
+        update_subnet: rule:tenant_update_network or rule:tenant_neutron_update
+        delete_subnet: rule:tenant_delete_network or rule:tenant_neutron_delete
+        create_subnetpool: rule:tenant_create or rule:tenant_neutron_create
+        create_subnetpool:shared: rule:admin_create or rule:admin_neutron_create
+        get_subnetpool: rule:tenant_read or rule:shared_subnetpools or rule:tenant_neutron_read
+        update_subnetpool: rule:tenant_update or rule:tenant_neutron_update
+        delete_subnetpool: rule:tenant_delete or rule:tenant_neutron_delete
+        create_subnetpool:is_default: rule:admin_only or rule:admin_neutron_create
+        update_subnetpool:is_default: rule:admin_only or rule:admin_neutron_update
+        create_subnet:segment_id: rule:admin_only or rule:admin_neutron_create
+        create_subnet:service_types: rule:admin_only or rule:admin_neutron_create
+        get_subnet:segment_id: rule:admin_only or rule:admin_neutron_read
+        update_subnet:service_types: rule:admin_only or rule:admin_neutron_update
+        create_address_scope: rule:tenant_create or rule:tenant_neutron_create
+        create_address_scope:shared: rule:admin_only or rule:admin_neutron_create
+        get_address_scope: rule:tenant_read or rule:shared_address_scopes or rule:tenant_neutron_read
+        update_address_scope: rule:tenant_update or rule:tenant_neutron_update
+        update_address_scope:shared: rule:admin_only or rule:admin_neutron_update
+        delete_address_scope: rule:tenant_delete or rule:tenant_neutron_delete
+        get_network: rule:tenant_read or rule:shared or rule:external_and_public or rule:context_is_advsvc or rule:tenant_neutron_read
+        get_network:router:external: rule:tenant_read or rule:tenant_neutron_read
+        get_network:segments: rule:sriov_read or rule:admin_neutron_read
+        get_network:provider:network_type: rule:sriov_read or rule:admin_neutron_read
+        get_network:provider:physical_network: rule:sriov_read or rule:admin_neutron_read
+        get_network:provider:segmentation_id: rule:sriov_read or rule:admin_neutron_read
+        get_network:queue_id: rule:sriov_read or rule:admin_neutron_read
+        get_network_ip_availabilities: rule:admin_only or rule:admin_neutron_read
+        get_network_ip_availability: rule:admin_only or rule:admin_neutron_read
+        create_network: rule:tenant_create or rule:tenant_neutron_create
+        create_network:shared: rule:admin_create or rule:admin_neutron_create
+        create_network:router:external: rule:admin_create or rule:admin_neutron_create
+        create_network:router:private: rule:admin_only or rule:admin_neutron_create
+        create_network:segments: rule:admin_create or rule:admin_neutron_create
+        create_network:provider:network_type: rule:admin_create or rule:admin_neutron_create
+        create_network:provider:physical_network: rule:admin_create or rule:admin_neutron_create
+        create_network:provider:segmentation_id: rule:admin_create or rule:admin_neutron_create
+        create_network:is_default: rule:admin_only or rule:admin_neutron_create
+        update_network: rule:tenant_update or rule:tenant_neutron_update
+        update_network:segments: rule:admin_update or rule:admin_neutron_update
+        update_network:shared: rule:admin_update or rule:admin_neutron_update
+        update_network:provider:network_type: rule:admin_update or rule:admin_neutron_update
+        update_network:provider:physical_network: rule:admin_update or rule:admin_neutron_update
+        update_network:provider:segmentation_id: rule:admin_update or rule:admin_neutron_update
+        update_network:router:external: rule:admin_update or rule:admin_neutron_update
+        delete_network: rule:tenant_delete or rule:tenant_neutron_delete
+        delete_network:provider:physical_network: role:admin or role:sriov_member or rule:admin_neutron_delete
+        delete_network:router:private: rule:tenant_delete or rule:admin_neutron_delete
+        delete_network:provider:network_type: role:admin or role:sriov_member or rule:admin_neutron_delete
+        delete_network:provider:segmentation_id: role:admin or role:sriov_member or rule:admin_neutron_delete
+        create_segment: rule:admin_only or rule:admin_neutron_create
+        get_segment: rule:admin_only or rule:admin_neutron_read
+        update_segment: rule:admin_only or rule:admin_neutron_update
+        delete_segment: rule:admin_only or rule:admin_neutron_delete
+        network_device: 'field:port:device_owner=~^network: or rule:tenant_neutron_read'
+        create_security_group: rule:tenant_create or rule:tenant_neutron_create
+        update_security_group: rule:tenant_update_security_group or rule:tenant_neutron_update
+        delete_security_group: rule:tenant_delete or rule:tenant_neutron_delete
+        get_security_group: rule:tenant_read or rule:tenant_neutron_read
+        get_security_groups: rule:tenant_read or rule:tenant_neutron_create
+        create_security_group_rule: rule:tenant_create or rule:tenant_neutron_create
+        delete_security_group_rule: rule:tenant_delete or rule:tenant_neutron_delete
+        get_security_group_rule: rule:tenant_read or rule:tenant_neutron_read
+        get_security_group_rules: rule:tenant_read or rule:tenant_neutron_read
+        create_port: rule:tenant_create or rule:context_is_advsvc or rule:tenant_neutron_create
+        create_port:device_owner: rule:tenant_create_network or not rule:network_device or rule:context_is_advsvc or rule:tenant_neutron_create
+        create_port:mac_address: rule:tenant_create_network or rule:context_is_advsvc or rule:tenant_neutron_create
+        create_port:fixed_ips: rule:tenant_create_network or rule:context_is_advsvc or rule:tenant_neutron_create
+        create_port:fixed_ips:ip_address: rule:tenant_create_network or rule:context_is_advsvc or rule:tenant_neutron_create
+        create_port:port_security_enabled: rule:tenant_create_network or rule:context_is_advsvc or rule:tenant_neutron_create
+        create_port:binding:host_id: rule:admin_create or rule:admin_neutron_create
+        create_port:binding:profile: rule:sriov_create or rule:tenant_neutron_create
+        create_port:binding:vnic_type: rule:sriov_create or rule:tenant_neutron_create
+        create_port:mac_learning_enabled: rule:tenant_create_network or rule:context_is_advsvc or rule:tenant_neutron_create
+        create_port:allowed_address_pairs: rule:tenant_create_network or rule:tenant_neutron_create
+        get_port: rule:context_is_advsvc or rule:tenant_read or rule:tenant_admin_or_network_owner or rule:tenant_neutron_read
+        get_port:queue_id: rule:sriov_read or rule:tenant_neutron_read
+        get_port:binding:vif_type: rule:sriov_read or rule:tenant_neutron_read
+        get_port:binding:vif_details: rule:sriov_read or rule:tenant_neutron_read
+        get_port:binding:host_id: rule:sriov_read or rule:tenant_neutron_read
+        get_port:binding:profile: rule:sriov_read or rule:tenant_neutron_read
+        update_port: rule:tenant_update or rule:context_is_advsvc or rule:tenant_neutron_update
+        update_port:device_owner: rule:tenant_update_network or not rule:network_device or rule:context_is_advsvc or rule:tenant_neutron_update
+        update_port:mac_address: rule:admin_update or rule:context_is_advsvc or rule:admin_neutron_update
+        update_port:fixed_ips: rule:tenant_update_network or rule:context_is_advsvc or rule:tenant_neutron_update
+        update_port:fixed_ips:ip_address: rule:tenant_update_network or rule:context_is_advsvc or rule:tenant_neutron_update
+        update_port:port_security_enabled: rule:tenant_update_network or rule:context_is_advsvc or rule:tenant_neutron_update
+        update_port:binding:host_id: rule:admin_update or rule:admin_neutron_update
+        update_port:binding:profile: rule:admin_update or rule:admin_neutron_update
+        update_port:binding:vnic_type: rule:tenant_update_network or rule:context_is_advsvc or rule:admin_neutron_update
+        update_port:mac_learning_enabled: rule:tenant_update_network or rule:context_is_advsvc or rule:tenant_neutron_update
+        update_port:allowed_address_pairs: rule:tenant_update_network or rule:tenant_neutron_update
+        delete_port: rule:context_is_advsvc or rule:sriov_delete or rule:tenant_admin_or_network_owner or rule:tenant_neutron_delete
+        delete_port:binding:vif_details: rule:sriov_delete or rule:context_is_advsvc or rule:tenant_neutron_delete
+        delete_port:binding:vif_type: rule:sriov_delete or rule:context_is_advsvc or rule:tenant_neutron_delete
+        delete_port:mac_address: rule:sriov_delete or rule:context_is_advsvc or rule:tenant_neutron_delete
+        delete_port:binding:profile: rule:sriov_delete or rule:context_is_advsvc or rule:tenant_neutron_delete
+        delete_port:fixed_ips: rule:sriov_delete or rule:context_is_advsvc or rule:tenant_neutron_delete
+        delete_port:binding:host_id: rule:sriov_delete or rule:context_is_advsvc or rule:admin_neutron_delete
+        delete_port:allowed_address_pairs: rule:tenant_delete or rule:context_is_advsvc or rule:tenant_neutron_delete
+        delete_port:port_security_enabled: rule:sriov_delete or rule:context_is_advsvc or rule:tenant_neutron_delete
+        delete_port:device_owner: rule:sriov_delete or rule:context_is_advsvc or rule:tenant_neutron_delete
+        delete_port:binding:vnic_type: rule:sriov_delete or rule:context_is_advsvc or rule:tenant_neutron_delete
+        get_router:ha: rule:admin_read or rule:admin_neutron_read
+        create_router: rule:tenant_create or rule:tenant_neutron_create
+        create_router:external_gateway_info:enable_snat: rule:admin_only or rule:admin_neutron_create
+        create_router:external_gateway_info: rule:tenant_create or rule:tenant_neutron_create
+        create_router:external_gateway_info:network_id: rule:tenant_create or rule:tenant_neutron_create
+        create_router:distributed: rule:admin_create or rule:admin_neutron_create
+        create_router:ha: rule:admin_create or rule:admin_neutron_create
+        get_router: rule:tenant_read or rule:tenant_neutron_read
+        get_router:distributed: rule:admin_read or rule:admin_neutron_read
+        update_router: rule:tenant_update or rule:tenant_neutron_update
+        update_router:external_gateway_info: rule:tenant_update or rule:tenant_neutron_update
+        update_router:external_gateway_info:network_id: rule:tenant_update or rule:tenant_neutron_update
+        update_router:external_gateway_info:enable_snat: rule:admin_update or rule:admin_neutron_update
+        update_router:distributed: rule:admin_update or rule:admin_neutron_update
+        update_router:ha: rule:admin_update or rule:admin_neutron_update
+        delete_router: rule:tenant_delete or rule:tenant_neutron_delete
+        delete_router:distributed: rule:tenant_delete or rule:admin_neutron_delete
+        delete_router:ha: rule:tenant_delete or rule:admin_neutron_delete
+        add_router_interface: rule:tenant_create or rule:tenant_neutron_create
+        add_router_interface:ha: rule:tenant_create or rule:tenant_neutron_create
+        add_router_interface:external_gateway_info: rule:tenant_create or rule:tenant_neutron_create
+        add_router_interface:external_gateway_info:network_id: rule:tenant_create or rule:tenant_neutron_create
+        add_router_interface:external_gateway_info:enable_snat: rule:tenant_create or rule:tenant_neutron_create
+        add_router_interface:external_gateway_info:external_fixed_ips: rule:tenant_create or rule:tenant_neutron_create
+        add_router_interface:distributed: rule:tenant_create or rule:tenant_neutron_create
+        add_router_interface:flavor_id: rule:tenant_create or rule:tenant_neutron_create
+        remove_router_interface: rule:tenant_delete or rule:tenant_neutron_delete
+        remove_router_interface:distributed: rule:tenant_delete or rule:tenant_neutron_delete
+        remove_router_interface:ha: rule:tenant_delete or rule:tenant_neutron_delete
+        remove_router_interface:flavor_id: rule:tenant_delete or rule:tenant_neutron_delete
+        create_router:external_gateway_info:external_fixed_ips: rule:admin_only or rule:admin_neutron_create
+        update_router:external_gateway_info:external_fixed_ips: rule:admin_update or rule:admin_neutron_update
+        create_pool: rule:tenant_create or rule:tenant_neutron_create
+        update_pool: rule:tenant_update or rule:tenant_neutron_update
+        delete_pool: rule:tenant_delete or rule:tenant_neutron_delete
+        get_pool: rule:tenant_read or rule:tenant_neutron_read
+        stats: rule:tenant_read or rule:tenant_neutron_read
+        create_vip: rule:tenant_create or rule:tenant_neutron_create
+        update_vip: rule:tenant_update or rule:tenant_neutron_update
+        delete_vip: rule:tenant_delete or rule:tenant_neutron_delete
+        get_vip: rule:tenant_read or rule:tenant_neutron_read
+        create_member: rule:tenant_create or rule:tenant_neutron_create
+        update_member: rule:tenant_update or rule:tenant_neutron_update
+        delete_member: rule:tenant_delete or rule:tenant_neutron_delete
+        get_member: rule:tenant_read or rule:tenant_neutron_read
+        create_health_monitor: rule:tenant_create or rule:tenant_neutron_create
+        update_health_monitor: rule:tenant_update or rule:tenant_neutron_update
+        delete_health_monitor: rule:tenant_delete or rule:tenant_neutron_delete
+        get_health_monitor: rule:tenant_read or rule:tenant_neutron_read
+        create_pool_health_monitor: rule:tenant_create or rule:tenant_neutron_create
+        delete_pool_health_monitor: rule:tenant_delete or rule:tenant_neutron_delete
+        create_firewall: rule:tenant_create or rule:tenant_neutron_create
+        get_firewall: rule:tenant_read or rule:tenant_neutron_read
+        create_firewall:shared: rule:admin_create or rule:admin_neutron_create
+        get_firewall:shared: rule:admin_read or rule:admin_neutron_read
+        update_firewall: rule:tenant_update or rule:tenant_neutron_update
+        update_firewall:shared: rule:admin_update or rule:admin_neutron_update
+        delete_firewall: rule:tenant_delete or rule:tenant_neutron_delete
+        delete_firewall:shared: rule:admin_delete or rule:admin_neutron_delete
+        create_firewall_policy: rule:tenant_create or rule:tenant_neutron_create
+        get_firewall_policy: rule:tenant_read or rule:shared_firewall_policies or rule:tenant_neutron_read
+        create_firewall_policy:shared: rule:admin_create or rule:admin_neutron_create
+        update_firewall_policy: rule:tenant_update or rule:tenant_neutron_update
+        delete_firewall_policy: rule:tenant_delete or rule:tenant_neutron_delete
+        create_firewall_rule: rule:tenant_create or rule:tenant_neutron_create
+        create_firewall_rule:shared: rule:admin_create or rule:admin_neutron_create
+        get_firewall_rule: rule:tenant_read or rule:shared_firewalls or rule:tenant_neutron_read
+        update_firewall_rule: rule:tenant_update or rule:tenant_neutron_update
+        delete_firewall_rule: rule:tenant_delete or rule:tenant_neutron_delete
+        insert_rule: rule:admin_or_owner
+        remove_rule: rule:admin_or_owner
+        create_qos_queue: rule:admin_create or rule:admin_neutron_create
+        get_qos_queue: rule:admin_read or rule:admin_neutron_read
+        update_agent: rule:admin_update or rule:admin_neutron_update
+        delete_agent: rule:admin_delete or rule:admin_neutron_delete
+        get_agent: rule:admin_read or rule:admin_neutron_read
+        create_dhcp-network: rule:admin_create or rule:admin_neutron_create
+        delete_dhcp-network: rule:admin_delete or rule:admin_neutron_delete
+        get_dhcp-networks: rule:admin_read or rule:admin_neutron_read
+        create_l3-router: rule:admin_create or rule:admin_neutron_create
+        delete_l3-router: rule:admin_delete or rule:admin_neutron_delete
+        get_l3-routers: rule:admin_read or rule:admin_neutron_read
+        get_dhcp-agents: rule:admin_read or rule:admin_neutron_read
+        get_l3-agents: rule:admin_read or rule:admin_neutron_read
+        get_loadbalancer-agent: rule:admin_read or rule:admin_neutron_read
+        get_loadbalancer-pools: rule:admin_read or rule:admin_neutron_read
+        get_agent-loadbalancers: rule:admin_read or rule:admin_neutron_read
+        get_loadbalancer-hosting-agent: rule:admin_read or rule:admin_neutron_read
+        create_floatingip: '!'
+        create_floatingip:floating_ip_address: '!'
+        update_floatingip: '!'
+        delete_floatingip: '!'
+        delete_floatingip:floating_ip_address: '!'
+        get_floatingip: '!'
+        create_network_profile: rule:admin_create or rule:admin_neutron_create
+        update_network_profile: rule:admin_update or rule:admin_neutron_update
+        delete_network_profile: rule:admin_delete or rule:admin_neutron_delete
+        get_network_profiles: rule:admin_read or rule:admin_neutron_read
+        get_network_profile: rule:tenant_read or rule:tenant_neutron_read
+        update_policy_profiles: rule:admin_update or rule:admin_neutron_update
+        get_policy_profiles: rule:tenant_read or rule:tenant_neutron_read
+        get_policy_profile: rule:tenant_read or rule:tenant_neutron_read
+        create_metering_label: rule:admin_create or rule:admin_neutron_create
+        delete_metering_label: rule:admin_delete or rule:admin_neutron_delete
+        get_metering_label: rule:admin_read or rule:admin_neutron_read
+        create_metering_label_rule: rule:admin_create or rule:admin_neutron_create
+        delete_metering_label_rule: rule:admin_delete or rule:admin_neutron_delete
+        get_metering_label_rule: rule:admin_read or rule:admin_neutron_read
+        get_service_provider: rule:tenant_read or rule:tenant_neutron_read
+        get_lsn: rule:admin_read or rule:admin_neutron_read
+        create_lsn: rule:admin_create or rule:admin_neutron_create
+        create_flavor: rule:admin_only or rule:admin_neutron_create
+        update_flavor: rule:admin_only or rule:admin_neutron_update
+        delete_flavor: rule:admin_only or rule:admin_neutron_delete
+        get_flavors: rule:tenant_read or rule:tenant_neutron_read
+        get_flavor: rule:tenant_read or rule:tenant_neutron_read
+        create_service_profile: rule:admin_only or rule:admin_neutron_create
+        update_service_profile: rule:admin_only or rule:admin_neutron_update
+        delete_service_profile: rule:admin_only or rule:admin_neutron_delete
+        get_service_profiles: rule:admin_only or rule:admin_neutron_read
+        get_service_profile: rule:admin_only or rule:admin_neutron_read
+        get_policy: rule:tenant_read or rule:tenant_neutron_read
+        create_policy: rule:admin_only or rule:admin_neutron_create
+        update_policy: rule:admin_only or rule:admin_neutron_update
+        delete_policy: rule:admin_only or rule:admin_neutron_delete
+        get_policy_bandwidth_limit_rule: rule:tenant_read or rule:tenant_neutron_read
+        create_policy_bandwidth_limit_rule: rule:admin_only or rule:admin_neutron_create
+        delete_policy_bandwidth_limit_rule: rule:admin_only or rule:admin_neutron_delete
+        update_policy_bandwidth_limit_rule: rule:admin_only or rule:admin_neutron_update
+        get_policy_dscp_marking_rule: rule:tenant_read or rule:tenant_neutron_read
+        create_policy_dscp_marking_rule: rule:admin_only or rule:admin_neutron_create
+        delete_policy_dscp_marking_rule: rule:admin_only or rule:admin_neutron_delete
+        update_policy_dscp_marking_rule: rule:admin_only or rule:admin_neutron_update
+        get_rule_type: rule:tenant_read or rule:tenant_neutron_read
+        get_policy_minimum_bandwidth_rule: rule:tenant_read or rule:tenant_neutron_read
+        create_policy_minimum_bandwidth_rule: rule:admin_only or rule:admin_neutron_create
+        delete_policy_minimum_bandwidth_rule: rule:admin_only or rule:admin_neutron_delete
+        update_policy_minimum_bandwidth_rule: rule:admin_only or rule:admin_neutron_update
+        restrict_wildcard: '(not field:rbac_policy:target_tenant=*) or rule:admin_only'
+        create_rbac_policy: rule:tenant_create or rule:tenant_neutron_create
+        create_rbac_policy:target_tenant: rule:restrict_wildcard or rule:tenant_neutron_create
+        update_rbac_policy: rule:tenant_update or rule:tenant_neutron_update
+        update_rbac_policy:target_tenant: rule:restrict_wildcard and rule:tenant_update or rule:tenant_neutron_update
+        get_rbac_policy: rule:tenant_read or rule:tenant_neutron_read
+        delete_rbac_policy: rule:tenant_delete or rule:tenant_neutron_delete
+        create_flavor_service_profile: rule:admin_only or rule:admin_neutron_create
+        delete_flavor_service_profile: rule:admin_only or rule:admin_neutron_delete
+        get_flavor_service_profile: rule:tenant_read or rule:tenant_neutron_read
+        get_auto_allocated_topology: rule:tenant_read or rule:tenant_neutron_read
+        create_trunk: rule:tenant_create or rule:tenant_neutron_create
+        get_trunk: rule:tenant_read or rule:tenant_neutron_read
+        delete_trunk: rule:tenant_delete or rule:tenant_neutron_delete
+        get_subports: rule:tenant_read or rule:tenant_neutron_read
+        add_subports: rule:tenant_create or rule:tenant_neutron_create
+        remove_subports: rule:tenant_delete or rule:tenant_neutron_delete
+        create_tap_service: rule:admin_tap
+        delete_tap_service: rule:admin_tap
+        update_tap_service: rule:admin_tap
+        get_tap_services: (rule:admin_tap or role:admin_viewer)
+        get_tap_service: (rule:admin_tap or role:admin_viewer)
+        create_tap_flow: rule:admin_tap
+        delete_tap_flow: rule:admin_tap
+        update_tap_flow: rule:admin_tap
+        get_tap_flow: (rule:admin_tap or role:admin_viewer)
+        get_tap_flows: (rule:admin_tap or role:admin_viewer)
   dependencies:
-    - neutron-htk
+    - os-neutron-htk
 ...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: neutron-htk
+  name: os-neutron-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -360,10 +856,16 @@ metadata:
         path: .charts.osh.neutron-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: neutron-htk
-  release: neutron-htk
-  namespace: neutron-htk
+  chart_name: os-neutron-htk
+  release: os-neutron-htk
+  namespace: os-neutron-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

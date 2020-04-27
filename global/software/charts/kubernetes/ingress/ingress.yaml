@@ -2,12 +2,12 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: global-ingress-kube-system
+  name: ingress-kube-system
   labels:
     ingress: kube-system
-    name: ingress-kube-system-global
+    name: cluster-ingress-global
   layeringDefinition:
-    abstract: true
+    abstract: false
     layer: global
   storagePolicy: cleartext
   substitutions:
@@ -29,10 +29,12 @@ data:
   chart_name: ingress-kube-system
   release: ingress-kube-system
   namespace: kube-system
+  protected:
+    continue_processing: false
   wait:
-    timeout: 300
+    timeout: 600
     labels:
-      release_group: airship-ingress-kube-system
+      release_group: clcp-ingress-kube-system
   install:
     no_hooks: false
   upgrade:
@@ -41,7 +43,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ingress-kube-system
+            release_group: clcp-ingress-kube-system
   values:
     labels:
       server:
@@ -52,27 +54,32 @@ data:
         node_selector_value: enabled
     deployment:
       mode: cluster
-      type: Deployment
+      type: DaemonSet
     network:
       host_namespace: true
       ingress:
         annotations:
           nginx.ingress.kubernetes.io/proxy-read-timeout: "603"
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            more_set_headers "X-Content-Type-Options: 'nosniff'";
+            more_set_headers "X-Frame-Options: 'deny'";
+            more_set_headers "Content-Security-Policy: script-src 'self'";
+            more_set_headers "X-Permitted-Cross-Domain-Policies: none";
+            more_clear_headers "Server";
     pod:
       replicas:
-        ingress: 1
-        error_page: 1
+        error_page: 2
   dependencies:
-    - ingress-kube-system-htk
+    - ingress-htk
+...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: ingress-kube-system-htk
+  name: ingress-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -80,9 +87,16 @@ metadata:
         path: .charts.kubernetes.ingress-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: ingress-kube-system-htk
-  release: ingress-kube-system-htk
-  namespace: ingress-kube-system-htk
+  chart_name: ingress-htk
+  release: ingress-htk
+  namespace: ingress-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
+...

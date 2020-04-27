@@ -6,7 +6,6 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -14,10 +13,16 @@ metadata:
         path: .charts.ucp.ceph-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
   chart_name: ceph-htk
   release: ceph-htk
   namespace: ceph-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

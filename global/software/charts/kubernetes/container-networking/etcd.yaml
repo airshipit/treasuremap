@@ -76,16 +76,20 @@ data:
   protected:
     continue_processing: true
   wait:
-    timeout: 600
+    timeout: 1800
     labels:
-      release_group: airship-kubernetes-calico-etcd
+      release_group: clcp-kubernetes-calico-etcd
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: airship-kubernetes-calico-etcd
+            release_group: clcp-kubernetes-calico-etcd
+        - type: pod
+          labels:
+            release_group: clcp-kubernetes-calico-etcd
+            component: etcd-test
   values:
     labels:
       anchor:

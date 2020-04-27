@@ -3,19 +3,21 @@ schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
   name: utilities
+  labels:
+    name: utilities-global
   layeringDefinition:
     abstract: false
     layer: global
   storagePolicy: cleartext
 data:
-  description: deploy utility containers
-  sequenced: false
+  description: deploy all utility charts
   chart_group:
     - calicoctl-utility
-#    - ceph-utility-config
-#    - ceph-utility
+    - ceph-utility
+    - ceph-utility-config
     - compute-utility
     - etcdctl-utility
     - mysqlclient-utility
+    - ncct-utility
     - openstack-utility
     - postgresql-utility

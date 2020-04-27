@@ -31,7 +31,12 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-osh-infra-ingress-controller
+      release_group: clcp-osh-infra-ingress-controller
+    resources:
+      - type: deployment
+        min_ready: 33%
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -40,7 +45,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-osh-infra-ingress-controller
+            release_group: clcp-osh-infra-ingress-controller
   values:
     labels:
       server:
@@ -53,5 +58,56 @@ data:
       replicas:
         ingress: 2
         error_page: 2
+      lifecycle:
+        upgrades:
+          deployments:
+            pod_replacement_strategy: RollingUpdate
+            rolling_update:
+              max_unavailable: 50%
+    endpoints:
+      ingress:
+        port:
+          http:
+            default: 80
+          https:
+            default: 443
+          healthz:
+            default: 10254
+          stream:
+            default: 10247
+          profiler:
+            default: 10245
+          server:
+            default: 8181
   dependencies:
-    - osh-helm-toolkit
+    - osh-infra-ingress-controller-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: osh-infra-ingress-controller-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.ingress-htk
+      dest:
+        path: .source
+  storagePolicy: cleartext
+data:
+  chart_name: osh-infra-ingress-controller-htk
+  release: osh-infra-ingress-controller-htk
+  namespace: osh-infra-ingress-controller-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []
+...
+

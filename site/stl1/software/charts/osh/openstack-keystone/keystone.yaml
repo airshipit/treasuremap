@@ -1,0 +1,22 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: keystone
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: keystone-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      logging:
+        logger_keystone:
+          level: INFO
+...

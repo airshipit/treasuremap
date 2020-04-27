@@ -1,0 +1,47 @@
+---
+schema: deckhand/PublicKey/v1
+metadata:
+  schema: metadata/Document/v1
+  name: mirror_repo_key
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+#
+# pub   rsa2048 2016-04-27 [SC]
+#       4A00282EA27943B92C2696EFFBB0285A15AA3056
+# uid                      ATT Repositories <aptly@mirrors.it.att.com>
+# sub   rsa2048 2016-04-27 [E]
+#
+data: |-
+  -----BEGIN PGP PUBLIC KEY BLOCK-----
+  Version: GnuPG v2.0.14 (GNU/Linux)
+
+  mQENBFcg2EsBCAC/d1ACRBrgLFXmuzjl/aTqs7tTmuTzZmncnbUBWH4IGgYJnIvk
+  FGcbB+8tC/ag0k6ZaSiuAGK9y5aO7zctKMX8WWRXZfNsJv60VB9u3QSr9izjiTmP
+  +HKnocjf/fpSO+7tDzvzqjF6lT3zE2fNgDRyOaW8FSgfWRnYzUVLme/08uXrPjXG
+  /+YKFSo3dkjjSa0F+Sk9/kCC+pEhNVndzoGFx++0Kv58Yab5YyHNqqG4QRMOA6Vn
+  JevtSMNSXcHfDuqbl21ia7F+gsqO+wB1SAI9sGlXZQYoDETPEZhS0Y/MKImqaTAg
+  T8x9/w1RUmKJgbHYsbIF0QXOAW+Za3bxP/CLABEBAAG0K0FUVCBSZXBvc2l0b3Jp
+  ZXMgPGFwdGx5QG1pcnJvcnMuaXQuYXR0LmNvbT6JATgEEwEIACIFAlcg2EsCGwMG
+  CwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEPuwKFoVqjBWrjUH/RnJ8pmVAPvv
+  WWrmzrDjaoMSIhJTE3fsftJ7V6htsW/M7Dm5vAHb2+YiPN0mlRiiNZRs8OOpz+GG
+  W+R5Rls7KWPvzfF8m3QthV3zAwxeLtNokcPpKHBE/rsv8sm6DV5UTBSLU8lKpNk6
+  2rPDXuiGdilVTrUJ90ByE8Sx4d7XJj6Q/YQvPoLJgqkzBq0jQwaytHe8LSLTQmnN
+  QZD6oOlTU3q6mDmlqXKcYpWWuXKH5X56QpYIc+uDymCBB8rfNNgv0Q8z+YO/04Pu
+  Co7vkjvrABgcXWyJErsQZgZbetR5icfn4VuIBGKwy1SHUiqZxeR4oadzRTRxuZLz
+  6vq+Vvk6sdi5AQ0EVyDYSwEIAJSzSmrAdx8P7WtSXs0LOHg2mvUv4dtHa8TodOB4
+  CwAzrirrvPD9XXkO3ukoWiC0HzvDMCbThTWi8TIg/6LUpJBrmNLqwp3u2oO8dOES
+  dohas90oC7bAP6nZmgvAnF4JMefnRgUx/uT+r5uRLS9bCj8V7Uc7NBKujJ+BZ3kp
+  NVy03TtiZ+KNMYPi1/ICRGAyFzAgC9hQ2xeTbcBoNnuMqSFXPn4S6X7sctzRX/VE
+  n0FKf/NMtC7lX5KknPGOt3LRONUzXEeMpBF+YpO4dvz4GaxwvACixbl4xWPGozBL
+  owBKriwPVH6M6A/hEIoLg0vnsprtCrTWnlWrL6Q6Qnh9pDsAEQEAAYkBHwQYAQgA
+  CQUCVyDYSwIbDAAKCRD7sChaFaowVnDKB/999Wwj1kTtlqPDlNaw/M2rh6dJrgFo
+  kEHaV/y1tncCwugAnGyKml32FvmsX+WPKwY/ojS+cnnILDogoDvWxOMWI0IR9O9w
+  K9C4P+p9hOw1VQxBxDC4pE97wPDXSpWgofdaAsI4nw7vpkTr702SRcMQ/RJfNNh3
+  s2BCShEip6eJSK4vc3qbje3if1hXo2bKrai8toPMrwzhNh19Prvu1hCl1HQ87Vc4
+  CffuzOgz0gwZ3v1nW++CJLiuy6C1er9CSbChoQ9qhoXStwAiFCbjSjvOD5bvh1Be
+  9USniAfD6lO2qFfhsNBAo6lUFYqmap2se0vqdakCr8t0d980R4rBHLCO
+  =o0B5
+  -----END PGP PUBLIC KEY BLOCK-----
+...

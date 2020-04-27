@@ -10,10 +10,16 @@ metadata:
   substitutions:
     - src:
         schema: deckhand/Passphrase/v1
-        name: apiserver-encryption-key-key1
+        name: apiserver-encryption-key-key2
         path: .
       dest:
         path: .etcd[0].providers[0].secretbox.keys[0].secret
+    - src:
+        schema: deckhand/Passphrase/v1
+        name: apiserver-encryption-key-key1
+        path: .
+      dest:
+        path: .etcd[0].providers[0].secretbox.keys[1].secret
 data:
   etcd:
     - resources:
@@ -21,7 +27,12 @@ data:
       providers:
         - secretbox:
             keys:
+             - name: key2
+               secret: null
              - name: key1
                secret: null
         - identity: {}
+  scripts:
+    genesis:
+      gpg: {}
 ...

@@ -1,0 +1,63 @@
+---
+schema: deckhand/PublicKey/v1
+metadata:
+  schema: metadata/Document/v1
+  name: jenkins_repo_key
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+#
+# pub   rsa2048 2019-01-14 [SCEA]
+#       9279ACF10122C6B5E78CE66AC836A0B559B41C95
+# uid                      jenkins@att.com
+#
+data: |-
+  -----BEGIN PGP PUBLIC KEY BLOCK-----
+  Version: BCPG C# v1.6.1.0
+
+  mQENBFw9DxABCADHoI4fuPBDh/tKTRdz3n1nBqYhhUmYLXdaSMKziO+HZuEyJg11
+  DFQFmfI9vu+r60JnMyLUxLMXy6gU+qzozttPFPoSHtGSW8azVgXRriY5Qf10kWwB
+  e2wnXNHfWKZO7gPH614aqoasqMbxxppBn2vpwr591/BY9OUUDnFKDEVWAxdm+ip/
+  jdTCXmprgJzvMnf5HOKgQrqT+xOrIGIcLI6ovTmGw+2yR0lPhOAtGrzbJP9E4kbf
+  bIFvsomgS80SrQzJ26tM9aGBVU3SGzHmLVmo/O4/E2IMyNNblGI0GGAHl+gqldWx
+  K10SaUtRd3gWulJSwDg8MWTuu1F7Bo4e33UDABEBAAG0D2plbmtpbnNAYXR0LmNv
+  bYkBHAQQAQIABgUCXD0PEAAKCRDINqC1WbQclWtTCACB3DKNnlpFTfgp893bJfTY
+  b/xp+NeA7yt2RlRKJmfUVpr78G6FJijkC3e7wgdn2mpEto6MJA9paOsD3dh2c9VH
+  8jrnQ1GywHaNlaxlBoP84yLZVhDQ8jxTRVgfwcLSeT5hH5+efyQsVb+carvxWMo1
+  +HwC2QUV56kCUyfZP8BxavyHSENp2bPBr/067QyZWLBFL84IXS2INFsHjZ6lhNmz
+  P9u4Rr7co+9qre+Jbk8rJI2SSD063h/VGM0QjSp0qAwvOZc006bKBbbfLyn4aV/t
+  qP4wfOc2jzmxEYLxY6Tw9I/WrDGaj1eshtHw9YT894js4spIVgP2F694zXO0hxG4
+  =JNWO
+  -----END PGP PUBLIC KEY BLOCK-----
+...
+---
+schema: deckhand/PublicKey/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ceph_repo_key
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data: |-
+  -----BEGIN PGP PUBLIC KEY BLOCK-----
+  Version: GnuPG v1
+
+  mQENBFtYVY8BCAC3oli93husG0ZVtv/L8I4/bcW60LFCyB0DuwEznGlSaj1fjOQu
+  C7QX9wvGRq8mRZ8mfZ6sbxGmgs0LnV5QIBle1l5I3B+AMGksf6UGEWgoN/vq86g+
+  0Jg6kJP/D0sjGXvdlfy+bgAqjsx2bWOLjQGtHSIxhe4cE9HPBfMiYsFwGQua3XN3
+  tiGKcifszvDA6uqdjS6DuTEPCzyKiSyUevnWtBh0oUtUt//X4lG2Mx0lU91uUQGj
+  KeZ+fYXOLqgZm/FxLVT5w3g/UGK9Cbz5h4kGCJOfk0EwIZp0IRRs1phOC6gVMwoV
+  yWKCtdHmg7Ob8I4AZ8OW5HJn1UPHTprxcHBnABEBAAG0LEF1dG9idWlsZGVyIDxp
+  bmZyYSthdXRpYnVpbGRlckBtaXJhbnRpcy5jb20+iQE4BBMBAgAiBQJbWFWPAhsD
+  BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCRZVp5TFKJ70cJB/9ArWrSFyEx
+  qs7Tyo9M5WCPjqw7y2F7jd4Et3hqwc5jx6KlxGpg17SHt4oWcmtML3VBx+ziBAi0
+  5Ry4Z4w0QqFW6gAqQepeW76Yq/OP5SoqEI9sUwzLfUY7raK/P1buvXB1eZh4mMw4
+  TFf4Hgo8yUQ3geYNnUBBfaSfkmiyBJGsMXBfW2zhlpVIyB6Cye5R823FxGNJe+li
+  hggNCQnKYqrGtr55RO6xYI1v89cgGrO2EVwPkFLA/MUnQEb433Ck+sjp1NZDUfuJ
+  U3gg8S0hT+Cf5XiknT/xqIhhTY/KzlNmynZt/51DzZzsbM+RO6JZFYJL2LuC69gB
+  +R5jrmaGu9fG
+  =sqIn
+  -----END PGP PUBLIC KEY BLOCK-----
+...

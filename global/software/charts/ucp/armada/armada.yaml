@@ -3,12 +3,12 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-armada
-  labels:
-    name: ucp-armada-global
   layeringDefinition:
     abstract: false
     layer: global
   storagePolicy: cleartext
+  labels:
+    name: ucp-armada-global
   substitutions:
     # Chart source
     - src:
@@ -62,7 +62,7 @@ metadata:
         name: ucp_keystone_admin_password
         path: .
     - dest:
-        path: .values.endpoints.identity.auth.user.password
+        path: .values.endpoints.identity.auth.armada.password
       src:
         schema: deckhand/Passphrase/v1
         name: ucp_armada_keystone_password
@@ -71,10 +71,20 @@ data:
   chart_name: armada
   release: ucp-armada
   namespace: ucp
+  protected:
+    continue_processing: false
   wait:
-    timeout: 100
+    native:
+      # Note(seaneagan): This allows the sidecar tiller (if enabled) to update
+      # the armada chart's release status to DEPLOYED before the tiller sidecar
+      # goes away when the armada chart is updated, otherwise it can get
+      # stuck in PENDING_UPGRADE status.
+      enabled: false
+    timeout: 900
     labels:
-      release_group: airship-ucp-armada
+      release_group: clcp-ucp-armada
+  test:
+    enabled: true
   install:
     no_hooks: false
   upgrade:
@@ -83,46 +93,36 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-armada
+            release_group: clcp-ucp-armada
   values:
     pod:
-      replicas:
-        api: 2
+      affinity:
+        anti:
+          type:
+            default: requiredDuringSchedulingIgnoredDuringExecution
+      security_context:
+        armada:
+          pod:
+            runAsUser: 1000
       env:
         armada_api:
           - name: ARMADA_UWSGI_TIMEOUT
-            value: 14400
+            value: 10800
+      replicas:
+        api: 1
     conf:
       armada:
         DEFAULT:
           debug: true
-          tiller_namespace: kube-system
+          # Allow lock to expire before timing out. This is needed in case
+          # a lock does not get cleaned up, such as when Armada updates itself.
+          lock_acquire_timeout: 1800
+          lock_expiration: 300
+      tiller:
+        storage: secret
     manifests:
       deployment_tiller: false
       service_tiller_deploy: false
   dependencies:
     - armada-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: armada-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.armada-htk
-      dest:
-        path: .source
-data:
-  chart_name: armada-htk
-  release: armada-htk
-  namespace: armada-htk
-  values: {}
-  dependencies: []
 ...

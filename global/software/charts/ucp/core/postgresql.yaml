@@ -26,6 +26,14 @@ metadata:
       dest:
         path: .values.images.tags
 
+    # PostgreSQL log level
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .airship.log_level
+      dest:
+        path: .values.conf.postgresql.logging.log_level
+
     # Endpoints
     - src:
         schema: pegleg/EndpointCatalogue/v1
@@ -33,6 +41,19 @@ metadata:
         path: .ucp.postgresql
       dest:
         path: .values.endpoints.postgresql
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ucp.prometheus_postgresql_exporter
+      dest:
+        path: .values.endpoints.prometheus_postgresql_exporter
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ucp.postgresql.hosts.default
+      dest:
+        path: .values.secrets.pki.server.hosts.names[0]
+
     # Credentials
     - src:
         schema: pegleg/AccountCatalogue/v1
@@ -49,9 +70,27 @@ metadata:
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: ucp_service_accounts
-        path: .ucp.postgres.exporter
+        path: .ucp.prometheus_postgresql_exporter.user
       dest:
         path: .values.endpoints.postgresql.auth.exporter
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.prometheus_postgresql_exporter.user
+      dest:
+        path: .values.endpoints.prometheus_postgresql_exporter.auth.user
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.postgres.replica.username
+      dest:
+        path: .values.secrets.pki.replication.hosts.names[0]
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.postgres.audit
+      dest:
+        path: .values.endpoints.postgresql.auth.audit
 
     # Secrets
     - dest:
@@ -64,73 +103,117 @@ metadata:
         path: .values.endpoints.postgresql.auth.replica.password
       src:
         schema: deckhand/Passphrase/v1
-        name: ucp_postgres_replication_password
+        name: ucp_postgres_replica_password
         path: .
     - dest:
         path: .values.endpoints.postgresql.auth.exporter.password
       src:
         schema: deckhand/Passphrase/v1
-        name: ucp_postgres_exporter_password
+        name: ucp_postgres_exporter_postgres_password
         path: .
+    - dest:
+        path: .values.endpoints.prometheus_postgresql_exporter.auth.user.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_postgres_exporter_postgres_password
+        path: .
+    - dest:
+        path: .values.endpoints.postgresql.auth.audit.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_postgres_audit_password
+        path: .
+    - dest:
+        - path: .values.secrets.pki.replication.ca.crt
+        - path: .values.secrets.pki.server.ca.crt
+      src:
+        schema: deckhand/CertificateAuthority/v1
+        name: patroni-replication
+        path: .
+    - dest:
+        - path: .values.secrets.pki.replication.ca.key
+        - path: .values.secrets.pki.server.ca.key
+      src:
+        schema: deckhand/CertificateAuthorityKey/v1
+        name: patroni-replication
+        path: .
+
+    # POD IPs
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.pod_cidr
+      dest:
+        path: .values.secrets.pki.pod_cidr
+
 data:
   chart_name: ucp-postgresql
   release: ucp-postgresql
   namespace: ucp
+  protected:
+    continue_processing: false
   wait:
     timeout: 1800
     labels:
-      release_group: airship-ucp-postgresql
+      release_group: clcp-ucp-postgresql
   install:
     no_hooks: false
   upgrade:
+    no_hooks: false
     options:
       force: true
-    no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-postgresql
+            release_group: clcp-ucp-postgresql
       create: []
     post:
       create: []
   values:
     pod:
+      affinity:
+        anti:
+          type:
+            default: requiredDuringSchedulingIgnoredDuringExecution
       replicas:
-        server: 3
+        server: 1
+    monitoring:
+      prometheus:
+        enabled: true
+    volume:
+      backup:
+        size: 50Gi
     conf:
       postgresql:
         max_connections: 1000
         shared_buffers: 2GB
+      backup:
+        pg_dumpall_options: --inserts
     development:
       enabled: false
     labels:
       server:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
+      test:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+      prometheus_postgresql_exporter:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+      job:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+    manifests:
+      cron_job_postgresql_backup: true
+      pvc_backup: true
+    secrets:
+      pki:
+        server:
+          life: 365
+        replication:
+          life: 365
   dependencies:
     - postgres-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: postgres-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.postgresql-htk
-      dest:
-        path: .source
-data:
-  chart_name: postgres-htk
-  release: postgres-htk
-  namespace: postgres-htk
-  values: {}
-  dependencies: []
 ...

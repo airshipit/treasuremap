@@ -3,8 +3,6 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: kubernetes-apiserver
-  labels:
-    name: kubernetes-apiserver-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -25,6 +23,14 @@ metadata:
         path: .images.kubernetes.apiserver
       dest:
         path: .values.images.tags
+
+    # Kube-Apiserver Log Level
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .kubernetes_components.apiserver_log_level
+      dest:
+        path: .values.apiserver.logging.log_level
 
     # IP addresses
     - src:
@@ -110,24 +116,66 @@ metadata:
       dest:
         path: .values.conf.encryption_provider.content.resources
 
+    # Aggregation API config
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: kubernetes-agg-api
+        path: .
+      dest:
+        path: .values.conf.agg_api_ca.content
+    - src:
+        schema: deckhand/Certificate/v1
+        name: apiserver-proxy
+        path: .
+      dest:
+        path: .values.conf.apiserver_proxy_cert.content
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: apiserver-proxy
+        path: .
+      dest:
+        path: .values.conf.apiserver_proxy_key.content
 data:
   chart_name: apiserver
   release: kubernetes-apiserver
   namespace: kube-system
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
-    timeout: 600
+    timeout: 900
+    # Don't want to wait on the keyrotation job during bootstrap
+    resources:
+      # Wait on the anchor daemonset rolling update in order to
+      # allow time for the static pods to start updating, which should then be
+      # handled by the below pod wait.
+      # If the apiserver static pods are being updated, this should quarantine
+      # down time to only affect the armada wait logic, and not any
+      # tiller-apiserver interaction, which can cause releases to be marked
+      # FAILED, which prevents deployment progress if it affects protected
+      # charts.
+      - type: daemonset
+      - type: pod
     labels:
-      release_group: airship-kubernetes-apiserver
+      release_group: clcp-kubernetes-apiserver
+    native:
+      enabled: false
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: airship-kubernetes-apiserver
+            release_group: clcp-kubernetes-apiserver
   values:
+    pod:
+      lifecycle:
+        upgrades:
+          daemonsets:
+            pod_replacement_strategy: RollingUpdate
+            kubernetes-apiserver-anchor:
+              enabled: true
+              min_ready_seconds: 0
+              max_unavailable: 50%
     apiserver:
       etcd:
         endpoints: https://127.0.0.1:2378
@@ -140,17 +188,15 @@ data:
         - --authorization-mode=Node,RBAC
         - --service-cluster-ip-range=SERVICE_CIDR
         - --service-node-port-range=SERVICE_NODE_PORT_RANGE
-        - --endpoint-reconciler-type=lease
-        - --feature-gates=PodShareProcessNamespace=true
-        - --v=3
+        - --feature-gates=PodShareProcessNamespace=true,TaintBasedEvictions=false
     conf:
       encryption_provider:
         file: encryption_provider.yaml
         command_options:
-          - '--experimental-encryption-provider-config=/etc/kubernetes/apiserver/encryption_provider.yaml'
+          - '--encryption-provider-config=/etc/kubernetes/apiserver/encryption_provider.yaml'
         content:
-          kind: EncryptionConfig
-          apiVersion: v1
+          kind: EncryptionConfiguration
+          apiVersion: apiserver.config.k8s.io/v1
       eventconfig:
         file: eventconfig.yaml
         content:
@@ -171,17 +217,37 @@ data:
           plugins:
           - name: EventRateLimit
             path: eventconfig.yaml
+      agg_api_ca:
+        file: agg-api-ca.pem
+        command_options:
+          - '--requestheader-client-ca-file=/etc/kubernetes/apiserver/agg-api-ca.pem'
+          - '--requestheader-extra-headers-prefix=X-Remote-Extra-'
+          - '--requestheader-group-headers=X-Remote-Group'
+          - '--requestheader-username-headers=X-Remote-User'
+          - '--requestheader-allowed-names=aggregator'
+        content: null
+      apiserver_proxy_cert:
+        file: 'apiserver-proxy-cert.pem'
+        command_options:
+          - '--proxy-client-cert-file=/etc/kubernetes/apiserver/apiserver-proxy-cert.pem'
+        content: null
+      apiserver_proxy_key:
+        file: 'apiserver-proxy-key.pem'
+        command_options:
+          - '--proxy-client-key-file=/etc/kubernetes/apiserver/apiserver-proxy-key.pem'
+        content: null
   dependencies:
-    - kubernetes-apiserver-htk
+    - apiserver-htk
+...
 ---
+## Helm toolkit
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: kubernetes-apiserver-htk
+  name: apiserver-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -189,10 +255,16 @@ metadata:
         path: .charts.kubernetes.apiserver-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: kubernetes-apiserver-htk
-  release: kubernetes-apiserver-htk
-  namespace: kubernetes-apiserver-htk
+  chart_name: apiserver-htk
+  release: apiserver-htk
+  namespace: apiserver-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

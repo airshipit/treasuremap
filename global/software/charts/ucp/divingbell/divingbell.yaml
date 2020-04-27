@@ -2,15 +2,14 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: ucp-divingbell-global
+  name: ucp-divingbell
+  layeringDefinition:
+    abstract: false
+    layer: global
   labels:
     name: ucp-divingbell-global
-  layeringDefinition:
-    abstract: true
-    layer: global
   storagePolicy: cleartext
   substitutions:
-    # Chart source
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
@@ -24,7 +23,6 @@ metadata:
         path: .images.ucp.divingbell
       dest:
         path: .values.images
-
     - src:
         schema: pegleg/Script/v1
         name: rbd-roomba-scanner
@@ -37,14 +35,41 @@ metadata:
         path: .
       dest:
         path: .values.conf.exec.X005-hanging-cgroup-release.data
+    # probe-killer script to terminate long-running probes
+    - src:
+        schema: pegleg/Script/v1
+        name: probe-killer
+        path: .
+      dest:
+        path: .values.conf.exec.X099-probe-killer.data
+    # i40e dkms script for day2 driver upgrade scenario
+    - src:
+        schema: pegleg/Script/v1
+        name: i40e-dkms-install
+        path: .
+      dest:
+        path: .values.conf.exec.X055-i40e-driver-update.data
+    # Setup Password and Keys
+    - dest:
+        path: .values.conf.uamlite.users[0].user_sshkeys[0]
+      src:
+        schema: deckhand/PublicKey/v1
+        name: jenkins_ssh_public_key
+        path: .
+    - dest:
+        path: .values.conf.uamlite.users[0].user_crypt_passwd
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ubuntu_crypt_password
+        path: .
 data:
   chart_name: ucp-divingbell
   release: ucp-divingbell
   namespace: ucp
   wait:
-    timeout: 300
+    timeout: 1800
     labels:
-      release_group: airship-ucp-divingbell
+      release_group: clcp-ucp-divingbell
   install:
     no_hooks: false
   upgrade:
@@ -53,15 +78,49 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-divingbell
+            release_group: clcp-ucp-divingbell
   values:
     conf:
+      uamlite:
+        users:
+          - user_name: ubuntu
+            user_sudo: true
+            user_sshkeys: []
+      limits:
+        core_dump:
+          domain: '0:'
+          type: 'hard'
+          item: 'core'
+          value: 0
+        nofile-root-soft:
+          domain: 'root'
+          type: 'soft'
+          item: 'nofile'
+          value: '65536'
+        nofile-root-hard:
+          domain: 'root'
+          type: 'hard'
+          item: 'nofile'
+          value: '1048576'
+        nofile-all-soft:
+          domain: '*'
+          type: 'soft'
+          item: 'nofile'
+          value: '65536'
+        nofile-all-hard:
+          domain: '*'
+          type: 'hard'
+          item: 'nofile'
+          value: '1048576'
       sysctl:
-        # Larger connection tracking table
+        # Larger connection tracking table, a result of AIC operational issues
         net.nf_conntrack_max: '1048576'
         # Reboot the node 60 seconds after a kernel panic, instead of default
         # value of 0 (i.e. never reboot)
         kernel.panic: '60'
+        # Increase pix_max to x86_64 maximum to buy more time when large
+        # numbers of zombie processes accumulate
+        kernel.pid_max: '4194303'
         # Randomize stack space to prevent buffer overflow exploits
         kernel.randomize_va_space: '2'
         # Accept gratuitous ARP to support failover scenarios
@@ -76,7 +135,7 @@ data:
         net.ipv4.tcp_keepalive_time: '30'
         net.ipv4.tcp_keepalive_probes: '8'
         net.ipv4.tcp_retries2: '5'
-        # Larger thresholds
+        # Larger thresholds, a result of AIC operational issues to fix
         # "Neighbour table overflow" errors that filled kernel logs
         net.ipv4.neigh.default.gc_thresh1: '4096'
         net.ipv4.neigh.default.gc_thresh2: '8192'
@@ -84,13 +143,38 @@ data:
         # It was necessary to set rp_filter to zero to support certain
         # multi-homed storage backends
         net.ipv4.conf.default.rp_filter: '0'
+        # Disable IPv6 until we have proper filtering in place
+        net.ipv6.conf.all.disable_ipv6: '1'
+        net.ipv6.conf.lo.disable_ipv6: '0'
         # Enable byte/packet count for new connections to enable creation of
         # rules for the connbytes netfilter module
         net.netfilter.nf_conntrack_acct: '1'
+        # Added according to Ubuntu BPG: disable core dumps on host
+        fs.suid_dumpable: '0'
         # Added in response to error messages seen on genesis host when services
         # were restarted. "Failed to add /run/systemd/ask-password to directory
         # watch: No space left on device". https://bit.ly/2Mj5qn2 TDP bug 427616
         fs.inotify.max_user_watches: '1048576'
+        # Added according to Ubuntu BPG: Symlink and Hardlink Protection
+        # This is extra effort and could be commented out
+        # because Ubuntu Xenial has those as defaults coming from procps package
+        # https://www.apt-browse.org/browse/ubuntu/xenial/main/amd64/procps/
+        # 2:3.3.10-4ubuntu2/file/etc/sysctl.d/10-link-restrictions.conf
+        # sysctl utility is part of this package as well
+        fs.protected_hardlinks: 1
+        fs.protected_symlinks: 1
+      # new module 'perm' allows to control owner:group and permissions
+      # Added according to Ubuntu BPG: File system permission on host
+      perm:
+        rerun_policy: always
+        # 86400 = 24 hours
+        rerun_interval: 86400
+        paths:
+        -
+          path: '/boot/System.map-*'
+          owner: 'root'
+          group: 'root'
+          permissions: '0600'
       exec:
         X005-rbd-roomba-scanner:
           rerun_policy: always
@@ -102,28 +186,17 @@ data:
           # 300 = 5 minutes
           rerun_interval: 3600
           timeout: 600
+        X055-i40e-driver-update:
+          rerun_policy: always
+          # 3600 = 1 hour
+          rerun_interval: 3600
+          args:
+            - '-s'
+            - '-r'
+        X099-probe-killer:
+          rerun_policy: always
+          # 3600 = 1 hour
+          rerun_interval: 3600
   dependencies:
     - ucp-divingbell-htk
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: ucp-divingbell-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.divingbell-htk
-      dest:
-        path: .source
-data:
-  chart_name: ucp-divingbell-htk
-  release: ucp-divingbell-htk
-  namespace: ucp-divingbell-htk
-  values: {}
-  dependencies: []
 ...

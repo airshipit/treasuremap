@@ -8,6 +8,6 @@ metadata:
     layer: global
   storagePolicy: cleartext
 data:
-  description: Prometheus OpenStack Exporter for UCP Components
+  description: Prometheus OpenStack Exporter for UCP Namespace
   chart_group:
     - ucp-prometheus-openstack-exporter

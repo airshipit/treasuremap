@@ -1,0 +1,140 @@
+---
+# The purpose of this file is to define network related paramters that are
+# referenced elsewhere in the manifests for this site.
+#
+# TODO: Include bare metal host FQDN naming standards
+# TODO: Include ingress FQDN naming standards
+schema: pegleg/CommonAddresses/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: common-addresses
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: common-addresses-global
+    actions:
+      - method: replace
+        path: .dns.upstream_servers
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  calico:
+    # NEWSITE-CHANGEME: The interface that calico will use. Update if your
+    # logical bond interface name or calico VLAN have changed from the reference
+    # site design.
+    # This should be whichever
+    # bond and VLAN number specified in networks/physical/networks.yaml for the Calico
+    # network. E.g. VLAN 44 for the calico network as a member of bond1, you
+    # would set "interface=bond1.44" as shown here.
+    ip_autodetection_method: interface=bond1.44
+    etcd:
+      # etcd service IP address
+      service_ip: 10.96.232.136
+    ip_rule:
+      # NEWSITE-CHANGEME: The service gateway/VRR IP for routing pod traffic
+      gateway: 172.29.0.1
+    bgp:
+      ipv4:
+        # NEWSITE-CHANGEME: A routable CIDR to configure for ingress, maas, and
+        # outward facing services (i.e. routable ingress CIDR)
+        public_service_cidr: 10.254.146.64/29
+        # NEWSITE-CHANGEME: Update with the "public" facing VIP to assign to
+        # the ingress controller. /32 is redundant; this is an IP not a CIDR.
+        ingress_vip: 10.254.146.65/32
+        # NEWSITE-CHANGEME(v1.0.1): Update with the "public" facing VIP to assign
+        # the MAAS ingress controller. /32 is redundant; this is an IP not a CIDR.
+        maas_vip: 10.254.146.66/32
+        # NEWSITE-CHANGEME: In Network Cloud, there is a pair of "global" BGP
+        # peers that will be used for the whole site (all racks). These BGP peer
+        # IPs should be put into this list.
+        # NOTE: Any change to the size of this list (2) requires corresponding
+        # changes in calico.yaml
+        peers:
+          - 172.29.0.2
+          - 172.29.0.3
+
+  dns:
+    # DNS service ip
+    service_ip: 10.96.0.10
+    # List of internal ATT DNS forwards. Verify you can reach them from your
+    # environment. If so, you should not need to change them.
+    upstream_servers:
+      - 8.8.8.8
+      - 1.1.1.1
+    upstream_servers_joined: 8.8.8.8,1.1.1.1
+    # NEWSITE-CHANGEME: Set the FQDN used by bare metal nodes according to FQDN naming standards at
+    node_domain: stl1.nc.opensource.att.com
+    # NEWSITE-CHANGEME: FQDN for ingress (i.e. "publicly facing" access point)
+    # Choose FQDN according to the ingress/public FQDN naming conventions at
+    # the top of this document. NOTE: This FQDN needs to be registered with
+    # upstream ATT corporate EISS, so that it is resolvable over ATT OAM network
+    ingress_domain: stl1.nc.opensource.att.com
+
+  genesis:
+    # NEWSITE-CHANGEME: Update with the hostname for the node which will take on
+    # the Genesis role. Refer to the hostname naming stardards in
+    # networks/physical/networks.yaml
+    # NOTE: Ensure that the genesis node is manually configured with this
+    # hostname before running `genesis.sh` on the node.
+    # NOTE: Register with upstream ATT corporate EISS the FQDN for this host,
+    # pointing to its OAM IP Address
+    hostname: stl1r01s01
+    # NEWSITE-CHANGEME: Calico IP of the Genesis node. Use the "start" value for
+    # the calico network defined in networks/physical/networks.yaml for this IP.
+    ip: 172.29.0.11
+    # NEWSITE-CHANGEME: OOB IP of the Genesis node. This should be sourced from the
+    # engineering package and match the address used to access the iLO/iDRAC/ASMI
+    # interface for the Genesis node.
+    oob: 10.253.200.11
+
+  bootstrap:
+    # NEWSITE-CHANGEME: Update with the "start" value/IP of the static range
+    # defined for the pxe network in networks/physical/networks.yaml
+    ip: 172.30.0.11
+
+  kubernetes:
+    # K8s API service IP
+    api_service_ip: 10.96.0.1
+    # etcd service IP
+    etcd_service_ip: 10.96.0.2
+    # k8s pod CIDR (network which pod traffic will traverse)
+    pod_cidr: 10.97.0.0/16
+    # k8s service CIDR (network which k8s API traffic will traverse)
+    service_cidr: 10.96.0.0/16
+
+  # NEWSITE-CHANGEME: A list of nodes (apart from Genesis) which act as the
+  # control plane servers. Ensure that this matches the nodes with the 'masters'
+  # tags applied in baremetal/nodes.yaml
+  masters:
+    - hostname: stl1r01s02
+    - hostname: stl1r01s03
+    - hostname: stl1r01s04
+
+  # By default, NTP values from global are used which include all ATT NTP servers.
+
+  ldap:
+    # NEWSITE-CHANGEME: Replace with the site's LDAP account used to
+    # authenticate to the active directory backend to validate keystone
+    # users.
+    username: "m12345@ldap.test.com"
+
+  storage:
+    ceph:
+      # NEWSITE-CHANGEME: CIDRs for Ceph. Update to match the network CIDR
+      # used for the `storage` network in networks/physical/networks.yaml
+      public_cidr: 172.31.0.0/25
+      cluster_cidr: 172.31.0.0/25
+
+  neutron:
+    tunnel_device: 'bond1.45'
+    external_iface: 'bond1'
+
+  openvswitch:
+    # bond which the overlay is a member of. Ensure the bond name is consistent
+    # with the bond assigned to the overlay network in
+    # networks/physical/networks.yaml
+    external_iface: 'bond1'
+...

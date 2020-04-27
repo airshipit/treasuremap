@@ -7,6 +7,7 @@ metadata:
     application: drydock
 data:
   $schema: 'http://json-schema.org/schema#'
+  id: 'http://att.com/att-comdev/drydock/bootaction.yaml'
   type: 'object'
   additionalProperties: false
   properties:
@@ -30,7 +31,13 @@ data:
               - 'file'
               - 'pkg_list'
           data:
-            type: 'string'
+            oneOf:
+              - type: 'string'
+              - type: 'object'
+                additionalProperties:
+                  oneOf:
+                    - type: 'string'
+                    - type: 'null'
           location_pipeline:
             type: 'array'
             items:

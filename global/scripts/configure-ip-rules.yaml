@@ -17,7 +17,7 @@ data: |-
 
     -c POD_CIDR     The pod CIDR for the Kubernetes cluster, e.g. 10.97.0.0/16
     -i INTERFACE    (optional) The interface for internal pod traffic, e.g.
-                    bond0.22.  Used to auto-detect the service gateway.
+                    bond1.2006.  Used to auto-detect the service gateway.
                     Exclusive with -g.
     -g SERVICE_GW   (optional) The service gateway/VRR IP for routing pod
                     traffic.  Exclusive with -i.
@@ -26,7 +26,7 @@ data: |-
                     complete Calico routes cannot be received via BGP.
                     e.g. 10.96.0.0/15.  NOTE: This must include the POD_CIDR.
     -s SERVICE_CIDR (optional) A routable CIDR to configure for ingress, maas,
-                    e.g. 10.23.22.192/29
+                    e.g. 10.20.19.192/29
   EOU
   }
 
@@ -93,27 +93,32 @@ data: |-
   TABLE="1500"
 
   if [ "x${intra_vrrp_ip}" == "x" ]; then
-      echo "Either INTERFACE or SERVICE_GW is required: e.g. either -i bond0.22 or -g 10.23.22.1"
+      echo "Either INTERFACE or SERVICE_GW is required: e.g. either -i bond1.2006 or -g 172.29.0.1"
       usage
       exit 1
   fi
 
-  # Setup a routing table for traffic from service IPs
-  ip route flush table "${TABLE}"
-  ip route add default via "${intra_vrrp_ip}" table "${TABLE}"
+  # Introduce a file lock as concurrent runs of this script
+  # suffer from a race condition w/ the table 1500 routes
+  (
+    flock --verbose -w 120 9 || exit 1
 
-  # Setup arp_announce adjustment on interface facing gateway
-  arp_intf=$(ip route get ${intra_vrrp_ip} | grep dev | awk '{print $3}')
-  echo 2 > /proc/sys/net/ipv4/conf/${arp_intf}/arp_announce
+    # Setup a routing table for traffic from service IPs
+    ip route flush table "${TABLE}"
+    ip route add default via "${intra_vrrp_ip}" table "${TABLE}"
+
+    # Setup arp_announce adjustment on interface facing gateway
+    arp_intf=$(ip route get ${intra_vrrp_ip} | grep dev | awk '{print $3}')
+    echo 2 > /proc/sys/net/ipv4/conf/${arp_intf}/arp_announce
 
 
-  if [ "x$OVERLAP_CIDR" != "x" ]; then
-      # NOTE: This is a work-around for nodes not receiving complete
-      # routes via BGP.
-      ip route add "${OVERLAP_CIDR}" via "${intra_vrrp_ip}"
-  fi
+    if [ "x$OVERLAP_CIDR" != "x" ]; then
+        # NOTE(mb874d): This is a work-around for nodes not receiving complete
+        # routes via BGP.  It may also be required for brownfield large sites.
+        ip route add "${OVERLAP_CIDR}" via "${intra_vrrp_ip}"
+    fi
 
-  if [ "x$SERVICE_CIDR" != "x" ]; then
+    if [ "x$SERVICE_CIDR" != "x" ]; then
       # Traffic from the service IPs to pods should use the pod network.
       ip rule add \
           from "${SERVICE_CIDR}" \
@@ -125,4 +130,5 @@ data: |-
           from "${SERVICE_CIDR}" \
           lookup "${TABLE}" \
           pref 10100
-  fi
+    fi
+  ) 9> /tmp/configure-ip-rules.lock

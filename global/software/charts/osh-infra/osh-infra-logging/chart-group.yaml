@@ -3,14 +3,17 @@ schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
   name: osh-infra-logging
+  labels:
+    name: osh-infra-logging-global
   layeringDefinition:
     abstract: false
     layer: global
   storagePolicy: cleartext
 data:
   description: OSH Infra Logging
-  sequenced: True
+  sequenced: true
   chart_group:
+    - elasticsearch-master-local-ssd
+    - elasticsearch-data-local-ssd
     - elasticsearch
-    - fluentbit
     - fluentd

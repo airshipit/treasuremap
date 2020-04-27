@@ -6,6 +6,9 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
+  labels:
+    name: mysqlclient-utility-global
+    component: utility
   storagePolicy: cleartext
   substitutions:
     # Chart source
@@ -15,6 +18,7 @@ metadata:
         path: .charts.utility.mysqlclient-utility
       dest:
         path: .source
+
     # Images
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -22,30 +26,41 @@ metadata:
         path: .images.utility.mysqlclient-utility
       dest:
         path: .values.images.tags
+
+    # Log User mysqlclient Utility Container
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .utility.always_log_user
+      dest:
+        path: .values.conf.utility.always_log_user
+
 data:
   chart_name: mysqlclient-utility
   release: mysqlclient-utility
+  test:
+    enabled: false
   namespace: utility
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
     timeout: 600
     labels:
-      release_group: airship-mysqlclient-utility
+      release_group: clcp-mysqlclient-utility
   install:
    no_hooks: false
   upgrade:
    no_hooks: false
+   pre:
+      delete:
+        - type: job
+          labels:
+            release_group: clcp-mysqlclient-utility
   values:
     labels:
       utility:
         node_selector_key: utility
         node_selector_value: enabled
-    manifests:
-      configmap_bin: true
-      configmap_etc_client: true
-      deployment_utility: true
-      job_image_repo_sync: false
   dependencies:
     - mysqlclient-utility-htk
 ...

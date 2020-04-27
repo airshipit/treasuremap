@@ -5,7 +5,6 @@ metadata:
   name: openstack-ceph-config
   labels:
     name: openstack-ceph-config-global
-    component: ceph
   layeringDefinition:
     abstract: false
     layer: global
@@ -56,7 +55,9 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-openstack-ceph-config
+      release_group: clcp-openstack-ceph-config
+    resources:
+      - type: job
   install:
     no_hooks: false
   upgrade:
@@ -65,7 +66,13 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-openstack-ceph-config
+            release_group: clcp-openstack-ceph-config
+        - type: pod
+          labels:
+            release_group: clcp-openstack-ceph-config
+            component: test
+  test:
+    enabled: true
   values:
     labels:
       job:
@@ -79,7 +86,6 @@ data:
       client_secrets: true
       rbd_provisioner: false
       cephfs_provisioner: false
-      rgw_keystone_user_and_endpoints: false
     bootstrap:
       enabled: false
     storageclass:

@@ -1,0 +1,45 @@
+---
+schema: deckhand/DataSchema/v1
+metadata:
+  schema: metadata/Control/v1
+  name: nc/ControlPlaneAddresses/v1
+data:
+  $schema: http://json-schema.org/schema#
+
+  definitions:
+    host:
+      type: object
+      properties:
+        hostname:
+          type: string
+        ip:
+          type: object
+          properties:
+            ksn:
+              type: string
+            oam:
+              type: string
+          required:
+            - ksn
+            - oam
+          additionalProperties: false
+      required:
+        - hostname
+        - ip
+      additionalProperties: false
+
+  type: object
+  properties:
+    genesis:
+      $ref: '#/definitions/host'
+
+    masters:
+      type: array
+      items:
+        $ref: '#/definitions/host'
+
+  required:
+    - genesis
+    - masters
+  additionalProperties: false
+...

@@ -6,6 +6,9 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
+  labels:
+    name: ceph-utility-config-global
+    component: utility
   storagePolicy: cleartext
   substitutions:
     # Chart source
@@ -51,11 +54,13 @@ data:
   release: ceph-utility-config
   namespace: utility
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
     timeout: 3600
     labels:
-      release_group: airship-ceph-utility-config
+      release_group: clcp-ceph-utility-config
+    resources:
+      - type: job
   install:
     no_hooks: false
   upgrade:
@@ -64,7 +69,13 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ceph-utility-config
+            release_group: clcp-ceph-utility-config
+        - type: pod
+          labels:
+            release_group: clcp-ceph-utility-config
+            component: test
+  test:
+    enabled: true
   values:
     labels:
       job:
@@ -86,7 +97,8 @@ data:
     storageclass:
       rbd:
         ceph_configmap_name: ceph-etc
-        user_secret_name: pvc-ceph-client-key
-  dependencies:
-    - ceph-htk
+        parameters:
+          userSecretName: pvc-ceph-client-key
+      cephfs:
+        provision_storage_class: false
 ...

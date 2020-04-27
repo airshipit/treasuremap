@@ -1,0 +1,25 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: tenant-ceph-client
+  labels:
+    name: tenant-ceph-client-nc
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: tenant-ceph-client-global
+    actions:
+      - method: replace
+        path: .values.conf.pool.target.osd
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      pool:
+        target:
+          osd: 240
+...

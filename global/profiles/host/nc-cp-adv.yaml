@@ -1,0 +1,214 @@
+---
+schema: drydock/HostProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nc-cp-adv-global
+  storagePolicy: cleartext
+  labels:
+    hosttype: nc-cp-adv
+  layeringDefinition:
+    abstract: true
+    layer: global
+  substitutions:
+    - dest:
+        path: .oob.credential
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ipmi_admin_password
+        path: .
+    - dest:
+        path: .interfaces.p2p1.sriov.device
+      src:
+        schema: drydock/HardwareProfile/v1
+        name: dell_r740_purley_adv_nc
+        path: .device_aliases.dp_nic01.address
+    - dest:
+        path: .interfaces.p7p2.sriov.device
+      src:
+        schema: drydock/HardwareProfile/v1
+        name: dell_r740_purley_adv_nc
+        path: .device_aliases.dp_nic02.address
+data:
+  oob:
+    type: 'ipmi'
+    network: 'oob'
+    account: 'tier4'
+  primary_network: 'oam'
+  hardware_profile: dell_r740_purley_adv_nc
+  interfaces:
+    pxe:
+      device_link: pxe
+      slaves:
+        - 'pxe_nic01'
+      networks:
+        - 'pxe'
+    bond1:
+      device_link: bond1
+      slaves:
+        - 'gp_nic01'
+        - 'gp_nic02'
+      networks:
+        - 'oam'
+        - 'storage'
+        - 'calico'
+    p2p1:
+      slaves:
+        - 'dp_nic01'
+      sriov:
+        num_vfs: 32
+        promisc: false
+      ovs_dpdk:
+        vf_index: 0
+      pci_whitelist:
+        trusted: false
+    p7p2:
+      slaves:
+        - 'dp_nic02'
+      sriov:
+        num_vfs: 32
+        promisc: false
+      ovs_dpdk:
+        vf_index: 0
+      pci_whitelist:
+        trusted: false
+  storage:
+    physical_devices:
+      bootdisk:
+        labels:
+          bootdrive: 'true'
+        partitions:
+          - name: 'root'
+            size: '30g'
+            bootable: true
+            filesystem:
+              mountpoint: '/'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'boot'
+            size: '1g'
+            filesystem:
+              mountpoint: '/boot'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var_log'
+            size: '100g'
+            filesystem:
+              mountpoint: '/var/log'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var_crash'
+            size: '70g'
+            filesystem:
+              mountpoint: '/var/crash'
+              fstype: 'ext4'
+              mount_options: 'defaults,nofail'
+          - name: 'var_lib_openstack_helm'
+            size: '10g'
+            filesystem:
+              mountpoint: '/var/lib/openstack-helm'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var'
+            size: '>200g'
+            filesystem:
+              mountpoint: '/var'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+      ephemeral:
+        partitions:
+          - name: 'ssd_storage'
+            size: '99%'
+            filesystem:
+              mountpoint: '/srv'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+  platform:
+    image: 'bionic'
+    kernel: 'ga-18.04'
+    kernel_params:
+      # NOTE: For the hugepagez config, must use real value here
+      # because this list is also consumed by pre-genesis.sh to
+      # configure hugepages for genesis node, and unlike drydock
+      # it does not have capability to perform the necessarily
+      # substitution at run time.  See nc-p1-adv profile for
+      # preferred substitution pattern.
+      hugepagesz: '1G'
+      hugepages: '20'
+      transparent_hugepage: 'never'
+      kernel_package: 'linux-image-4.15.0-64-generic'
+      console: 'ttyS1,115200n8'
+      cgroup_disable: 'hugetlb'
+      amd_iommu: 'on'
+      intel_iommu: 'on'
+      iommu: 'pt'
+      default_hugepagesz: '1G'
+      dpdk-socket-mem: '4096,4096'
+  metadata:
+    owner_data:
+      hosttype: nc-cp-adv
+      control-plane: enabled
+      ucp-control-plane: enabled
+      openstack-control-plane: enabled
+      openstack-heat: enabled
+      openstack-keystone: enabled
+      openstack-rabbitmq: enabled
+      openstack-dns-helper: enabled
+      openstack-mariadb: enabled
+      openstack-nova-control: enabled
+      openstack-etcd: enabled
+      openstack-mistral: enabled
+      openstack-memcached: enabled
+      openstack-glance: enabled
+      openstack-horizon: enabled
+      openstack-cinder-control: enabled
+      openstack-cinder-volume: control
+      openstack-neutron: enabled
+      openstack-l3-agent: enabled
+      openstack-dhcp-agent: enabled
+      openstack-metadata-agent: enabled
+      openstack-neutron-server: enabled
+      openvswitch: enabled
+      ucp-barbican: enabled
+      ceph-bootstrap: enabled
+      ceph-mon: enabled
+      ceph-mgr: enabled
+      ceph-osd: enabled
+      ceph-mds: enabled
+      ceph-rgw: enabled
+      tenant-ceph-control-plane: enabled
+      tenant-ceph-mon: enabled
+      tenant-ceph-rgw: enabled
+      tenant-ceph-mgr: enabled
+      maas-rack: enabled
+      maas-region: enabled
+      kube-dns: enabled
+      kubernetes-apiserver: enabled
+      kubernetes-controller-manager: enabled
+      kubernetes-etcd: enabled
+      kubernetes-scheduler: enabled
+      tiller-helm: enabled
+      kube-etcd: enabled
+      calico-policy: enabled
+      calico-node: enabled
+      calico-etcd: enabled
+      ucp-armada: enabled
+      ucp-drydock: enabled
+      ucp-deckhand: enabled
+      ucp-shipyard: enabled
+      IAM: enabled
+      ucp-promenade: enabled
+      prometheus-server: enabled
+      prometheus-client: enabled
+      fluentd: enabled
+      influxdb: enabled
+      kibana: enabled
+      elasticsearch-client: enabled
+      elasticsearch-master: enabled
+      elasticsearch-data: enabled
+      postgresql: enabled
+      kube-ingress: enabled
+      beta.kubernetes.io/fluentd-ds-ready: 'true'
+      node-exporter: enabled
+      utility: enabled
+      sriov: enabled
+...

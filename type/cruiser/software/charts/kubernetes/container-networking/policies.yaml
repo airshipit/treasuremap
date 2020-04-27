@@ -1,0 +1,133 @@
+---
+schema: nc/Policy/v1
+metadata:
+  schema: metadata/Document/v1
+  name: type-policy
+  labels:
+    name: type-policy
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: global-policy
+    actions:
+      - method: merge
+        path: .
+  substitutions:
+    - src:
+        schema: drydock/Network/v1
+        name: oam
+        path: .cidr
+      dest:
+        - path: .policy.sitelevel.rules[0].spec.egress[0].source.nets[0]
+          pattern: OAM_CIDR
+        - path: .policy.sitelevel.rules[1].spec.ingress[0].destination.nets[0]
+          pattern: OAM_CIDR
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.bgp.ipv4.peers[0]
+      dest:
+        - path: .policy.sitelevel.rules[0].spec.egress[0].destination.nets[0]
+          pattern: CALICO_BGP0_IP
+        - path: .policy.sitelevel.rules[1].spec.ingress[0].source.nets[0]
+          pattern: CALICO_BGP0_IP
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.bgp.ipv4.peers[1]
+      dest:
+        - path: .policy.sitelevel.rules[0].spec.egress[0].destination.nets[1]
+          pattern: CALICO_BGP1_IP
+        - path: .policy.sitelevel.rules[1].spec.ingress[0].source.nets[1]
+          pattern: CALICO_BGP1_IP
+    - src:
+        schema: drydock/Network/v1
+        name: calico
+        path: .cidr
+      dest:
+        - path: .policy.sitelevel.rules[2].spec.egress[0].destination.nets[0]
+          pattern: CALICO_CIDR
+        - path: .policy.sitelevel.rules[3].spec.egress[0].destination.nets[0]
+          pattern: CALICO_CIDR
+  storagePolicy: cleartext
+data:
+  policy:
+    sitelevel:
+      priority: 5
+      rules:
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: nc1-bgp-peering-egress
+          spec:
+            order: 21
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            egress:
+            - action: Allow
+              protocol: TCP
+              source:
+                nets: ["OAM_CIDR"]
+              destination:
+                nets: ["CALICO_BGP0_IP/32","CALICO_BGP1_IP/32"]
+                ports:
+                - 179
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: nc1-bgp-peering-ingress
+          spec:
+            order: 22
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            ingress:
+            - action: Allow
+              protocol: TCP
+              source:
+                nets: ["CALICO_BGP0_IP/32","CALICO_BGP1_IP/32"]
+              destination:
+                nets: ["OAM_CIDR"]
+                ports:
+                - 179
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # rule 2: all UCP containers should allow outgoing TCP connections to the calico etcd IP / ports
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: ucp-calico-etcd
+          spec:
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            order: 0
+            egress:
+            - action: Allow
+              protocol: TCP
+              destination:
+                nets:
+                  - "CALICO_CIDR"
+                ports: [6666, 6667]
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # rule 3: allow egress to the Kubernetes apiservers
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: kubernetes-apiserver-service
+          spec:
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            order: 0
+            egress:
+            - action: Allow
+              protocol: TCP
+              destination:
+                nets:
+                  - "CALICO_CIDR"
+                ports: [6443]
+            doNotTrack: false
+            preDNAT: false
+
+...

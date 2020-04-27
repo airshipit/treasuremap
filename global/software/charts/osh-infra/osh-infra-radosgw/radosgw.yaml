@@ -14,7 +14,7 @@ metadata:
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .charts.ucp.ceph-rgw
+        path: .charts.osh_infra.ceph-rgw
       dest:
         path: .source
 
@@ -75,6 +75,12 @@ metadata:
         schema: deckhand/Passphrase/v1
         name: osh_infra_rgw_s3_admin_secret_key
         path: .
+    - dest:
+        path: .values.endpoints.identity.auth.swift.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_infra_rgw_ks_password
+        path: .
 
 data:
   chart_name: osh-infra-radosgw
@@ -83,7 +89,13 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-osh-infra-radosgw
+      release_group: clcp-osh-infra-radosgw
+    resources:
+      - type: deployment
+        min_ready: 2
+      - type: job
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -92,7 +104,13 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-osh-infra-radosgw
+            release_group: clcp-osh-infra-radosgw
+        - type: pod
+          labels:
+            release_group: clcp-osh-infra-radosgw
+            component: rgw-test
+  test:
+    enabled: true
   values:
     labels:
       job:
@@ -102,19 +120,51 @@ data:
         node_selector_key: ceph-rgw
         node_selector_value: enabled
     deployment:
-      storage_secrets: false
       ceph: true
-      rbd_provisioner: false
-      cephfs_provisioner: false
-      client_secrets: false
       rgw_keystone_user_and_endpoints: false
     bootstrap:
       enabled: false
+    pod:
+      affinity:
+        anti:
+          type:
+            default: requiredDuringSchedulingIgnoredDuringExecution
+      replicas:
+        rgw: 3
     conf:
       rgw_s3:
         enabled: true
     ceph_client:
       configmap: ceph-etc
   dependencies:
-    - osh-infra-helm-toolkit
+    - osh-infra-radosgw-htk
 ...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: osh-infra-radosgw-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.ceph-rgw-htk
+      dest:
+        path: .source
+  storagePolicy: cleartext
+data:
+  chart_name: osh-infra-radosgw-htk
+  release: osh-infra-radosgw-htk
+  namespace: osh-infra-radosgw-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []
+...
+

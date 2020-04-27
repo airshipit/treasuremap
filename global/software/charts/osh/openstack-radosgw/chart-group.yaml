@@ -3,6 +3,8 @@ schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
   name: openstack-radosgw
+  labels:
+    name: openstack-radosgw-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -11,4 +13,3 @@ data:
   description: Deploy Radosgw
   chart_group:
     - tenant-ceph-rgw
-...

@@ -1,0 +1,92 @@
+---
+schema: drydock/HostProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nc-cp-secondary-adv
+  storagePolicy: cleartext
+  labels:
+    hosttype: cp-secondary-adv
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      hosttype: nc-cp-adv
+    actions:
+      - method: merge
+        path: .
+      - method: replace
+        path: .metadata.owner_data
+data:
+  metadata:
+    owner_data:
+      # Additional label to global
+      openstack-ranger-agent: enabled
+      # Removed labels from global
+      kubernetes-apiserver: enabled
+      kubernetes-controller-manager: enabled
+      # kubernetes-etcd: enabled
+      kubernetes-scheduler: enabled
+      # kube-etcd: enabled
+      calico-etcd: enabled
+      # tenant-ceph-mon: enabled
+      # ceph-mon: enabled
+      # Common labels with global
+      hosttype: nc-cp-adv
+      control-plane: enabled
+      ucp-control-plane: enabled
+      maas-rack: enabled
+      maas-region: enabled
+      openstack-control-plane: enabled
+      openstack-heat: enabled
+      openstack-keystone: enabled
+      openstack-rabbitmq: enabled
+      openstack-dns-helper: enabled
+      openstack-mariadb: enabled
+      openstack-nova-control: enabled
+      openstack-etcd: enabled
+      openstack-mistral: enabled
+      openstack-memcached: enabled
+      openstack-glance: enabled
+      openstack-horizon: enabled
+      openstack-cinder-control: enabled
+      openstack-cinder-volume: control
+      openstack-neutron: enabled
+      openstack-neutron-server: enabled
+      openstack-l3-agent: enabled
+      openstack-dhcp-agent: enabled
+      openstack-metadata-agent: enabled
+      openvswitch: enabled
+      ucp-barbican: enabled
+      ceph-bootstrap: enabled
+      ceph-mgr: enabled
+      ceph-osd: enabled
+      ceph-mds: enabled
+      ceph-rgw: enabled
+      tenant-ceph-control-plane: enabled
+      tenant-ceph-rgw: enabled
+      tenant-ceph-mgr: enabled
+      ucp-maas: enabled
+      kube-dns: enabled
+      tiller-helm: enabled
+      calico-policy: enabled
+      calico-node: enabled
+      ucp-armada: enabled
+      ucp-drydock: enabled
+      ucp-deckhand: enabled
+      ucp-shipyard: enabled
+      IAM: enabled
+      ucp-promenade: enabled
+      prometheus-server: enabled
+      prometheus-client: enabled
+      fluentd: enabled
+      influxdb: enabled
+      kibana: enabled
+      elasticsearch-client: enabled
+      elasticsearch-master: enabled
+      elasticsearch-data: enabled
+      postgresql: enabled
+      kube-ingress: enabled
+      beta.kubernetes.io/fluentd-ds-ready: 'true'
+      node-exporter: enabled
+      sriov: enabled
+...

@@ -1,0 +1,34 @@
+---
+schema: nc/ControlPlaneAddresses/v1
+metadata:
+  schema: metadata/Document/v1
+  name: control-plane-addresses
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  genesis:
+    hostname: stl1r01s01
+    ip:
+      oam: 10.254.125.141
+      ksn: 172.29.0.11
+
+  masters:
+    - hostname: stl1r01s01
+      ip:
+        oam: 10.254.125.141
+        ksn: 172.29.0.11
+    - hostname: stl1r01s02
+      ip:
+        oam: 10.254.125.142
+        ksn: 172.29.0.12
+    - hostname: stl1r01s03
+      ip:
+        oam: 10.254.125.143
+        ksn: 172.29.0.13
+    - hostname: stl1r01s04
+      ip:
+        oam: 10.254.125.144
+        ksn: 172.29.0.14
+...

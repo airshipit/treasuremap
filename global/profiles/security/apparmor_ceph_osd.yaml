@@ -1,0 +1,30 @@
+---
+schema: 'pegleg/AppArmorProfile/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: ceph-osd-v1
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: global
+data:
+  savePath: /etc/apparmor.d/ceph-osd-v1
+  content: |
+    # AppArmor profile based on docker-default from version 17.03.x
+    #   https://github.com/moby/moby/blob/17.03.x/profiles/apparmor/template.go
+    # Modified to allow access to /proc/sys/net, as required, for example:
+    #   https://github.com/openstack/charm-ceph-osd/blob/master/files/apparmor/usr.bin.ceph-osd
+    # Also includes fix to https://github.com/moby/moby/issues/39791 (required to make this work)
+    # Specific changes are NOTEd below
+
+
+    #include <tunables/global>
+    profile ceph-osd-v1 flags=(attach_disconnected) {
+
+      #include <abstractions/base>
+      #include <abstractions/nameservice>
+
+      capability,
+      network,
+      mount,
+    }

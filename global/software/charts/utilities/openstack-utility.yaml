@@ -18,6 +18,7 @@ metadata:
         path: .charts.utility.openstack-utility
       dest:
         path: .source
+
     # Images
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -25,30 +26,41 @@ metadata:
         path: .images.utility.openstack-utility
       dest:
         path: .values.images.tags
+
+    # Log User Openstack Utility Container
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .utility.always_log_user
+      dest:
+        path: .values.conf.utility.always_log_user
+
 data:
   chart_name: openstack-utility
   release: openstack-utility
+  test:
+    enabled: false
   namespace: utility
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
     timeout: 600
     labels:
-      release_group: airship-openstack-utility
+      release_group: clcp-openstack-utility
   install:
    no_hooks: false
   upgrade:
    no_hooks: false
+   pre:
+      delete:
+        - type: job
+          labels:
+            release_group: clcp-openstack-utility
   values:
     labels:
       utility:
         node_selector_key: utility
         node_selector_value: enabled
-    manifests:
-      configmap_bin: true
-      configmap_etc_client: true
-      configmap_etc_sudoers: true
-      deployment_utility: true
   dependencies:
     - openstack-utility-htk
 ...

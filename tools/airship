@@ -124,7 +124,7 @@ Examples:
 
 pegleg() {
 
-  versions_lookup "['data']['images']['ucp']['pegleg']['pegleg']"
+  versions_lookup "['data']['images_refs']['images']['pegleg']"
 
   cat >> $ENV_FILE << EOF
 USER=pegleg

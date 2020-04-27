@@ -6,8 +6,6 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
-  labels:
-    name: ucp-ceph-ingress-global
   storagePolicy: cleartext
   substitutions:
     # Chart source
@@ -31,7 +29,7 @@ data:
   wait:
     timeout: 300
     labels:
-      release_group: airship-ucp-ceph-ingress
+      release_group: clcp-ucp-ceph-ingress
   install:
     no_hooks: false
   upgrade:
@@ -40,7 +38,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-ceph-ingress
+            release_group: clcp-ucp-ceph-ingress
   values:
     conf:
       ingress:

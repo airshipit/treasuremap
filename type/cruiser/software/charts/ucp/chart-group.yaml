@@ -1,0 +1,21 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-services-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  description: UCP Services
+  sequenced: false
+  chart_group:
+    - ucp-barbican-scaled
+    - ucp-deckhand-scaled
+    - ucp-maas-scaled
+    - ucp-drydock-scaled
+    - ucp-promenade-scaled
+    - ucp-shipyard-scaled
+    - ucp-apiserver-webhook-scaled
+...

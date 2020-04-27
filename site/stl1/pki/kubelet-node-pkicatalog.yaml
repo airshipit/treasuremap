@@ -1,0 +1,115 @@
+---
+# The purpose of this file is to define the PKI certificates for the environment
+#
+# NOTE: When deploying a new site, this file should not be configured until
+# baremetal/nodes.yaml is complete.
+schema: promenade/PKICatalog/v1
+metadata:
+  schema: metadata/Document/v1
+  name: cluster-certificates
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  certificate_authorities:
+    kubernetes:
+      description: CA for Kubernetes components
+      certificates:
+        - document_name: kubelet-stl1r01s01
+          common_name: system:node:stl1r01s01
+          hosts:
+            - stl1r01s01
+            - 10.254.125.141
+            - 172.29.0.11
+          groups:
+            - system:nodes
+        - document_name: kubelet-stl1r01s02
+          common_name: system:node:stl1r01s02
+          hosts:
+            - stl1r01s02
+            - 10.254.125.142
+            - 172.29.0.12
+          groups:
+            - system:nodes
+        - document_name: kubelet-stl1r01s03
+          common_name: system:node:stl1r01s03
+          hosts:
+            - stl1r01s03
+            - 10.254.125.143
+            - 172.29.0.13
+          groups:
+            - system:nodes
+        - document_name: kubelet-stl1r01s04
+          common_name: system:node:stl1r01s04
+          hosts:
+            - stl1r01s04
+            - 10.254.125.144
+            - 172.29.0.14
+          groups:
+            - system:nodes
+        - document_name: kubelet-stl1r01s05
+          common_name: system:node:stl1r01s05
+          hosts:
+            - stl1r01s05
+            - 10.254.125.145
+            - 172.29.0.15
+          groups:
+            - system:nodes
+        - document_name: kubelet-stl1r01s06
+          common_name: system:node:stl1r01s06
+          hosts:
+            - stl1r01s06
+            - 10.254.125.146
+            - 172.29.0.16
+          groups:
+            - system:nodes
+        - document_name: kubelet-stl1r01s07
+          common_name: system:node:stl1r01s07
+          hosts:
+            - stl1r01s07
+            - 10.254.125.147
+            - 172.29.0.17
+          groups:
+            - system:nodes
+        - document_name: kubelet-stl1r01s08
+          common_name: system:node:stl1r01s08
+          hosts:
+            - stl1r01s08
+            - 10.254.125.148
+            - 172.29.0.18
+          groups:
+            - system:nodes
+        - document_name: kubelet-stl1r01s09
+          common_name: system:node:stl1r01s09
+          hosts:
+            - stl1r01s09
+            - 10.254.125.149
+            - 172.29.0.19
+          groups:
+            - system:nodes
+        - document_name: kubelet-stl1r01s10
+          common_name: system:node:stl1r01s10
+          hosts:
+            - stl1r01s10
+            - 10.254.125.150
+            - 172.29.0.20
+          groups:
+            - system:nodes
+        - document_name: kubelet-stl1r01s11
+          common_name: system:node:stl1r01s11
+          hosts:
+            - stl1r01s11
+            - 10.254.125.151
+            - 172.29.0.21
+          groups:
+            - system:nodes
+        - document_name: kubelet-stl1r01s12
+          common_name: system:node:stl1r01s12
+          hosts:
+            - stl1r01s12
+            - 10.254.125.152
+            - 172.29.0.22
+          groups:
+            - system:nodes
+...

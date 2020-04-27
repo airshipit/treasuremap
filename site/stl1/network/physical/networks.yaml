@@ -1,0 +1,277 @@
+---
+# The purpose of this file is to define all of the NetworkLinks (i.e. layer 1
+# devices) and Networks (i.e. layer 3 configurations). The following is standard
+# for the logical networks in NC:
+#
+# +----------+-----------------------------------+----------------+--------------+----------------------------------------------------+-----------------+
+# | Network  |                                   | Per-rack or    |              |                                                    |   VLAN tagged   |
+# |   Name   |             Purpose               | per-site CIDR? | Has gateway? |                    Bond                            |  or untagged?   |
+# +----------+-----------------------------------+----------------+--------------+----------------------------------------------------+-----------------+
+# |   oob    | Out of Band devices (iDrac/iLo)   | per-rack CIDR  | Has gateway  |                No bond, N/A                        | Untagged/Native |
+# |   pxe    | PXE boot network                  | per-rack CIDR  | No gateway   | No bond, no LACP fallback. Dedicated PXE interface | Untagged/Native |
+# |   oam    | management net; k8s traffic       | per-site CIDR  | Has gateway  |               member of bond1                      |     tagged      |
+# | storage  | storage network                   | per-site CIDR  | No gateway   |               member of bond1                      |     tagged      |
+# |  calico  | underlay calico network           | per-site CIDR  | No gateway   |               member of bond1                      |     tagged      |
+# | overlay  | overlay network for openstack SDN | per-site CIDR  | No gateway   |               member of bond1                      |     tagged      |
+# | routable | OVS-F (OVS Floating IP – Public)  | per-site CIDR  | Has gateway  |               member of bond1                      |     tagged      |
+# +----------+-----------------------------------+----------------+--------------+----------------------------------------------------+-----------------+
+#
+# For standard NC deployments, you should not need to modify the number of
+# NetworkLinks and Networks in this file. Only the metadata name, the IP addresses and CIDRs should
+# need editing.
+#
+# NOTE: For FQDN naming conventions, refer to the following:
+# 1st rack PXE & OOB NetworkLink & Network definition
+# NEWSITE-CHANGEME: Update each "rack" reference below (metadata.name, data.trunking.default_network,
+# data.allowed_networks) with an applicable name for this site & rack
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: oob
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      network_role: oob
+      topology: cruiser
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Update with this particular rack's out-of-band CIDR
+  cidr: 10.253.200.0/24
+  routes:
+    # NEWSITE-CHANGEME: Update with this practicular rack's out-of-band gateway IP
+    - subnet: '0.0.0.0/0'
+      gateway: 10.253.200.1
+      metric: 100
+  # NEWSITE-CHANGEME: Update with the site's out-of-band IP allocation range
+  # FIXME: Is this IP range actually used/allocated for anything? The HW already
+  # has its OOB IPs assigned. None of the Ubuntu OS's should need IPs on OOB
+  # network either, as they should be routable via the default gw on OAM network
+  ranges:
+    - type: static
+      start: 10.253.200.12
+      end: 10.253.200.22
+...
+# NEWSITE-CHANGEME: Update each "rack" reference below (metadata.name, data.trunking.default_network,
+# data.allowed_networks) with an applicable name for this site & rack
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: pxe
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      network_role: pxe
+      topology: cruiser
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Update with the site's PXE network CIDR
+  # NOTE: The CIDR minimum size = (number of nodes * 2) + 10
+  cidr: 172.30.0.0/25
+  # PXE network default gateway. Required.
+  routes:
+    - subnet: 0.0.0.0/0
+      # NEWSITE-CHANGEME: Set the PXE network gateway IP address
+      gateway: 172.30.0.1
+      metric: 100
+  # NOTE: The first 10 IPs in the subnet are reserved for network infrastructure.
+  # The remainder of the range is divided between two subnets of equal size:
+  # one static, and one DHCP.
+  # The DHCP addresses are used when nodes perform a PXE boot (DHCP address gets
+  # assigned), and when a node is commissioning in MaaS (also uses DHCP to get
+  # its IP address). However, when MaaS installs the operating system
+  # ("Deploying/Deployed" states), it will write a static IP assignment to
+  # /etc/network/interfaces[.d] with IPs from the "static" subnet defined here.
+  ranges:
+    # NEWSITE-CHANGEME: Update to the first 10 IPs in the CIDR
+    - type: reserved
+      start: 172.30.0.1
+      end: 172.30.0.10
+    # NEWSITE-CHANGEME: Update to the first half of the remaining range after
+    # excluding the 10 reserved IPs.
+    - type: static
+      start: 172.30.0.11
+      end: 172.30.0.63
+    # NEWSITE-CHANGEME: Update to the second half of the remaining range after
+    # excluding the 10 reserved IPs.
+    - type: dhcp
+      start: 172.30.0.64
+      end: 172.30.0.126
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: oam
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      network_role: oam
+      topology: cruiser
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Set the CIDR for the OAM network
+  # NOTE: The CIDR minimum size = number of nodes + 10
+  cidr: 10.254.125.128/25
+  routes:
+    - subnet: 0.0.0.0/0
+      # NEWSITE-CHANGEME: Set the OAM network gateway IP address
+      gateway: 10.254.125.129
+      metric: 100
+  ranges:
+    # NEWSITE-CHANGEME: Update to the first 10 IPs in the CIDR
+    - type: reserved
+      start: 10.254.125.129
+      end: 10.254.125.141
+    # NEWSITE-CHANGEME: Update to the remaining range after excluding the 10
+    # 10 reserved IPs.
+    - type: static
+      start: 10.254.125.142
+      end: 10.254.125.152
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: storage
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      network_role: storage
+      topology: cruiser
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Set the CIDR for the storage network
+  # NOTE: The CIDR minimum size = number of nodes + 10
+  cidr: 172.31.0.0/25
+  ranges:
+    # NEWSITE-CHANGEME: Update to the first 10 IPs in the CIDR
+    - type: reserved
+      start: 172.31.0.1
+      end: 172.31.0.10
+    # NEWSITE-CHANGEME: Update to the remaining range after excluding the 10
+    # 10 reserved IPs.
+    - type: static
+      start: 172.31.0.11
+      end: 172.31.0.127
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: calico
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      network_role: calico
+      topology: cruiser
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Set the CIDR for the calico network
+  # NOTE: The CIDR minimum size = number of nodes + 10
+  cidr: 172.29.0.0/25
+  ranges:
+    # NEWSITE-CHANGEME: Update to the first 10 IPs in the CIDR  - type: reserved
+    - type: reserved
+      start: 172.29.0.1
+      end: 172.29.0.10
+    # NEWSITE-CHANGEME: Update to the remaining range after excluding the 10
+    # 10 reserved IPs.
+    - type: static
+      start: 172.29.0.11
+      end: 172.29.0.127
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: overlay
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      network_role: os-overlay
+      topology: cruiser
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Set the CIDR for the overlay network
+  # NOTE: The CIDR minimum size = number of nodes + 10
+  cidr: 172.17.0.0/25
+  ranges:
+    # NEWSITE-CHANGEME: Update to the first 10 IPs in the CIDR
+    - type: reserved
+      start: 172.17.0.1
+      end: 172.17.0.10
+    # NEWSITE-CHANGEME: Update to the remaining range after excluding the 10
+    # 10 reserved IPs.
+    - type: static
+      start: 172.17.0.11
+      end: 172.17.0.63
+  routes:
+    - subnet: 0.0.0.0/0
+      # NEWSITE-CHANGEME: Update to the gateway address for this network
+      gateway: 172.17.0.3
+  labels:
+    # NEWSITE-CHANGEME: All cruisers should have this enabled, set to false if this
+    #  is a special case. If set to false, IP Addresses and CIDR will still need
+    #  to be specified above to satisfy the schema and substitution used by other documents.
+    enabled: true
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: routable
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      network_role: os-routable
+      topology: cruiser
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Set the CIDR for the OVS-F (OVS Floating IP – Public) network
+  cidr: 10.254.195.192/26
+  ranges:
+    - type: reserved
+      # NEWSITE-CHANGEME: Update to the start and end addresses to be used for the Floating IP pool
+      start: 10.254.195.197
+      end: 10.254.195.223
+  routes:
+    - subnet: 0.0.0.0/0
+      # NEWSITE-CHANGEME: Update to the gateway address for this network
+      gateway: 10.254.195.193
+      metric: 100
+  labels:
+    # NEWSITE-CHANGEME: All cruisers should have this enabled, set to false if this
+    #     is a special case in corridor 1 that doesn't support a floating IP pool.
+    #     If set to false, IP Addresses and CIDR will still need to be specified
+    #     above to satisfy the schema and substitution used by other documents.
+    enabled: true
+...

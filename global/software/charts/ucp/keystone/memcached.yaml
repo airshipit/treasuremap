@@ -3,8 +3,6 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-keystone-memcached
-  labels:
-    name: ucp-keystone-memcached-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -36,10 +34,12 @@ data:
   chart_name: ucp-keystone-memcached
   release: ucp-keystone-memcached
   namespace: ucp
+  protected:
+    continue_processing: false
   wait:
     timeout: 600
     labels:
-      release_group: airship-ucp-keystone-memcached
+      release_group: clcp-ucp-keystone-memcached
   install:
     no_hooks: false
   upgrade:
@@ -48,7 +48,7 @@ data:
       delete:
           - type: job
             labels:
-              release_group: airship-ucp-keystone-memcached
+              release_group: clcp-ucp-keystone-memcached
   values:
     labels:
       server:
@@ -56,27 +56,4 @@ data:
         node_selector_value: enabled
   dependencies:
     - ucp-memcached-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: ucp-memcached-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.memcached-htk
-      dest:
-        path: .source
-data:
-  chart_name: ucp-memcached-htk
-  release: ucp-memcached-htk
-  namespace: ucp-memcached-htk
-  values: {}
-  dependencies: []
 ...

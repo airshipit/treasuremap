@@ -1,0 +1,42 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: tenant-ceph-osd-sdd
+  labels:
+    name: tenant-ceph-osd-sdd-nc
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: tenant-ceph-osd-global
+    actions:
+      - method: replace
+        path: .values.conf.storage.osd
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  chart_name: tenant-ceph-osd-sdd
+  release: tenant-ceph-osd-sdd
+  wait:
+    labels:
+      release_group: clcp-tenant-ceph-osd-sdd
+  values:
+    daemonset:
+      prefix_name: "clcp-tenant-ceph-osd-sdd"
+    conf:
+      storage:
+        failure_domain_by_hostname: 1-8
+        osd:
+          - data:
+              type: bluestore
+              location: /dev/sdd
+            block_db:
+              location: /dev/sdb
+              size: "96GB"
+            block_wal:
+              location: /dev/sdb
+              size: "2GB"
+...
+

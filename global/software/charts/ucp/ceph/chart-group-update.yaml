@@ -2,11 +2,13 @@
 schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
-  name: ucp-ceph-update
+  name: ucp-ceph-update-global
   layeringDefinition:
-    abstract: false
+    abstract: true
     layer: global
   storagePolicy: cleartext
+  labels:
+    name: ucp-ceph-update-global
 data:
   description: Ceph post-install update
   sequenced: true
@@ -15,5 +17,5 @@ data:
     - ucp-ceph-mon
     - ucp-ceph-osd
     - ucp-ceph-client-update
-    - ucp-ceph-provisioners
+    - ucp-ceph-provisioners-update
 ...

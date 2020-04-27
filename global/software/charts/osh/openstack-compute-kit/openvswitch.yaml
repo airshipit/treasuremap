@@ -24,14 +24,27 @@ metadata:
         path: .images.osh.openvswitch
       dest:
         path: .values.images.tags
+    # External Interface
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .openvswitch.external_iface
+      dest:
+        path: .values.network.interface.external
+        pattern: 'EXTERNAL_INTERFACE'
 data:
   chart_name: openvswitch
   release: openvswitch
   namespace: openstack
   wait:
-    timeout: 900
+    timeout: 2700
     labels:
-      release_group: airship-openvswitch
+      release_group: clcp-openvswitch
+    resources:
+      - type: daemonset
+        min_ready: 100%
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -40,24 +53,59 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-openvswitch
+            release_group: clcp-openvswitch
   values:
     labels:
       ovs:
         node_selector_key: openvswitch
         node_selector_value: enabled
+    pod:
+      probes:
+        ovs_db:
+          ovs_db:
+            liveness:
+              enabled: true
+              params:
+                failureThreshold: 3
+                initialDelaySeconds: 10
+                periodSeconds: 10
+        ovs_vswitch:
+          ovs_vswitch:
+            liveness:
+              enabled: true
+              params:
+                failureThreshold: 3
+                initialDelaySeconds: 10
+                periodSeconds: 10
+      apparmor:
+        openvswitch:
+          openvswitch: localhost/docker-default
+          init: localhost/docker-default
+      lifecycle:
+        upgrades:
+          daemonsets:
+            pod_replacement_strategy: RollingUpdate
+            ovs_db:
+              enabled: true
+              max_unavailable: 100%
+            ovs_vswitchd:
+              enabled: true
+              max_unavailable: 100%
+    network:
+      external_bridge: br-bond1
+      interface:
+        external: 'EXTERNAL_INTERFACE'
   dependencies:
-    - openvswitch-htk
+    - os-openvswitch-htk
 ...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: openvswitch-htk
+  name: os-openvswitch-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -65,10 +113,16 @@ metadata:
         path: .charts.osh.openvswitch-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: openvswitch-htk
-  release: openvswitch-htk
-  namespace: openvswitch-htk
+  chart_name: os-openvswitch-htk
+  release: os-openvswitch-htk
+  namespace: os-openvswitch-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

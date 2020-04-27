@@ -3,6 +3,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: prometheus-node-exporter
+  labels:
+    name: prometheus-node-exporter-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -39,7 +41,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-prometheus-node-exporter
+      release_group: clcp-prometheus-node-exporter
   install:
     no_hooks: false
   upgrade:
@@ -48,11 +50,81 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-prometheus-node-exporter
+            release_group: clcp-prometheus-node-exporter
       create: []
     post:
       create: []
   values:
+    pod:
+      mandatory_access_control:
+        type: apparmor
+        node-exporter:
+          node-exporter: localhost/docker-default
+      resources:
+        enabled: true
+        node_exporter:
+          requests:
+            memory: "512Mi"
+            cpu: "100m"
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
+      lifecycle:
+        upgrades:
+          daemonsets:
+            node_exporter:
+              max_unavailable: 100%
+      mounts:
+        node_exporter:
+          node_exporter:
+            volumeMounts:
+              - name: node-root
+                mountPath: /node/
+                readOnly:  true
+              - name: node-var
+                mountPath: /node/var
+                readOnly:  true
+              - name: node-var-log
+                mountPath: /node/var/log
+                readOnly:  true
+              - name: node-boot
+                mountPath: /node/boot
+                readOnly:  true
+              - name: node-var-crash
+                mountPath: /node/var/crash
+                readOnly:  true
+              - name: node-var-lib-nova
+                mountPath: /node/var/lib/nova
+                readOnly:  true
+              - name: node-srv
+                mountPath: /node/srv
+                readOnly: true
+            volumes:
+              - name: node-root
+                hostPath:
+                  path: /
+              - name: node-var
+                hostPath:
+                  path: /var
+              - name: node-var-log
+                hostPath:
+                  path: /var/log
+              - name: node-boot
+                hostPath:
+                  path: /boot
+              - name: node-var-crash
+                hostPath:
+                  path: /var/crash
+              - name: node-var-lib-nova
+                hostPath:
+                  path: /var/lib/nova
+              - name: node-srv
+                hostPath:
+                  path: /srv
+    conf:
+      collectors:
+        textfile:
+          directory: /var/log/node-exporter-textfiles
     labels:
       node_exporter:
         node_selector_key: node-exporter
@@ -61,5 +133,34 @@ data:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
   dependencies:
-    - osh-infra-helm-toolkit
+    - prometheus_node_exporter-htk
+...
+
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: prometheus_node_exporter-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.prometheus_node_exporter-htk
+      dest:
+        path: .source
+  storagePolicy: cleartext
+data:
+  chart_name: prometheus_node_exporter-htk
+  release: prometheus_node_exporter-htk
+  namespace: prometheus_node_exporter-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []
 ...

@@ -108,10 +108,11 @@ metadata:
         path: .values.endpoints.network
     - src:
         schema: pegleg/EndpointCatalogue/v1
-        name: osh_infra_endpoints
-        path: .osh_infra.fluentd
+        name: osh_endpoints
+        path: .osh.compute.name
       dest:
-        path: .values.endpoints.fluentd
+        path: .values.endpoints.oslo_messaging.path
+        pattern: VHOST_NAME
 
     # Service Accounts
     - src:
@@ -126,6 +127,12 @@ metadata:
         path: .osh.nova.nova
       dest:
         path: .values.endpoints.identity.auth.nova
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.nova.test
+      dest:
+        path: .values.endpoints.identity.auth.test
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
@@ -189,13 +196,6 @@ metadata:
       dest:
         path: .values.endpoints.oslo_db_cell0.path
         pattern: DB_NAME
-    - src:
-        schema: pegleg/EndpointCatalogue/v1
-        name: osh_endpoints
-        path: .osh.compute.name
-      dest:
-        path: .values.endpoints.oslo_messaging.path
-        pattern: VHOST_NAME
 
     # Secrets
     - dest:
@@ -211,6 +211,12 @@ metadata:
         name: osh_nova_password
         path: .
     - dest:
+        path: .values.endpoints.identity.auth.test.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_nova_test_password
+        path: .
+    - dest:
         path: .values.endpoints.identity.auth.neutron.password
       src:
         schema: deckhand/Passphrase/v1
@@ -223,6 +229,12 @@ metadata:
         name: osh_placement_password
         path: .
     - dest:
+        path: .values.endpoints.identity.auth.ironic.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_ironic_password
+        path: .
+    - dest:
         path: .values.endpoints.oslo_messaging.auth.admin.password
       src:
         schema: deckhand/Passphrase/v1
@@ -232,7 +244,7 @@ metadata:
         path: .values.endpoints.oslo_messaging.auth.nova.password
       src:
         schema: deckhand/Passphrase/v1
-        name: osh_oslo_messaging_admin_password
+        name: osh_nova_oslo_messaging_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.nova.password
@@ -282,10 +294,25 @@ metadata:
         schema: deckhand/Passphrase/v1
         name: osh_nova_metadata_proxy_shared_secret
         path: .
+
 data:
   chart_name: nova
   release: nova
   namespace: openstack
+  wait:
+    timeout: 2700
+    labels:
+      release_group: clcp-nova
+    resources:
+      - type: job
+      - type: deployment
+        min_ready: 100%
+      - type: daemonset
+        min_ready: 100%
+    native:
+      enabled: false
+  test:
+    timeout: 600
   install:
     no_hooks: false
   upgrade:
@@ -294,14 +321,18 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-nova
+            release_group: clcp-nova
     post:
       create: []
-  wait:
-    timeout: 2700
-    labels:
-      release_group: airship-nova
   values:
+    dependencies:
+      static:
+        rabbit_init:
+          services:
+            - endpoint: internal
+              service: oslo_messaging
+          jobs:
+            - clcp-openstack-rabbitmq-cluster-wait
     labels:
       agent:
         compute:
@@ -338,51 +369,82 @@ data:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
     pod:
+      mandatory_access_control:
+        type: apparmor
+        nova-compute-default:
+          # NOTE: needs to be fixed for nc2.0 release
+          nova-compute: unconfined
+      #NOTE(rk760n): replicas number is based on AIC3.x openstack services workers configuration
       replicas:
-        api_metadata: 4
-        placement: 2
-        osapi: 4
-        conductor: 4
-        consoleauth: 2
-        scheduler: 2
-        novncproxy: 2
+        api_metadata: 32
+        placement: 4
+        osapi: 32
+        conductor: 32
+        consoleauth: 4
+        scheduler: 4
+        novncproxy: 4
+      affinity:
+        anti:
+          type:
+            consoleauth: requiredDuringSchedulingIgnoredDuringExecution
+            novnc-proxy: requiredDuringSchedulingIgnoredDuringExecution
+            placement: requiredDuringSchedulingIgnoredDuringExecution
+            scheduler: requiredDuringSchedulingIgnoredDuringExecution
+          weight:
+            default: 100
+      lifecycle:
+        upgrades:
+          deployments:
+            pod_replacement_strategy: RollingUpdate
+            rolling_update:
+              max_unavailable: 50%
+          daemonsets:
+            pod_replacement_strategy: RollingUpdate
+            compute:
+              max_unavailable: 100%
     ceph_client:
       configmap: tenant-ceph-etc
       user_secret_name: pvc-tceph-client-key
     conf:
-      nova:
-        libvirt:
-          cpu_mode: 'host-passthrough'
-          virt_type: kvm
-        database:
-          max_pool_size: 30
-          max_retries: -1
-          max_overflow: 60
+      rabbitmq:
+        policies:
+          - vhost: "nova"
+            name: "ha_ttl_nova"
+            definition:
+              ha-mode: "all"
+              ha-sync-mode: "automatic"
+              message-ttl: 70000
+            priority: 0
+            apply-to: all
+            pattern: '^(?!(amq\.|reply_)).*'
       logging:
         loggers:
           keys:
             - root
             - nova
+            - oslo.messaging
         handlers:
           keys:
             - stdout
             - stderr
-            - 'null'
-            - fluent
+            - "null"
         formatters:
           keys:
             - context
             - default
-            - fluent
         logger_root:
           level: WARNING
-          handlers: stdout
+          handlers: "null"
         logger_nova:
           level: INFO
           handlers:
             - stdout
-            - fluent
           qualname: nova
+        logger_oslo.messaging:
+          level: INFO
+          handlers:
+            - stdout
+          qualname: oslo.messaging
         logger_amqp:
           level: WARNING
           handlers: stderr
@@ -415,28 +477,362 @@ data:
           class: StreamHandler
           args: (sys.stderr,)
           formatter: context
-        handler_fluent:
-          class: fluent.handler.FluentHandler
-          args: ('openstack.nova', 'fluentd-logging.osh-infra', 24224)
-          formatter: fluent
-        formatter_fluent:
-          class: oslo_log.formatters.FluentFormatter
         formatter_context:
           class: oslo_log.formatters.ContextFormatter
         formatter_default:
           format: "%(message)s"
+      policy:
+        context_is_admin: role:admin or role:admin_support or role:admin_viewer
+        admin_or_owner: role:admin or project_id:%(project_id)s
+        default: role:admin
+        admin_create: role:admin or role:admin_support
+        admin_read: role:admin or role:admin_support or role:admin_viewer
+        admin_update: role:admin
+        admin_delete: role:admin
+        admin_snapshot: role:admin
+        tenant_create: role:snapshot_member or role:_member_ or role:sriov_member or role:support_member or rule:admin_create
+        tenant_snapshot: role:snapshot_member or rule:admin_snapshot
+        tenant_read: role:snapshot_member or role:_member_ or role:sriov_member or role:support_member or role:viewer or rule:admin_read
+        tenant_update: role:snapshot_member or role:_member_ or role:sriov_member or rule:admin_update
+        tenant_delete: role:snapshot_member or role:_member_ or role:sriov_member or rule:admin_delete
+        not_implemented_in_aic: '!'
+        os_compute_api:os-admin-actions:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-admin-actions:reset_state: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-admin-actions:inject_network_info: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-admin-actions: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-admin-actions:reset_network: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-admin-password:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-admin-password: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-agents: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-agents:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-aggregates:set_metadata: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-aggregates:add_host: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-aggregates:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-aggregates:create: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-aggregates:remove_host: rule:admin_delete or role:admin_nova_delete
+        os_compute_api:os-aggregates:update: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-aggregates:index: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-aggregates:delete: rule:admin_delete or role:admin_nova_delete
+        os_compute_api:os-aggregates:show: rule:admin_read or role:admin_nova_read
+        os_compute_api:os-assisted-volume-snapshots:create: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-assisted-volume-snapshots:delete: rule:admin_delete or role:admin_nova_delete
+        os_compute_api:os-assisted-volume-snapshots:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-attach-interfaces: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-attach-interfaces:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-attach-interfaces:create: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:os-attach-interfaces:delete: rule:tenant_delete or role:tenant_nova_delete
+        os_compute_api:os-availability-zone:list: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-availability-zone:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-availability-zone:detail: rule:admin_read or role:admin_nova_read
+        os_compute_api:os-baremetal-nodes:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-baremetal-nodes: rule:admin_update or role:admin_nova_update
+        admin_api: is_admin:True
+        network:attach_external_network: rule:not_implemented_in_aic
+        os_compute_api:os-block-device-mapping:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-block-device-mapping-v1:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-cells:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-cells:update: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-cells:create: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-cells: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-cells:sync_instances: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-cells:delete: rule:admin_delete or role:admin_nova_delete
+        cells_scheduler_filter:DifferentCellFilter: rule:admin_create or role:admin_nova_create
+        cells_scheduler_filter:TargetCellFilter: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-certificates:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-certificates:create: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:os-certificates:show: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-cloudpipe: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-cloudpipe:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-config-drive:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-config-drive: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-console-auth-tokens:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-console-auth-tokens: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-console-output:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-console-output: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-consoles:create: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:os-consoles:show: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-consoles:delete: rule:tenant_delete or role:tenant_nova_delete
+        os_compute_api:os-consoles:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-consoles:index: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-create-backup:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-create-backup: rule:tenant_snapshot or role:tenant_nova_create
+        os_compute_api:os-deferred-delete:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-deferred-delete: rule:tenant_delete or role:tenant_nova_delete
+        os_compute_api:os-evacuate:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-evacuate: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-extended-availability-zone: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-extended-availability-zone:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-extended-server-attributes: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-extended-server-attributes:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-extended-status:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-extended-status: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-extended-volumes: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-extended-volumes:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:extension_info:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:extensions: rule:admin_or_owner
+        os_compute_api:extensions:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-fixed-ips:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-fixed-ips: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-flavor-access:add_tenant_access: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-flavor-access:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-flavor-access:remove_tenant_access: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-flavor-access: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-flavor-extra-specs:show: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-flavor-extra-specs:create: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-flavor-extra-specs:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-flavor-extra-specs:update: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-flavor-extra-specs:delete: rule:admin_delete or role:admin_nova_delete
+        os_compute_api:os-flavor-extra-specs:index: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-flavor-manage: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-flavor-manage:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-flavor-manage:create: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-flavor-manage:delete: rule:admin_delete or role:admin_nova_delete
+        os_compute_api:os-flavor-rxtx: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-flavor-rxtx:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:flavors:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:flavors: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:os-floating-ip-dns: '!'
+        os_compute_api:os-floating-ip-dns:domain:update: '!'
+        os_compute_api:os-floating-ip-dns:discoverable: '!'
+        os_compute_api:os-floating-ip-dns:domain:delete: '!'
+        os_compute_api:os-floating-ip-pools:discoverable: '!'
+        os_compute_api:os-floating-ip-pools: '!'
+        os_compute_api:os-floating-ips: '!'
+        os_compute_api:os-floating-ips:discoverable: '!'
+        os_compute_api:os-floating-ips-bulk:discoverable: '!'
+        os_compute_api:os-floating-ips-bulk: '!'
+        os_compute_api:os-fping:all_tenants: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-fping:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-fping: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:os-hide-server-addresses:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-hide-server-addresses: is_admin:False
+        os_compute_api:os-hosts:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-hosts: rule:context_is_admin or role:admin_nova_read
+        os_compute_api:os-hypervisors:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-hypervisors: rule:admin_read or role:admin_nova_read
+        os_compute_api:image-metadata:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:image-size:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:image-size: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:images:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-instance-actions:events: rule:admin_read or role:admin_nova_read
+        os_compute_api:os-instance-actions: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-instance-actions:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-instance-usage-audit-log: rule:admin_read or role:admin_nova_read
+        os_compute_api:os-instance-usage-audit-log:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:ips:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:ips:show: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:ips:index: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-keypairs:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-keypairs:index: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-keypairs:create: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:os-keypairs:delete: rule:tenant_delete or role:tenant_nova_delete
+        os_compute_api:os-keypairs:show: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-keypairs: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:limits:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:limits: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-lock-server:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-lock-server:lock: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-lock-server:unlock:unlock_override: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-lock-server:unlock: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-migrate-server:migrate: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-migrate-server:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-migrate-server:migrate_live: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-migrations:index: rule:admin_read or role:admin_nova_read
+        os_compute_api:os-migrations:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-multinic: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-multinic:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-multiple-create:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-networks:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-networks: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-networks:view: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-networks-associate: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-networks-associate:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-pause-server:unpause: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-pause-server:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-pause-server:pause: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-pci:index: rule:admin_read or role:admin_nova_read
+        os_compute_api:os-pci:detail: rule:admin_read or role:admin_nova_read
+        os_compute_api:os-pci:pci_servers: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:os-pci:show: rule:admin_read or role:admin_nova_read
+        os_compute_api:os-pci:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-quota-class-sets:show: rule:admin_read or quota_class:%(quota_class)s or role:admin_nova_read
+        os_compute_api:os-quota-class-sets:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-quota-class-sets:update: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-quota-sets:update: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-quota-sets:defaults: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-quota-sets:show: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-quota-sets:delete: rule:admin_delete or role:admin_nova_delete
+        os_compute_api:os-quota-sets:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-quota-sets:detail: rule:admin_read or role:admin_nova_read
+        os_compute_api:os-remote-consoles: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-remote-consoles:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-rescue:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-rescue: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-scheduler-hints:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-security-group-default-rules:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-security-group-default-rules: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-security-groups: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-security-groups:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-server-diagnostics: rule:admin_read or role:admin_nova_read
+        os_compute_api:os-server-diagnostics:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-server-external-events:create: rule:admin_create or role:admin_nova_create
+        os_compute_api:os-server-external-events:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-server-groups:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-server-groups: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:os-server-groups:create: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:os-server-groups:delete: rule:tenant_delete or role:tenant_nova_delete
+        os_compute_api:os-server-groups:index: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-server-groups:show: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:server-metadata:index: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:server-metadata:show: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:server-metadata:create: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:server-metadata:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:server-metadata:update_all: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:server-metadata:delete: rule:tenant_delete or role:tenant_nova_delete
+        os_compute_api:server-metadata:update: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-server-password: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:os-server-password:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-server-tags:delete_all: rule:tenant_delete or role:tenant_nova_delete
+        os_compute_api:os-server-tags:index: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-server-tags:update_all: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-server-tags:delete: rule:tenant_delete or role:tenant_nova_delete
+        os_compute_api:os-server-tags:update: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-server-tags:show: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-server-tags:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-server-usage: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-server-usage:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:servers:index: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:servers:detail: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:servers:detail:get_all_tenants: rule:admin_read or role:admin_nova_read
+        os_compute_api:servers:index:get_all_tenants: rule:admin_read or role:admin_nova_read
+        os_compute_api:servers:show: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:servers:show:host_status: rule:admin_read or role:admin_nova_read
+        os_compute_api:servers:create: rule:tenant_create or role:tenant_nova_create
+        #os_compute_api:servers:create:forced_host: rule:admin_create or role:admin_nova_create
+        os_compute_api:servers:create:forced_host: rule:admin_create or role:admin_nova_create or rule:tenant_create
+        os_compute_api:servers:create:attach_volume: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:servers:create:attach_network: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:servers:delete: rule:tenant_delete or role:tenant_nova_delete
+        os_compute_api:servers:update: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:servers:confirm_resize: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:servers:revert_resize: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:servers:reboot: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:servers:resize: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:servers:rebuild: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:servers:create_image: rule:tenant_snapshot or rule:admin_create or role:admin_nova_create
+        os_compute_api:servers:create_image:allow_volume_backed: rule:tenant_snapshot or rule:admin_create or role:admin_nova_create
+        os_compute_api:servers:start: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:servers:stop: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:servers:trigger_crash_dump: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:servers:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:servers:migrations:show: rule:admin_read or role:admin_nova_read
+        os_compute_api:servers:migrations:force_complete: rule:admin_update or role:admin_nova_update
+        os_compute_api:servers:migrations:delete: rule:admin_delete or role:admin_nova_delete
+        os_compute_api:servers:migrations:index: rule:admin_read or role:admin_nova_read
+        os_compute_api:server-migrations:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-services: rule:context_is_admin or role:admin_nova_read
+        os_compute_api:os-services:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-services:update: rule:admin_update or role:admin_nova_update
+        os_compute_api:os-services:delete: rule:admin_delete or role:admin_nova_delete
+        os_compute_api:os-shelve:shelve: rule:tenant_snapshot or role:tenant_nova_create
+        os_compute_api:os-shelve:unshelve: rule:admin_or_owner
+        os_compute_api:os-shelve:shelve_offload: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-shelve:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-simple-tenant-usage:show: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-simple-tenant-usage:list: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-simple-tenant-usage:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-suspend-server:resume: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-suspend-server:suspend: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-suspend-server:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-tenant-networks: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:os-tenant-networks:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-used-limits:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-used-limits: rule:admin_read or role:admin_nova_read
+        os_compute_api:os-user-data:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:versions:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-virtual-interfaces:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-virtual-interfaces: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:os-volumes:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-volumes: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-volumes-attachments:index: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-volumes-attachments:create: rule:tenant_create or role:tenant_nova_create
+        os_compute_api:os-volumes-attachments:show: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-volumes-attachments:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-volumes-attachments:update: rule:tenant_update or role:tenant_nova_update
+        os_compute_api:os-volumes-attachments:delete: rule:tenant_delete or role:tenant_nova_delete
+      nova:
+        DEFAULT:
+          report_interval: 60
+          service_down_time: 180
+          compute_monitors: Monitor, NicMonitor
+          block_device_allocate_retries: 360
+          block_device_allocate_retries_interval: 10
+        filter_scheduler:
+          host_subset_size: 30
+          available_filters: nova.scheduler.filters.all_filters
+          enabled_filters:
+              type: csv
+              values:
+                - RetryFilter
+                - AvailabilityZoneFilter
+                - RamFilter
+                - CoreFilter
+                - DiskFilter
+                - ComputeFilter
+                - ImagePropertiesFilter
+                - ServerGroupAntiAffinityFilter
+                - ServerGroupAffinityFilter
+                - AggregateInstanceExtraSpecsFilter
+                - AggregateCoreFilter
+                - AggregateRamFilter
+                - AggregateMultiTenancyIsolation
+                - JsonFilter
+                - IoOpsFilter
+                - AggregateDiskFilter
+                - AllHostsFilter
+                - IsolatedHostsFilter
+                - AggregateImagePropertiesIsolation
+                - PciPassthroughFilter
+                - AggregateIoOpsFilter
+                - NumInstancesFilter
+                - AggregateNumInstancesFilter
+                - MetricsFilter
+                - SimpleCIDRAffinityFilter
+                - AggregateTypeAffinityFilter
+                - NUMATopologyFilter
+                - ComputeCapabilitiesFilter
+                - DifferentHostFilter
+                - SameHostFilter
+        libvirt:
+          rx_queue_size: 1024
+          tx_queue_size: 1024
+        neutron:
+          timeout: 90
+        quota:
+          instances: 100
+          cores: 100
+          injected_files: 50
+          injected_file_path_length: 4096
+          key_pairs: 10
+        cinder:
+          http_retries: 6
+        oslo_messaging_rabbit:
+          heartbeat_timeout_threshold: 60
+        audit_middleware_notifications:
+          driver: log
+        workarounds:
+          validate_aggregate_ids: true
   dependencies:
-    - nova-htk
+    - os-nova-htk
 ...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: nova-htk
+  name: os-nova-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -444,10 +840,16 @@ metadata:
         path: .charts.osh.nova-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: nova-htk
-  release: nova-htk
-  namespace: nova-htk
+  chart_name: os-nova-htk
+  release: os-nova-htk
+  namespace: os-nova-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

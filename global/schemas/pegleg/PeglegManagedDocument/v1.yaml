@@ -1,0 +1,57 @@
+---
+schema: deckhand/DataSchema/v1
+metadata:
+  schema: metadata/Control/v1
+  name: pegleg/PeglegManagedDocument/v1
+data:
+  $schema: 'http://json-schema.org/schema#'
+  type: 'object'
+  additionalProperties: true
+  properties:
+    encrypted:
+      type: 'object'
+      properties:
+        at:
+          type: 'string'
+        by:
+          type: 'string'
+    generated:
+      type: 'object'
+      properties:
+        at:
+          type: 'string'
+        by:
+          type: 'string'
+    specifiedBy:
+      type: 'object'
+      properties:
+        path:
+          type: 'array'
+        reference:
+          type: 'string'
+        repo:
+          type: 'string'
+    managedDocument:
+      type: 'object'
+      properties:
+        data:
+          type: 'string'
+        metadata:
+          type: 'object'
+          properties:
+            layeringDefinition:
+              type: 'object'
+              properties:
+                abstract:
+                  type: 'boolean'
+                layer:
+                  type: 'string'
+            name:
+              type: 'string'
+            schema:
+              type: 'string'
+            storagePolicy:
+              type: 'string'
+        schema:
+          type: 'string'
+...

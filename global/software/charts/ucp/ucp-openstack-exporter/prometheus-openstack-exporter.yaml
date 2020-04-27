@@ -3,8 +3,6 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-prometheus-openstack-exporter
-  labels:
-    name: ucp-prometheus-openstack-exporter-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -68,13 +66,13 @@ metadata:
         name: ucp_openstack_exporter_keystone_password
         path: .
 data:
-  chart_name: ucp-prometheus-openstack-exporter
+  chart_name: prometheus-openstack-exporter
   release: ucp-prometheus-openstack-exporter
   namespace: ucp
   wait:
     timeout: 900
     labels:
-      release_group: airship-ucp-prometheus-openstack-exporter
+      release_group: clcp-ucp-prometheus-openstack-exporter
   install:
     no_hooks: false
   upgrade:
@@ -83,15 +81,23 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-prometheus-openstack-exporter
+            release_group: clcp-ucp-prometheus-openstack-exporter
   values:
+    pod:
+      resources:
+        enabled: true
+        prometheus_openstack_exporter:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
     labels:
       openstack_exporter:
-        node_selector_key: openstack-control-plane
+        node_selector_key: ucp-control-plane
         node_selector_value: enabled
       job:
-        node_selector_key: openstack-control-plane
+        node_selector_key: ucp-control-plane
         node_selector_value: enabled
-  dependencies:
-    - osh-infra-helm-toolkit
 ...

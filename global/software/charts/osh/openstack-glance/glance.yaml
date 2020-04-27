@@ -77,12 +77,6 @@ metadata:
       dest:
         path: .values.endpoints.object_store
     - src:
-        schema: pegleg/EndpointCatalogue/v1
-        name: osh_infra_endpoints
-        path: .osh_infra.fluentd
-      dest:
-        path: .values.endpoints.fluentd
-    - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
         path: .osh.keystone.admin
@@ -94,6 +88,12 @@ metadata:
         path: .osh.glance.glance
       dest:
         path: .values.endpoints.identity.auth.glance
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.glance.test
+      dest:
+        path: .values.endpoints.identity.auth.test
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
@@ -133,7 +133,7 @@ metadata:
         path: .values.endpoints.oslo_messaging.path
         pattern: VHOST_NAME
 
-    # Glance Image
+    #Glance Image
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
@@ -158,6 +158,12 @@ metadata:
         name: osh_glance_password
         path: .
     - dest:
+        path: .values.endpoints.identity.auth.test.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_glance_test_password
+        path: .
+    - dest:
         path: .values.endpoints.oslo_messaging.auth.admin.password
       src:
         schema: deckhand/Passphrase/v1
@@ -167,7 +173,7 @@ metadata:
         path: .values.endpoints.oslo_messaging.auth.glance.password
       src:
         schema: deckhand/Passphrase/v1
-        name: osh_oslo_messaging_admin_password
+        name: osh_glance_oslo_messaging_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.glance.password
@@ -212,7 +218,13 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-glance
+      release_group: clcp-glance
+    resources:
+      - type: job
+      - type: deployment
+        min_ready: 100%
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -221,14 +233,35 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-glance
+            release_group: clcp-glance
     post:
       create: []
+  test:
+    enabled: true
   values:
+    dependencies:
+      static:
+        rabbit_init:
+          services:
+            - endpoint: internal
+              service: oslo_messaging
+          jobs:
+            - clcp-openstack-rabbitmq-cluster-wait
     pod:
       replicas:
-        api: 2
-        registry: 2
+        api: 3
+        registry: 3
+      affinity:
+        anti:
+          type:
+            api: requiredDuringSchedulingIgnoredDuringExecution
+            registry: requiredDuringSchedulingIgnoredDuringExecution
+      lifecycle:
+        upgrades:
+          deployments:
+            pod_replacement_strategy: RollingUpdate
+            rolling_update:
+              max_unavailable: 50%
     labels:
       api:
         node_selector_key: openstack-control-plane
@@ -239,15 +272,28 @@ data:
       registry:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
+    manifests:
+      job_bootstrap: false
+      deployment_registry: true
+      ingress_registry: true
+      pdb_registry: true
+      service_ingress_registry: true
+      service_registry: true
     ceph_client:
       configmap: tenant-ceph-etc
       user_secret_name: pvc-tceph-client-key
-
-    # disable bootstrap of Cirros image
-    bootstrap:
-      enabled: false
-
     conf:
+      rabbitmq:
+        policies:
+          - vhost: "glance"
+            name: "ha_ttl_glance"
+            definition:
+              ha-mode: "all"
+              ha-sync-mode: "automatic"
+              message-ttl: 70000
+            priority: 0
+            apply-to: all
+            pattern: '^(?!(amq\.|reply_)).*'
       rally_tests:
         run_tempest: false
         tests:
@@ -275,32 +321,44 @@ data:
               sla:
                 failure_rate:
                   max: 0
-
+      glance:
+        DEFAULT:
+          enable_v1_api: true
+          enable_v1_registry: true
+          enable_v2_api: true
+          enable_v2_registry: true
+        oslo_middleware:
+          enable_proxy_headers_parsing: true
+        audit_middleware_notifications:
+          driver: log
       logging:
         loggers:
           keys:
             - root
             - glance
+            - oslo.messaging
         handlers:
           keys:
             - stdout
             - stderr
-            - 'null'
-            - fluent
+            - "null"
         formatters:
           keys:
             - context
             - default
-            - fluent
         logger_root:
           level: WARNING
-          handlers: stdout
+          handlers: "null"
         logger_glance:
           level: INFO
           handlers:
             - stdout
-            - fluent
           qualname: glance
+        logger_oslo.messaging:
+          level: INFO
+          handlers:
+            - stdout
+          qualname: oslo.messaging
         logger_amqp:
           level: WARNING
           handlers: stderr
@@ -333,28 +391,89 @@ data:
           class: StreamHandler
           args: (sys.stderr,)
           formatter: context
-        handler_fluent:
-          class: fluent.handler.FluentHandler
-          args: ('openstack.glance', 'fluentd-logging.osh-infra', 24224)
-          formatter: fluent
-        formatter_fluent:
-          class: oslo_log.formatters.FluentFormatter
         formatter_context:
           class: oslo_log.formatters.ContextFormatter
         formatter_default:
           format: "%(message)s"
+      policy:
+        context_is_admin: role:admin or role:admin_support or role:admin_viewer
+        admin_create: role:admin or role:admin_support
+        admin_read: role:admin or role:admin_support or role:admin_viewer
+        admin_update: role:admin
+        admin_delete: role:admin
+        admin_snapshot: role:admin
+        tenant_create: role:snapshot_member or role:_member_ or role:sriov_member or role:support_member or rule:admin_create
+        tenant_snapshot_create: role:snapshot_member or rule:admin_create
+        tenant_snapshot_delete: role:snapshot_member or rule:admin_delete
+        tenant_read: role:snapshot_member or role:_member_  or role:sriov_member or role:support_member or role:viewer or rule:admin_read
+        tenant_update: role:snapshot_member or role:_member_ or role:sriov_member or rule:admin_update
+        tenant_delete: role:snapshot_member or role:_member_ or role:sriov_member or rule:admin_delete
+        tenant_modify_action: role:_member_ or role:sriov_member or rule:tenant_snapshot_create
+        admin_or_owner: role:admin or project_id:%(project_id)s
+        default: role:admin
+        add_image: rule:tenant_snapshot_create or role:tenant_glance_create
+        delete_image: rule:tenant_snapshot_delete or role:tenant_glance_delete
+        get_image: rule:tenant_read or role:tenant_glance_read
+        get_images: rule:tenant_read or role:tenant_glance_read
+        modify_image: rule:tenant_snapshot_create or role:tenant_glance_create
+        publicize_image: rule:admin_create or role:admin_glance_create
+        communitize_image: rule:admin_create or role:admin_glance_create
+        copy_from: rule:admin_create or role:admin_glance_create
+        download_image: rule:tenant_create or role:tenant_glance_create
+        upload_image: rule:tenant_snapshot_create or role:tenant_glance_create
+        delete_image_location: rule:admin_delete or role:admin_glance_delete
+        get_image_location: rule:tenant_create or role:tenant_glance_create
+        set_image_location: rule:admin_create or role:admin_glance_create
+        add_member: rule:tenant_create or role:tenant_glance_create
+        delete_member: rule:tenant_update or role:tenant_glance_update
+        get_member: rule:tenant_read or role:tenant_glance_read
+        get_members: rule:tenant_read or role:tenant_glance_read
+        modify_member: rule:tenant_create or role:tenant_glance_create
+        manage_image_cache: rule:admin_update or role:admin_glance_update
+        get_task: rule:tenant_read or role:tenant_glance_read
+        get_tasks: rule:tenant_read or role:tenant_glance_read
+        add_task: rule:admin_create or role:admin_glance_create
+        modify_task: rule:admin_create or role:admin_glance_create
+        tasks_api_access: role:admin
+        deactivate: rule:admin_update or role:admin_glance_update
+        reactivate: rule:admin_update or role:admin_glance_update
+        get_metadef_namespace: rule:tenant_read or role:tenant_glance_read
+        get_metadef_namespaces: rule:tenant_read or role:tenant_glance_read
+        modify_metadef_namespace: rule:tenant_modify_action or role:tenant_glance_update
+        add_metadef_namespace: rule:tenant_create or role:tenant_glance_create
+        delete_metadef_namespace: rule:tenant_delete or role:tenant_glance_delete
+        get_metadef_object: rule:tenant_read or role:tenant_glance_read
+        get_metadef_objects: rule:tenant_read or role:tenant_glance_read
+        modify_metadef_object: rule:tenant_modify_action or role:tenant_glance_update
+        add_metadef_object: rule:tenant_create or role:tenant_glance_create
+        delete_metadef_object: rule:tenant_delete or role:tenant_glance_delete
+        list_metadef_resource_types: rule:tenant_read or role:tenant_glance_read
+        get_metadef_resource_type: rule:tenant_read or role:tenant_glance_read
+        add_metadef_resource_type_association: rule:tenant_create or role:tenant_glance_create
+        delete_metadef_resource_type_association: rule:tenant_delete or role:tenant_glance_delete
+        get_metadef_property: rule:tenant_read or role:tenant_glance_read
+        get_metadef_properties: rule:tenant_read or role:tenant_glance_read
+        modify_metadef_property: rule:tenant_modify_action or role:tenant_glance_update
+        add_metadef_property: rule:tenant_create or role:tenant_glance_create
+        delete_metadef_property: rule:tenant_delete or role:tenant_glance_delete
+        get_metadef_tag: rule:tenant_read or role:tenant_glance_create
+        get_metadef_tags: rule:tenant_read or role:tenant_glance_create
+        modify_metadef_tag: rule:tenant_modify_action or role:tenant_glance_update
+        add_metadef_tag: rule:tenant_create or role:tenant_glance_create
+        add_metadef_tags: rule:tenant_create or role:tenant_glance_create
+        delete_metadef_tag: rule:tenant_delete or role:tenant_glance_delete
+        delete_metadef_tags: rule:tenant_delete or role:tenant_glance_delete
   dependencies:
-    - glance-htk
+    - os-glance-htk
 ...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: glance-htk
+  name: os-glance-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -362,10 +481,16 @@ metadata:
         path: .charts.osh.glance-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: glance-htk
-  release: glance-htk
-  namespace: glance-htk
+  chart_name: os-glance-htk
+  release: os-glance-htk
+  namespace: os-glance-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

@@ -1,0 +1,61 @@
+---
+schema: 'pegleg/AppArmorProfile/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: calico-node-v1
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: global
+data:
+  savePath: /etc/apparmor.d/calico-node-v1
+  content: |
+    # AppArmor profile based on docker-default from version 17.03.x
+    #   https://github.com/moby/moby/blob/17.03.x/profiles/apparmor/template.go
+    # Modified to allow access to /proc/sys/net, as required by calico felix, for example:
+    #   https://github.com/projectcalico/felix/blob/a1b147fee456f378f1dee8503c979ad4c33745d1/dataplane/linux/endpoint_mgr.go#L942-L1027
+    #   https://github.com/projectcalico/felix/blob/a1b147fee456f378f1dee8503c979ad4c33745d1/dataplane/linux/int_dataplane.go#L669
+    # Also includes fix to https://github.com/moby/moby/issues/39791 (required to make this work)
+    # Specific changes are NOTEd below
+
+
+    #include <tunables/global>
+
+
+    profile calico-node-v1 flags=(attach_disconnected,mediate_deleted) {
+
+      #include <abstractions/base>
+
+
+      network,
+      capability,
+      file,
+      umount,
+
+      deny @{PROC}/* w,   # deny write for all files directly in /proc (not in a subdir)
+      # deny write to files not in /proc/<number>/** or /proc/sys/**
+      deny @{PROC}/{[^1-9],[^1-9][^0-9],[^1-9s][^0-9y][^0-9s],[^1-9][^0-9][^0-9][^0-9/]*}/** w,
+      # NOTE: Added '/'           docker-default blocks everything in /proc/sys/*/** ^
+      deny @{PROC}/sys/[^kn]** w,  # deny /proc/sys except /proc/sys/k* (effectively /proc/sys/kernel)
+      # NOTE: Added 'n'   ^                             or /proc/sys/n* (effectively /proc/sys/net)
+      deny @{PROC}/sys/kernel/{?,??,[^s][^h][^m]**} w,  # deny everything except shm* in /proc/sys/kernel/
+      deny @{PROC}/sysrq-trigger rwklx,
+      deny @{PROC}/mem rwklx,
+      deny @{PROC}/kmem rwklx,
+      deny @{PROC}/kcore rwklx,
+
+      deny mount,
+
+      deny /sys/[^f]*/** wklx,
+      deny /sys/f[^s]*/** wklx,
+      deny /sys/fs/[^c]*/** wklx,
+      deny /sys/fs/c[^g]*/** wklx,
+      deny /sys/fs/cg[^r]*/** wklx,
+      deny /sys/firmware/** rwklx,
+      deny /sys/kernel/security/** rwklx,
+
+
+      # suppress ptrace denials when using 'docker ps' or using 'ps' inside a container
+      ptrace (trace,read) peer=calico-node-v1,
+
+    }

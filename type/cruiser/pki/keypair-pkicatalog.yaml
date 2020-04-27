@@ -1,0 +1,14 @@
+---
+schema: promenade/PKICatalog/v1
+metadata:
+  schema: metadata/Document/v1
+  name: keypairs
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  keypairs:
+    - name: service-account
+      description: Service account signing key for use by Kubernetes controller-manager.
+...

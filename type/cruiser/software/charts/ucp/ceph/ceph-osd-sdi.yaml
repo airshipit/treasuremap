@@ -1,0 +1,42 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-ceph-osd-sdi
+  labels:
+    name: ucp-ceph-osd-sdi-nc
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-ceph-osd-global
+    actions:
+      - method: replace
+        path: .values.conf.storage.osd
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  chart_name: ucp-ceph-osd-sdi
+  release: ucp-ceph-osd-sdi
+  wait:
+    labels:
+      release_group: clcp-ucp-ceph-osd-sdi
+  values:
+    daemonset:
+      prefix_name: "clcp-ucp-ceph-osd-sdi"
+    conf:
+      storage:
+        failure_domain_by_hostname: 1-8
+        osd:
+          - data:
+              type: bluestore
+              location: /dev/sdi
+            block_db:
+              location: /dev/sdc
+              size: "96GB"
+            block_wal:
+              location: /dev/sdc
+              size: "2GB"
+...
+

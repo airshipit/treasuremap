@@ -1,0 +1,22 @@
+---
+schema: pegleg/NetworkSettings/v1
+metadata:
+  schema: metadata/Document/v1
+  name: network-settings
+  layeringDefinition:
+    abstract: false
+    layer: global
+  labels:
+    network-settings: default
+  storagePolicy: cleartext
+data:
+  mtu:
+    kubernetes: 9000
+    neutron: 9150
+    oam: 9000
+    oob: 1500
+    overlay: 9150
+    primary_bond: 9214
+    pxe: 1500
+    storage: 9000
+...

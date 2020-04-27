@@ -1,0 +1,574 @@
+---
+schema: deckhand/DataSchema/v1
+metadata:
+  schema: metadata/Control/v1
+  name: nc/CorridorConfig/v1
+data:
+  $schema: http://json-schema.org/schema#
+
+  type: object
+  properties:
+    corridor:
+      type: string
+    artifactory:
+      properties:
+        auth_key:
+          type: string
+        hostnames:
+          type: object
+          properties:
+            artifacts:
+              type: string
+            docker-open:
+              type: string
+            docker:
+              type: string
+
+          additionalProperties: false
+          required:
+            - artifacts
+            - docker-open
+            - docker
+
+        artfactory_ip:
+          type: string
+
+        repo_urls:
+          type: object
+          properties:
+            artfactory_web_url:
+              type: string
+
+        secret:
+          type: string
+
+      additionalProperties: false
+      required:
+        - auth_key
+        - hostnames
+        - artfactory_ip
+        - repo_urls
+
+    gstools:
+      type: object
+      properties:
+        collecthost:
+          type: string
+        qclient:
+          type: string
+        uamroles:
+          type: string
+        cphalo:
+          type: object
+          properties:
+            agent_key:
+              type: string
+            proxy:
+              type: string
+          additionalProperties: false
+          required:
+            - agent_key
+            - proxy
+        allmid:
+          type: object
+          properties:
+            admin:
+              type: string
+          additionalProperties: false
+          required:
+            - admin
+        bpa:
+          type: object
+          properties:
+            email:
+              type: string
+          additionalProperties: false
+          required:
+            - email
+      additionalProperties: false
+      required:
+        - collecthost
+        - uamroles
+        - qclient
+
+    infrastructure:
+      type: object
+      properties:
+         dns:
+           type: object
+           properties:
+             upstream_servers:
+               type: array
+               items:
+                 type: string
+             upstream_servers_joined:
+               type: string
+
+           additionalProperties: false
+           required:
+             - upstream_servers
+             - upstream_servers_joined
+
+         ntp:
+           type: object
+           properties:
+             servers:
+               type: array
+               items:
+                 type: string
+
+           additionalProperties: false
+           required:
+             - servers
+
+         snmp:
+           type: object
+           properties:
+             primary_target:
+               type: string
+             secondary_target:
+               type: string
+
+           additionalProperties: false
+           required:
+             - primary_target
+             - secondary_target
+
+         smtp:
+           type: object
+           properties:
+             server:
+               type: string
+
+           additionalProperties: false
+           required:
+             - server
+
+         ldap:
+           type: object
+           properties:
+             base_url:
+               type: string
+             url:
+               type: string
+             auth_path:
+               type: string
+             username:
+               type: string
+             common_name:
+               type: string
+             domain:
+               type: string
+             fqdn:
+               type: string
+             subdomain:
+               type: string
+
+           additionalProperties: false
+           required:
+             - auth_path
+             - common_name
+             - domain
+             - fqdn
+             - subdomain
+
+         proxy:
+           type: object
+           properties:
+             no_proxy:
+               type: string
+
+           additionalProperties: false
+           required:
+             - no_proxy
+
+         scm:
+           type: object
+           properties:
+             port:
+               type: number
+             ssh:
+               type: string
+             ssh_codecloud:
+               type: string
+             url:
+               type: string
+             credentials:
+               type: string
+             ucp_credentials:
+               type: string
+
+           additionalProperties: false
+           required:
+             - port
+             - ssh
+             - url
+
+    smtp:
+      type: object
+      properties:
+        relay:
+          type: string
+
+      additionalProperties: false
+      required:
+        - relay
+
+    ro:
+      properties:
+        aai:
+          type: object
+          properties:
+            fqdn:
+              type: string
+            port:
+              type: number
+            protocol:
+              type: string
+            version:
+              type: string
+
+          additionalProperties: false
+          required:
+            - fqdn
+            - port
+            - protocol
+            - version
+
+        netcool:
+          type: object
+          properties:
+            fqdn:
+              type: string
+            port:
+              type: number
+            protocol:
+              type: string
+            version:
+              type: string
+
+          additionalProperties: false
+          required:
+            - fqdn
+            - port
+            - protocol
+            - version
+
+        epr:
+          type: object
+          properties:
+            fqdn:
+              type: string
+            port:
+              type: number
+            protocol:
+              type: string
+            version:
+              type: string
+
+          additionalProperties: false
+          required:
+            - fqdn
+            - port
+            - protocol
+            - version
+
+      additionalProperties: false
+      required:
+        - aai
+        - netcool
+        - epr
+
+    ozone:
+      properties:
+        ozone-collector:
+          type: object
+          properties:
+            user:
+              type: string
+
+          additionalProperties: true
+          required:
+            - user
+
+      additionalProperties: true
+      required:
+        - ozone-collector
+
+    airship:
+      type: object
+      properties:
+        log_level:
+          type: string
+          enum:
+            - 'DEBUG'
+            - 'INFO'
+            - 'WARNING'
+            - 'CRITICAL'
+            - 'ERROR'
+        log_level_numeric:
+          type: integer
+          enum:
+            - 10
+            - 20
+            - 30
+            - 40
+            - 50
+        maas:
+          type: object
+          properties:
+            ingress_disable_gui:
+              type: boolean
+          additionaProperties: false
+          required:
+            - ingress_disable_gui
+      additionalProperties: false
+      required:
+        - log_level
+        - maas
+
+    policy:
+      type: object
+      additionalProperties: true
+
+
+    ranger:
+      properties:
+        ranger:
+          type: object
+          properties:
+            ranger_keystone_user:
+              type: string
+            customer_domain:
+              type: string
+            user:
+              type: string
+            user_home:
+              type: string
+            ranger_agent_client_cert_path:
+              type: string
+            ranger_agent_client_cert:
+              type: string
+            debug_level:
+              type: string
+          additionalProperties: false
+          required:
+            - ranger_keystone_user
+            - customer_domain
+            - user
+            - user_home
+            - ranger_agent_client_cert_path
+            - ranger_agent_client_cert
+            - debug_level
+
+        ranger-agent:
+          type: object
+          properties:
+            rds_listener_endpoint:
+              type: string
+            ranger_agent_keystone_user:
+              type: string
+            user:
+              type: string
+            user_home:
+              type: string
+            keystone_password:
+              type: string
+            debug_level:
+              type: string
+          additionalProperties: false
+          required:
+            - rds_listener_endpoint
+            - ranger_agent_keystone_user
+            - user
+            - user_home
+            - keystone_password
+            - debug_level
+
+      additionalProperties: false
+      required:
+        - ranger
+        - ranger-agent
+
+    calico:
+      type: object
+      properties:
+        calico_startup_loglevel:
+          type: string
+          enum:
+            - 'Debug'
+            - 'Info'
+        felix_logseverity:
+          type: string
+          enum:
+            - 'Debug'
+            - 'Info'
+        cni_log_level:
+          type: string
+          enum:
+            - 'Debug'
+            - 'Info'
+      additionalProperties: false
+      required:
+        - calico_startup_loglevel
+
+    kubernetes_components:
+      type: object
+      properties:
+        apiserver_log_level:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+        controller_manager_log_level:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+        scheduler_log_level:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+        proxy_log_level:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+        apiserver_webhook_log_level:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+      additionalProperties: false
+      required:
+        - apiserver_log_level
+        - controller_manager_log_level
+        - scheduler_log_level
+        - proxy_log_level
+        - apiserver_webhook_log_level
+
+    nagios:
+      type: object
+      properties:
+        notification:
+          type: object
+          propeties:
+            snmp:
+              type: object
+              properties:
+                primary_target:
+                  type: string
+                secondary_target:
+                  type: string
+              required:
+                - primary_target
+                - secondary_target
+            http:
+              type: object
+              properties:
+                primary_target:
+                  type: string
+                secondary_target:
+                  type: string
+              required:
+                - primary_target
+                - secondary_target
+          required:
+            - snmp
+            - http
+      required:
+        - notification
+
+    cicd:
+      type: object
+      properties:
+        generic_pipe:
+          type: object
+          properties:
+            user:
+              type: string
+            required_role:
+              type: string
+          required:
+            - user
+            - required_role
+      required:
+        - generic_pipe
+
+    utility:
+      type: object
+      properties:
+        always_log_user:
+          type: boolean
+      additionalProperties: false
+      required:
+        - always_log_user
+
+    jenkins:
+      type: object
+      properties:
+        global_env_vars:
+          type: object
+          properties:
+            conf_package_path:
+              type: string
+            internal_gerrit_key:
+              type: string
+            jenkins_cli:
+              type: string
+            os_project_name:
+              type: string
+            ssh_data:
+              type: string
+          required:
+            - conf_package_path
+            - internal_gerrit_key
+            - jenkins_cli
+            - os_project_name
+            - ssh_data
+      required:
+        - global_env_vars
+
+  additionalProperties: true
+...

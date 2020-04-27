@@ -57,12 +57,6 @@ metadata:
         path: .ucp.oslo_messaging
       dest:
         path: .values.endpoints.oslo_messaging
-    - src:
-        schema: pegleg/EndpointCatalogue/v1
-        name: osh_infra_endpoints
-        path: .osh_infra.fluentd
-      dest:
-        path: .values.endpoints.fluentd
     # Credentials
     - src:
         schema: pegleg/AccountCatalogue/v1
@@ -137,10 +131,14 @@ data:
   chart_name: ucp-barbican
   release: ucp-barbican
   namespace: ucp
+  protected:
+    continue_processing: false
   wait:
-    timeout: 300
+    timeout: 900
     labels:
-      release_group: airship-ucp-barbican
+      release_group: clcp-ucp-barbican
+  test:
+    enabled: true
   install:
     no_hooks: false
   upgrade:
@@ -149,11 +147,20 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-barbican
+            release_group: clcp-ucp-barbican
     post:
       create: []
   values:
     conf:
+      barbican:
+        DEFAULT:
+          max_allowed_request_size_in_bytes: 256000
+          max_allowed_secret_in_bytes: 256000
+      policy:
+        secret_project_match: project_id:%(target.secret.project_id)s
+        secret_creator_user: user_id:%(target.secret.creator_id)s
+        container_project_match: project_id:%(target.container.project_id)s
+        container_creator_user: user_id:%(target.container.creator_id)s
       logging:
         loggers:
           keys:
@@ -163,21 +170,19 @@ data:
           keys:
             - stdout
             - stderr
-            - 'null'
-            - fluent
+            - "null"
         formatters:
           keys:
             - context
             - default
-            - fluent
         logger_root:
           level: WARNING
-          handlers: stdout
+          handlers: "null"
         logger_barbican:
           level: INFO
           handlers:
             - stdout
-            - fluent
+            - stderr
           qualname: barbican
         logger_amqp:
           level: WARNING
@@ -211,12 +216,6 @@ data:
           class: StreamHandler
           args: (sys.stderr,)
           formatter: context
-        handler_fluent:
-          class: fluent.handler.FluentHandler
-          args: ('ucp.barbican', 'fluentd-logging.osh-infra', 24224)
-          formatter: fluent
-        formatter_fluent:
-          class: oslo_log.formatters.FluentFormatter
         formatter_context:
           class: oslo_log.formatters.ContextFormatter
         formatter_default:
@@ -232,31 +231,16 @@ data:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
     pod:
+      apparmor:
+        barbican:
+          barbican: localhost/docker-default
+          init: localhost/docker-default
+      affinity:
+        anti:
+          type:
+            default: requiredDuringSchedulingIgnoredDuringExecution
       replicas:
-        api: 2
+        api: 1
   dependencies:
     - ucp-barbican-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: ucp-barbican-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.barbican-htk
-      dest:
-        path: .source
-data:
-  chart_name: ucp-barbican-htk
-  release: ucp-barbican-htk
-  namespace: ucp-barbican-htk
-  values: {}
-  dependencies: []
 ...

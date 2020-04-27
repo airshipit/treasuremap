@@ -1,0 +1,21 @@
+---
+schema: drydock/HostProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nc-cp-primary-adv
+  storagePolicy: cleartext
+  labels:
+    hosttype: cp-primary-type-adv
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      hosttype: nc-cp-adv
+    actions:
+      - method: merge
+        path: .
+data:
+  metadata:
+    owner_data:
+      openstack-ranger-agent: enabled
+...

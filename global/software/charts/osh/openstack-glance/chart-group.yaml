@@ -4,8 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: openstack-glance
   labels:
-    name: openstack-glance-chart-group-global
-    component: glance
+    name: openstack-glance-global
   layeringDefinition:
     abstract: false
     layer: global

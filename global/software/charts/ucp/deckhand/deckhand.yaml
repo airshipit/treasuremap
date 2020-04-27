@@ -58,6 +58,15 @@ metadata:
         path: .ucp.oslo_cache
       dest:
         path: .values.endpoints.oslo_cache
+
+    # Deckhand log level
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .airship.log_level
+      dest:
+        path: .values.conf.logging.logger_deckhand.level
+
     # Credentials
     - src:
         schema: pegleg/AccountCatalogue/v1
@@ -105,7 +114,7 @@ metadata:
         name: ucp_postgres_admin_password
         path: .
     - dest:
-        path: .values.endpoints.identity.auth.user.password
+        path: .values.endpoints.identity.auth.deckhand.password
       src:
         schema: deckhand/Passphrase/v1
         name: ucp_deckhand_keystone_password
@@ -120,10 +129,14 @@ data:
   chart_name: ucp-deckhand
   release: ucp-deckhand
   namespace: ucp
+  protected:
+    continue_processing: false
   wait:
-    timeout: 600
+    timeout: 900
     labels:
-      release_group: airship-ucp-deckhand
+      release_group: clcp-ucp-deckhand
+  test:
+    enabled: true
   install:
     no_hooks: false
   upgrade:
@@ -132,13 +145,21 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-deckhand
+            release_group: clcp-ucp-deckhand
     post:
       create: []
   values:
     pod:
+      affinity:
+        anti:
+          type:
+            default: requiredDuringSchedulingIgnoredDuringExecution
       replicas:
-        deckhand: 2
+        deckhand: 1
+      security_context:
+        deckhand:
+          pod:
+            runAsUser: 1000
     conf:
       deckhand:
         DEFAULT:
@@ -147,29 +168,23 @@ data:
           use_syslog: true
         keystone_authtoken:
           memcache_security_strategy: None
+      policy:
+        admin_api: role:admin or role:admin_ucp
+        admin_viewer: role:admin_ucp_viewer or rule:admin_api
+        deckhand:create_cleartext_documents: rule:admin_api
+        deckhand:create_encrypted_documents: rule:admin_api
+        deckhand:list_cleartext_documents: rule:admin_viewer
+        deckhand:list_encrypted_documents: rule:admin_viewer
+        deckhand:show_revision: rule:admin_viewer
+        deckhand:list_revisions: rule:admin_viewer
+        deckhand:delete_revisions: rule:admin_api
+        deckhand:show_revision_deepdiff: rule:admin_viewer
+        deckhand:show_revision_diff: rule:admin_viewer
+        deckhand:create_tag: rule:admin_api
+        deckhand:show_tag: rule:admin_viewer
+        deckhand:list_tags: rule:admin_viewer
+        deckhand:delete_tag: rule:admin_api
+        deckhand:delete_tags: rule:admin_api
   dependencies:
     - deckhand-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: deckhand-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.deckhand-htk
-      dest:
-        path: .source
-data:
-  chart_name: deckhand-htk
-  release: deckhand-htk
-  namespace: deckhand-htk
-  values: {}
-  dependencies: []
 ...

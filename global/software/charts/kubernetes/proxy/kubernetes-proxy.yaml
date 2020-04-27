@@ -3,8 +3,6 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: kubernetes-proxy
-  labels:
-    name: kubernetes-proxy-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -26,13 +24,21 @@ metadata:
       dest:
         path: .values.images.tags
 
+    # Kube-proxy Log Level
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .kubernetes_components.proxy_log_level
+      dest:
+        path: .values.proxy.logging.log_level
+
     # IP Addresses
     - src:
         schema: pegleg/CommonAddresses/v1
         name: common-addresses
         path: .kubernetes.pod_cidr
       dest:
-        path: .values.command_prefix[1]
+        path: .values.command_prefix[2]
         pattern: POD_CIDR
 
     # Secrets
@@ -46,20 +52,36 @@ data:
   chart_name: proxy
   release: kubernetes-proxy
   namespace: kube-system
+  protected:
+    continue_processing: false
   wait:
-    timeout: 600
+    timeout: 1800
     labels:
-      release_group: airship-kubernetes-proxy
+      release_group: clcp-kubernetes-proxy
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: airship-kubernetes-proxy
+            release_group: clcp-kubernetes-proxy
   values:
+    pod:
+      lifecycle:
+        upgrades:
+          daemonsets:
+            pod_replacement_strategy: RollingUpdate
+            proxy:
+              enabled: true
+              min_ready_seconds: 0
+              max_unavailable: '50%'
+      mandatory_access_control:
+        type: apparmor
+        kubernetes-proxy:
+          proxy: localhost/kubeproxy-v1
     command_prefix:
-      - /proxy
+      - /hyperkube
+      - kube-proxy
       - --cluster-cidr=POD_CIDR
       - --proxy-mode=iptables
     kube_service:
@@ -67,18 +89,22 @@ data:
       port: 6553
     livenessProbe:
       whitelist:
-        - tiller-deploy
+        - 'tiller-deploy'
+        - 'kube-controller-manager'
+        - 'kube-controller-manager-discovery'
+        - 'kube-scheduler'
+        - 'kube-scheduler-discovery'
   dependencies:
-    - kubernetes-proxy-htk
+    - proxy-htk
+...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: kubernetes-proxy-htk
+  name: proxy-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -86,9 +112,16 @@ metadata:
         path: .charts.kubernetes.proxy-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: kubernetes-proxy-htk
-  release: kubernetes-proxy-htk
-  namespace: kubernetes-proxy-htk
+  chart_name: proxy-htk
+  release: proxy-htk
+  namespace: proxy-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
   dependencies: []
 ...

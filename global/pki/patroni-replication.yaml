@@ -1,0 +1,17 @@
+---
+schema: promenade/PKICatalog/v1
+metadata:
+  schema: metadata/Document/v1
+  name: patroni-replication
+  labels:
+    name: patroni-replication
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  certificate_authorities:
+    patroni-replication:
+      description: CA for generating Patroni replication client certificates
+      certificates: []
+...

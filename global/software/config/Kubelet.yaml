@@ -6,6 +6,8 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
+  labels:
+    name: kubelet-global
   storagePolicy: cleartext
   substitutions:
     - src:
@@ -22,19 +24,25 @@ metadata:
         path: .arguments
         pattern: SECCOMP_PROFILE_ROOT
         recurse:
-          depth: 1
+           depth: 1
 data:
   arguments:
     - --cni-bin-dir=/opt/cni/bin
     - --cni-conf-dir=/etc/cni/net.d
+    - --container-runtime=remote
+    - --container-runtime-endpoint=unix:///run/containerd/containerd.sock
     - --network-plugin=cni
     - --seccomp-profile-root=SECCOMP_PROFILE_ROOT
   config_file_overrides:
+    cgroupDriver: "systemd"
     evictionMaxPodGracePeriod: -1
     featureGates:
       PodShareProcessNamespace: true
       TaintBasedEvictions: false
+      CSIMigration: false
     kubeAPIBurst: 40
     kubeAPIQPS: 20
+    podsPerCore: 10
     maxPods: 200
     nodeStatusUpdateFrequency: "5s"
+    runtimeRequestTimeout: "15m"

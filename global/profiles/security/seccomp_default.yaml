@@ -16,6 +16,10 @@ data:
   # Path to save seccomp profile as file.
   # This should be same as seccompDirPath with file name.
   savePath: /var/lib/kubelet/seccomp/seccomp_default
+  # Allowed profile name to set in podsecuritypolicy
+  allowedProfileNames: localhost/seccomp_default
+  # Default profile name to set in podsecuritypolicy
+  defaultProfileName: localhost/seccomp_default
   # Content of default seccomp profile file.
   content: |
     {

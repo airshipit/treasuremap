@@ -52,20 +52,41 @@ metadata:
         path: .osh.oslo_cache
       dest:
         path: .values.endpoints.oslo_cache
-    - src:
-        schema: pegleg/EndpointCatalogue/v1
-        name: osh_infra_endpoints
-        path: .osh_infra.fluentd
-      dest:
-        path: .values.endpoints.fluentd
 
     # Service Accounts
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: aqua_service_accounts
+        path: .aqua.orchestrator.username
+      dest:
+        path: .values.bootstrap.script
+        pattern: \[ORCHESTRATOR_USERNAME\]
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: aqua_service_accounts
+        path: .aqua.executor.username
+      dest:
+        path: .values.bootstrap.script
+        pattern: \[EXECUTOR_USERNAME\]
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .ozone.ozone-collector.user
+      dest:
+        path: .values.bootstrap.script
+        pattern: \[OZONE_COLLECTOR_USER\]
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
         path: .osh.keystone.admin
       dest:
         path: .values.endpoints.identity.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.keystone.test
+      dest:
+        path: .values.endpoints.identity.auth.test
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
@@ -91,13 +112,103 @@ metadata:
       dest:
         path: .values.endpoints.oslo_db.path
         pattern: DB_NAME
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.identity.name
+      dest:
+        path: .values.endpoints.oslo_messaging.path
+        pattern: VHOST_NAME
+
+#    # LDAP details
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .infrastructure.ldap.fqdn
+#      dest:
+#        path: .values.conf.ks_domains.nc.ldap.url
+#        pattern: FQDN
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .infrastructure.ldap.common_name
+#      dest:
+#        path: .values.conf.ks_domains.nc.ldap.user_filter
+#        pattern: COMMON_NAME
+#    # (dd118r): consider recursive pattern substitution once internal deckhand supports
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .infrastructure.ldap.subdomain
+#      dest:
+#        - path: .values.conf.ks_domains.nc.ldap.user_filter
+#          pattern: SUBDOMAIN
+#        - path: .values.conf.ks_domains.nc.ldap.suffix
+#          pattern: SUBDOMAIN
+#        - path: .values.conf.ks_domains.nc.ldap.user_tree_dn
+#          pattern: SUBDOMAIN
+#    # (dd118r): consider recursive pattern substitution once internal deckhand supports
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .infrastructure.ldap.domain
+#      dest:
+#        - path: .values.conf.ks_domains.nc.ldap.user_filter
+#          pattern: DOMAIN
+#        - path: .values.conf.ks_domains.nc.ldap.suffix
+#          pattern: DOMAIN
+#        - path: .values.conf.ks_domains.nc.ldap.user_tree_dn
+#          pattern: DOMAIN
+#
+#    # LDAP Mech ID Details
+#    - src:
+#        schema: pegleg/CommonAddresses/v1
+#        name: common-addresses
+#        path: .ldap.username
+#      dest:
+#        path: .values.conf.ks_domains.nc.ldap.user
+#    - dest:
+#        path: .values.conf.ks_domains.nc.ldap.password
+#      src:
+#        schema: deckhand/Passphrase/v1
+#        name: osh_keystone_ldap_mechid_password
+#        path: .
+#
+#    # MyLogins Mech ID User
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .mylogins.user
+#      dest:
+#        path: .values.bootstrap.script
+#        pattern: MYLOGINS_USER
 
     # Secrets
+    - dest:
+        path: .values.bootstrap.script
+        pattern: \[ORCHESTRATOR_PASSWORD\]
+      src:
+        schema: deckhand/Passphrase/v1
+        name: aqua_orchestrator
+        path: .
+    - dest:
+        path: .values.bootstrap.script
+        pattern: \[EXECUTOR_PASSWORD\]
+      src:
+        schema: deckhand/Passphrase/v1
+        name: aqua_executor
+        path: .
     - dest:
         path: .values.endpoints.identity.auth.admin.password
       src:
         schema: deckhand/Passphrase/v1
         name: osh_keystone_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.test.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_keystone_test_password
         path: .
     - dest:
         path: .values.endpoints.oslo_messaging.auth.admin.password
@@ -109,7 +220,7 @@ metadata:
         path: .values.endpoints.oslo_messaging.auth.keystone.password
       src:
         schema: deckhand/Passphrase/v1
-        name: osh_oslo_messaging_admin_password
+        name: osh_keystone_oslo_messaging_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.keystone.password
@@ -130,14 +241,31 @@ metadata:
         name: osh_oslo_cache_secret_key
         path: .
 
+    # Regions
+    - src:
+        schema: pegleg/CommonSoftwareConfig/v1
+        name: common-software-config
+        path: .osh.region_name
+      dest:
+        - path: .values.bootstrap.script
+          pattern: (\[ORCHESTRATOR_REGION\]|\[EXECUTOR_REGION\])
+
 data:
   chart_name: keystone
   release: keystone
   namespace: openstack
   wait:
-    timeout: 900
+    timeout: 1200
     labels:
-      release_group: airship-keystone
+      release_group: clcp-keystone
+    resources:
+      - type: job
+      - type: deployment
+        min_ready: 100%
+    native:
+      enabled: false
+  test:
+    timeout: 600
   install:
     no_hooks: false
   upgrade:
@@ -146,22 +274,18 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-keystone
+            release_group: clcp-keystone
     post:
       create: []
   values:
     dependencies:
       static:
-        api:
+        rabbit_init:
+          services:
+            - endpoint: internal
+              service: oslo_messaging
           jobs:
-            - keystone-db-sync
-            - keystone-credential-setup
-            - keystone-fernet-setup
-        db_sync:
-          jobs:
-            - keystone-db-init
-            - keystone-credential-setup
-            - keystone-fernet-setup
+            - clcp-openstack-rabbitmq-cluster-wait
     bootstrap:
       script: |
         openstack role create --or-show _member_
@@ -172,6 +296,13 @@ data:
               --project="${OS_PROJECT_NAME}" \
               "_member_"
 
+        #NOTE(cliff.parsons): Required for admin to navigate to the domains
+        # panel in Horizon GUI
+        openstack role add \
+              --user="${OS_USERNAME}" \
+              --domain="${OS_USER_DOMAIN_NAME}" \
+              "admin"
+
         #NOTE(portdirect): required for all users who operate heat stacks
         openstack role create --or-show heat_stack_owner
         openstack role add \
@@ -180,32 +311,202 @@ data:
               --project-domain="${OS_PROJECT_DOMAIN_NAME}" \
               --project="${OS_PROJECT_NAME}" \
               "heat_stack_owner"
+         openstack domain create nc
+         openstack user create --domain nc --password test123 admin-nc 
+         #NOTE(rk760n): these are standrd roles that evenutally should go to keystone heat bootstrap yaml
+         openstack role create --or-show support_member
+         openstack role create --or-show viewer
+         openstack role create --or-show admin_viewer
+         openstack role create --or-show admin_support
+         openstack role create --or-show admin_orm
+         openstack role create --or-show snapshot_member
+         openstack role create --or-show sriov_member
+         openstack role create --or-show admin_tap
+
+        #NOTE(cp769u): these are the granular Rapid RBAC roles
+        openstack role create --or-show tenant_nova_create
+        openstack role create --or-show tenant_nova_read
+        openstack role create --or-show tenant_nova_update
+        openstack role create --or-show tenant_nova_delete
+        openstack role create --or-show admin_nova_create
+        openstack role create --or-show admin_nova_read
+        openstack role create --or-show admin_nova_update
+        openstack role create --or-show admin_nova_delete
+        openstack role create --or-show tenant_neutron_create
+        openstack role create --or-show tenant_neutron_read
+        openstack role create --or-show tenant_neutron_update
+        openstack role create --or-show tenant_neutron_delete
+        openstack role create --or-show admin_neutron_create
+        openstack role create --or-show admin_neutron_read
+        openstack role create --or-show admin_neutron_update
+        openstack role create --or-show admin_neutron_delete
+        openstack role create --or-show tenant_cinder_create
+        openstack role create --or-show tenant_cinder_read
+        openstack role create --or-show tenant_cinder_update
+        openstack role create --or-show tenant_cinder_delete
+        openstack role create --or-show admin_cinder_create
+        openstack role create --or-show admin_cinder_read
+        openstack role create --or-show admin_cinder_update
+        openstack role create --or-show admin_cinder_delete
+        openstack role create --or-show tenant_glance_create
+        openstack role create --or-show tenant_glance_read
+        openstack role create --or-show tenant_glance_update
+        openstack role create --or-show tenant_glance_delete
+        openstack role create --or-show admin_glance_create
+        openstack role create --or-show admin_glance_read
+        openstack role create --or-show admin_glance_update
+        openstack role create --or-show admin_glance_delete
+        openstack role create --or-show tenant_keystone_create
+        openstack role create --or-show tenant_keystone_read
+        openstack role create --or-show tenant_keystone_update
+        openstack role create --or-show tenant_keystone_delete
+        openstack role create --or-show admin_keystone_create
+        openstack role create --or-show admin_keystone_read
+        openstack role create --or-show admin_keystone_update
+        openstack role create --or-show admin_keystone_delete
+        openstack role create --or-show tenant_heat_create
+        openstack role create --or-show tenant_heat_read
+        openstack role create --or-show tenant_heat_update
+        openstack role create --or-show tenant_heat_delete
+        openstack role create --or-show admin_heat_create
+        openstack role create --or-show admin_heat_read
+        openstack role create --or-show admin_heat_update
+        openstack role create --or-show admin_heat_delete
+
+        #NOTE(gagehugo): LDAP domain
+        NC_DOMAIN_ID=$(openstack domain create --or-show --enable -f value -c id \
+             --description="Domain for [ORCHESTRATOR_REGION]/nc" \
+             "nc")
+
+        #NOTE(dustin.specker): required for AQuA to execute Tempest
+        QA_DOMAIN_ID=$(openstack domain create --or-show --enable -f value -c id \
+             --description="Domain for [ORCHESTRATOR_REGION]/qa" \
+             "qa")
+
+        ORCHESTRATOR_PROJECT_DESC="AQuA project for [ORCHESTRATOR_REGION]/aqua-admin"
+        ORCHESTRATOR_PROJECT_ID=$(openstack project create --or-show --enable -f value -c id \
+            --domain="${QA_DOMAIN_ID}" \
+            --description="${ORCHESTRATOR_PROJECT_DESC}" \
+            "aqua-admin");
+
+        ORCHESTRATOR_USER_DESC="AQuA Orchestrator user for [ORCHESTRATOR_REGION]/qa/aqua"
+        ORCHESTRATOR_USER_ID=$(openstack user create --or-show --enable -f value -c id \
+            --domain="${QA_DOMAIN_ID}" \
+            --project-domain="${QA_DOMAIN_ID}" \
+            --project="${ORCHESTRATOR_PROJECT_ID}" \
+            --description="${ORCHESTRATOR_USER_DESC}" \
+            --password="[ORCHESTRATOR_PASSWORD]" \
+            "[ORCHESTRATOR_USERNAME]");
+        openstack user set --password="[ORCHESTRATOR_PASSWORD]" "${ORCHESTRATOR_USER_ID}"
+
+        ORCHESTRATOR_USER_ROLE_ID=$(openstack role create --or-show -f value -c id \
+              "admin");
+
+        openstack role add \
+            --user="${ORCHESTRATOR_USER_ID}" \
+            --user-domain="${QA_DOMAIN_ID}" \
+            --project-domain="${QA_DOMAIN_ID}" \
+            --project="${ORCHESTRATOR_PROJECT_ID}" \
+            "${ORCHESTRATOR_USER_ROLE_ID}"
+
+        EXECUTOR_PROJECT_DESC="AQuA project for [EXECUTOR_REGION]/aqua-admin"
+        EXECUTOR_PROJECT_ID=$(openstack project create --or-show --enable -f value -c id \
+            --domain="${QA_DOMAIN_ID}" \
+            --description="${EXECUTOR_PROJECT_DESC}" \
+            "aqua-admin");
+
+        EXECUTOR_USER_DESC="AQuA Executor user for [EXECUTOR_REGION]/qa/aqua"
+        EXECUTOR_USER_ID=$(openstack user create --or-show --enable -f value -c id \
+            --domain="${QA_DOMAIN_ID}" \
+            --project-domain="${QA_DOMAIN_ID}" \
+            --project="${EXECUTOR_PROJECT_ID}" \
+            --description="${EXECUTOR_USER_DESC}" \
+            --password="[EXECUTOR_PASSWORD]" \
+            "[EXECUTOR_USERNAME]");
+        openstack user set --password="[EXECUTOR_PASSWORD]" "${EXECUTOR_USER_ID}"
+
+        EXECUTOR_USER_ROLE_ID=$(openstack role create --or-show -f value -c id \
+              "admin");
+
+        openstack role add \
+            --user="${EXECUTOR_USER_ID}" \
+            --user-domain="${QA_DOMAIN_ID}" \
+            --project-domain="${QA_DOMAIN_ID}" \
+            --project="${EXECUTOR_PROJECT_ID}" \
+            "${EXECUTOR_USER_ROLE_ID}"
+
+        OZONE_USER_ID=$(openstack user show -f value -c id \
+            --domain="nc" \
+            "[OZONE_COLLECTOR_USER]")
+        openstack role add \
+            --user="${OZONE_USER_ID}" \
+            --user-domain=nc \
+            --project=admin \
+            --project-domain=default \
+            admin_viewer
+
+#        MYLOGINS_USERID=$(openstack user show -f value -c id \
+#            --domain="nc" \
+#            "MYLOGINS_USER");
+#        openstack role add \
+#            --user="${MYLOGINS_USERID}" \
+#            --user-domain=nc \
+#            --domain=nc \
+#            admin_viewer
+
+    jobs:
+      fernet_rotate:
+        #NOTE(rk760n): the configuration based on AIC3.x security requirements statisfying formula max_active_keys = (token_expiration / rotation_frequency) + 2
+        # rotate keys every 12 hours
+        cron: "0 */10 * * *"
     conf:
+      rabbitmq:
+        policies:
+          - vhost: "keystone"
+            name: "ha_ttl_keystone"
+            definition:
+              ha-mode: "all"
+              ha-sync-mode: "automatic"
+              message-ttl: 70000
+            priority: 0
+            apply-to: all
+            pattern: '^(?!(amq\.|reply_)).*'
       logging:
         loggers:
           keys:
             - root
             - keystone
+            - oslo.messaging
         handlers:
           keys:
             - stdout
             - stderr
-            - 'null'
-            - fluent
+            - "null"
         formatters:
           keys:
             - context
             - default
-            - fluent
         logger_root:
           level: WARNING
-          handlers: stdout
+          handlers: "null"
         logger_keystone:
           level: INFO
           handlers:
             - stdout
-            - fluent
           qualname: keystone
+        logger_oslo.messaging:
+          level: INFO
+          handlers:
+            - stdout
+          qualname: oslo.messaging
+        logger_amqp:
+          level: WARNING
+          handlers: stderr
+          qualname: amqp
+        logger_amqplib:
+          level: WARNING
+          handlers: stderr
+          qualname: amqplib
         logger_eventletwsgi:
           level: WARNING
           handlers: stderr
@@ -230,28 +531,294 @@ data:
           class: StreamHandler
           args: (sys.stderr,)
           formatter: context
-        handler_fluent:
-          class: fluent.handler.FluentHandler
-          args: ('openstack.keystone', 'fluentd-logging.osh-infra', 24224)
-          formatter: fluent
-        formatter_fluent:
-          class: oslo_log.formatters.FluentFormatter
         formatter_context:
           class: oslo_log.formatters.ContextFormatter
         formatter_default:
           format: "%(message)s"
+      policy:
+        context_is_admin: role:admin or is_admin:1 or role:admin_support or role:admin_viewer
+        admin_required: role:admin or is_admin:1 or role:admin_orm or role:admin_support or role:admin_viewer
+        admin_or_admin_orm: role:admin or role:admin_orm
+        admin_only: role:admin
+        admin_create: rule:admin_only or role:admin_support
+        tenant_read: role:snapshot_member or role:_member_ or role:sriov_member or role:support_member or role:viewer or rule:admin_required
+        service_role: role:service
+        service_or_admin: rule:admin_required or rule:service_role
+        owner: user_id:%(user_id)s
+        admin_or_owner: rule:admin_required or rule:owner
+        token_subject: user_id:%(target.token.user_id)s
+        admin_or_token_subject: rule:admin_required or rule:token_subject
+        service_admin_or_token_subject: rule:service_or_admin or rule:token_subject
+        default: rule:admin_required
+        identity:get_region: rule:tenant_read or role:tenant_keystone_read
+        identity:list_regions: rule:tenant_read or role:tenant_keystone_read
+        identity:create_region: rule:admin_only or role:admin_keystone_create
+        identity:update_region: rule:admin_only or role:admin_keystone_update
+        identity:delete_region: rule:admin_only or role:admin_keystone_delete
+        identity:get_service: rule:admin_required or role:admin_keystone_read
+        identity:list_services: rule:admin_required or role:admin_keystone_read
+        identity:create_service: rule:admin_only or role:admin_keystone_create
+        identity:update_service: rule:admin_only or role:admin_keystone_update
+        identity:delete_service: rule:admin_only or role:admin_keystone_delete
+        identity:get_endpoint: rule:admin_required or role:admin_keystone_read
+        identity:list_endpoints: rule:admin_required or role:admin_keystone_read
+        identity:create_endpoint: rule:admin_only or role:admin_keystone_create
+        identity:update_endpoint: rule:admin_only or role:admin_keystone_update
+        identity:delete_endpoint: rule:admin_only or role:admin_keystone_delete
+        identity:get_domain: rule:admin_required or role:admin_keystone_read
+        identity:list_domains: rule:admin_required or role:admin_keystone_read
+        identity:create_domain: rule:admin_only or role:admin_keystone_create
+        identity:update_domain: rule:admin_only or role:admin_keystone_update
+        identity:delete_domain: rule:admin_only or role:admin_keystone_delete
+        identity:get_project: rule:admin_required or project_id:%(target.project.id)s or role:admin_keystone_read
+        identity:list_projects: rule:admin_required or role:admin_keystone_read
+        identity:get_all_projects: rule:admin_required or role:admin_keystone_read
+        identity:list_user_projects: rule:admin_or_owner or role:admin_keystone_read
+        identity:create_project: rule:admin_or_admin_orm or rule:admin_create or role:admin_keystone_create
+        identity:update_project: rule:admin_or_admin_orm or rule:admin_create or role:admin_keystone_update or role:admin_keystone_create
+        identity:delete_project: rule:admin_or_admin_orm or role:admin_keystone_delete
+        identity:get_user: rule:admin_required or role:admin_keystone_read
+        identity:get_users: rule:admin_required or role:admin_keystone_read
+        identity:list_users: rule:admin_required or role:admin_keystone_read
+        identity:create_user: rule:admin_only or role:admin_keystone_create
+        identity:update_user: rule:admin_only or role:admin_keystone_update
+        identity:delete_user: rule:admin_only or role:admin_keystone_delete
+        identity:change_password: rule:admin_only or rule:owner
+        identity:get_group: rule:admin_required or role:admin_keystone_read
+        identity:list_groups: rule:admin_required or role:admin_keystone_read
+        identity:list_groups_for_user: rule:admin_or_owner or role:admin_keystone_read
+        identity:create_group: rule:admin_create or role:admin_keystone_create
+        identity:update_group: rule:admin_only or role:admin_keystone_update
+        identity:delete_group: rule:admin_only or role:admin_keystone_delete
+        identity:list_users_in_group: rule:admin_required or role:admin_keystone_read
+        identity:remove_user_from_group: rule:admin_only or role:admin_keystone_update
+        identity:check_user_in_group: rule:admin_required or role:admin_keystone_read
+        identity:add_user_to_group: rule:admin_create or role:admin_keystone_create or role:admin_keystone_update
+        identity:get_credential: rule:admin_required or role:admin_keystone_read
+        identity:list_credentials: rule:admin_required or role:admin_keystone_read
+        identity:create_credential: rule:admin_create or role:admin_keystone_create
+        identity:update_credential: rule:admin_only or role:admin_keystone_update
+        identity:delete_credential: rule:admin_only or role:admin_keystone_delete
+        identity:ec2_get_credential: rule:admin_required or (rule:owner and user_id:%(target.credential.user_id)s) or role:admin_keystone_read
+        identity:ec2_list_credentials: rule:admin_or_owner or role:admin_keystone_read
+        identity:ec2_create_credential: rule:admin_create or role:admin_keystone_create
+        identity:ec2_delete_credential: rule:admin_only or (rule:owner and user_id:%(target.credential.user_id)s) or role:admin_keystone_delete
+        identity:get_role: rule:admin_required or role:admin_keystone_read
+        identity:list_roles: rule:admin_required or role:admin_keystone_read
+        identity:create_role: rule:admin_only or role:admin_keystone_create
+        identity:update_role: rule:admin_only or role:admin_keystone_update
+        identity:delete_role: rule:admin_only or role:admin_keystone_delete
+        identity:get_domain_role: rule:admin_required or role:admin_keystone_read
+        identity:list_domain_roles: rule:admin_required or role:admin_keystone_read
+        identity:create_domain_role: rule:admin_create or role:admin_keystone_create
+        identity:update_domain_role: rule:admin_only or role:admin_keystone_update
+        identity:delete_domain_role: rule:admin_only or role:admin_keystone_delete
+        identity:get_implied_role: rule:admin_required or role:admin_keystone_read
+        identity:list_implied_roles: rule:admin_required or role:admin_keystone_read
+        identity:create_implied_role: rule:admin_create or role:admin_keystone_create
+        identity:delete_implied_role: rule:admin_only or role:admin_keystone_delete
+        identity:list_role_inference_rules: rule:admin_required or role:admin_keystone_read
+        identity:check_implied_role: rule:admin_required or role:admin_keystone_read
+        identity:check_grant: rule:admin_required or role:admin_keystone_read
+        identity:list_grants: rule:admin_required or role:admin_keystone_read
+        identity:create_grant: rule:admin_create or role:admin_keystone_create
+        identity:revoke_grant: rule:admin_create or role:adin_keystone_update
+        identity:list_role_assignments: rule:admin_required or role:admin_keystone_read
+        identity:list_role_assignments_for_tree: rule:admin_required or role:admin_keystone_read
+        identity:get_policy: rule:admin_required or role:admin_keystone_read
+        identity:list_policies: rule:admin_required or role:admin_keystone_read
+        identity:create_policy: rule:admin_only or role:admin_keystone_create
+        identity:update_policy: rule:admin_only or role:admin_keystone_update
+        identity:delete_policy: rule:admin_only or role:admin_keystone_delete
+        identity:check_token: rule:admin_or_token_subject or role:admin_keystone_read
+        identity:validate_token: rule:service_admin_or_token_subject or role:admin_keystone_read
+        identity:validate_token_head: rule:service_or_admin or role:admin_keystone_read
+        identity:revocation_list: rule:service_or_admin or role:admin_keystone_read
+        identity:revoke_token: rule:admin_or_token_subject or role:admin_keystone_update
+        identity:endpoints: rule:service_or_admin or role:admin_keystone_read
+        identity:create_trust: user_id:%(trust.trustor_user_id)s
+        identity:list_trusts: ''
+        identity:list_roles_for_trust: ''
+        identity:get_role_for_trust: ''
+        identity:delete_trust: ''
+        identity:create_consumer: rule:admin_create or role:admin_keystone_create
+        identity:get_consumer: rule:admin_required or role:admin_keystone_read
+        identity:list_consumers: rule:admin_required or role:admin_keystone_read
+        identity:delete_consumer: rule:admin_only or role:admin_keystone_delete
+        identity:update_consumer: rule:admin_only or role:admin_keystone_update
+        identity:authorize_request_token: rule:admin_required or role:admin_keystone_create
+        identity:list_access_token_roles: rule:admin_required or role:admin_keystone_read
+        identity:get_access_token_role: rule:admin_required or role:admin_keystone_read
+        identity:list_access_tokens: rule:admin_required or role:admin_keystone_read
+        identity:get_access_token: rule:admin_required or role:admin_keystone_read
+        identity:delete_access_token: rule:admin_only or role:admin_keystone_delete
+        identity:list_projects_for_endpoint: rule:admin_required or role:admin_keystone_read
+        identity:add_endpoint_to_project: rule:admin_only or role:admin_keystone_update
+        identity:check_endpoint_in_project: rule:admin_required or role:admin_keystone_read
+        identity:list_endpoints_for_project: rule:admin_required or role:admin_keystone_read
+        identity:remove_endpoint_from_project: rule:admin_only or role:admin_keystone_delete
+        identity:create_endpoint_group: rule:admin_only or role:admin_keystone_create
+        identity:list_endpoint_groups: rule:admin_required or role:admin_keystone_read
+        identity:get_endpoint_group: rule:admin_required or role:admin_keystone_read
+        identity:update_endpoint_group: rule:admin_only or role:admin_keystone_update
+        identity:delete_endpoint_group: rule:admin_only or role:admin_keystone_delete
+        identity:list_projects_associated_with_endpoint_group: rule:admin_required or role:admin_keystone_read
+        identity:list_endpoints_associated_with_endpoint_group: rule:admin_required or role:admin_keystone_read
+        identity:get_endpoint_group_in_project: rule:admin_required or role:admin_keystone_read
+        identity:list_endpoint_groups_for_project: rule:admin_required or role:admin_keystone_read
+        identity:add_endpoint_group_to_project: rule:admin_only or role:admin_keystone_update
+        identity:remove_endpoint_group_from_project: rule:admin_only or role:admin_keystone_update
+        identity:create_identity_provider: rule:admin_only or role:admin_keystone_create
+        identity:list_identity_providers: rule:admin_required or role:admin_keystone_read
+        identity:get_identity_provider: rule:admin_required or role:admin_keystone_read
+        identity:update_identity_provider: rule:admin_only or role:admin_keystone_update
+        identity:delete_identity_provider: rule:admin_only or role:admin_keystone_delete
+        identity:create_protocol: rule:admin_only or role:admin_keystone_create
+        identity:update_protocol: rule:admin_only or role:admin_keystone_update
+        identity:get_protocol: rule:admin_required or role:admin_keystone_read
+        identity:list_protocols: rule:admin_required or role:admin_keystone_read
+        identity:delete_protocol: rule:admin_only or role:admin_keystone_delete
+        identity:create_mapping: rule:admin_only or role:admin_keystone_create
+        identity:get_mapping: rule:admin_required or role:admin_keystone_read
+        identity:list_mappings: rule:admin_required or role:admin_keystone_read
+        identity:delete_mapping: rule:admin_only or role:admin_keystone_delete
+        identity:update_mapping: rule:admin_only or role:admin_keystone_update
+        identity:create_service_provider: rule:admin_only or role:admin_keystone_create
+        identity:list_service_providers: rule:admin_required or role:admin_keystone_read
+        identity:get_service_provider: rule:admin_required or role:admin_keystone_read
+        identity:update_service_provider: rule:admin_only or role:admin_keystone_update
+        identity:delete_service_provider: rule:admin_only or role:admin_keystone_delete
+        identity:get_auth_catalog: rule:tenant_read or role:tenant_keystone_read
+        identity:get_auth_projects: ''
+        identity:get_auth_domains: ''
+        identity:list_projects_for_user: ''
+        identity:list_domains_for_user: ''
+        identity:list_projects_for_groups: ''
+        identity:list_domains_for_groups: ''
+        identity:list_revoke_events: rule:tenant_read or role:tenant_keystone_read
+        identity:create_policy_association_for_endpoint: rule:admin_only or role:admin_keystone_create
+        identity:check_policy_association_for_endpoint: rule:admin_required or role:admin_keystone_read
+        identity:delete_policy_association_for_endpoint: rule:admin_only or role:admin_keystone_delete
+        identity:create_policy_association_for_service: rule:admin_only or role:admin_keystone_create
+        identity:check_policy_association_for_service: rule:admin_required or role:admin_keystone_read
+        identity:delete_policy_association_for_service: rule:admin_only or role:admin_keystone_delete
+        identity:create_policy_association_for_region_and_service: rule:admin_required or role:admin_keystone_create
+        identity:check_policy_association_for_region_and_service: rule:admin_required or role:admin_keystone_read
+        identity:delete_policy_association_for_region_and_service: rule:admin_only or role:admin_keystone_delete
+        identity:get_policy_for_endpoint: rule:admin_required or role:admin_keystone_read
+        identity:list_endpoints_for_policy: rule:admin_required or role:admin_keystone_read
+        identity:create_domain_config: rule:admin_create or role:admin_keystone_create
+        identity:get_domain_config: rule:admin_required or role:admin_keystone_read
+        identity:get_security_compliance_domain_config: rule:admin_required or role:admin_keystone_read
+        identity:update_domain_config: rule:admin_only or role:admin_keystone_update
+        identity:delete_domain_config: rule:admin_only or role:admin_keystone_delete
+        identity:get_domain_config_default: rule:admin_required or role:admin_keystone_read
+        identity:add_role_to_user: rule:admin_create or role:admin_keystone_update
+        identity:remove_role_from_user: rule:admin_create or role:admin_keystone_delete
+        identity:get_user_roles: rule:admin_required or role:admin_keystone_read
+        identity:get_projects_for_token: ''
+        identity:create_project_tag: rule:admin_create
+        identity:delete_project_tag: rule:admin_only
+        identity:get_project_tag: rule:admin_required
+        identity:list_project_tags: rule:admin_required
+        identity:delete_project_tags: rule:admin_only
+        identity:update_project_tags: rule:admin_create
+        identity:get_application_credential: '!'
+        identity:list_application_credentials: '!'
+        identity:create_application_credential: '!'
+        identity:delete_application_credential: '!'
       keystone:
         DEFAULT:
-          transport_url: localhost
+          max_token_size: 16384
+          #enable CADF format to be used for all generated notifications
+          notification_format: cadf
+          #enable all type of notifications including authentication events which may add strain to the messaging bus as they are noisy
+          notification_opt_out: ""
+        oslo_middleware:
+          max_request_body_size: 344064
+        oslo_messaging_notifications:
+          driver:
+            type: multistring
+            values:
+              - messagingv2
+              - log
+        token:
+          revoke_by_id: False
+          #NOTE(rk760n): the configuration based on AIC3.x security requirements statisfying formula max_active_keys = (token_expiration / rotation_frequency) + 2
+          #30 hours
+          expiration: 108000
+          cache_on_issue: true
+        keystone_authtoken:
+          memcache_security_strategy: ENCRYPT
+        fernet_tokens:
+          #NOTE(rk760n): the configuration based on AIC3.x security requirements statisfying formula max_active_keys = (token_expiration / rotation_frequency) + 2
+          max_active_keys: 10
         identity:
           driver: sql
           default_domain_id: default
           domain_specific_drivers_enabled: True
           domain_configurations_from_database: True
           domain_config_dir: /etc/keystonedomains
+        cache:
+          backend_argument: "server_max_value_length:10485760"
+      paste:
+        filter:att_account_adder_extension:
+          use: egg:keystone#att_account_adder_extension
+        pipeline:api_v3:
+          pipeline: cors sizelimit http_proxy_to_wsgi osprofiler url_normalize request_id build_auth_context token_auth json_body ec2_extension_v3 s3_extension att_account_adder_extension service_v3
+#      ks_domains:
+#        nc:
+#          identity:
+#            driver: sql
+#            default_domain_id: default
+#            domain_specific_drivers_enabled: True
+#            domain_configurations_from_database: True
+#            domain_config_dir: /etc/keystonedomains
+#          ldap:
+#            # Use LDAPS instead of STARTTLS
+#            use_tls: false
+#            tls_req_cert: allow
+#            url: "ldaps://FQDN:636"
+#            user_filter: "(memberof=CN=COMMON_NAME,OU=Application,OU=Groups,DC=SUBDOMAIN,DC=DOMAIN,DC=com)"
+#            suffix: "DC=SUBDOMAIN,DC=DOMAIN,DC=com"
+#            page_size: 1000
+#            alias_dereferencing: default
+#            user_objectclass: user
+#            user_id_attribute: cn
+#            user_name_attribute: sAMAccountName
+#            user_pass_attribute: userPassword
+#            query_scope: sub
+#            user_tree_dn: "DC=SUBDOMAIN,DC=DOMAIN,DC=com"
+#            user_enabled_mask: 2
+#            user_enabled_default: 512
+#            user_enabled_attribute: userAccountControl
+#            user_mail_attribute: mail
+#            use_pool: true
+#            pool_size: 10
+#            pool_retry_max: 3
+#            pool_retry_delay: 0.1
+#            #timeout(in seconds) after which any LDAP API call will abort if not response is received (timeout for LDAP requests)
+#            pool_connection_timeout: 5
+#            pool_connection_lifetime: 600
+#            use_auth_pool: true
+#            auth_pool_size: 100
+#            auth_pool_connection_lifetime: 600
+#            #timeout(in seconds) after which pool/select following a connect returns in case of no activity(connecting to LDAP server)
+#            connection_timeout: 1
     pod:
+      #NOTE(rk760n): replicas number is based on AIC3.x openstack services workers configuration
       replicas:
-        api: 2
+        api: 16
+      lifecycle:
+        upgrades:
+          deployments:
+            pod_replacement_strategy: RollingUpdate
+            rolling_update:
+              max_unavailable: 50%
+      affinity:
+        anti:
+          weight:
+            default: 100
     labels:
       api:
         node_selector_key: openstack-control-plane
@@ -259,21 +826,18 @@ data:
       job:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-    manifests:
-      job_rabbit_init: false
-      secret_rabbitmq: false
   dependencies:
-    - keystone-htk
+    - os-keystone-htk
 ...
+
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: keystone-htk
+  name: os-keystone-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -281,10 +845,16 @@ metadata:
         path: .charts.osh.keystone-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: keystone-htk
-  release: keystone-htk
-  namespace: keystone-htk
+  chart_name: os-keystone-htk
+  release: os-keystone-htk
+  namespace: os-keystone-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

@@ -256,6 +256,83 @@ data:
                   type: string
                 project_domain_name:
                   type: string
+    ro:
+      type: object
+      properties:
+        keystone:
+          type: object
+          properties:
+            ro:
+              type: object
+              properties:
+                role:
+                  type: string
+                region_name:
+                  type: string
+                username:
+                  type: string
+                project_name:
+                  type: string
+                user_domain_name:
+                  type: string
+                project_domain_name:
+                  type: string
+        oslo_db:
+          type: object
+          properties:
+            username:
+              type: string
+            database:
+              type: string
+        keystone_oslo_messaging:
+          type: object
+          properties:
+            ro:
+              type: object
+              properties:
+                username:
+                  type: string
+        heat_oslo_messaging:
+          type: object
+          properties:
+            ro:
+              type: object
+              properties:
+                username:
+                  type: string
+        cinder_oslo_messaging:
+          type: object
+          properties:
+            ro:
+              type: object
+              properties:
+                username:
+                  type: string
+        nova_oslo_messaging:
+          type: object
+          properties:
+            ro:
+              type: object
+              properties:
+                username:
+                  type: string
+        neutron_oslo_messaging:
+          type: object
+          properties:
+            ro:
+              type: object
+              properties:
+                username:
+                  type: string
+        glance_oslo_messaging:
+          type: object
+          properties:
+            ro:
+              type: object
+              properties:
+                username:
+                  type: string
+
     osh:
       type: object
       properties:
@@ -585,6 +662,70 @@ data:
                   type: string
                 database:
                   type: string
+    osh-addons:
+        ranger:
+          type: object
+          properties:
+            ranger:
+              type: object
+              properties:
+                role:
+                  type: string
+                region_name:
+                  type: string
+                username:
+                  type: string
+                project_name:
+                  type: string
+                user_domain_name:
+                  type: string
+                project_domain_name:
+                  type: string
+            oslo_db:
+              type: object
+              properties:
+                username:
+                  type: string
+                database:
+                  type: string
+        ranger-agent:
+          type: object
+          properties:
+            ranger-agent:
+              type: object
+              properties:
+                role:
+                  type: string
+                region_name:
+                  type: string
+                username:
+                  type: string
+                project_name:
+                  type: string
+                user_domain_name:
+                  type: string
+                project_domain_name:
+                  type: string
+            oslo_db:
+              type: object
+              properties:
+                username:
+                  type: string
+                database:
+                  type: string
+            oslo_messaging:
+              type: object
+              properties:
+                admin:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                ranger-agent:
+                  type: object
+                  properties:
+                    username:
+                      type: string
     osh_infra:
       type: object
       properties:

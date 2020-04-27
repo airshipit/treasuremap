@@ -1,0 +1,58 @@
+---
+schema: deckhand/PublicKey/v1
+metadata:
+  schema: metadata/Document/v1
+  name: airship_repo_key
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+#
+# pub   rsa3072 2019-12-23 [SC] [expires: 2021-12-22]
+#       F873F429430E04697733322693F049A0B4265340
+# uid                      Airship Team <DL-AIC_UCP1@att.com>
+# sub   rsa3072 2019-12-23 [E] [expires: 2021-12-22]
+#
+data: |-
+  -----BEGIN PGP PUBLIC KEY BLOCK-----
+
+  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
+  ZxBU93b/6nrXLrbW6PX+nmfhsEkqvaE3oVs=
+  =X7GP
+  -----END PGP PUBLIC KEY BLOCK-----
+...

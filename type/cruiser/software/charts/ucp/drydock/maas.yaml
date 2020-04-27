@@ -1,0 +1,30 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-maas
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-maas-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: ucp-maas-type
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.bgp.ipv4.maas_vip
+      dest:
+        path: .values.network.maas_ingress.addr
+data:
+  values:
+    pod:
+      replicas:
+        region: 1
+        rack: 1
+...

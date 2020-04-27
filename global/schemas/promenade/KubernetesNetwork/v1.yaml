@@ -101,6 +101,17 @@ data:
             items:
               $ref: '#/definitions/hostname'
 
+    ntp:
+      type: object
+      properties:
+        servers:
+          type: array
+          items:
+            $ref: '#/definitions/hostname_or_ip_address'
+      additionalProperties: false
+      required:
+        - servers
+
     proxy:
       type: object
       properties:

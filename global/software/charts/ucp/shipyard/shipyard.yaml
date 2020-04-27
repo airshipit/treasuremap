@@ -26,6 +26,20 @@ metadata:
       dest:
         path: .values.images.tags
 
+    # Shipyard log level
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .airship.log_level_numeric
+      dest:
+        path: .values.conf.shipyard.logging.log_level
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .airship.log_level
+      dest:
+        path: .values.conf.airflow.core.logging_level
+
     # Endpoints
     - src:
         schema: pegleg/EndpointCatalogue/v1
@@ -69,7 +83,6 @@ metadata:
         path: .ucp.oslo_cache
       dest:
         path: .values.endpoints.oslo_cache
-
     # Database path
     - src:
         schema: pegleg/AccountCatalogue/v1
@@ -114,6 +127,12 @@ metadata:
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: ucp_service_accounts
+        path: .ucp.keystone.admin
+      dest:
+        path: .values.endpoints.identity.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
         path: .ucp.shipyard.postgres
       dest:
         path: .values.endpoints.postgresql_shipyard_db.auth.user
@@ -141,18 +160,6 @@ metadata:
         path: .ucp.airflow.oslo_messaging.admin
       dest:
         path: .values.endpoints.oslo_messaging.auth.admin
-    - src:
-        schema: pegleg/AccountCatalogue/v1
-        name: ucp_service_accounts
-        path: .ucp.keystone.admin
-      dest:
-        path: .values.endpoints.identity.auth.admin
-    - src:
-        schema: pegleg/AccountCatalogue/v1
-        name: ucp_service_accounts
-        path: .ucp.shipyard.keystone
-      dest:
-        path: .values.endpoints.identity.auth.shipyard
 
     # Secrets
     - dest:
@@ -220,19 +227,25 @@ data:
   chart_name: shipyard
   release: ucp-shipyard
   namespace: ucp
+  protected:
+    continue_processing: false
   wait:
-    timeout: 600
+    timeout: 1800
     labels:
-      release_group: airship-ucp-shipyard
+      release_group: clcp-ucp-shipyard
+  test:
+    enabled: true
   install:
     no_hooks: false
   upgrade:
     no_hooks: false
+    options:
+      force: true
     pre:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-shipyard
+            release_group: clcp-ucp-shipyard
   values:
     endpoints:
       postgresql_airflow_db:
@@ -259,46 +272,74 @@ data:
           default: null
     prod_environment: true
     pod:
+      affinity:
+        anti:
+          type:
+            default: requiredDuringSchedulingIgnoredDuringExecution
       replicas:
         shipyard:
-          api: 2
+          api: 1
         airflow:
-          worker: 2
-          # TODO: Scheduler can be set to 0 with a future version - here to
-          # accommodate the upgrade to the current configuration with the
-          # Scheduler being a sidecar with the Worker.
-          scheduler: 1
+          worker: 1
+          # Set replicas to 0 to disable the standalone scheduler
+          scheduler: 0
     labels:
       job:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
+    network:
+      shipyard:
+        enable_node_port: false
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+      airflow:
+        web:
+          enable_node_port: false
     conf:
       shipyard:
         keystone_authtoken:
           memcache_security_strategy: None
+      rabbitmq:
+      # adding rmq policy to mirror messages from celery queues
+      # TODO: the vhost should be sourced from the same place as the config of the queue (endpoints)
+      #       and must align with endpoints.yaml airflow_oslo_messaging.path, but without the leading slash.
+        policies:
+        - vhost: "airflow"
+          name: "ha_celery"
+          definition:
+            ha-mode: "all"
+            ha-sync-mode: "automatic"
+          priority: 0
+          apply-to: all
+          pattern: 'celery|default'
+      policy:
+        admin_create: role:admin or role:admin_ucp
+        admin_read_access: rule:admin_create or role:admin_ucp_viewer or role:cicd_viewer
+        workflow_orchestrator:list_actions: rule:admin_read_access
+        workflow_orchestrator:create_action: rule:admin_create or role:cicd_viewer
+        workflow_orchestrator:get_action: rule:admin_read_access
+        workflow_orchestrator:get_action_step: rule:admin_read_access
+        workflow_orchestrator:get_action_step_logs: rule:admin_read_access
+        workflow_orchestrator:get_action_validation: rule:admin_read_access
+        workflow_orchestrator:invoke_action_control: rule:admin_create
+        workflow_orchestrator:get_configdocs_status: rule:admin_read_access
+        workflow_orchestrator:create_configdocs: rule:admin_create
+        workflow_orchestrator:get_configdocs: rule:admin_read_access
+        workflow_orchestrator:get_configdocs_cleartext: rule:admin_create
+        workflow_orchestrator:commit_configdocs: rule:admin_create
+        workflow_orchestrator:get_renderedconfigdocs: rule:admin_read_access
+        workflow_orchestrator:get_renderedconfigdocs_cleartext: rule:admin_create or role:cicd_viewer
+        workflow_orchestrator:list_workflows: rule:admin_read_access
+        workflow_orchestrator:get_workflow: rule:admin_read_access
+        workflow_orchestrator:get_notedetails: rule:admin_read_access
+        workflow_orchestrator:get_site_statuses: rule:admin_read_access
+        workflow_orchestrator:action_deploy_site: rule:admin_create
+        workflow_orchestrator:action_update_site: rule:admin_create
+        workflow_orchestrator:action_update_software: rule:admin_create
+        workflow_orchestrator:action_redeploy_server: rule:admin_create
+        workflow_orchestrator:action_relabel_nodes: rule:admin_create
+        workflow_orchestrator:action_test_site: rule:admin_create or role:cicd_viewer
   dependencies:
     - shipyard-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: shipyard-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.shipyard-htk
-      dest:
-        path: .source
-data:
-  chart_name: shipyard-htk
-  release: shipyard-htk
-  namespace: shipyard-htk
-  values: {}
-  dependencies: []
 ...

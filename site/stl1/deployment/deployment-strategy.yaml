@@ -1,0 +1,72 @@
+---
+# The purpose of this file is to provide Shipyard a strategy to aid in the site's
+# deployment. This WILL require modification for each particular site. A successful
+# strategy for large labs that has been used in the past has been to split the Control
+# Plane hosts up from the computes, as well as the computes by rack. The below strategy
+# differs slightly, as the size of the lab is smaller. As such, the Control Plane hosts
+# deploy first, followed by half of the computes, followed by the second half of the
+# computes. Shipyard deployment strategies can be very useful in getting around certain
+# failures, like misbehaving nodes that may hold up the deployment. See more at:
+# https://github.com/openstack/airship-shipyard/blob/master/doc/source/site-definition-documents.rst#deployment-strategy
+schema: shipyard/DeploymentStrategy/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: deployment-strategy
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: deployment-strategy-global
+    actions:
+      - method: replace
+        path: .
+  storagePolicy: cleartext
+  replacement: true
+data:
+  groups:
+    - name: masters
+      critical: true
+      depends_on: []
+      selectors:
+        - node_names: []
+          node_labels: []
+          node_tags:
+            - masters
+          rack_names: []
+      success_criteria:
+        percent_successful_nodes: 100
+    # NEWSITE-CHANGEME: The number of "worker groups" should equal the number of site racks
+    - name: worker_group_0
+      critical: false
+      depends_on:
+        - masters
+      selectors:
+        # NEWSITE-CHANGEME: The following should be a list of the computes in the site's first rack
+        - node_names:
+            - 'stl1r01s05'
+            - 'stl1r01s06'
+            - 'stl1r01s07'
+            #- 'stl1r01s08'
+            #- 'stl1r01s09'
+            #- 'stl1r01s10'
+            #- 'stl1r01s11'
+            #- 'stl1r01s12'
+          node_labels: []
+          node_tags: []
+          rack_names: []
+    - name: workers
+      critical: true
+      # NEWSITE-CHANGEME: Populate with each worker group (should equal the number of site racks).
+      # This group ensures a percent of success is achieved with the compute deployments.
+      depends_on:
+        - worker_group_0
+      selectors:
+        - node_names: []
+          node_labels: []
+          node_tags:
+            - workers
+          rack_names: []
+      success_criteria:
+        percent_successful_nodes: 60
+...

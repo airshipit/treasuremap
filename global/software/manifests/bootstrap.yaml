@@ -3,14 +3,15 @@ schema: armada/Manifest/v1
 metadata:
   schema: metadata/Document/v1
   name: cluster-bootstrap
+  labels:
+    name: cluster-bootstrap
+    layer: global
   layeringDefinition:
     abstract: false
     layer: global
-  labels:
-    name: cluster-bootstrap-global
   storagePolicy: cleartext
 data:
-  release_prefix: airship
+  release_prefix: clcp
   chart_groups:
     - podsecuritypolicy
     - kubernetes-proxy
@@ -19,15 +20,13 @@ data:
     - kubernetes-etcd
     - kubernetes-haproxy
     - kubernetes-core
+    # - kubernetes-falco
     - ingress-kube-system
     - ucp-ceph
     - ucp-ceph-config
-    - ucp-core
+    - ucp-infra
     - ucp-keystone
-    - ucp-divingbell
     - ucp-armada
-    - ucp-deckhand
-    - ucp-drydock
-    - ucp-promenade
-    - ucp-shipyard
-...
+    - ucp-services
+#    - ucp-nc-info
+#    - mini-mirror

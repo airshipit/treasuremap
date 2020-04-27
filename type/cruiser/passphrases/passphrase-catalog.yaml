@@ -1,0 +1,512 @@
+---
+schema: pegleg/PassphraseCatalog/v1
+metadata:
+  schema: metadata/Document/v1
+  name: passphrase-catalog
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  passphrases:
+  - description: 'osh barbican oslo db password'
+    document_name: osh_barbican_oslo_db_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh oslo messaging admin password'
+    document_name: osh_oslo_messaging_admin_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh barbican oslo messaging password'
+    document_name: osh_barbican_oslo_messaging_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh barbican password'
+    document_name: osh_barbican_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh rabbitmq erlang cookie'
+    document_name: osh_rabbitmq_erlang_cookie
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh cinder oslo db password'
+    document_name: osh_cinder_oslo_db_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh cinder oslo messaging password'
+    document_name: osh_cinder_oslo_messaging_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh cinder password'
+    document_name: osh_cinder_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh cinder test password'
+    document_name: osh_cinder_test_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh glance oslo db password'
+    document_name: osh_glance_oslo_db_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh glance oslo messaging password'
+    document_name: osh_glance_oslo_messaging_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh glance password'
+    document_name: osh_glance_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh glance test password'
+    document_name: osh_glance_test_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh heat oslo db password'
+    document_name: osh_heat_oslo_db_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh heat oslo messaging password'
+    document_name: osh_heat_oslo_messaging_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh heat password'
+    document_name: osh_heat_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh heat test password'
+    document_name: osh_heat_test_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh heat stack user password'
+    document_name: osh_heat_stack_user_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh heat trustee password'
+    document_name: osh_heat_trustee_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh horizon oslo db password'
+    document_name: osh_horizon_oslo_db_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh horizon secret key'
+    document_name: osh_horizon_secret_key
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra dmaap mechid password do_not_generate'
+    document_name: osh_infra_dmaap_mechid_password
+    encrypted: true
+    profile: hex_lower
+    type: passphrase
+    prompt: true
+    regenerable: false
+  - description: 'osh infra elasticsearch admin password'
+    document_name: osh_infra_elasticsearch_admin_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra grafana admin password'
+    document_name: osh_infra_grafana_admin_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra grafana oslo db password'
+    document_name: osh_infra_grafana_oslo_db_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra grafana oslo db session password'
+    document_name: osh_infra_grafana_oslo_db_session_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra kibana admin password'
+    document_name: osh_infra_kibana_admin_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra nagios admin password'
+    document_name: osh_infra_nagios_admin_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra openstack exporter password'
+    document_name: osh_infra_openstack_exporter_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra oslo db admin password'
+    document_name: osh_infra_oslo_db_admin_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra oslo db audit password'
+    document_name: osh_infra_oslo_db_audit_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra oslo db exporter password'
+    document_name: osh_infra_oslo_db_exporter_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra prometheus admin password'
+    document_name: osh_infra_prometheus_admin_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra rgw ks password'
+    document_name: osh_infra_rgw_ks_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra rgw s3 admin secret key'
+    document_name: osh_infra_rgw_s3_admin_secret_key
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra rgw s3 admin access key'
+    document_name: osh_infra_rgw_s3_admin_access_key
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra rgw s3 elasticsearch secret key'
+    document_name: osh_infra_rgw_s3_elasticsearch_secret_key
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh infra rgw s3 elasticsearch access key'
+    document_name: osh_infra_rgw_s3_elasticsearch_access_key
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh ironic password'
+    document_name: osh_ironic_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh keystone admin password'
+    document_name: osh_keystone_admin_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh keystone oslo db password'
+    document_name: osh_keystone_oslo_db_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh keystone oslo messaging password'
+    document_name: osh_keystone_oslo_messaging_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh keystone test password'
+    document_name: osh_keystone_test_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh neutron oslo db password'
+    document_name: osh_neutron_oslo_db_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh neutron oslo messaging password'
+    document_name: osh_neutron_oslo_messaging_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh neutron password'
+    document_name: osh_neutron_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh neutron test password'
+    document_name: osh_neutron_test_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh nova metadata proxy shared secret'
+    document_name: osh_nova_metadata_proxy_shared_secret
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh nova oslo db password'
+    document_name: osh_nova_oslo_db_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh nova oslo messaging password'
+    document_name: osh_nova_oslo_messaging_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh nova password'
+    document_name: osh_nova_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh nova test password'
+    document_name: osh_nova_test_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh oslo cache secret key'
+    document_name: osh_oslo_cache_secret_key
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh oslo db admin password'
+    document_name: osh_oslo_db_admin_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh oslo db exporter password'
+    document_name: osh_oslo_db_exporter_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh placement password'
+    document_name: osh_placement_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp keystone admin password'
+    document_name: ucp_keystone_admin_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp keystone test password'
+    document_name: ucp_keystone_test_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp armada keystone password'
+    document_name: ucp_armada_keystone_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ceph swift keystone password'
+    document_name: ceph_swift_keystone_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp airflow oslo messaging password'
+    document_name: ucp_airflow_oslo_messaging_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp postgres admin password'
+    document_name: ucp_postgres_admin_password
+    encrypted: true
+    profile: hex_lower
+    prompt: false
+    regenerable: false
+  - description: 'ucp postgres audit password'
+    document_name: ucp_postgres_audit_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp oslo db admin password'
+    document_name: ucp_oslo_db_admin_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp deckhand postgres password'
+    document_name: ucp_deckhand_postgres_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp deckhand keystone password'
+    document_name: ucp_deckhand_keystone_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp barbican keystone password'
+    document_name: ucp_barbican_keystone_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp barbican oslo db password'
+    document_name: ucp_barbican_oslo_db_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp oslo messaging password'
+    document_name: ucp_oslo_messaging_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp drydock postgres password'
+    document_name: ucp_drydock_postgres_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp drydock keystone password'
+    document_name: ucp_drydock_keystone_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp maas admin password'
+    document_name: ucp_maas_admin_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp maas postgres password'
+    document_name: ucp_maas_postgres_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp keystone oslo db password'
+    document_name: ucp_keystone_oslo_db_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp promenade keystone password'
+    document_name: ucp_promenade_keystone_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp shipyard keystone password'
+    document_name: ucp_shipyard_keystone_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp shipyard postgres password'
+    document_name: ucp_shipyard_postgres_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp airflow postgres password'
+    document_name: ucp_airflow_postgres_password
+    encrypted: true
+    profile: hex_lower
+    prompt: false
+    regenerable: false
+  - description: 'ucp postgres exporter postgres password'
+    document_name: ucp_postgres_exporter_postgres_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp rabbitmq erlang cookie'
+    document_name: ucp_rabbitmq_erlang_cookie
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp openstack exporter keystone password'
+    document_name: ucp_openstack_exporter_keystone_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp oslo db exporter password'
+    document_name: ucp_oslo_db_exporter_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'maas-region-key'
+    document_name: maas-region-key
+    encrypted: true
+    profile: hex_lower
+    prompt: false
+    regenerable: false
+  - description: 'artifactory_oslo_db_sst_password'
+    document_name: artifactory_oslo_db_sst_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'artifactory_oslo_db_audit_password'
+    document_name: artifactory_oslo_db_audit_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'artifactory rgw s3 admin access key'
+    document_name: artifactory_rgw_s3_admin_access_key
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh_addons_keystone_ranger-agent_password'
+    document_name: osh_addons_keystone_ranger-agent_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh_addons_ranger-agent_admin_oslo_messaging_password'
+    document_name: osh_addons_ranger-agent_admin_oslo_messaging_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh_addons_ranger-agent_oslo_db_password'
+    document_name: osh_addons_ranger-agent_oslo_db_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh_infra_oslo_db_sst_password'
+    document_name: osh_infra_oslo_db_sst_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh_oslo_db_sst_password'
+    document_name: osh_oslo_db_sst_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh_oslo_db_audit_password'
+    document_name: osh_oslo_db_audit_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ro_keystone_password'
+    document_name: ro_keystone_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ro_oslo_db_password'
+    document_name: ro_oslo_db_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ro_oslo_messaging_password'
+    document_name: ro_oslo_messaging_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp_oslo_db_sst_password'
+    document_name: ucp_oslo_db_sst_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp_oslo_db_audit_password'
+    document_name: ucp_oslo_db_audit_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp_postgres_replica_password'
+    document_name: ucp_postgres_replica_password
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp_webhook_keystone_password'
+    document_name: ucp_webhook_keystone_password
+    encrypted: true
+    profile: hex_lower
+#  - description: 'aqua_executor'
+#    document_name: aqua_executor
+#    encrypted: true
+#    profile: hex_lower
+#  - description: 'aqua_orchestrator'
+#    document_name: aqua_orchestrator
+#    encrypted: true
+#    profile: hex_lower
+  - description: 'apiserver-encryption-key-key1'
+    document_name: apiserver-encryption-key-key1
+    encrypted: true
+    profile: hex_lower
+    type: base64
+    length: 32
+    prompt: false
+    regenerable: false
+  - description: 'apiserver-encryption-key-key2'
+    document_name: apiserver-encryption-key-key2
+    encrypted: true
+    profile: hex_lower
+    type: base64
+    length: 32
+    prompt: false
+    regenerable: false
+  - description: 'osh_keystone_ldap_mechid_password do_not_generate'
+    document_name: osh_keystone_ldap_mechid_password
+    encrypted: true
+    profile: hex_lower
+    type: passphrase
+    prompt: true
+    regenerable: false
+  - description: 'ceph_fsid uuid'
+    document_name: ceph_fsid
+    type: uuid
+    prompt: false
+    profile: hex_lower
+    regenerable: false
+    encrypted: true
+  - description: 'tenant_ceph_fsid uuid'
+    document_name: tenant_ceph_fsid
+    type: uuid
+    prompt: false
+    regenerable: false
+    encrypted: true
+    profile: hex_lower
+  - description: 'ucp_keystone_ldap_mechid_password do_not_generate'
+    document_name: ucp_keystone_ldap_mechid_password
+    type: passphrase
+    encrypted: true
+    profile: hex_lower
+    prompt: true
+    regenerable: false
+  - description: 'ipmi_admin_password do_not_generate'
+    document_name: ipmi_admin_password
+    type: passphrase
+    regenerable: false
+    encrypted: true
+    prompt: true
+    profile: hex_lower
+  - description: 'ubuntu_crypt_password linux-crypt-sha-512'
+    document_name: ubuntu_crypt_password
+    type: passphrase
+    prompt: false
+    profile: hex_lower
+    encrypted: true
+  - description: 'osh addons ranger-agent oslo messaging password'
+    document_name: osh_addons_ranger-agent_oslo_messaging_password
+    type: passphrase
+    prompt: false
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh_addons_ranger_oslo_db_password'
+    document_name: osh_addons_ranger_oslo_db_password
+    type: passphrase
+    prompt: false
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh_addons_ranger_oslo_db_sst_password'
+    document_name: osh_addons_ranger_oslo_db_sst_password
+    type: passphrase
+    prompt: false
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh_addons_ranger_admin_oslo_db_password'
+    document_name: osh_addons_ranger_admin_oslo_db_password
+    type: passphrase
+    prompt: false
+    encrypted: true
+    profile: hex_lower
+  - description: 'osh_addons_ranger_agent_rabbitmq_erlang_cookie'
+    document_name: osh_addons_ranger_agent_rabbitmq_erlang_cookie
+    type: passphrase
+    prompt: false
+    encrypted: true
+    profile: hex_lower
+...

@@ -1,0 +1,731 @@
+---
+schema: nc/Policy/v1
+metadata:
+  schema: metadata/Document/v1
+  name: global-policy
+  layeringDefinition:
+    abstract: false
+    layer: global
+  labels:
+    name: global-policy
+  storagePolicy: cleartext
+  substitutions:
+
+    - src:
+        schema: drydock/Network/v1
+        name: oam
+        path: .cidr
+      dest:
+        - path: .policy.globalsitelevel.rules[0].spec.ingress[0].source.nets[0]
+          pattern: OAM_CIDR
+        - path: .policy.globalsitelevel.rules[0].spec.ingress[1].source.nets[0]
+          pattern: OAM_CIDR
+        - path: .policy.globalsitelevel.rules[1].spec.egress[0].source.nets[0]
+          pattern: OAM_CIDR
+        - path: .policy.globalsitelevel.rules[15].spec.egress[0].source.nets[0]
+          pattern: OAM_CIDR
+        - path: .policy.globalsitelevel.rules[16].spec.ingress[0].source.nets[0]
+          pattern: OAM_CIDR
+        - path: .policy.globalsitelevel.rules[17].spec.egress[0].destination.nets[0]
+          pattern: OAM_CIDR
+
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.bgp.ipv4.ingress_vip
+      dest:
+        - path: .policy.globalsitelevel.rules[1].spec.egress[0].destination.nets[0]
+          pattern: CALICO_BGP_IP
+        - path: .policy.globalsitelevel.rules[19].spec.ingress[0].destination.nets[0]
+          pattern: INGRESS_VIP
+        - path: .policy.globalsitelevel.rules[21].spec.ingress[0].destination.nets[0]
+          pattern: INGRESS_VIP
+        - path: .policy.globalsitelevel.rules[22].spec.ingress[0].destination.notNets[0]
+          pattern: INGRESS_VIP
+
+    - src:
+        schema: promenade/KubernetesNetwork/v1
+        name: kubernetes-network
+        path: .kubernetes.service_cidr
+      dest:
+        - path: .policy.globalsitelevel.rules[2].spec.ingress[0].source.nets[0]
+          pattern: KUBERNETES_SERVICE_CIDR
+        - path: .policy.globalsitelevel.rules[2].spec.ingress[1].source.nets[0]
+          pattern: KUBERNETES_SERVICE_CIDR
+        - path: .policy.globalsitelevel.rules[2].spec.egress[0].destination.nets[0]
+          pattern: KUBERNETES_SERVICE_CIDR
+        - path: .policy.globalsitelevel.rules[2].spec.egress[1].destination.nets[0]
+          pattern: KUBERNETES_SERVICE_CIDR
+
+    - src:
+        schema: promenade/KubernetesNetwork/v1
+        name: kubernetes-network
+        path: .kubernetes.pod_cidr
+      dest:
+        - path: .policy.globalsitelevel.rules[3].spec.ingress[0].source.nets[0]
+          pattern: KUBERNETES_POD_CIDR
+        - path: .policy.globalsitelevel.rules[3].spec.ingress[1].source.nets[0]
+          pattern: KUBERNETES_POD_CIDR
+        - path: .policy.globalsitelevel.rules[3].spec.egress[0].destination.nets[0]
+          pattern: KUBERNETES_POD_CIDR
+        - path: .policy.globalsitelevel.rules[3].spec.egress[1].destination.nets[0]
+          pattern: KUBERNETES_POD_CIDR
+
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .storage.ceph.public_cidr
+      dest:
+        - path: .policy.globalsitelevel.rules[4].spec.ingress[0].source.nets[0]
+          pattern: CEPH_PUBLIC_CIDR
+        - path: .policy.globalsitelevel.rules[4].spec.ingress[1].source.nets[0]
+          pattern: CEPH_PUBLIC_CIDR
+        - path: .policy.globalsitelevel.rules[4].spec.egress[0].destination.nets[0]
+          pattern: CEPH_PUBLIC_CIDR
+        - path: .policy.globalsitelevel.rules[4].spec.egress[1].destination.nets[0]
+          pattern: CEPH_PUBLIC_CIDR
+
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .storage.ceph.cluster_cidr
+      dest:
+        - path: .policy.globalsitelevel.rules[5].spec.ingress[0].source.nets[0]
+          pattern: CEPH_CLUSTER_CIDR
+        - path: .policy.globalsitelevel.rules[5].spec.ingress[1].source.nets[0]
+          pattern: CEPH_CLUSTER_CIDR
+        - path: .policy.globalsitelevel.rules[5].spec.egress[0].destination.nets[0]
+          pattern: CEPH_CLUSTER_CIDR
+        - path: .policy.globalsitelevel.rules[5].spec.egress[1].destination.nets[0]
+          pattern: CEPH_CLUSTER_CIDR
+
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .genesis.ip
+      dest:
+        - path: .policy.globalsitelevel.rules[6].spec.ingress[0].source.nets[0]
+          pattern: GENESIS_IP
+        - path: .policy.globalsitelevel.rules[6].spec.ingress[1].source.nets[0]
+          pattern: GENESIS_IP
+        - path: .policy.globalsitelevel.rules[6].spec.egress[0].destination.nets[0]
+          pattern: GENESIS_IP
+        - path: .policy.globalsitelevel.rules[6].spec.egress[1].destination.nets[0]
+          pattern: GENESIS_IP
+
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .bootstrap.ip
+      dest:
+        - path: .policy.globalsitelevel.rules[7].spec.ingress[0].source.nets[0]
+          pattern: BOOTSTRAP_IP
+        - path: .policy.globalsitelevel.rules[7].spec.ingress[1].source.nets[0]
+          pattern: BOOTSTRAP_IP
+        - path: .policy.globalsitelevel.rules[7].spec.egress[0].destination.nets[0]
+          pattern: BOOTSTRAP_IP
+        - path: .policy.globalsitelevel.rules[7].spec.egress[1].destination.nets[0]
+          pattern: BOOTSTRAP_IP
+
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.bgp.ipv4.maas_vip
+      dest:
+        - path: .policy.globalsitelevel.rules[8].spec.ingress[0].source.nets[0]
+          pattern: MAAS_VIP
+        - path: .policy.globalsitelevel.rules[8].spec.ingress[1].source.nets[0]
+          pattern: MAAS_VIP
+        - path: .policy.globalsitelevel.rules[8].spec.egress[0].destination.nets[0]
+          pattern: MAAS_VIP
+        - path: .policy.globalsitelevel.rules[8].spec.egress[1].destination.nets[0]
+          pattern: MAAS_VIP
+        - path: .policy.globalsitelevel.rules[20].spec.ingress[0].destination.nets[0]
+          pattern: MAAS_VIP
+        - path: .policy.globalsitelevel.rules[20].spec.ingress[1].destination.nets[0]
+          pattern: MAAS_VIP
+        - path: .policy.globalsitelevel.rules[22].spec.ingress[0].destination.notNets[1]
+          pattern: MAAS_VIP
+
+    - src:
+        schema: drydock/Network/v1
+        name: oob
+        path: .cidr
+      dest:
+        - path: .policy.globalsitelevel.rules[14].spec.egress[0].destination.nets[0]
+          pattern: IPMI_CIDR
+        - path: .policy.globalsitelevel.rules[14].spec.egress[1].destination.nets[0]
+          pattern: IPMI_CIDR
+data:
+  policy:
+    globalsitelevel:
+      priority: 4
+      rules:
+        # Rule 0
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: nc1-kvm-hosts-ingress
+          spec:
+            order: 20
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            ingress:
+            - action: Allow
+              protocol: TCP
+              source:
+                nets: ["OAM_CIDR"]
+              destination:
+                ports:
+                - 80
+                - 443
+                - 2378
+                - 4149
+                - 6443
+                - 6553
+                - 6666
+                - 6667
+                - 9099
+                - 10250
+                - 10255
+                - 10256
+            - action: Allow
+              protocol: ICMP
+              icmp:
+                type: 0
+                code: 0
+              source:
+                nets: ["OAM_CIDR"]
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+
+        # Rule 1
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: nc1-host-to-ingress
+          spec:
+            order: 23
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            egress:
+            - action: Allow
+              protocol: TCP
+              source:
+                nets: ["OAM_CIDR"]
+              destination:
+                nets: ["CALICO_BGP_IP"]
+                ports:
+                - 80
+                - 443
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+
+        # rule 2: all UCP containers should allow all TCP and UDP connections to and from the kubernetes service network
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: ucp-kubernetes-service
+          spec:
+            selector: host == 'nc-control' && intf-alias == 'oam'
+            order: 0
+            ingress:
+            - action: Allow
+              protocol: TCP
+              source:
+                nets:
+                  - "KUBERNETES_SERVICE_CIDR"
+            - action: Allow
+              protocol: UDP
+              source:
+                nets:
+                  - "KUBERNETES_SERVICE_CIDR"
+            egress:
+            - action: Allow
+              protocol: TCP
+              destination:
+                nets:
+                  - "KUBERNETES_SERVICE_CIDR"
+            - action: Allow
+              protocol: UDP
+              destination:
+                nets:
+                  - "KUBERNETES_SERVICE_CIDR"
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+
+        # rule 3: all UCP containers should allow all TCP and UDP connections to and from the kubernetes pod network
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: ucp-kubernetes-pod
+          spec:
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            order: 0
+            ingress:
+            - action: Allow
+              protocol: TCP
+              source:
+                nets:
+                  - "KUBERNETES_POD_CIDR"
+            - action: Allow
+              protocol: UDP
+              source:
+                nets:
+                  - "KUBERNETES_POD_CIDR"
+            egress:
+            - action: Allow
+              protocol: TCP
+              destination:
+                nets:
+                  - "KUBERNETES_POD_CIDR"
+            - action: Allow
+              protocol: UDP
+              destination:
+                nets:
+                  - "KUBERNETES_POD_CIDR"
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # rule 4: all UCP containers should allow all TCP and UDP connections to and from the public ceph network
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: ucp-ceph-public
+          spec:
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            order: 0
+            ingress:
+            - action: Allow
+              protocol: TCP
+              source:
+                nets:
+                  - "CEPH_PUBLIC_CIDR"
+            - action: Allow
+              protocol: UDP
+              source:
+                nets:
+                  - "CEPH_PUBLIC_CIDR"
+            egress:
+            - action: Allow
+              protocol: TCP
+              destination:
+                nets:
+                  - "CEPH_PUBLIC_CIDR"
+            - action: Allow
+              protocol: UDP
+              destination:
+                nets:
+                  - "CEPH_PUBLIC_CIDR"
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # rule 5: all UCP containers should allow all TCP and UDP connections to and from the cluster ceph network
+        #         (can this sometimes be different from the public ceph network?)
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: ucp-ceph-cluster
+          spec:
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            order: 0
+            ingress:
+            - action: Allow
+              protocol: TCP
+              source:
+                nets:
+                  - "CEPH_CLUSTER_CIDR"
+            - action: Allow
+              protocol: UDP
+              source:
+                nets:
+                  - "CEPH_CLUSTER_CIDR"
+            egress:
+            - action: Allow
+              protocol: TCP
+              destination:
+                nets:
+                  - "CEPH_CLUSTER_CIDR"
+            - action: Allow
+              protocol: UDP
+              destination:
+                nets:
+                  - "CEPH_CLUSTER_CIDR"
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # rule 6: all UCP containers should allow all TCP and UDP connections to and from the genesis node
+        #         (is this needed, or does the bootstrap IP rule below cover everything?)
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: ucp-genesis
+          spec:
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            order: 0
+            ingress:
+            - action: Allow
+              protocol: TCP
+              source:
+                nets:
+                  - "GENESIS_IP/32"
+            - action: Allow
+              protocol: UDP
+              source:
+                nets:
+                  - "GENESIS_IP/32"
+            egress:
+            - action: Allow
+              protocol: TCP
+              destination:
+                nets:
+                  - "GENESIS_IP/32"
+            - action: Allow
+              protocol: UDP
+              destination:
+                nets:
+                  - "GENESIS_IP/32"
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # rule 7: all UCP containers should allow all TCP and UDP connections to and from the bootstrap IP
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: ucp-bootstrap
+          spec:
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            order: 0
+            ingress:
+            - action: Allow
+              protocol: TCP
+              source:
+                nets:
+                  - "BOOTSTRAP_IP/32"
+            - action: Allow
+              protocol: UDP
+              source:
+                nets:
+                  - "BOOTSTRAP_IP/32"
+            egress:
+            - action: Allow
+              protocol: TCP
+              destination:
+                nets:
+                  - "BOOTSTRAP_IP/32"
+            - action: Allow
+              protocol: UDP
+              destination:
+                nets:
+                  - "BOOTSTRAP_IP/32"
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+
+        # rule 8: all UCP containers should allow all TCP and UDP connections to and from the maas VIP
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: ucp-maas
+          spec:
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            order: 0
+            ingress:
+            - action: Allow
+              protocol: TCP
+              source:
+                nets:
+                  - "MAAS_VIP"
+            - action: Allow
+              protocol: UDP
+              source:
+                nets:
+                  - "MAAS_VIP"
+            egress:
+            - action: Allow
+              protocol: TCP
+              destination:
+                nets:
+                  - "MAAS_VIP"
+            - action: Allow
+              protocol: UDP
+              destination:
+                nets:
+                  - "MAAS_VIP"
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # rule 9: FAILSAFE: all UCP containers should allow incoming TCP connections on port 22 from anywhere (SSH)
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: failsafe-ssh
+          spec:
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            order: 0
+            ingress:
+              - action: Allow
+                protocol: TCP
+                destination:
+                  ports: [22]
+
+        # rule 10: FAILSAFE: all UCP containers should allow incoming and outgoing ICMP connections to/from anywhere (pings & traces)
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: failsafe-icmp
+          spec:
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            order: 0
+            ingress:
+            - action: Allow
+              protocol: ICMP
+            egress:
+            - action: Allow
+              protocol: ICMP
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # rule 11: FAILSAFE: all UCP containers should allow outgoing UDP connections on port 53 to anywhere (DNS)
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: failsafe-dns
+          spec:
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            order: 0
+            egress:
+            - action: Allow
+              protocol: UDP
+              destination:
+                ports: [53]
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # rule 12: FAILSAFE: all UCP containers should allow outgoing UDP connections on port 67 to anywhere (DHCP)
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: failsafe-dhcp
+          spec:
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            order: 0
+            egress:
+            - action: Allow
+              protocol: UDP
+              destination:
+                ports: [67]
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # rule 13: FAILSAFE: all UCP containers should allow outgoing UDP connections on port 123 to anywhere (NTP)
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: failsafe-ntp
+          spec:
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            order: 0
+            egress:
+            - action: Allow
+              protocol: UDP
+              destination:
+                ports: [123]
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # rule 14: FAILSAFE: ipmi
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: failsafe-ipmi-egress
+          spec:
+            order: 13
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            egress:
+            - action: Allow
+              protocol: TCP
+              destination:
+                nets: ["IPMI_CIDR"]
+                ports:
+                - 22
+                - 80
+                - 443
+            - action: Allow
+              protocol: UDP
+              destination:
+                nets: ["IPMI_CIDR"]
+                ports:
+                - 623
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # Rule 15
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: nc1-kvm-hosts-egress
+          spec:
+            order: 20
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            egress:
+            - action: Allow
+              protocol: TCP
+              source:
+                nets: ["OAM_CIDR"]
+              destination:
+                ports:
+                - 80
+                - 443
+                - 2378
+                - 4149
+                - 6443
+                - 6553
+                - 6666
+                - 6667
+                - 9099
+                - 10250
+                - 10255
+                - 10256
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # Rule 16
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: vnc-traffic-ingress
+          spec:
+            order: 60
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            ingress:
+            - action: Allow
+              protocol: TCP
+              source:
+                nets: ["OAM_CIDR"]
+              destination:
+                ports:
+                - "5900:5999"
+            doNotTrack: false
+            preDNAT: true
+            applyOnForward: true
+        # Rule 17
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: vnc-traffic-egress
+          spec:
+            order: 5
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'oam'
+            egress:
+            - action: Allow
+              protocol: TCP
+              destination:
+                nets: ["OAM_CIDR"]
+                ports:
+                - "5900:5999"
+            doNotTrack: false
+            preDNAT: false
+            applyOnForward: true
+        # Rule 18
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: ksn-allow-icmp
+          spec:
+            order: 0
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'ksn'
+            applyOnForward: true
+            ingress:
+            - action: Allow
+              protocol: ICMP
+            egress:
+            - action: Allow
+              protocol: ICMP
+        # Rule 19
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: ksn-allow-to-ingress-vip
+          spec:
+            order: 0
+            selector: host == 'nc-control' && intf-alias == 'ksn'
+            applyOnForward: true
+            ingress:
+            # allow kubernetes ingress-controller ports
+            - action: Allow
+              protocol: TCP
+              destination:
+                ports:
+                - 80
+                - 443
+                nets:
+                - INGRESS_VIP
+        # Rule 20
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: ksn-allow-to-maas-vip
+          spec:
+            order: 0
+            selector: host == 'nc-control' && intf-alias == 'ksn'
+            applyOnForward: true
+            ingress:
+            # allow maas and minimirror ports
+            - action: Allow
+              protocol: TCP
+              destination:
+                ports:
+                - 53
+                - 80
+                - 8000
+                nets:
+                - MAAS_VIP
+            - action: Allow
+              protocol: UDP
+              destination:
+                ports:
+                - 514
+                - 53
+                - 514
+                nets:
+                - MAAS_VIP
+        # Rule 21
+        # TODO: move this to a corridor policy
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: ksn-allow-kubernetes-api
+          spec:
+            order: 0
+            selector: host == 'nc-control' && intf-alias == 'ksn'
+            applyOnForward: true
+            ingress:
+            # allow kubernetes api access
+            - action: Allow
+              protocol: TCP
+              destination:
+                ports:
+                - 6443
+                - 6553
+                nets:
+                - INGRESS_VIP
+        # Rule 22
+        - apiVersion: projectcalico.org/v3
+          kind: GlobalNetworkPolicy
+          metadata:
+            name: ksn-allow-all-non-vip
+          spec:
+            order: 10000
+            selector: host in { 'nc-control', 'nc-compute' } && intf-alias == 'ksn'
+            applyOnForward: true
+            ingress:
+            - action: Allow
+              destination:
+                notNets:
+                - INGRESS_VIP
+                - MAAS_VIP
+            egress:
+            - action: Allow
+...

@@ -1,0 +1,47 @@
+---
+schema: 'drydock/HardwareProfile/v1'
+metadata:
+ schema: 'metadata/Document/v1'
+ name: hp_dl380_compute
+ storagePolicy: 'cleartext'
+ layeringDefinition:
+   abstract: false
+   layer: global
+data:
+ vendor: 'HP'
+ # Data in this block is probably inaccurate, but also
+ # not yet used
+ generation: '8'
+ hw_version: '3'
+ bios_version: '2.2.3'
+ boot_mode: bios
+ bootstrap_protocol: pxe
+ pxe_interface: 0
+ # End inaccurate data block
+ device_aliases:
+   pxe_nic01:
+     # eno1
+     address: '0000:02:00.0'
+     dev_type: 'Gig NIC'
+     bus_type: 'pci'
+   gp_nic01:
+     # ens6f0
+     address: '0000:81:00.0'
+     dev_type: 'Intel 10 Gig'
+     bus_type: 'pci'
+   gp_nic02:
+      # ens3f1
+     address: '0000:08:00.1'
+     dev_type: 'Intel 10 Gig'
+     bus_type: 'pci'
+   bootdisk:
+     # /dev/sda
+     address: '0:1.0.0'
+     dev_type: 'Internal RAID-1 HDDs'
+     bus_type: 'scsi'
+   ephemeral:
+     # /dev/sdb
+     address: '0:1.0.1'
+     dev_type: 'Internal RAID-6 HDDs'
+     bus_type: 'scsi'
+...

@@ -2,15 +2,15 @@
 schema: armada/Manifest/v1
 metadata:
   schema: metadata/Document/v1
-  name: full-site
+  name: full-site-global
   layeringDefinition:
-    abstract: false
+    abstract: true
     layer: global
   labels:
     name: full-site-global
   storagePolicy: cleartext
 data:
-  release_prefix: airship
+  release_prefix: clcp
   chart_groups:
     - podsecuritypolicy
     - kubernetes-proxy
@@ -19,18 +19,28 @@ data:
     - kubernetes-etcd
     - kubernetes-haproxy
     - kubernetes-core
+    # - kubernetes-falco
     - ingress-kube-system
     - ucp-ceph-update
     - ucp-ceph-config
-    - ucp-core
-    - ucp-keystone
+    # TODO(aw442m): Move mini-mirror after UCP components once mini-mirror MOP
+    # has been removed from Divingbell post-1.7. Mini-mirror must be deployed
+    # deployed before Divingbell in all 1.7 releases.
+#    - mini-mirror
     - ucp-divingbell
+    - ucp-infra
+    - ucp-keystone
     - ucp-armada
-    - ucp-deckhand
-    - ucp-drydock-scaled
-    - ucp-promenade
-    - ucp-shipyard
+    - ucp-services
+#    - ucp-nc-info
     - ucp-prometheus-openstack-exporter
+#   - gstools-setup
+#   - gstools-login
+#   - gstools-services
+#    - gstools-capacityplanning
+#    - gstools-roles
+#    - gstools-cphalo
+#    - gstools-bpa
     - osh-infra-ingress-controller
     - osh-infra-ceph-config
     - osh-infra-radosgw
@@ -44,6 +54,7 @@ data:
     - openstack-mariadb
     - openstack-rabbitmq
     - openstack-memcached
+    - openstack-compute-services
     - openstack-keystone
     - openstack-radosgw
     - openstack-glance
@@ -52,4 +63,7 @@ data:
     - openstack-heat
     - osh-infra-prometheus-openstack-exporter
     - openstack-horizon
+    - openstack-barbican
+    - utilities
+    - sonobuoy
 ...

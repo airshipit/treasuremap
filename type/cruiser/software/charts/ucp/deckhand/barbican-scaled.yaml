@@ -1,0 +1,26 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-barbican-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-barbican-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: ucp-barbican-scaled-type
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        api: 2
+    endpoints:
+      oslo_messaging:
+        statefulset:
+          replicas: 2
+...

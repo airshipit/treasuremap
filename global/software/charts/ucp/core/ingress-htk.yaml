@@ -1,0 +1,28 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-ingress-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.ingress-htk
+      dest:
+        path: .source
+  storagePolicy: cleartext
+data:
+  chart_name: ucp-ingress-htk
+  release: ucp-ingress-htk
+  namespace: ucp-ingress-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []
+...

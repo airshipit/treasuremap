@@ -68,7 +68,6 @@ data:
                 - docker_image
                 - file_path
       additionalProperties: false
-
     image:
       type: string
       # XXX add regex
@@ -84,9 +83,47 @@ data:
     url:
       type: string
       # XXX add regex
-
+    repos_and_packages:
+      type: object
+      properties:
+        # apt repositories
+        repositories:
+          type: array
+          items:
+            $ref: '#/definitions/apt_source_line'
+        # apt repository keys
+        keys:
+          type: array
+          items:
+            $ref: '#/definitions/public_key'
+        # required packages
+        required:
+          type: object
+          properties:
+            docker:
+              $ref: '#/definitions/package'
+            runtime:
+              $ref: '#/definitions/package'
+            socat:
+              $ref: '#/definitions/package'
+          # a container runtime is required
+          # using either docker or runtime key
+          oneOf:
+            - required:
+                - docker
+            - required:
+                - runtime
+          # socat is required
+          required:
+            - socat
+          additionalProperties: false
+        # additional packages
+        additional:
+          type: array
+          items:
+            $ref: '#/definitions/package'
+      additionalProperties: false
   type: object
-
   properties:
     files:
       type: array
@@ -101,6 +138,7 @@ data:
     images:
       type: object
       properties:
+        # NOTE(mark-burnett): No longer used.
         coredns:
           $ref: '#/definitions/image'
         haproxy:
@@ -121,113 +159,25 @@ data:
         monitoring_image:
           $ref: '#/definitions/image'
       required:
+        - coredns
         - haproxy
         - helm
         - kubernetes
         - monitoring_image
       additionalProperties: false
-
     packages:
       type: object
-      common:
-        type: object
-        properties:
-          additional:
-            type: array
-            items:
-              $ref: '#/definitions/package'
-          keys:
-            type: array
-            items:
-              $ref: '#/definitions/public_key'
-
-          required:
-            type: object
-            properties:
-              docker:
-                $ref: '#/definitions/package'
-              socat:
-                $ref: '#/definitions/package'
-            required:
-              - docker
-              - socat
-            additionalProperties: false
-
-          repositories:
-            type: array
-            items:
-              $ref: '#/definitions/apt_source_line'
-
-        required:
-          - required
-        additionalProperties: false
-
-      genesis:
-        type: object
-        properties:
-          additional:
-            type: array
-            items:
-              $ref: '#/definitions/package'
-          keys:
-            type: array
-            items:
-              $ref: '#/definitions/public_key'
-
-          required:
-            type: object
-            properties:
-              docker:
-                $ref: '#/definitions/package'
-              socat:
-                $ref: '#/definitions/package'
-            required:
-              - docker
-              - socat
-            additionalProperties: false
-
-          repositories:
-            type: array
-            items:
-              $ref: '#/definitions/apt_source_line'
-
-        required:
-          - required
-        additionalProperties: false
-
-      join:
-        type: object
-        properties:
-          additional:
-            type: array
-            items:
-              $ref: '#/definitions/package'
-          keys:
-            type: array
-            items:
-              $ref: '#/definitions/public_key'
-
-          required:
-            type: object
-            properties:
-              docker:
-                $ref: '#/definitions/package'
-              socat:
-                $ref: '#/definitions/package'
-            required:
-              - docker
-              - socat
-            additionalProperties: false
-
-          repositories:
-            type: array
-            items:
-              $ref: '#/definitions/apt_source_line'
-
-        required:
-          - required
-        additionalProperties: false
-
+      properties:
+        common:
+          type: object
+          $ref: '#/definitions/repos_and_packages'
+        genesis:
+          type: object
+          $ref: '#/definitions/repos_and_packages'
+        join:
+          type: object
+          $ref: '#/definitions/repos_and_packages'
+      additionalProperties: false
     validation:
       type: object
       properties:
@@ -238,8 +188,18 @@ data:
               type: string
           additionalProperties: false
       additionalProperties: false
-
   required:
     - images
     - packages
+  allOf:
+    # ensure that required packages are defined for genesis node
+    # (either in .packages.genesis or .packages.common)
+    - anyOf:
+        - {properties: {packages: {properties: {common: {required: [required]}}}}}
+        - {properties: {packages: {properties: {genesis: {required: [required]}}}}}
+    # ensure that required packages are defined for join nodes
+    # (either in .packages.join or .packages.common)
+    - anyOf:
+        - {properties: {packages: {properties: {common: {required: [required]}}}}}
+        - {properties: {packages: {properties: {join: {required: [required]}}}}}
   additionalProperties: false

@@ -41,17 +41,20 @@ data:
               fstype: 'ext4'
               mount_options: 'defaults'
           - name: 'var'
-            size: '>100g'
+            size: '>300g'
             filesystem:
               mountpoint: '/var'
               fstype: 'ext4'
               mount_options: 'defaults'
   platform:
     image: 'xenial'
-    kernel: 'hwe-16.04'
+    kernel: 'ga-16.04'
     kernel_params:
-      kernel_package: 'linux-image-4.15.0-46-generic'
-
+    # bug ks3019: these kernel parameters will render PXE boot hanging
+    # for HP DL380G9 nodes (occurs at MaaS Deploy stage)
+    # todo: find working version or remove
+    #   console: 'ttyS1,115200n8'
+      cgroup_disable: 'hugetlb'
   metadata:
     owner_data:
       control-plane: enabled
@@ -71,8 +74,14 @@ data:
       openstack-cinder-control: enabled
       openstack-cinder-volume: control
       openstack-neutron: enabled
+      openstack-l3-agent: enabled
+      openstack-dhcp-agent: enabled
+      openstack-metadata-agent: enabled
+      openstack-neutron-server: enabled
+      openstack-ranger-agent: enabled
       openvswitch: enabled
       ucp-barbican: enabled
+      ceph-bootstrap: enabled
       ceph-mon: enabled
       ceph-mgr: enabled
       ceph-osd: enabled
@@ -82,8 +91,7 @@ data:
       tenant-ceph-mon: enabled
       tenant-ceph-rgw: enabled
       tenant-ceph-mgr: enabled
-      maas-rack: enabled
-      maas-region: enabled
+      ucp-maas: enabled
       kube-dns: enabled
       kubernetes-apiserver: enabled
       kubernetes-controller-manager: enabled
@@ -103,7 +111,6 @@ data:
       prometheus-server: enabled
       prometheus-client: enabled
       fluentd: enabled
-      fluentbit: enabled
       influxdb: enabled
       kibana: enabled
       elasticsearch-client: enabled
@@ -113,5 +120,4 @@ data:
       kube-ingress: enabled
       beta.kubernetes.io/fluentd-ds-ready: 'true'
       node-exporter: enabled
-      utility: enabled
 ...

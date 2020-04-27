@@ -1,0 +1,60 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: elasticsearch-master-local-ssd
+  labels:
+    name: elasticsearch-master-local-ssd
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.local-storage
+      dest:
+        path: .source
+
+data:
+  chart_name: local-storage
+  release: elasticsearch-master-local-ssd
+  namespace: osh-infra
+  wait:
+    resources: []
+  test:
+    enabled: false
+  install:
+    no_hooks: true
+  upgrade:
+    no_hooks: true
+  values:
+    labels:
+      node_affinity:
+        node_selector_key: elasticsearch-master
+        node_selector_value: enabled
+    conf:
+      persistent_volumes:
+        - name: elasticsearch-master-ssd-volume-0
+          reclaim_policy: Retain
+          storage_capacity: "10G"
+          access_modes: [ "ReadWriteOnce" ]
+          local_path: /srv/elasticsearch-master
+        - name: elasticsearch-master-ssd-volume-1
+          reclaim_policy: Retain
+          storage_capacity: "10G"
+          access_modes: [ "ReadWriteOnce" ]
+          local_path: /srv/elasticsearch-master
+        - name: elasticsearch-master-ssd-volume-2
+          reclaim_policy: Retain
+          storage_capacity: "10G"
+          access_modes: [ "ReadWriteOnce" ]
+          local_path: /srv/elasticsearch-master
+    manifests:
+      storage_class: true
+      persistent_volumes: true
+  dependencies:
+    - local-storage-htk
+...

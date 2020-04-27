@@ -1,0 +1,17 @@
+---
+schema: nc/CorridorConfig/v1
+metadata:
+  schema: metadata/Document/v1
+  name: corridor-config
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      corridor: '1'
+      region: 'global'
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data: {}
+...

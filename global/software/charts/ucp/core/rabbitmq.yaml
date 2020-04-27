@@ -60,22 +60,38 @@ data:
   chart_name: ucp-rabbitmq
   release: ucp-rabbitmq
   namespace: ucp
+  protected:
+    continue_processing: false
   wait:
-    timeout: 300
+    timeout: 900
     labels:
-      release_group: airship-ucp-rabbitmq
+      release_group: clcp-ucp-rabbitmq
     resources:
       - type: statefulset
+      - type: job
+  test:
+    enabled: true
   install:
     no_hooks: false
   upgrade:
     no_hooks: false
+    options:
+      force: true
     pre:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-rabbitmq
+            release_group: clcp-ucp-rabbitmq
   values:
+    volume:
+      size: 5Gi
+    pod:
+      affinity:
+        anti:
+          type:
+            default: requiredDuringSchedulingIgnoredDuringExecution
+      replicas:
+        server: 1
     labels:
       server:
         node_selector_key: ucp-control-plane
@@ -83,32 +99,12 @@ data:
       prometheus_rabbitmq_exporter:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
+      test:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
     monitoring:
       prometheus:
         enabled: true
   dependencies:
     - ucp-rabbitmq-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: ucp-rabbitmq-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.rabbitmq-htk
-      dest:
-        path: .source
-data:
-  chart_name: ucp-rabbitmq-htk
-  release: ucp-rabbitmq-htk
-  namespace: ucp-rabbitmq-htk
-  values: {}
-  dependencies: []
 ...

@@ -1,0 +1,17 @@
+---
+schema: pegleg/Script/v1
+metadata:
+  schema: metadata/Document/v1
+  name: linux-crashdump-install
+  storagePolicy: cleartext
+  layeringDefinition:
+    abstract: false
+    layer: global
+data: |-
+  #!/bin/bash
+  set -ex
+
+  echo '*** System restart required ***' > /run/reboot-required
+  echo "linux-crashdump" >> /run/reboot-required.pkgs
+  # Prevent the service from requesting another reboot
+  touch /var/lib/linux-crashdump-reboot.done

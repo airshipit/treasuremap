@@ -25,6 +25,13 @@ metadata:
         path: .images.utility.etcdctl-utility
       dest:
         path: .values.images.tags
+    # Log User etcdctl Utility Container
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .utility.always_log_user
+      dest:
+        path: .values.conf.utility.always_log_user
     # CAs
     - src:
         schema: deckhand/CertificateAuthority/v1
@@ -54,17 +61,24 @@ metadata:
 data:
   chart_name: etcdctl-utility
   release: etcdctl-utility
+  test:
+    enabled: false
   namespace: utility
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
     timeout: 600
     labels:
-      release_group: airship-etcdctl-utility
+      release_group: clcp-etcdctl-utility
   install:
    no_hooks: false
   upgrade:
-   no_hooks: false
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: clcp-etcdctl-utility
   values:
     labels:
       utility:

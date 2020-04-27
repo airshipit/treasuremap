@@ -3,6 +3,8 @@ schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
   name: osh-infra-prometheus-openstack-exporter
+  labels:
+    name: osh-infra-prometheus-openstack-exporter-global
   layeringDefinition:
     abstract: false
     layer: global

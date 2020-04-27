@@ -4,8 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: openstack-horizon
   labels:
-    name: openstack-horizon-chart-group-global
-    component: horizon
+    name: openstack-horizon-global
   layeringDefinition:
     abstract: false
     layer: global

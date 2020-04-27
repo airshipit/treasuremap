@@ -1,0 +1,22 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: coredns-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: coredns-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: coredns-scaled-type
+  storagePolicy: cleartext
+data:
+  values:
+    manifests:
+      # scale out a daemonset in addition to the deployment
+      daemonset: true
+...

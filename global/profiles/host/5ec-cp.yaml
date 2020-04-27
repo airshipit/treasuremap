@@ -1,0 +1,162 @@
+---
+schema: drydock/HostProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: 5ec-cp-global
+  storagePolicy: cleartext
+  labels:
+    hosttype: 5ec-cp
+  layeringDefinition:
+    abstract: true
+    layer: global
+  substitutions:
+    - dest:
+        path: .oob.credential
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ipmi_admin_password
+        path: .
+data:
+  oob:
+    type: 'ipmi'
+    network: 'oob'
+    account: 'tier4'
+  primary_network: 'oam'
+  hardware_profile: dell_r640_purley_5ec
+  interfaces:
+    pxe:
+      device_link: pxe
+      slaves:
+        - 'pxe_nic'
+      networks:
+        - 'pxe'
+    bond1:
+      device_link: bond1
+      slaves:
+        - 'gp_nic01'
+        - 'gp_nic02'
+      networks:
+        - 'oam'
+        - 'storage'
+        - 'overlay'
+        - 'ksn'
+  storage:
+    physical_devices:
+      bootdisk:
+        labels:
+          bootdrive: 'true'
+        partitions:
+          - name: 'root'
+            size: '30g'
+            bootable: true
+            filesystem:
+              mountpoint: '/'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'boot'
+            size: '1g'
+            filesystem:
+              mountpoint: '/boot'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var_log'
+            size: '100g'
+            filesystem:
+              mountpoint: '/var/log'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var'
+            size: '>300g'
+            filesystem:
+              mountpoint: '/var'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+      cephjournal1:
+        partitions:
+          - name: 'ceph-ssd1-j1'
+            size: '10g'
+          - name: 'ceph-ssd1-j2'
+            size: '10g'
+          - name: 'ceph-ssd1-j3'
+            size: '10g'
+      cephjournal2:
+        partitions:
+          - name: 'ceph-ssd2-j4'
+            size: '10g'
+          - name: 'ceph-ssd2-j5'
+            size: '10g'
+          - name: 'ceph-ssd2-j6'
+            size: '10g'
+  platform:
+    image: 'xenial'
+    kernel: 'hwe-16.04'
+    kernel_params:
+      console: 'ttyS1,115200n8'
+      cgroup_disable: 'hugetlb'
+  metadata:
+    owner_data:
+      hosttype: 5ec-cp
+      control-plane: enabled
+      ucp-control-plane: enabled
+      openstack-control-plane: enabled
+      openstack-heat: enabled
+      openstack-keystone: enabled
+      openstack-rabbitmq: enabled
+      openstack-dns-helper: enabled
+      openstack-mariadb: enabled
+      openstack-nova-control: enabled
+      openstack-etcd: enabled
+      openstack-mistral: enabled
+      openstack-memcached: enabled
+      openstack-glance: enabled
+      openstack-horizon: enabled
+      openstack-cinder-control: enabled
+      openstack-cinder-volume: control
+      openstack-neutron: enabled
+      openstack-ranger-agent: enabled
+      openstack-l3-agent: enabled
+      openstack-dhcp-agent: enabled
+      openstack-metadata-agent: enabled
+      openstack-neutron-server: enabled
+      openvswitch: enabled
+      ucp-barbican: enabled
+      tenant-ceph-control-plane: enabled
+      tenant-ceph-mon: enabled
+      tenant-ceph-rgw: enabled
+      tenant-ceph-mgr: enabled
+      ceph-bootstrap: enabled
+      ceph-mon: enabled
+      ceph-mgr: enabled
+      ceph-osd: enabled
+      ceph-mds: enabled
+      ceph-rgw: enabled
+      ucp-maas: enabled
+      kube-dns: enabled
+      kubernetes-apiserver: enabled
+      kubernetes-controller-manager: enabled
+      kubernetes-etcd: enabled
+      kubernetes-scheduler: enabled
+      tiller-helm: enabled
+      kube-etcd: enabled
+      calico-policy: enabled
+      calico-node: enabled
+      ucp-armada: enabled
+      ucp-drydock: enabled
+      ucp-deckhand: enabled
+      ucp-shipyard: enabled
+      IAM: enabled
+      ucp-promenade: enabled
+      prometheus-server: enabled
+      prometheus-client: enabled
+      fluentd: enabled
+      influxdb: enabled
+      kibana: enabled
+      elasticsearch-client: enabled
+      elasticsearch-master: enabled
+      elasticsearch-data: enabled
+      postgresql: enabled
+      kube-ingress: enabled
+      beta.kubernetes.io/fluentd-ds-ready: 'true'
+      node-exporter: enabled
+      fluentbit: enabled
+...

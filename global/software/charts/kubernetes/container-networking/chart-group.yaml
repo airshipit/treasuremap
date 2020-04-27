@@ -8,8 +8,9 @@ metadata:
     layer: global
   storagePolicy: cleartext
 data:
-  description: Container networking via Calico
+  description: Container networking via calico
   sequenced: true
   chart_group:
     - kubernetes-calico-etcd
     - kubernetes-calico
+    #- calicoctl-utility

@@ -3,6 +3,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: prometheus-process-exporter
+  labels:
+    name: prometheus-process-exporter-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -39,7 +41,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-prometheus-process-exporter
+      release_group: clcp-prometheus-process-exporter
   install:
     no_hooks: false
   upgrade:
@@ -48,18 +50,67 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-prometheus-process-exporter
+            release_group: clcp-prometheus-process-exporter
       create: []
     post:
       create: []
   values:
+    pod:
+      mandatory_access_control:
+        type: apparmor
+        process-exporter:
+          process-exporter: localhost/docker-default
+      resources:
+        enabled: true
+        process_exporter:
+          requests:
+            memory: "512Mi"
+            cpu: "100m"
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
+      lifecycle:
+        upgrades:
+          daemonsets:
+            process_exporter:
+              max_unavailable: 100%
+    conf:
+      processes: dockerd,kubelet,kube-proxy,cron,rsyslogd
     labels:
-      node_exporter:
+      process_exporter:
         node_selector_key: node-exporter
         node_selector_value: enabled
       job:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
   dependencies:
-    - osh-infra-helm-toolkit
+    - prometheus_process_exporter-htk 
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: prometheus_process_exporter-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.prometheus_process_exporter-htk
+      dest:
+        path: .source
+  storagePolicy: cleartext
+data:
+  chart_name: prometheus_process_exporter-htk
+  release: prometheus_process_exporter-htk
+  namespace: prometheus_process_exporter-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []
 ...

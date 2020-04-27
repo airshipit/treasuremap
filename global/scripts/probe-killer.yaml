@@ -1,0 +1,70 @@
+---
+schema: pegleg/Script/v1
+metadata:
+  schema: metadata/Document/v1
+  name: probe-killer
+  storagePolicy: cleartext
+  layeringDefinition:
+    abstract: false
+    layer: global
+data: |-
+  #!/usr/bin/env bash
+
+  IFS=$'\n'
+
+  export KUBECONFIG=/etc/kubernetes/admin/kubeconfig.yaml
+
+  pods="$(kubectl get pods --all-namespaces -o wide --no-headers)"
+  for podRow in $pods; do
+    ns="$(echo "$podRow" | awk '{print $1}')"
+    pod="$(echo "$podRow" | awk '{print $2}')"
+    desc="$(kubectl describe -n $ns pod $pod)"
+    # Example output
+    # Liveness:       exec [/tmp/bin/liveness-probe.sh] delay=15s timeout=10s period=35s #success=1 #failure=10
+    # Readiness:      exec [/tmp/bin/readiness-probe.sh] delay=15s timeout=1s period=15s #success=1 #failure=3
+    probeCLIs="$(echo "$desc" | grep 'Liveness:\|Readiness:' | grep exec | grep -o '\[.*\]' | tr -d '][')"
+
+    containers="$(/usr/local/bin/kubectl get pods $pod -n $ns -o jsonpath='{.spec.containers[*].name}' | tr ' ' '\n')"
+    for container in $containers; do
+      for probeCLI in $probeCLIs; do
+        timeout 15 kubectl exec -n $ns $pod --container $container -- /bin/bash -c "
+          # Whether or not PID will be killed. Useful for debugging.
+          killPID=true
+
+                                              # Find processes older than 5 minutes
+          nsProcs=\"\$(find /proc -maxdepth 1 -name '[0-9]*' -type d -mmin +5)\"
+
+          # Kill matches
+          IFS=\$'\n'
+          for procDir in \$nsProcs; do
+              # Replace null byte with space.
+              # The null byte is used in this file instead of space to separate CLi args.
+              pidCLI=\"\$(cat \$procDir/cmdline | tr '\0' ' ')\"
+              if [[ \"\$pidCLI\" = *\"$probeCLI\"* ]]; then
+                  pidToKill=\"\$(basename \$procDir)\"
+                  # Do not left script kill itself
+                  if [[ \$pidToKill = \$\$ ]] || [[ \"\$pidCLI\" = *'kubectl exec'* ]]; then
+                      continue
+                  fi
+                  # never kill pid 1
+                  if [[ \$pidToKill = 1 ]]; then
+                      echo \"WARN: PID 1 regex match for '$probeCLI'. Check regex list.\"
+                      continue
+                  fi
+                  if [[ \$killPID = true ]]; then
+                      kill \$pidToKill
+                      # Also kill all the children of this PID
+                      kill -TERM -- -\$pidToKill
+                      echo \"INFO: Killed PID \$pidToKill \$pidCLI and its children\"
+                  else
+                      echo \"DEBUG: PID to kill in non-debug mode: \$pidToKill \$pidCLI\"
+                  fi
+              fi
+          done
+        " 2>&1 | grep '^INFO\|^WARN\|^DEBUG' &
+      done
+    done
+  done
+
+  echo "probeKiller execution completed."
+

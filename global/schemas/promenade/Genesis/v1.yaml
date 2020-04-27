@@ -62,11 +62,23 @@ data:
       properties:
         target_manifest:
           type: string
+        metrics:
+          type: object
+          properties:
+            output_dir:
+              type: string
+            max_attempts:
+              type: integer
+          additionalProperties: false
       additionalProperties: false
 
     apiserver:
       type: object
       properties:
+        command_prefix:
+          type: array
+          items:
+            type: string
         arguments:
           type: array
           items:
@@ -87,6 +99,25 @@ data:
                   additionalProperties: true
       additionalProperties: false
 
+    etcd:
+      type: object
+      properties:
+        # What number of non-auxiliary etcd members are needed
+        # before the auxiliary members will self-terminate
+        auxiliary_threshold:
+          type: integer
+      additionalProperties: false
+    tiller:
+      type: object
+      properties:
+        listen:
+          type: integer
+        probe_listen:
+          type: integer
+        storage:
+          type: string
+      additionalProperties: false
+
     files:
       type: array
       items:
@@ -96,7 +127,7 @@ data:
       type: object
       properties:
         run_as_user:
-          type: integer
+          type: string
       additionalProperties: false
 
     hostname:
@@ -106,6 +137,9 @@ data:
       type: string
 
     ip:
+      $ref: '#/definitions/ip_address'
+
+    external_ip:
       $ref: '#/definitions/ip_address'
 
     labels:

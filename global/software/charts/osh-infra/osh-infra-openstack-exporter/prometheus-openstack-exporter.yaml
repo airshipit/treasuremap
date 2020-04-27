@@ -74,7 +74,7 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-prometheus-openstack-exporter
+      release_group: clcp-prometheus-openstack-exporter
   install:
     no_hooks: false
   upgrade:
@@ -83,8 +83,18 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-prometheus-openstack-exporter
+            release_group: clcp-prometheus-openstack-exporter
   values:
+    pod:
+      resources:
+        enabled: true
+        prometheus_openstack_exporter:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
     labels:
       openstack_exporter:
         node_selector_key: openstack-control-plane
@@ -93,5 +103,33 @@ data:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
   dependencies:
-    - osh-infra-helm-toolkit
+    - prometheus_openstack_exporter-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: prometheus_openstack_exporter-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.prometheus_openstack_exporter-htk
+      dest:
+        path: .source
+  storagePolicy: cleartext
+data:
+  chart_name: prometheus_openstack_exporter-htk
+  release: prometheus_openstack_exporter-htk
+  namespace: prometheus_openstack_exporter-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []
 ...

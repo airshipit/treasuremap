@@ -71,27 +71,33 @@ metadata:
       dest:
         path: .values.conf.coredns.corefile
         pattern: '(UPSTREAM2)'
+
 data:
   chart_name: coredns
   release: coredns
   namespace: kube-system
+  protected:
+    continue_processing: false
   wait:
-    timeout: 600
+    timeout: 900
     labels:
-      release_group: airship-coredns
+      release_group: clcp-coredns
+  test:
+    enabled: true
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: airship-coredns
+            release_group: clcp-coredns
   values:
     conf:
       coredns:
         corefile: |
           .:53 {
               errors
+              loadbalance round_robin
               health
               autopath @kubernetes
               kubernetes CLUSTER_DOMAIN SERVICE_CIDR POD_CIDR {
@@ -100,18 +106,41 @@ data:
                 upstream UPSTREAM1
                 upstream UPSTREAM2
               }
-              prometheus :9153
+              prometheus :9253
               forward . UPSTREAM1 UPSTREAM2
               cache 30
+              log . {
+                class denial error
+              }
           }
-
+      test:
+        names_to_resolve:
+          - kubernetes.default.svc.cluster.local
+    monitoring:
+      prometheus:
+        enabled: true
+    pod:
+      # TODO: replicas can be removed once we switch coredns to
+      # DaemonSet-only.  It will be deployed with both DaemonSet
+      # and Deployment-managed pods as we transition to DaemonSet.
+      replicas:
+        coredns: 2
     labels:
       coredns:
+        # NOTE(mb874d): This is the label specified in the IPDD
         node_selector_key: kube-dns
         node_selector_value: enabled
-
+    manifests:
+      # NOTE(mc981n) Delay adding the coredns daemonset until after all
+      #              the nodes have bootstraped/joined
+      daemonset: false
+      # TODO: `deployment` can be set to false once we switch coredns to
+      # DaemonSet-only.  It will be deployed with both DaemonSet
+      # and Deployment-managed pods as we transition to DaemonSet.
+      deployment: true
   dependencies:
     - coredns-htk
+...
 ---
 schema: armada/Chart/v1
 metadata:
@@ -120,7 +149,6 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -128,22 +156,16 @@ metadata:
         path: .charts.kubernetes.coredns-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
   chart_name: coredns-htk
   release: coredns-htk
   namespace: coredns-htk
-  values:
-    pod:
-      # TODO: replicas can be removed once we switch coredns to
-      # DaemonSet-only.  It will be deployed with both DaemonSet
-      # and Deployment-managed pods as we transition to DaemonSet.
-      replicas:
-        coredns: 2
-    manifests:
-      daemonset: true
-      # TODO: `deployment` can be set to false once we switch coredns to
-      # DaemonSet-only.  It will be deployed with both DaemonSet
-      # and Deployment-managed pods as we transition to DaemonSet.
-      deployment: true
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
   dependencies: []
 ...

@@ -83,12 +83,6 @@ metadata:
       dest:
         path: .values.endpoints.oslo_cache
     - src:
-        schema: pegleg/EndpointCatalogue/v1
-        name: osh_infra_endpoints
-        path: .osh_infra.fluentd
-      dest:
-        path: .values.endpoints.fluentd
-    - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
         path: .osh.keystone.admin
@@ -100,6 +94,12 @@ metadata:
         path: .osh.cinder.cinder
       dest:
         path: .values.endpoints.identity.auth.cinder
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.cinder.test
+      dest:
+        path: .values.endpoints.identity.auth.test
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
@@ -147,6 +147,12 @@ metadata:
         name: osh_cinder_password
         path: .
     - dest:
+        path: .values.endpoints.identity.auth.test.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_cinder_test_password
+        path: .
+    - dest:
         path: .values.endpoints.oslo_messaging.auth.admin.password
       src:
         schema: deckhand/Passphrase/v1
@@ -156,7 +162,7 @@ metadata:
         path: .values.endpoints.oslo_messaging.auth.cinder.password
       src:
         schema: deckhand/Passphrase/v1
-        name: osh_oslo_messaging_admin_password
+        name: osh_cinder_oslo_messaging_password
         path: .
     - dest:
         path: .values.endpoints.oslo_db.auth.cinder.password
@@ -183,7 +189,15 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-cinder
+      release_group: clcp-cinder
+    resources:
+      - type: job
+      - type: deployment
+        min_ready: 100%
+    native:
+      enabled: false
+  test:
+    timeout: 600
   install:
     no_hooks: false
   upgrade:
@@ -192,16 +206,48 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-cinder
+            release_group: clcp-cinder
     post:
       create: []
   values:
+    dependencies:
+      static:
+        bootstrap:
+          pod:
+            - requireSameNode: false
+              labels:
+                application: cinder
+                component: volume
+        rabbit_init:
+          services:
+            - endpoint: internal
+              service: oslo_messaging
+          jobs:
+            - clcp-openstack-rabbitmq-cluster-wait
     pod:
       replicas:
-        api: 2
-        volume: 2
-        scheduler: 2
-        backup: 2
+        api: 3
+        volume: 3
+        scheduler: 3
+        backup: 3
+      affinity:
+        anti:
+          type:
+            api: requiredDuringSchedulingIgnoredDuringExecution
+            backup: requiredDuringSchedulingIgnoredDuringExecution
+            scheduler: requiredDuringSchedulingIgnoredDuringExecution
+            volume: requiredDuringSchedulingIgnoredDuringExecution
+      lifecycle:
+        upgrades:
+          deployments:
+            pod_replacement_strategy: RollingUpdate
+            rolling_update:
+              max_unavailable: 50%
+      security_context:
+        cinder_volume:
+          container:
+            cinder_volume:
+              allowPrivilegeEscalation: true
     labels:
       api:
         node_selector_key: openstack-control-plane
@@ -225,31 +271,59 @@ data:
       configmap: tenant-ceph-etc
       user_secret_name: pvc-tceph-client-key
     conf:
+      ceph:
+        pools:
+          backup:
+            crush_rule: rack_replicated_rule
+          cinder.volumes:
+            crush_rule: rack_replicated_rule
+      rabbitmq:
+        policies:
+          - vhost: "cinder"
+            name: "ha_ttl_cinder"
+            definition:
+              ha-mode: "all"
+              ha-sync-mode: "automatic"
+              message-ttl: 70000
+            priority: 0
+            apply-to: all
+            pattern: '^(?!(amq\.|reply_)).*'
+      cinder:
+        DEFAULT:
+          backup_driver: "cinder.backup.drivers.swift.SwiftBackupDriver"
+        oslo_middleware:
+          enable_proxy_headers_parsing: true
+          max_request_body_size: 114688
+        audit_middleware_notifications:
+          driver: log
       logging:
         loggers:
           keys:
             - root
             - cinder
+            - oslo.messaging
         handlers:
           keys:
             - stdout
             - stderr
-            - 'null'
-            - fluent
+            - "null"
         formatters:
           keys:
             - context
             - default
-            - fluent
         logger_root:
           level: WARNING
-          handlers: stdout
+          handlers: "null"
         logger_cinder:
           level: INFO
           handlers:
             - stdout
-            - fluent
           qualname: cinder
+        logger_oslo.messaging:
+          level: INFO
+          handlers:
+            - stdout
+          qualname: oslo.messaging
         logger_amqp:
           level: WARNING
           handlers: stderr
@@ -282,28 +356,175 @@ data:
           class: StreamHandler
           args: (sys.stderr,)
           formatter: context
-        handler_fluent:
-          class: fluent.handler.FluentHandler
-          args: ('openstack.cinder', 'fluentd-logging.osh-infra', 24224)
-          formatter: fluent
-        formatter_fluent:
-          class: oslo_log.formatters.FluentFormatter
         formatter_context:
           class: oslo_log.formatters.ContextFormatter
         formatter_default:
           format: "%(message)s"
+      policy:
+        context_is_admin: role:admin or role:admin_support or role:admin_viewer
+        admin_create: role:admin or role:admin_support
+        admin_read: role:admin or role:admin_support or role:admin_viewer
+        admin_update: role:admin
+        admin_delete: role:admin
+        tenant_create: role:snapshot_member or role:_member_ or role:sriov_member or role:support_member or rule:admin_create
+        tenant_snapshot_create: role:snapshot_member or rule:admin_update
+        tenant_read: role:snapshot_member or role:_member_ or role:sriov_member or role:support_member or role:viewer or rule:admin_read
+        tenant_update: role:snapshot_member or role:_member_ or role:sriov_member or rule:admin_update
+        tenant_delete: role:snapshot_member or role:_member_ or role:sriov_member or rule:admin_delete
+        default: role:admin
+        not_supported_in_nc: "!"
+        volume:attachment_delete: rule:tenant_update or role:tenant_cinder_update
+        volume:attachment_create: rule:tenant_create or role:tenant_cinder_create
+        volume:attachment_complete: rule:tenant_create or role:tenant_cinder_create
+        volume:attachment_update: rule:tenant_update or role:tenant_cinder_update
+        volume:multiattach: rule:tenant_create or role:tenant_cinder_create
+        volume:multiattach_bootable_volume: rule:tenant_create or role:tenant_cinder_create
+        volume:create: rule:tenant_create or role:tenant_cinder_create
+        volume:create_from_image: rule:tenant_create or role:tenant_cinder_create
+        volume:delete: rule:tenant_delete or role:tenant_cinder_delete
+        volume:force_delete: rule:admin_delete or role:admin_cinder_delete
+        volume:update: rule:tenant_update or role:tenant_cinder_update
+        volume:get: rule:tenant_read or role:tenant_cinder_read
+        volume:get_all: rule:tenant_read or role:tenant_cinder_read
+        volume:get_volume_metadata: rule:tenant_read or role:tenant_cinder_read
+        volume:create_volume_metadata: rule:tenant_create or role:tenant_cinder_create
+        volume:delete_volume_metadata: rule:tenant_delete or role:tenant_cinder_delete
+        volume:update_volume_metadata: rule:tenant_update or role:tenant_cinder_update
+        volume:update_volume_admin_metadata: rule:admin_update or role:admin_cinder_update
+        volume:get_snapshot: rule:tenant_read or role:tenant_cinder_read
+        volume:get_all_snapshots: rule:tenant_read or role:tenant_cinder_read
+        volume:create_snapshot: rule:tenant_create or role:tenant_cinder_create
+        volume:delete_snapshot: rule:tenant_delete or role:tenant_cinder_delete
+        volume:update_snapshot: rule:tenant_update or role:tenant_cinder_update
+        volume:get_snapshot_metadata: rule:tenant_read or role:tenant_cinder_read
+        volume:delete_snapshot_metadata: rule:tenant_delete or role:tenant_cinder_delete
+        volume:update_snapshot_metadata: rule:tenant_update or role:tenant_cinder_update
+        volume:extend: rule:tenant_update or role:tenant_cinder_update
+        volume:extend_attached_volume: rule:tenant_update or role:tenant_cinder_update
+        volume:revert_to_snapshot: rule:tenant_update or role:tenant_cinder_update
+        volume:update_readonly_flag: rule:tenant_update or role:tenant_cinder_update
+        volume:retype: rule:tenant_update or role:tenant_cinder_update
+        volume_extension:types_manage: rule:admin_update or role:admin_cinder_update
+        volume_extension:type_get: rule:tenant_read or role:tenant_cinder_read
+        volume_extension:type_get_all: rule:tenant_read or role:tenant_cinder_read
+        volume_extension:types_extra_specs:create: rule:admin_create or role:admin_cinder_create
+        volume_extension:types_extra_specs:delete: rule:admin_delete or role:admin_cinder_delete
+        volume_extension:types_extra_specs:index: rule:admin_read or role:admin_cinder_read
+        volume_extension:types_extra_specs:show: rule:admin_read or role:admin_cinder_read
+        volume_extension:types_extra_specs:update: rule:admin_update or role:admin_cinder_update
+        volume_extension:access_types_qos_specs_id: rule:admin_update or role:admin_cinder_update
+        volume_extension:access_types_extra_specs: rule:admin_update or role:admin_cinder_update
+        volume_extension:volume_type_access: rule:admin_update or role:admin_cinder_update
+        volume_extension:volume_type_access:addProjectAccess: rule:admin_create or role:admin_cinder_create
+        volume_extension:volume_type_access:removeProjectAccess: rule:admin_delete or role:admin_cinder_delete
+        volume_extension:volume_type_encryption:create: rule:admin_create or role:admin_cinder_create
+        volume_extension:volume_type_encryption:update: rule:admin_update or role:admin_cinder_update
+        volume_extension:volume_type_encryption:delete: rule:admin_delete or role:admin_cinder_delete
+        volume_extension:volume_type_encryption:get: rule:admin_read or role:admin_cinder_read
+        volume_extension:volume_encryption_metadata: rule:tenant_update or role:tenant_cinder_update
+        volume_extension:extended_snapshot_attributes: rule:tenant_update or role:tenant_cinder_update
+        volume_extension:volume_image_metadata: rule:tenant_update or role:tenant_cinder_update
+        volume_extension:volume_actions:upload_image: rule:tenant_snapshot_create or role:admin_cinder_update
+        volume_extension:volume_actions:attach: rule:tenant_create or role:tenant_cinder_create
+        volume_extension:volume_actions:detach: rule:tenant_update or role:tenant_cinder_update
+        volume_extension:volume_actions:reserve: rule:tenant_update or role:tenant_cinder_update
+        volume_extension:volume_actions:unreserve: rule:tenant_update or role:tenant_cinder_update
+        volume_extension:volume_actions:begin_detaching: rule:tenant_update or role:tenant_cinder_update
+        volume_extension:volume_actions:initialize_connection: rule:tenant_create or role:tenant_cinder_create
+        volume_extension:volume_actions:terminate_connection: rule:tenant_update or role:tenant_cinder_update
+        volume_extension:volume_actions:roll_detaching: rule:tenant_update or role:tenant_cinder_update
+        volume_extension:qos_specs_manage:create: rule:admin_create or role:admin_cinder_create
+        volume_extension:qos_specs_manage:get: rule:admin_read or role:admin_cinder_read
+        volume_extension:qos_specs_manage:get_all: rule:admin_read or role:admin_cinder_read
+        volume_extension:qos_specs_manage:update: rule:admin_update or role:admin_cinder_update
+        volume_extension:qos_specs_manage:delete: rule:admin_delete or role:admin_cinder_delete
+        volume_extension:quotas:show: rule:tenant_read or role:tenant_cinder_read
+        volume_extension:quotas:update: rule:admin_update or role:admin_cinder_update
+        volume_extension:quotas:delete: rule:admin_delete or role:admin_cinder_delete
+        volume_extension:quota_classes: rule:admin_read or role:admin_cinder_read
+        volume_extension:quota_classes:validate_setup_for_nested_quota_use: rule:admin_read or role:admin_cinder_read
+        volume_extension:volume_admin_actions:reset_status: rule:admin_update or role:admin_cinder_update
+        volume_extension:snapshot_admin_actions:reset_status: rule:admin_update or role:admin_cinder_update
+        volume_extension:backup_admin_actions:reset_status: rule:admin_update or role:admin_cinder_update
+        volume_extension:volume_admin_actions:force_delete: rule:admin_delete or role:admin_cinder_delete
+        volume_extension:volume_admin_actions:force_detach: rule:admin_update or role:admin_cinder_update
+        volume_extension:snapshot_admin_actions:force_delete: rule:admin_delete or role:admin_cinder_delete
+        volume_extension:backup_admin_actions:force_delete: rule:admin_delete or role:admin_cinder_delete
+        volume_extension:volume_admin_actions:migrate_volume: rule:admin_update or role:admin_cinder_update
+        volume_extension:volume_admin_actions:migrate_volume_completion: rule:admin_update or role:admin_cinder_update
+        volume_extension:volume_actions:upload_public: rule:admin_update or role:admin_cinder_update
+        volume_extension:volume_host_attribute: rule:context_is_admin or role:admin_cinder_create or role:admin_cinder_update or role:admin_cinder_read or role:admin_cinder_delete
+        volume_extension:volume_tenant_attribute: rule:tenant_update or role:tenant_cinder_update or rule:context_is_admin or role:admin_cinder_create or role:admin_cinder_update or role:admin_cinder_read or role:admin_cinder_delete
+        volume_extension:volume_mig_status_attribute: rule:admin_update or role:admin_cinder_update
+        volume_extension:hosts: rule:context_is_admin or role:admin_cinder_create or role:admin_cinder_update or role:admin_cinder_read or role:admin_cinder_delete
+        volume_extension:services:index: rule:admin_read or role:admin_cinder_read
+        volume_extension:services:update: rule:admin_update or role:admin_cinder_update
+        volume_extension:volume_manage: rule:not_supported_in_nc
+        volume_extension:volume_unmanage: rule:not_supported_in_nc
+        volume_extension:list_manageable: rule:not_supported_in_nc
+        volume_extension:capabilities: rule:admin_read or role:admin_cinder_read
+        volume:create_transfer: rule:tenant_create or role:tenant_cinder_create
+        volume:accept_transfer: rule:tenant_update or role:tenant_cinder_update
+        volume:delete_transfer: rule:tenant_delete or role:tenant_cinder_delete
+        volume:get_transfer: rule:tenant_read or role:tenant_cinder_read
+        volume:get_all_transfers: rule:tenant_read or role:tenant_cinder_read
+        group:enable_replication: rule:admin_update or role:admin_cinder_update
+        group:disable_replication: rule:admin_update or role:admin_cinder_update
+        group:failover_replication: rule:admin_update or role:admin_cinder_update
+        group:list_replication_targets: rule:admin_update or role:admin_cinder_update
+        volume:failover_host: rule:admin_update or role:admin_cinder_update
+        volume:freeze_host: rule:admin_update or role:admin_cinder_update
+        volume:thaw_host: rule:admin_update or role:admin_cinder_update
+        backup:create: rule:tenant_create or role:tenant_cinder_create
+        backup:delete: rule:tenant_delete or role:tenant_cinder_delete
+        backup:get: rule:tenant_read or role:tenant_cinder_read
+        backup:get_all: rule:tenant_read or role:tenant_cinder_read
+        backup:restore: rule:tenant_update or role:tenant_cinder_update
+        backup:backup-import: rule:admin_update or role:admin_cinder_update
+        backup:export-import: rule:admin_create or role:admin_cinder_create or role:tenant_cinder_create
+        backup:update: rule:tenant_update or role:tenant_cinder_update or role:admin_cinder_update
+        backup:backup_project_attribute: rule:admin_update or role:admin_cinder_update
+        snapshot_extension:snapshot_actions:update_snapshot_status: rule:tenant_update or role:tenant_cinder_update or role:admin_cinder_update
+        snapshot_extension:snapshot_manage: rule:not_supported_in_nc
+        snapshot_extension:snapshot_unmanage: rule:not_supported_in_nc
+        snapshot_extension:list_manageable: rule:not_supported_in_nc
+        limits_extension:used_limits: rule:tenant_read or role:tenant_cinder_read or role:admin_cinder_read
+        group:group_types_manage: rule:admin_read or role:admin_cinder_read or role:admin_cinder_update
+        group:group_types_specs: rule:admin_create or role:admin_cinder_create
+        group:access_group_types_specs: rule:admin_read or role:admin_cinder_read
+        group:create: rule:tenant_create or role:tenant_cinder_create or role:admin_cinder_create
+        group:delete: rule:tenant_delete or role:tenant_cinder_delete or role:admin_cinder_delete
+        group:update: rule:tenant_update or role:tenant_cinder_update or role:admin_cinder_update
+        group:group_project_attribute: rule:tenant_read or role:tenant_cinder_read or role:admin_cinder_read
+        group:group_snapshot_project_attribute: rule:tenant_read or role:tenant_cinder_read or role:admin_cinder_read
+        group:get: rule:tenant_read or role:tenant_cinder_read or role:admin_cinder_read
+        group:get_all: rule:tenant_read or role:tenant_cinder_read or role:admin_cinder_read
+        group:create_group_snapshot: rule:tenant_create or role:tenant_cinder_create or role:admin_cinder_create
+        group:delete_group_snapshot: rule:tenant_delete or role:tenant_cinder_delete or role:admin_cinder_delete
+        group:update_group_snapshot: rule:tenant_update or role:tenant_cinder_update or role:admin_cinder_update
+        group:get_group_snapshot: rule:tenant_read or role:tenant_cinder_read or role:admin_cinder_read
+        group:get_all_group_snapshots: rule:tenant_read or role:tenant_cinder_read or role:admin_cinder_read
+        group:reset_group_snapshot_status: rule:admin_update or role:admin_cinder_update
+        group:reset_status: rule:admin_update or role:admin_cinder_update
+        scheduler_extension:scheduler_stats:get_pools: rule:admin_read or role:admin_cinder_read
+        message:delete: rule:tenant_delete or role:tenant_cinder_delete or role:admin_cinder_delete
+        message:get: rule:tenant_read or role:tenant_cinder_read or role:admin_cinder_read
+        message:get_all: rule:tenant_read or role:tenant_cinder_read or role:admin_cinder_read
+        clusters:get: rule:admin_read or role:admin_cinder_read
+        clusters:get_all: rule:admin_read or role:admin_cinder_read
+        clusters:update: rule:admin_update or role:admin_cinder_update
+        workers:cleanup: rule:admin_update or role:admin_cinder_update
   dependencies:
-    - cinder-htk
+    - os-cinder-htk
 ...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: cinder-htk
+  name: os-cinder-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -311,10 +532,16 @@ metadata:
         path: .charts.osh.cinder-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: cinder-htk
-  release: cinder-htk
-  namespace: cinder-htk
+  chart_name: os-cinder-htk
+  release: os-cinder-htk
+  namespace: os-cinder-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

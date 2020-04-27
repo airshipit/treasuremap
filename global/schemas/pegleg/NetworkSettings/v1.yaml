@@ -1,0 +1,17 @@
+---
+schema: 'deckhand/DataSchema/v1'
+metadata:
+  schema: metadata/Control/v1
+  name: pegleg/NetworkSettings/v1
+data:
+  $schema: 'http://json-schema.org/schema#'
+  type: 'object'
+  properties:
+    mtu:
+      type: object
+      additionalProperties:
+        # NOTE(mb874d): This was chosen to match Drydock's constraints on mtu
+        # in its Network schema.
+        type: number
+  additionalProperties: false
+...

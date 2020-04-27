@@ -4,8 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: openstack-mariadb
   labels:
-    name: openstack-mariadb-chart-group-global
-    component: mariadb
+    name: openstack-mariadb-global
   layeringDefinition:
     abstract: false
     layer: global

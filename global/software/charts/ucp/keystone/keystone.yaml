@@ -2,10 +2,11 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: ucp-keystone
+  name: ucp-keystone-global
   labels:
     name: ucp-keystone-global
     component: keystone
+    configuration: ldap-backed
   layeringDefinition:
     abstract: false
     layer: global
@@ -53,17 +54,17 @@ metadata:
       dest:
         path: .values.endpoints.oslo_cache
     - src:
-        schema: pegleg/EndpointCatalogue/v1
-        name: osh_infra_endpoints
-        path: .osh_infra.fluentd
-      dest:
-        path: .values.endpoints.fluentd
-    - src:
         schema: pegleg/AccountCatalogue/v1
         name: ucp_service_accounts
         path: .ucp.keystone.admin
       dest:
         path: .values.endpoints.identity.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.keystone.test
+      dest:
+        path: .values.endpoints.identity.auth.test
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: ucp_service_accounts
@@ -84,12 +85,125 @@ metadata:
         path: .values.endpoints.oslo_db.path
         pattern: DB_NAME
 
+#    # LDAP details
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .infrastructure.ldap.fqdn
+#      dest:
+#        path: .values.conf.ks_domains.nc.ldap.url
+#        pattern: FQDN
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .infrastructure.ldap.common_name
+#      dest:
+#        path: .values.conf.ks_domains.nc.ldap.user_filter
+#        pattern: COMMON_NAME
+#    # (dd118r): consider recursive pattern substitution once internal deckhand supports
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .infrastructure.ldap.subdomain
+#      dest:
+#        - path: .values.conf.ks_domains.nc.ldap.user_filter
+#          pattern: SUBDOMAIN
+#        - path: .values.conf.ks_domains.nc.ldap.suffix
+#          pattern: SUBDOMAIN
+#        - path: .values.conf.ks_domains.nc.ldap.user_tree_dn
+#          pattern: SUBDOMAIN
+#        - path: .values.conf.ks_domains.nc.ldap.group_tree_dn
+#          pattern: SUBDOMAIN
+#    # (dd118r): consider recursive pattern substitution once internal deckhand supports
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .infrastructure.ldap.domain
+#      dest:
+#        - path: .values.conf.ks_domains.nc.ldap.user_filter
+#          pattern: DOMAIN
+#        - path: .values.conf.ks_domains.nc.ldap.suffix
+#          pattern: DOMAIN
+#        - path: .values.conf.ks_domains.nc.ldap.user_tree_dn
+#          pattern: DOMAIN
+#        - path: .values.conf.ks_domains.nc.ldap.group_tree_dn
+#          pattern: DOMAIN
+#
+#    # LDAP Mech ID Details
+#    - src:
+#        schema: pegleg/CommonAddresses/v1
+#        name: common-addresses
+#        path: .ldap.username
+#      dest:
+#        path: .values.conf.ks_domains.nc.ldap.user
+#    - dest:
+#        path: .values.conf.ks_domains.nc.ldap.password
+#      src:
+#        schema: deckhand/Passphrase/v1
+#        name: ucp_keystone_ldap_mechid_password
+#        path: .
+#
+#    # SA Deployment perms
+#    - src:
+#        schema: pegleg/CommonSoftwareConfig/v1
+#        name: common-software-config
+#        path: .infrastructure.sysadmin
+#      dest:
+#        - path: .values.bootstrap.script
+#          pattern: SA_ID
+#
+#    # CICD Deployment perms
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .cicd.generic_pipe.user
+#      dest:
+#        - path: .values.bootstrap.script
+#          pattern: CICD_ID
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .cicd.generic_pipe.required_role
+#      dest:
+#        - path: .values.bootstrap.script
+#          pattern: CICD_ROLE
+#
+#    # NC3C Deployment perms
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .threec.threec-api.user
+#      dest:
+#        - path: .values.bootstrap.script
+#          pattern: THREEC_USER
+#
+#    # DE LDAP Group
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .keystone.ucp.groups
+#      dest:
+#        - path: .values.bootstrap.script
+#          pattern: GROUP_NAMES
+#    - src:
+#        schema: nc/CorridorConfig/v1
+#        name: corridor-config
+#        path: .keystone.ucp.ldap.group_filter
+#      dest:
+#        path: .values.conf.ks_domains.nc.ldap.group_filter
+
     # Secrets
     - dest:
         path: .values.endpoints.identity.auth.admin.password
       src:
         schema: deckhand/Passphrase/v1
         name: ucp_keystone_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.test.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_keystone_test_password
         path: .
     - dest:
         path: .values.endpoints.oslo_messaging.auth.keystone.password
@@ -119,12 +233,15 @@ data:
   chart_name: ucp-keystone
   release: ucp-keystone
   namespace: ucp
+  protected:
+    continue_processing: false
+  wait:
+    timeout: 1800
+    labels:
+      release_group: clcp-ucp-keystone
   test:
     timeout: 600
-  wait:
-    timeout: 600
-    labels:
-      release_group: airship-ucp-keystone
+    enabled: true
   install:
     no_hooks: false
   upgrade:
@@ -133,36 +250,98 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-keystone
+            release_group: clcp-ucp-keystone
     post:
       create: []
   values:
+    bootstrap:
+      script: |
+        openstack role create --or-show admin_ucp
+        openstack role create --or-show admin_ucp_viewer
+        openstack role create --or-show admin_iam
+        openstack role create --or-show admin_iam_viewer
+        openstack role create --or-show admin_k8scluster
+        openstack role create --or-show admin_k8scluster_editor
+        openstack role create --or-show admin_k8scluster_viewer
+#        # Give site's SA deploy capabilities
+#        openstack role add --user SA_ID --user-domain nc --domain nc admin_ucp || true
+#        # CICD needs
+#        openstack role create --or-show cicd_viewer
+#        openstack role add --user CICD_ID --user-domain nc --domain nc CICD_ROLE || true
+#        openstack role create --or-show utility_exec
+#        openstack project create --or-show --domain nc nc-operations
+#        # NC3C Roles
+#        openstack role add --user THREEC_USER --user-domain nc --domain nc admin_ucp_viewer || true
+#        openstack role add --user THREEC_USER --user-domain nc --domain nc admin_k8scluster_viewer || true
+#        #LDAP Group Roles
+#        groups=("GROUP_NAMES")
+#        for g in "${groups[@]}"; do
+#          openstack role add --group $g --group-domain nc --domain nc admin_ucp || true
+#        done
+    jobs:
+      fernet_rotate:
+        #NOTE(rk760n): the configuration based on AIC3.x security requirements statisfying formula max_active_keys = (token_expiration / rotation_frequency) + 2
+        # rotate keys every 12 hours
+        cron: "0 */10 * * *"
     conf:
+      keystone:
+        DEFAULT:
+          max_token_size: 16384
+          #enable CADF format to be used for all generated notifications
+          notification_format: cadf
+          #enable all types of notifications including authentication events which may add strain to the messaging bus as they are noisy
+          notification_opt_out: ""
+        oslo_messaging_notifications:
+          driver:
+            type: multistring
+            values:
+              - messagingv2
+              - log
+        oslo_middleware:
+          max_request_body_size: 344064
+        token:
+          revoke_by_id: False
+          #NOTE(rk760n): the configuration based on AIC3.x security requirements statisfying formula max_active_keys = (token_expiration / rotation_frequency) + 2
+          #30 hours
+          expiration: 108000
+        fernet_tokens:
+          #NOTE(rk760n): the configuration based on AIC3.x security requirements statisfying formula max_active_keys = (token_expiration / rotation_frequency) + 2
+          max_active_keys: 10
+        identity:
+           driver: sql
+           default_domain_id: default
+#           domain_specific_drivers_enabled: True
+#           domain_configurations_from_database: True
+#           domain_config_dir: /etc/keystonedomains
       logging:
         loggers:
           keys:
             - root
             - keystone
+            - oslo.messaging
         handlers:
           keys:
             - stdout
             - stderr
-            - 'null'
-            - fluent
+            - "null"
         formatters:
           keys:
             - context
             - default
-            - fluent
         logger_root:
           level: WARNING
-          handlers: stdout
+          handlers: "null"
         logger_keystone:
           level: INFO
           handlers:
             - stdout
-            - fluent
+            - stderr
           qualname: keystone
+        logger_oslo.messaging:
+          level: INFO
+          handlers:
+            - stdout
+          qualname: oslo.messaging
         logger_amqp:
           level: WARNING
           handlers: stderr
@@ -195,19 +374,231 @@ data:
           class: StreamHandler
           args: (sys.stderr,)
           formatter: context
-        handler_fluent:
-          class: fluent.handler.FluentHandler
-          args: ('ucp.keystone', 'fluentd-logging.osh-infra', 24224)
-          formatter: fluent
-        formatter_fluent:
-          class: oslo_log.formatters.FluentFormatter
         formatter_context:
           class: oslo_log.formatters.ContextFormatter
         formatter_default:
           format: "%(message)s"
+#      ks_domains:
+#        nc:
+#          identity:
+#            driver: ldap
+#          ldap:
+#            # Use LDAPS instead of STARTTLS
+#            use_tls: false
+#            tls_req_cert: allow
+#            url: "ldaps://FQDN:636"
+#            user_filter: "(memberof=CN=COMMON_NAME,OU=Application,OU=Groups,DC=SUBDOMAIN,DC=DOMAIN,DC=com)"
+#            suffix: "DC=SUBDOMAIN,DC=DOMAIN,DC=com"
+#            page_size: 1000
+#            alias_dereferencing: default
+#            user_objectclass: user
+#            user_id_attribute: cn
+#            user_name_attribute: sAMAccountName
+#            user_pass_attribute: userPassword
+#            query_scope: sub
+#            user_tree_dn: "DC=SUBDOMAIN,DC=DOMAIN,DC=com"
+#            user_enabled_mask: 2
+#            user_enabled_default: 512
+#            user_enabled_attribute: userAccountControl
+#            user_mail_attribute: mail
+#            group_tree_dn: "OU=Groups,DC=SUBDOMAIN,DC=DOMAIN,DC=com"
+#            group_objectclass: group
+#            group_id_attribute: sAMAccountName
+#            group_name_attribute: sAMAccountName
+#            group_member_attribute: member
+#            use_pool: true
+#            pool_size: 10
+#            pool_retry_max: 3
+#            pool_retry_delay: 0.1
+#            #timeout(in seconds) after which any LDAP API call will abort if not response is received (timeout for LDAP requests)
+#            pool_connection_timeout: 5
+#            pool_connection_lifetime: 600
+#            use_auth_pool: true
+#            auth_pool_size: 100
+#            auth_pool_connection_lifetime: 600
+#            #timeout(in seconds) after which pool/select following a connect returns in case of no activity(connecting to LDAP server)
+#            connection_timeout: 1
+      policy:
+        admin_required: role:admin or is_admin:1
+        service_role: role:service
+        service_or_admin: rule:admin_required or rule:service_role
+        owner: user_id:%(user_id)s
+        admin_or_owner: rule:admin_required or rule:owner
+        # cicd start
+        # cicd_viewer: role:cicd_viewer
+        # cicd end
+        token_subject: user_id:%(target.token.user_id)s
+        admin_or_token_subject: rule:admin_required or rule:token_subject
+        service_admin_or_token_subject: rule:service_or_admin or rule:token_subject
+        default: rule:admin_required
+        identity:get_region: ''
+        identity:list_regions: ''
+        identity:create_region: rule:admin_required
+        identity:update_region: rule:admin_required
+        identity:delete_region: rule:admin_required
+        identity:get_service: rule:admin_required
+        identity:list_services: rule:admin_required or rule:cicd_viewer
+        identity:create_service: rule:admin_required
+        identity:update_service: rule:admin_required
+        identity:delete_service: rule:admin_required
+        identity:get_endpoint: rule:admin_required
+        identity:list_endpoints: rule:admin_required or rule:cicd_viewer
+        identity:create_endpoint: rule:admin_required
+        identity:update_endpoint: rule:admin_required
+        identity:delete_endpoint: rule:admin_required
+        identity:get_domain: rule:admin_required or token.project.domain.id:%(target.domain.id)s
+        identity:list_domains: rule:admin_required
+        identity:create_domain: rule:admin_required
+        identity:update_domain: rule:admin_required
+        identity:delete_domain: rule:admin_required
+        identity:get_project: rule:admin_required or project_id:%(target.project.id)s
+        identity:list_projects: rule:admin_required
+        identity:list_user_projects: rule:admin_or_owner
+        identity:create_project: rule:admin_required
+        identity:update_project: rule:admin_required
+        identity:delete_project: rule:admin_required
+        identity:get_user: rule:admin_or_owner
+        identity:list_users: rule:admin_required
+        identity:create_user: rule:admin_required
+        identity:update_user: rule:admin_required
+        identity:delete_user: rule:admin_required
+        identity:change_password: rule:admin_or_owner
+        identity:get_group: rule:admin_required
+        identity:list_groups: rule:admin_required
+        identity:list_groups_for_user: rule:admin_or_owner
+        identity:create_group: rule:admin_required
+        identity:update_group: rule:admin_required
+        identity:delete_group: rule:admin_required
+        identity:list_users_in_group: rule:admin_required
+        identity:remove_user_from_group: rule:admin_required
+        identity:check_user_in_group: rule:admin_required
+        identity:add_user_to_group: rule:admin_required
+        identity:get_credential: rule:admin_required
+        identity:list_credentials: rule:admin_required
+        identity:create_credential: rule:admin_required
+        identity:update_credential: rule:admin_required
+        identity:delete_credential: rule:admin_required
+        identity:ec2_get_credential: rule:admin_required or (rule:owner and user_id:%(target.credential.user_id)s)
+        identity:ec2_list_credentials: rule:admin_or_owner
+        identity:ec2_create_credential: rule:admin_or_owner
+        identity:ec2_delete_credential: rule:admin_required or (rule:owner and user_id:%(target.credential.user_id)s)
+        identity:get_role: rule:admin_required
+        identity:list_roles: rule:admin_required
+        identity:create_role: rule:admin_required
+        identity:update_role: rule:admin_required
+        identity:delete_role: rule:admin_required
+        identity:get_domain_role: rule:admin_required
+        identity:list_domain_roles: rule:admin_required
+        identity:create_domain_role: rule:admin_required
+        identity:update_domain_role: rule:admin_required
+        identity:delete_domain_role: rule:admin_required
+        identity:get_implied_role: 'rule:admin_required '
+        identity:list_implied_roles: rule:admin_required
+        identity:create_implied_role: rule:admin_required
+        identity:delete_implied_role: rule:admin_required
+        identity:list_role_inference_rules: rule:admin_required
+        identity:check_implied_role: rule:admin_required
+        identity:check_grant: rule:admin_required
+        identity:list_grants: rule:admin_required
+        identity:create_grant: rule:admin_required
+        identity:revoke_grant: rule:admin_required
+        identity:list_role_assignments: rule:admin_required
+        identity:list_role_assignments_for_tree: rule:admin_required
+        identity:get_policy: rule:admin_required
+        identity:list_policies: rule:admin_required
+        identity:create_policy: rule:admin_required
+        identity:update_policy: rule:admin_required
+        identity:delete_policy: rule:admin_required
+        identity:check_token: rule:admin_or_token_subject
+        identity:validate_token: rule:service_admin_or_token_subject or rule:cicd_viewer
+        identity:validate_token_head: rule:service_or_admin
+        identity:revocation_list: rule:service_or_admin
+        identity:revoke_token: rule:admin_or_token_subject
+        identity:create_trust: user_id:%(trust.trustor_user_id)s
+        identity:list_trusts: ''
+        identity:list_roles_for_trust: ''
+        identity:get_role_for_trust: ''
+        identity:delete_trust: ''
+        identity:create_consumer: rule:admin_required
+        identity:get_consumer: rule:admin_required
+        identity:list_consumers: rule:admin_required
+        identity:delete_consumer: rule:admin_required
+        identity:update_consumer: rule:admin_required
+        identity:authorize_request_token: rule:admin_required
+        identity:list_access_token_roles: rule:admin_required
+        identity:get_access_token_role: rule:admin_required
+        identity:list_access_tokens: rule:admin_required
+        identity:get_access_token: rule:admin_required
+        identity:delete_access_token: rule:admin_required
+        identity:list_projects_for_endpoint: rule:admin_required
+        identity:add_endpoint_to_project: rule:admin_required
+        identity:check_endpoint_in_project: rule:admin_required
+        identity:list_endpoints_for_project: rule:admin_required
+        identity:remove_endpoint_from_project: rule:admin_required
+        identity:create_endpoint_group: rule:admin_required
+        identity:list_endpoint_groups: rule:admin_required
+        identity:get_endpoint_group: rule:admin_required
+        identity:update_endpoint_group: rule:admin_required
+        identity:delete_endpoint_group: rule:admin_required
+        identity:list_projects_associated_with_endpoint_group: rule:admin_required
+        identity:list_endpoints_associated_with_endpoint_group: rule:admin_required
+        identity:get_endpoint_group_in_project: rule:admin_required
+        identity:list_endpoint_groups_for_project: rule:admin_required
+        identity:add_endpoint_group_to_project: rule:admin_required
+        identity:remove_endpoint_group_from_project: rule:admin_required
+        identity:create_identity_provider: rule:admin_required
+        identity:list_identity_providers: rule:admin_required
+        identity:get_identity_provider: rule:admin_required
+        identity:update_identity_provider: rule:admin_required
+        identity:delete_identity_provider: rule:admin_required
+        identity:create_protocol: rule:admin_required
+        identity:update_protocol: rule:admin_required
+        identity:get_protocol: rule:admin_required
+        identity:list_protocols: rule:admin_required
+        identity:delete_protocol: rule:admin_required
+        identity:create_mapping: rule:admin_required
+        identity:get_mapping: rule:admin_required
+        identity:list_mappings: rule:admin_required
+        identity:delete_mapping: rule:admin_required
+        identity:update_mapping: rule:admin_required
+        identity:create_service_provider: rule:admin_required
+        identity:list_service_providers: rule:admin_required
+        identity:get_service_provider: rule:admin_required
+        identity:update_service_provider: rule:admin_required
+        identity:delete_service_provider: rule:admin_required
+        identity:get_auth_catalog: ''
+        identity:get_auth_projects: ''
+        identity:get_auth_domains: ''
+        identity:list_projects_for_user: ''
+        identity:list_domains_for_user: ''
+        identity:list_revoke_events: ''
+        identity:create_policy_association_for_endpoint: rule:admin_required
+        identity:check_policy_association_for_endpoint: rule:admin_required
+        identity:delete_policy_association_for_endpoint: rule:admin_required
+        identity:create_policy_association_for_service: rule:admin_required
+        identity:check_policy_association_for_service: rule:admin_required
+        identity:delete_policy_association_for_service: rule:admin_required
+        identity:create_policy_association_for_region_and_service: rule:admin_required
+        identity:check_policy_association_for_region_and_service: rule:admin_required
+        identity:delete_policy_association_for_region_and_service: rule:admin_required
+        identity:get_policy_for_endpoint: rule:admin_required
+        identity:list_endpoints_for_policy: rule:admin_required
+        identity:create_domain_config: rule:admin_required
+        identity:get_domain_config: rule:admin_required
+        identity:update_domain_config: rule:admin_required
+        identity:delete_domain_config: rule:admin_required
+        identity:get_domain_config_default: rule:admin_required
+        identity:get_application_credential: '!'
+        identity:list_application_credential: '!'
+        identity:create_application_credential: '!'
+        identity:delete_application_credential: '!'
     pod:
+      affinity:
+        anti:
+          type:
+            default: requiredDuringSchedulingIgnoredDuringExecution
       replicas:
-        api: 2
+        api: 1
     labels:
       api:
         node_selector_key: ucp-control-plane
@@ -215,31 +606,6 @@ data:
       job:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-
-
   dependencies:
     - ucp-keystone-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name:  ucp-keystone-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.keystone-htk
-      dest:
-        path: .source
-data:
-  chart_name: ucp-keystone-htk
-  release: ucp-keystone-htk
-  namespace: ucp-keystone-htk
-  values: {}
-  dependencies: []
 ...

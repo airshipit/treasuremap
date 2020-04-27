@@ -1,0 +1,212 @@
+---
+schema: 'drydock/NetworkLink/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: oob
+  labels:
+    link_role: oob
+    topology: cruiser
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  # MaaS doesnt own this network like it does the others, so the noconfig label
+  # is specified.
+  labels:
+    noconfig: enabled
+  mtu: 1500
+  bonding:
+    mode: disabled
+  linkspeed: auto
+  trunking:
+    mode: disabled
+    default_network: oob
+  allowed_networks:
+    - oob
+...
+---
+schema: 'drydock/NetworkLink/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: pxe
+  labels:
+    link_role: pxe
+    topology: cruiser
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  mtu: 1500
+  bonding:
+    mode: disabled
+  linkspeed: auto
+  trunking:
+    mode: disabled
+    default_network: pxe
+  allowed_networks:
+    - pxe
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: oob-cruiser
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: oob
+    topology: cruiser
+  storagePolicy: cleartext
+data:
+  mtu: 1500
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: pxe-cruiser
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: pxe
+    topology: cruiser
+  storagePolicy: cleartext
+data:
+  mtu: 1500
+...
+---
+schema: 'drydock/NetworkLink/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: bond1
+  labels:
+    link_role: bond1
+    topology: cruiser
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  mtu: 9214
+  bonding:
+    mode: 802.3ad
+    hash: layer3+4
+    peer_rate: fast
+    mon_rate: 100
+    up_delay: 1000
+    down_delay: 3000
+  linkspeed: auto
+  trunking:
+    mode: 802.1q
+  allowed_networks:
+    - oam
+    - storage
+    - overlay
+    - calico
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: oam-cruiser
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: oam
+    topology: cruiser
+  substitutions:
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .dns.node_domain
+      dest:
+        path: .dns.domain
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .dns.upstream_servers_joined
+      dest:
+        path: .dns.servers
+  storagePolicy: cleartext
+data:
+  mtu: 9000
+  vlan: '41'
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: storage-cruiser
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: storage
+    topology: cruiser
+  storagePolicy: cleartext
+data:
+  mtu: 9000
+  vlan: '42'
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: calico-cruiser
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: calico
+    topology: cruiser
+  storagePolicy: cleartext
+data:
+  mtu: 9000
+  vlan: '44'
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: overlay-cruiser
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: os-overlay
+    topology: cruiser
+  storagePolicy: cleartext
+data:
+  mtu: 9150
+  vlan: '45'
+  # MaaS doesnt own this network like it does the others, so the noconfig label
+  # is specified.
+  labels:
+    noconfig: enabled
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: routable-cruiser
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: os-routable
+    topology: cruiser
+  storagePolicy: cleartext
+data:
+  # Design info: OVS-F (OVS Floating IP – Public) Bond1.{ovsf} VLAN: 50  MTU: 9100
+  mtu: 9100
+  vlan: '50'
+  # MaaS doesnt own this network like it does the others, so the noconfig label
+  # is specified.
+  labels:
+    noconfig: enabled
+...

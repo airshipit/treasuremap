@@ -29,6 +29,15 @@ data:
   chart_name: libvirt
   release: libvirt
   namespace: openstack
+  wait:
+    timeout: 900
+    labels:
+      release_group: clcp-libvirt
+    resources:
+      - type: daemonset
+        min_ready: 100%
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -37,28 +46,38 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-libvirt
+            release_group: clcp-libvirt
   values:
     labels:
       agent:
         libvirt:
           node_selector_key: openstack-libvirt
           node_selector_value: kernel
+    pod:
+      lifecycle:
+        upgrades:
+          daemonsets:
+            pod_replacement_strategy: RollingUpdate
+            libvirt:
+              max_unavailable: 100%
+      mandatory_access_control:
+        type: apparmor
+        libvirt-libvirt-default:
+          libvirt: localhost/libvirt-v1
     ceph_client:
       configmap: tenant-ceph-etc
       user_secret_name: pvc-tceph-client-key
   dependencies:
-    - libvirt-htk
+    - os-libvirt-htk
 ...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: libvirt-htk
+  name: os-libvirt-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -66,10 +85,16 @@ metadata:
         path: .charts.osh.libvirt-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: libvirt-htk
-  release: libvirt-htk
-  namespace: libvirt-htk
+  chart_name: os-libvirt-htk
+  release: os-libvirt-htk
+  namespace: os-libvirt-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

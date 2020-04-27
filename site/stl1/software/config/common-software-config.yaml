@@ -1,0 +1,29 @@
+---
+# The purpose of this file is to define site-specific common software config
+# paramters.
+# #SITE-PROMOTION-CANDIDATE# would require subsitutions out of common-addresses
+schema: pegleg/CommonSoftwareConfig/v1
+metadata:
+  schema: metadata/Document/v1
+  name: common-software-config
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  osh:
+    # NEWSITE-CHANGEME: Replace with the site name
+    region_name: stl1
+  location:
+    # NEWSITE-CHANGEME: Replace with the site's corridor (c1 - Dev, c2 - IST, c3 - SIL, prod - PROD)
+    location_corridor: c1
+    # NEWSITE-CHANGEME: Replace with the geographical information (Use Middletown, NJ, US for ST labs )
+    location_name: St. Louis
+    location_state: MO
+    location_country: US
+    # NEWSITE-CHANGEME: Replace with the Physical Location ID for the site (http://intranet.att.com/gtoi/ebits/ebits-map-aic-site-list.cfm?)
+    location_physical_location_id: STL
+  infrastructure:
+    # NEWSITE-CHANGEME: Replace with sysadmin used for ieds and allmid
+    sysadmin: go4243
+...

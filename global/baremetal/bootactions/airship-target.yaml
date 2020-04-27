@@ -7,6 +7,8 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
+  labels:
+    name: airship-target
 data:
   signaling: false
   assets:

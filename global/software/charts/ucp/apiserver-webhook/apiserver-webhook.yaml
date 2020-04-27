@@ -1,0 +1,742 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-apiserver-webhook
+  labels:
+    name: ucp-apiserver-webhook-global
+    component: apiserver-webhook
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.apiserver-webhook
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.apiserver-webhook
+      dest:
+        path: .values.images.tags
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.apiserver.apiserver
+      dest:
+        path: .values.images.tags.apiserver
+
+    # apiserver-webhook Log Level
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .kubernetes_components.apiserver_webhook_log_level
+      dest:
+        path: .values.apiserver_webhook.logging.log_level
+
+    # IP addresses
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.pod_cidr
+      dest:
+        path: .values.network.pod_cidr
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.service_cidr
+      dest:
+        path: .values.network.service_cidr
+
+    # CA
+    -
+      src:
+        schema: deckhand/CertificateAuthority/v1
+        name: kubernetes
+        path: .
+      dest:
+        path: .values.certificates.kubelet.server.ca
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: keystone-webhook
+        path: .
+      dest:
+        path: .values.certificates.keystone_webhook.server.ca
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: apiserver-webhook
+        path: .
+      dest:
+        path: .values.certificates.apiserver_webhook_pod.server.ca
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: ingress-ca
+        path: .
+      dest:
+        path: .values.secrets.tls.webhook_apiserver.api.server.ca
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: kubernetes-etcd
+        path: .
+      dest:
+        path: .values.certificates.etcd.server.ca
+
+    # Certificates
+    - src:
+        schema: deckhand/Certificate/v1
+        name: apiserver-webhook-kubelet
+        path: .
+      dest:
+        path: .values.certificates.kubelet.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: apiserver-webhook-kubelet
+        path: .
+      dest:
+        path: .values.certificates.kubelet.client.key
+
+    - src:
+        schema: deckhand/Certificate/v1
+        name: apiserver-webhook-server
+        path: .
+      dest:
+        path: .values.certificates.apiserver_webhook_pod.server.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: apiserver-webhook-server
+        path: .
+      dest:
+        path: .values.certificates.apiserver_webhook_pod.server.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: ingress-crt
+        path: .
+      dest:
+        path: .values.secrets.tls.webhook_apiserver.api.server.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: ingress-key
+        path: .
+      dest:
+        path: .values.secrets.tls.webhook_apiserver.api.server.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: apiserver-webhook-etcd
+        path: .
+      dest:
+        path: .values.certificates.etcd.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: apiserver-webhook-etcd
+        path: .
+      dest:
+        path: .values.certificates.etcd.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: keystone-webhook-server
+        path: .
+      dest:
+        path: .values.certificates.keystone_webhook.server.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: keystone-webhook-server
+        path: .
+      dest:
+        path: .values.certificates.keystone_webhook.server.key
+    - src:
+        schema: deckhand/PublicKey/v1
+        name: service-account
+        path: .
+      dest:
+        path: .values.secrets.service_account.public_key
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ucp.identity
+      dest:
+        path: .values.endpoints.identity
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ucp.webhook_apiserver
+      dest:
+        path: .values.endpoints.webhook_apiserver
+
+     # Credentials
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.keystone.admin
+      dest:
+        path: .values.endpoints.identity.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: ucp_service_accounts
+        path: .ucp.webhook.keystone
+      dest:
+        path: .values.endpoints.identity.auth.webhook
+
+     # Secrets
+    - dest:
+        path: .values.endpoints.identity.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_keystone_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.webhook.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_webhook_keystone_password
+        path: .
+
+    # Dynamic config
+    #
+    # etcd encryption
+    - dest:
+        path: .values.conf.apiserver.encryption_provider.content.resources
+      src:
+        schema: promenade/EncryptionPolicy/v1
+        name: encryption-policy
+        path: .etcd
+
+    # Cluster CA (needed by cnx-apiserver)
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: kubernetes
+        path: .
+      dest:
+        path: .values.conf.apiserver.cluster_ca.content
+
+    # Aggregation API
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: kubernetes-agg-api
+        path: .
+      dest:
+        path: .values.conf.apiserver.agg_api_ca.content
+    - src:
+        schema: deckhand/Certificate/v1
+        name: apiserver-proxy
+        path: .
+      dest:
+        path: .values.conf.apiserver.apiserver_proxy_cert.content
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: apiserver-proxy
+        path: .
+      dest:
+        path: .values.conf.apiserver.apiserver_proxy_key.content
+
+data:
+  chart_name: ucp-apiserver-webhook
+  release: ucp-apiserver-webhook
+  namespace: ucp
+  wait:
+    timeout: 600
+    labels:
+      release_group: clcp-ucp-apiserver-webhook
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: clcp-ucp-apiserver-webhook
+  values:
+    pod:
+      replicas:
+        api: 1
+      affinity:
+        anti:
+          type:
+            default: requiredDuringSchedulingIgnoredDuringExecution
+      security_context:
+        apiserver_webhook:
+          pod:
+            runAsUser: 33
+    labels:
+      job:
+        node_selector_key: kubernetes-apiserver
+        node_selector_value: enabled
+      kubernetes_apiserver:
+        node_selector_key: kubernetes-apiserver
+        node_selector_value: enabled
+    conf:
+      policy:
+        - resource:
+            verbs:
+              - get
+              - list
+              - watch
+              - create
+            resources:
+              - pods
+            namespace: "utility"
+            version: "*"
+          match:
+            - type: role
+              values:
+                - utility_exec
+        - resource:
+            verbs:
+              - create
+            resources:
+              - pods/exec
+            namespace: "utility"
+            version: "*"
+          match:
+            - type: role
+              values:
+                - utility_exec
+        - nonresource:
+            verbs:
+              - get
+            path: "/api"
+          match:
+            - type: role
+              values:
+                - utility_exec
+        - nonresource:
+            verbs:
+              - get
+            path: "/api/*"
+          match:
+            - type: role
+              values:
+                - utility_exec
+        - nonresource:
+            verbs:
+              - get
+            path: "/apis"
+          match:
+            - type: role
+              values:
+                - utility_exec
+        - nonresource:
+            verbs:
+              - get
+            path: "/apis/*"
+          match:
+            - type: role
+              values:
+                - utility_exec
+        - resource:
+            verbs:
+              - "*"
+            resources:
+              - "*"
+            namespace: "*"
+            version: "*"
+          match:
+            - type: role
+              values:
+                - admin
+        - resource:
+            verbs:
+              - "*"
+            resources:
+              - "*"
+            namespace: "kube-system"
+            version: "*"
+          match:
+            - type: role
+              values:
+                - kube-system-admin
+        - resource:
+            verbs:
+              - get
+              - list
+              - watch
+            resources:
+              - "*"
+            namespace: "kube-system"
+            version: "*"
+          match:
+            - type: role
+              values:
+                - kube-system-viewer
+        - resource:
+            verbs:
+              - "*"
+            resources:
+              - "*"
+            namespace: "ucp"
+            version: "*"
+          match:
+            - type: project
+              values:
+                - ucp-admin
+                - airship-admin
+                - nc-operations
+        - resource:
+            verbs:
+              - "*"
+            resources:
+              - "*"
+            namespace: "*"
+            version: "*"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster
+        - nonresource:
+            verbs:
+              - "*"
+            path: "*"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster
+        - resource:
+            resources:
+              - pods
+              - pods/attach
+              - pods/exec
+              - pods/portforward
+              - pods/proxy
+              - configmaps
+              - endpoints
+              - persistentvolumeclaims
+              - replicationcontrollers
+              - replicationcontrollers/scale
+              - secrets
+              - serviceaccounts
+              - services
+              - services/proxy
+            verbs:
+              - create
+              - delete
+              - deletecollection
+              - get
+              - list
+              - patch
+              - update
+              - watch
+            namespace: "*"
+            version: ""
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_editor
+        - resource:
+            resources:
+              - bindings
+              - events
+              - limitranges
+              - namespaces/status
+              - pods/log
+              - pods/status
+              - replicationcontrollers/status
+              - resourcequotas
+              - resourcequotas/status
+              - namespaces
+            verbs:
+              - get
+              - list
+              - watch
+            namespace: "*"
+            version: ""
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_editor
+        - resource:
+            resources:
+              - serviceaccounts
+            verbs:
+              - impersonate
+            namespace: "*"
+            version: ""
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_editor
+        - resource:
+            resources:
+              - daemonsets
+              - deployments
+              - deployments/rollback
+              - deployments/scale
+              - replicasets
+              - replicasets/scale
+              - statefulsets
+            verbs:
+              - create
+              - delete
+              - deletecollection
+              - get
+              - list
+              - patch
+              - update
+              - watch
+            namespace: "*"
+            version: "apps"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_editor
+        - resource:
+            resources:
+              - horizontalpodautoscalers
+            verbs:
+              - create
+              - delete
+              - deletecollection
+              - get
+              - list
+              - patch
+              - update
+              - watch
+            namespace: "*"
+            version: "autoscaling"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_editor
+        - resource:
+            resources:
+              - cronjobs
+              - jobs
+            verbs:
+              - create
+              - delete
+              - deletecollection
+              - get
+              - list
+              - patch
+              - update
+              - watch
+            namespace: "*"
+            version: "batch"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_editor
+        - resource:
+            resources:
+              - daemonsets
+              - deployments
+              - deployments/rollback
+              - deployments/scale
+              - ingresses
+              - networkpolicies
+              - replicasets
+              - replicasets/scale
+              - replicationcontrollers/scale
+            verbs:
+              - create
+              - delete
+              - deletecollection
+              - get
+              - list
+              - patch
+              - update
+              - watch
+            namespace: "*"
+            version: "extensions"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_editor
+        - resource:
+            resources:
+              - poddisruptionbudgets
+            verbs:
+              - create
+              - delete
+              - deletecollection
+              - get
+              - list
+              - patch
+              - update
+              - watch
+            namespace: "*"
+            version: "policy"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_editor
+        - resource:
+            resources:
+              - networkpolicies
+            verbs:
+              - create
+              - delete
+              - deletecollection
+              - get
+              - list
+              - patch
+              - update
+              - watch
+            namespace: "*"
+            version: "networking.k8s.io"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_editor
+        - resource:
+            resources:
+              - configmaps
+              - endpoints
+              - persistentvolumeclaims
+              - pods
+              - replicationcontrollers
+              - replicationcontrollers/scale
+              - serviceaccounts
+              - services
+              - bindings
+              - events
+              - limitranges
+              - namespaces/status
+              - pods/log
+              - pods/status
+              - replicationcontrollers/status
+              - resourcequotas
+              - resourcequotas/status
+              - namespaces
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
+            namespace: "*"
+            version: ""
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_viewer
+        - resource:
+            resources:
+              - daemonsets
+              - deployments
+              - deployments/scale
+              - replicasets
+              - replicasets/scale
+              - statefulsets
+            verbs:
+              - get
+              - list
+              - watch
+            namespace: "*"
+            version: "apps"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_viewer
+        - resource:
+            resources:
+              - horizontalpodautoscalers
+            verbs:
+              - get
+              - list
+              - watch
+            namespace: "*"
+            version: "autoscaling"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_viewer
+        - resource:
+            resources:
+              - cronjobs
+              - jobs
+            verbs:
+              - get
+              - list
+              - watch
+            namespace: "*"
+            version: "batch"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_viewer
+        - resource:
+            resources:
+              - daemonsets
+              - deployments
+              - deployments/scale
+              - ingresses
+              - networkpolicies
+              - replicasets
+              - replicasets/scale
+              - replicationcontrollers/scale
+            verbs:
+              - get
+              - list
+              - watch
+            namespace: "*"
+            version: "extensions"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_viewer
+        - resource:
+            resources:
+              - poddisruptionbudgets
+            verbs:
+              - get
+              - list
+              - watch
+            namespace: "*"
+            version: "policy"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_viewer
+        - resource:
+            resources:
+              - networkpolicies
+            verbs:
+              - get
+              - list
+              - watch
+            namespace: "*"
+            version: "networking.k8s.io"
+          match:
+            - type: role
+              values:
+                - admin_k8scluster_viewer
+      apiserver:
+        encryption_provider:
+          file: encryption_provider.yaml
+          command_options:
+            - '--encryption-provider-config=/etc/webhook_apiserver/dynamic/encryption_provider.yaml'
+          content:
+            kind: EncryptionConfiguration
+            apiVersion: apiserver.config.k8s.io/v1
+        cluster_ca:
+          file: cluster-ca.pem
+          command_options:
+            - '--client-ca-file=/etc/webhook_apiserver/dynamic/cluster-ca.pem'
+        agg_api_ca:
+          file: agg-api-ca.pem
+          command_options:
+            - '--requestheader-client-ca-file=/etc/webhook_apiserver/dynamic/agg-api-ca.pem'
+            - '--requestheader-extra-headers-prefix=X-Remote-Extra-'
+            - '--requestheader-group-headers=X-Remote-Group'
+            - '--requestheader-username-headers=X-Remote-User'
+            - '--requestheader-allowed-names=aggregator'
+          content: null
+        apiserver_proxy_cert:
+          file: 'apiserver-proxy-cert.pem'
+          command_options:
+            - '--proxy-client-cert-file=/etc/webhook_apiserver/dynamic/apiserver-proxy-cert.pem'
+          content: null
+        apiserver_proxy_key:
+          file: 'apiserver-proxy-key.pem'
+          command_options:
+            - '--proxy-client-key-file=/etc/webhook_apiserver/dynamic/apiserver-proxy-key.pem'
+          content: null
+  dependencies:
+    - apiserver-webhook-htk
+...

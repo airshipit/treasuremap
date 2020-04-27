@@ -7,9 +7,32 @@ data:
   $schema: 'http://json-schema.org/schema#'
   type: object
   properties:
+    infrastructure:
+      type: object
+      properties:
+        sysadmin:
+          type: string
+      additionalProperties: false
     osh:
       type: object
       properties:
         region_name:
+          type: string
+    location:
+      type: object
+      properties:
+        location_corridor:
+          type: string
+        location_witt_address_id:
+          type: string
+        location_cloud_parent_id:
+          type: string
+        location_name:
+          type: string
+        location_state:
+          type: string
+        location_country:
+          type: string
+        location_physical_location_id:
           type: string
 ...

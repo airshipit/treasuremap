@@ -5,7 +5,6 @@ metadata:
   name: openstack-memcached
   labels:
     name: openstack-memcached-global
-    component: memcached
   layeringDefinition:
     abstract: false
     layer: global
@@ -33,6 +32,13 @@ metadata:
         path: .osh.oslo_cache
       dest:
         path: .values.endpoints.oslo_cache
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.prometheus_memcached_exporter
+      dest:
+        path: .values.endpoints.prometheus_memcached_exporter
+
 data:
   chart_name: openstack-memcached
   release: openstack-memcached
@@ -40,7 +46,12 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-openstack-memcached
+      release_group: clcp-openstack-memcached
+    resources:
+      - type: deployment
+        min_ready: 33%
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -49,24 +60,34 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-openstack-memcached
+            release_group: clcp-openstack-memcached
   values:
+    monitoring:
+      prometheus:
+        enabled: true
     labels:
       server:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
+    pod:
+      lifecycle:
+        upgrades:
+          deployments:
+            pod_replacement_strategy: RollingUpdate
+            rolling_update:
+              max_unavailable: 50%
   dependencies:
-    - memcached-htk
+    - os-memcached-htk
 ...
+
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: memcached-htk
+  name: os-memcached-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -74,10 +95,16 @@ metadata:
         path: .charts.osh.memcached-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: memcached-htk
-  release: memcached-htk
-  namespace: memcached-htk
+  chart_name: os-memcached-htk
+  release: os-memcached-htk
+  namespace: os-memcached-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

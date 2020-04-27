@@ -39,6 +39,7 @@ metadata:
         path: .storage.ceph.cluster_cidr
       dest:
         path: .values.network.cluster
+    # Endpoitns
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: ucp_endpoints
@@ -59,16 +60,37 @@ data:
   release: ucp-ceph-osd
   namespace: ceph
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
-    timeout: 900
+    timeout: 7200
     labels:
-      release_group: airship-ucp-ceph-osd
+      release_group: clcp-ucp-ceph-osd
+    resources:
+      - type: daemonset
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
     no_hooks: false
+    pre:
+      delete:
+        - type: pod
+          labels:
+            release_group: clcp-ucp-ceph-osd
+            component: test
+  test:
+    enabled: true
   values:
+    pod:
+      mandatory_access_control:
+        type: apparmor
+        ceph-osd-default:
+          ceph-osd-default: unconfined
+    deploy:
+      tool: "ceph-volume"
+    manifests:
+      cronjob_defragosds: false
     labels:
       osd:
         node_selector_key: ceph-osd
@@ -76,10 +98,14 @@ data:
     endpoints:
       ceph_mon:
         namespace: ceph
+      fluentd:
+        namespace: osh-infra
     bootstrap:
       enabled: true
     conf:
       storage:
+        failure_domain: rack
+        failure_domain_by_hostname: 1-7
         osd:
           - data:
               type: directory
@@ -92,6 +118,11 @@ data:
         # cluster with only one OSD.  Depending on OSD targeting & site
         # configuration this can be changed.
         osd_crush_chooseleaf_type: 0
+      ceph:
+        osd:
+          osd_op_num_threads_per_hdd: 2
+          osd_op_num_threads_per_ssd: 4
+          osd_max_backfills: 10
   dependencies:
     - ceph-htk
 ...

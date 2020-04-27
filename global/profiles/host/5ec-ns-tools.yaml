@@ -1,0 +1,127 @@
+---
+schema: drydock/HostProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: 5ec-ns-tools-global
+  storagePolicy: cleartext
+  labels:
+    hosttype: 5ec-ns-tools
+  layeringDefinition:
+    abstract: true
+    layer: global
+  substitutions:
+    - dest:
+        path: .oob.credential
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ipmi_admin_password
+        path: .
+data:
+  oob:
+    type: 'ipmi'
+    network: 'oob'
+    account: 'tier4'
+  primary_network: 'oam'
+  hardware_profile: dell_r640_purley_5ec
+  interfaces:
+    pxe:
+      device_link: pxe
+      slaves:
+        - 'pxe_nic'
+      networks:
+        - 'pxe'
+    bond1:
+      device_link: bond1
+      slaves:
+        - 'gp_nic01'
+        - 'gp_nic02'
+      networks:
+        - 'oam'
+        - 'storage'
+        - 'ksn'
+        - 'overlay'
+    p1p1:
+      slaves:
+        - 'sriov_nic01'
+      sriov:
+        vf_count: 32
+        trustedmode: true
+    p3p2:
+      slaves:
+        - 'sriov_nic02'
+      sriov:
+        vf_count: 32
+        trustedmode: true
+  storage:
+    physical_devices:
+      bootdisk:
+        labels:
+          bootdrive: 'true'
+        partitions:
+          - name: 'root'
+            size: '30g'
+            bootable: true
+            filesystem:
+              mountpoint: '/'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'boot'
+            size: '1g'
+            filesystem:
+              mountpoint: '/boot'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var_log'
+            size: '100g'
+            filesystem:
+              mountpoint: '/var/log'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var'
+            size: '>300g'
+            filesystem:
+              mountpoint: '/var'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+      cephjournal1:
+        partitions:
+          - name: 'ceph-ssd1-j1'
+            size: '10g'
+      cephjournal2:
+        partitions:
+          - name: 'ceph-ssd2-j2'
+            size: '10g'
+      ephemeral:
+        partitions:
+          - name: 'nova_instance'
+            size: '99%'
+            filesystem:
+              mountpoint: '/var/lib/nova'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+  platform:
+    image: 'xenial'
+    kernel: 'hwe-16.04'
+    kernel_params:
+      console: 'ttyS1,115200n8'
+      intel_iommu: 'on'
+      iommu: 'pt'
+      amd_iommu: 'on'
+      cgroup_disable: 'hugetlb'
+      transparent_hugepage: 'never'
+      hugepagesz: 'hardwareprofile:hugepages.dpdk.size'
+      hugepages: 'hardwareprofile:hugepages.dpdk.count'
+      default_hugepagesz: 'hardwareprofile:hugepages.dpdk.size'
+      isolcpus: 'hardwareprofile:cpuset.kvm'
+  metadata:
+    owner_data:
+      hosttype: '5ec-ns-tools'
+      tenant-ceph-osd: enabled
+      openstack-nova-compute: enabled
+      openvswitch: enabled
+      sriov: enabled
+      openstack-libvirt: kernel
+      beta.kubernetes.io/fluentd-ds-ready: 'true'
+      node-exporter: enabled
+      fluentbit: enabled
+...

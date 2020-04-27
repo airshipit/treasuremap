@@ -1,0 +1,24 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: neutron
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: neutron-cruiser
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+  replacement: true
+data:
+  values:
+    conf:
+      logging:
+        logger_neutron:
+          level: INFO
+        logger_neutron_taas:
+          level: INFO
+...

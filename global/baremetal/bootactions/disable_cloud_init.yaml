@@ -1,0 +1,31 @@
+---
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: disable_cloud_init
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: global
+  labels:
+    application: 'drydock'
+data:
+  signaling: false
+  assets:
+    - path: /etc/systemd/system/disable_cloud_init.service
+      type: unit
+      permissions: '600'
+      data: |-
+        [Unit]
+        Description=Disable Cloud Init after Promenade finishes
+        After=promjoin.service
+
+        [Service]
+        Type=oneshot
+        ExecStart=/usr/bin/install -g 0 -o 0 -m 444 -D -T /bin/true /etc/cloud/cloud-init.disabled
+
+        [Install]
+        WantedBy=airship.target
+      data_pipeline:
+        - utf8_decode
+...

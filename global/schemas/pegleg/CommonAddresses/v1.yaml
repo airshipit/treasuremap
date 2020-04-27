@@ -30,12 +30,18 @@ data:
             type: string
         upstream_servers_joined:
           type: string
+        ingress_domain:
+          type: string
     genesis:
       type: object
+      required:
+        - oob
       properties:
         hostname:
           type: string
         ip:
+          type: string
+        oob:
           type: string
     bootstrap:
       type: object
@@ -73,23 +79,19 @@ data:
         properties:
           hostname:
             type: string
-    node_ports:
-      type: object
-      properties:
-        drydock_api:
-          type: number
-        maas_api:
-          type: number
-        maas_proxy:
-          type: number
-        shipyard_api:
-          type: number
-        airflow_web:
-          type: number
     ntp:
       type: object
       properties:
         servers_joined:
+          type: string
+        servers:
+          type: array
+          items:
+            type: string
+    ldap:
+      type: object
+      properties:
+        username:
           type: string
     storage:
       type: object

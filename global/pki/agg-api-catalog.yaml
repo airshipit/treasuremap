@@ -1,0 +1,22 @@
+---
+schema: promenade/PKICatalog/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-agg-api
+  labels:
+    name: kubernetes-agg-api
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  certificate_authorities:
+    kubernetes-agg-api:
+      description: CA for Kubernetes Aggregated API
+      certificates:
+        - document_name: apiserver-proxy
+          description: Aggregation API proxy certificate for Kubernetes apiserver
+          common_name: aggregator
+          kubernetes_service_names:
+            - kubernetes.default.svc.cluster.local
+...

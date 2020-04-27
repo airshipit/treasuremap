@@ -39,6 +39,8 @@ metadata:
         path: .storage.ceph.cluster_cidr
       dest:
         path: .values.network.cluster
+
+    # Endpoints
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: ucp_endpoints
@@ -59,11 +61,15 @@ data:
   release: tenant-ceph-mon
   namespace: tenant-ceph
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
     timeout: 1800
     labels:
-      release_group: airship-tenant-ceph-mon
+      release_group: clcp-tenant-ceph-mon
+    resources:
+      - type: daemonset
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -72,7 +78,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-tenant-ceph-mon
+            release_group: clcp-tenant-ceph-mon
   values:
     labels:
       job:
@@ -84,18 +90,16 @@ data:
     endpoints:
       ceph_mon:
         namespace: tenant-ceph
-      ceph_mgr:
-        namespace: tenant-ceph
-      fluentd:
-        namespace: osh-infra
     monitoring:
       ceph_mgr:
         port: 9284
     conf:
+      ceph:
+        global:
+          mon_data_avail_warn: 30
       storage:
         mon:
           directory: /var/lib/openstack-helm/tenant-ceph/mon
-          log_directory: /var/log/tenant-ceph
     storageclass:
       rbd:
         parameters:
@@ -103,8 +107,17 @@ data:
     deployment:
       ceph: true
       storage_secrets: true
+    pod:
+      lifecycle:
+        upgrades:
+          daemonsets:
+            pod_replacement_strategy: RollingUpdate
+            mon:
+              enabled: true
+              min_ready_seconds: 0
+              max_unavailable: 3
     bootstrap:
       enabled: true
   dependencies:
-    - tenant-ceph-htk
+    - ceph-htk
 ...

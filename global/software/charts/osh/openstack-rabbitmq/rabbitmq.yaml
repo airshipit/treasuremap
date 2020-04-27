@@ -65,25 +65,42 @@ data:
   chart_name: openstack-rabbitmq
   release: openstack-rabbitmq
   namespace: openstack
+  test:
+    enabled: false
   wait:
     timeout: 900
     labels:
-      release_group: airship-openstack-rabbitmq
+      release_group: clcp-openstack-rabbitmq
     resources:
       - type: statefulset
+        min_ready: 50%
+      - type: job
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
     no_hooks: false
+    options:
+      force: true
+      # NOTE(lamt): Uncomment when rotating erlang cookies to ensure pods
+      # are re-created properly.
+      # recreate_pods: true
     pre:
       delete:
         - type: job
           labels:
-            release_group: airship-openstack-rabbitmq
+            release_group: clcp-openstack-rabbitmq
   values:
+    volume:
+      size: 5Gi
     pod:
       replicas:
         server: 2
+      affinity:
+        anti:
+          type:
+            server: requiredDuringSchedulingIgnoredDuringExecution
     labels:
       server:
         node_selector_key: openstack-control-plane
@@ -95,17 +112,16 @@ data:
       prometheus:
         enabled: true
   dependencies:
-    - openstack-rabbitmq-htk
+    - os-rabbit-htk
 ...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: openstack-rabbitmq-htk
+  name: os-rabbit-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -113,10 +129,16 @@ metadata:
         path: .charts.osh.rabbitmq-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: openstack-rabbitmq-htk
-  release: openstack-rabbitmq-htk
-  namespace: openstack-rabbitmq-htk
+  chart_name: os-rabbit-htk
+  release: os-rabbit-htk
+  namespace: os-rabbit-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

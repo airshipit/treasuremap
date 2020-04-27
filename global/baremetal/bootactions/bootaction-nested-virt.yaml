@@ -1,0 +1,30 @@
+---
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: nested_virt
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: global
+  labels:
+    application: 'drydock'
+    name: nested_virt
+data:
+  signaling: false
+  node_filter:
+    filter_set_type: 'union'
+    filter_set:
+      - filter_type: 'union'
+        node_labels:
+          # execute boot action on compute nodes
+          openstack-nova-compute: enabled
+  assets:
+    - path: /etc/modprobe.d/qemu-system-x86.conf
+      type: file
+      permissions: '644'
+      data_pipeline:
+        - utf8_decode
+      data: |
+        options kvm_intel nested=1
+...

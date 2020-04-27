@@ -3,16 +3,13 @@ schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-ceph-config
-  labels:
-    name: ucp-ceph-config-chart-group-global
-    component: ceph
   layeringDefinition:
     abstract: false
     layer: global
   storagePolicy: cleartext
 data:
-  description: Ceph config for Airship namespace(s)
+  description: Ceph config for UCP namespace(s)
   chart_group:
-    # NOTE: This will probably expand into one config per Airship namespace
+    # NOTE(mb874d): This will probably expand into one config per UCP namespace
     # that requires ceph access.
     - ucp-ceph-config

@@ -1,0 +1,28 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-barbican-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.barbican-htk
+      dest:
+        path: .source
+  storagePolicy: cleartext
+data:
+  chart_name: ucp-barbican-htk
+  release: ucp-barbican-htk
+  namespace: ucp-barbican-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []
+...

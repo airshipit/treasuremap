@@ -1,0 +1,126 @@
+---
+schema: drydock/HostProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nc-p1
+  storagePolicy: cleartext
+  labels:
+    hosttype: nc-p1
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - dest:
+        path: .oob.credential
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ipmi_admin_password
+        path: .
+data:
+  oob:
+    type: 'ipmi'
+    network: 'oob'
+    account: 'tier4'
+  primary_network: 'oam'
+  hardware_profile: dell_r740_purley_nc
+  interfaces:
+    pxe:
+      device_link: pxe
+      slaves:
+        - 'pxe_nic01'
+      networks:
+        - 'pxe'
+    bond1:
+      device_link: bond1
+      slaves:
+        - 'gp_nic01'
+        - 'gp_nic02'
+      networks:
+        - 'oam'
+        - 'storage'
+        - 'overlay'
+        - 'calico'
+    p2p2:
+      slaves:
+        - 'dp_nic01'
+      sriov:
+        vf_count: 64
+        trustedmode: false
+    p7p1:
+      slaves:
+        - 'dp_nic02'
+      sriov:
+        vf_count: 64
+        trustedmode: false
+  storage:
+    physical_devices:
+      bootdisk:
+        labels:
+          bootdrive: 'true'
+        partitions:
+          - name: 'root'
+            size: '30g'
+            bootable: true
+            filesystem:
+              mountpoint: '/'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'boot'
+            size: '1g'
+            filesystem:
+              mountpoint: '/boot'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var_log'
+            size: '100g'
+            filesystem:
+              mountpoint: '/var/log'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var_crash'
+            size: '70g'
+            filesystem:
+              mountpoint: '/var/crash'
+              fstype: 'ext4'
+              mount_options: 'defaults,nofail'
+          - name: 'var'
+            size: '>250g'
+            filesystem:
+              mountpoint: '/var'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+      ephemeral:
+        partitions:
+          - name: 'nova_instance'
+            size: '99%'
+            filesystem:
+              mountpoint: '/var/lib/nova'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+  platform:
+    image: 'bionic'
+    kernel: 'ga-18.04'
+    kernel_params:
+      kernel_package: 'linux-image-4.15.0-64-generic'
+      console: 'ttyS1,115200n8'
+      intel_iommu: 'on'
+      iommu: 'pt'
+      amd_iommu: 'on'
+      cgroup_disable: 'hugetlb'
+      transparent_hugepage: 'never'
+      hugepagesz: 'hardwareprofile:hugepages.dpdk.size'
+      hugepages: 'hardwareprofile:hugepages.dpdk.count'
+      default_hugepagesz: 'hardwareprofile:hugepages.dpdk.size'
+      isolcpus: 'hardwareprofile:cpuset.kvm'
+  metadata:
+    owner_data:
+      hosttype: nc-p1-r740
+      tenant-ceph-osd: enabled
+      openstack-nova-compute: enabled
+      openvswitch: enabled
+      sriov: enabled
+      openstack-libvirt: kernel
+      beta.kubernetes.io/fluentd-ds-ready: 'true'
+      node-exporter: enabled
+      fluentd: enabled
+...

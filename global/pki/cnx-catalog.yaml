@@ -1,0 +1,22 @@
+---
+schema: promenade/PKICatalog/v1
+metadata:
+  schema: metadata/Document/v1
+  name: cnx-catalog
+  labels:
+    name: cnx-catalog
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  certificate_authorities:
+    cnx-api:
+      description: CA for tsee cnx API
+      certificates:
+        - document_name: cnx-api
+          description: Server certificate for tsee cnx extention API
+          common_name: cnx-api
+          kubernetes_service_names:
+            - cnx-api.kube-system.svc.cluster.local
+...

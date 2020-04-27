@@ -1,0 +1,166 @@
+---
+schema: deckhand/DataSchema/v1
+metadata:
+  schema: metadata/Control/v1
+  name: nc/MiniMirrorSource/v1
+data:
+  "$schema": http://json-schema.org/schema#
+  "$id": "#/properties/source"
+  type: object
+  title: Source
+  required:
+    - name
+    - url
+    - key_url
+    - aptly_config
+    - components
+    - subrepos
+  properties:
+    name:
+      "$id": "#/properties/data/properties/name"
+      type: string
+      title: Source Name
+      default: ''
+      examples:
+        - ubuntu
+        - linux_dell
+    url:
+      "$id": "#/properties/data/properties/url"
+      type: string
+      title: Source URL
+      default: ''
+      examples:
+        - https://artifacts-nc.auk3.cci.att.com/artifactory/mirantis-dev-ceph/xenial
+    key_url:
+      "$id": "#/properties/data/properties/key_url"
+      type: string
+      title: Source Repository Public Key URL
+      default: ''
+      examples:
+        - https://artifacts-nc.auk3.cci.att.com/artifactory/mirantis-dev-ceph/xenial/archive-ceph-mimic.key
+    aptly_config:
+      "$id": "#/properties/data/properties/aptly_config"
+      type: string
+      title: Aptly Config
+      default: ''
+      examples:
+        - |
+          {
+            "rootDir": "/opt/.aptly",
+            "downloadConcurrency": 4,
+            "downloadSpeedLimit": 0,
+            "architectures": ["amd64"],
+            "dependencyFollowSuggests": false,
+            "dependencyFollowRecommends": false,
+            "dependencyFollowAllVariants": false,
+            "dependencyFollowSource": false,
+            "dependencyVerboseResolve": false,
+            "gpgDisableSign": false,
+            "gpgDisableVerify": false,
+            "gpgProvider": "gpg",
+            "downloadSourcePackages": false,
+            "skipLegacyPool": true,
+            "ppaDistributorID": "ubuntu",
+            "ppaCodename": "",
+            "FileSystemPublishEndpoints": {
+              "test": {
+                "rootDir": "/opt/aptly-publish",
+                "linkMethod": "copy",
+                "verifyMethod": "md5"
+              }
+            },
+            "S3PublishEndpoints": {
+              "test": {
+                "region": "us-east-1",
+                "bucket": "repo",
+                "endpoint": "",
+                "awsAccessKeyID": "",
+                "awsSecretAccessKey": "",
+                "prefix": "",
+                "acl": "public-read",
+                "storageClass": "",
+                "encryptionMethod": "",
+                "plusWorkaround": false,
+                "disableMultiDel": false,
+                "forceSigV2": false,
+                "debug": false
+              }
+            },
+            "SwiftPublishEndpoints": {
+              "test": {
+                "container": "repo",
+                "osname": "",
+                "password": "",
+                "prefix": "",
+                "authurl": "",
+                "tenant": "",
+                "tenantid": "",
+                "domain": "",
+                "domainid": "",
+                "tenantdomain": "",
+                "tenantdomainid": ""
+              }
+            }
+          }
+    components:
+      "$id": "#/properties/data/properties/components"
+      type: array
+      title: Source Repository Components
+      items:
+        "$id": "#/properties/data/properties/components/items"
+        type: string
+        title: APT Repository Component
+        default: ''
+        examples:
+          - main
+          - universe
+          - multiverse
+    subrepos:
+      "$id": "#/properties/data/properties/subrepos"
+      type: array
+      title: APT Sub-repositories
+      items:
+        "$id": "#/properties/data/properties/subrepos/items"
+        type: object
+        title: APT Sub-repository
+        required:
+          - distribution
+          - packages
+        properties:
+          distribution:
+            "$id": "#/properties/data/properties/subrepos/items/properties/distribution"
+            type: string
+            title: Ubuntu Distribution
+            default: ''
+            examples:
+              - xenial
+              - xenial-updates
+              - bionic
+              - bionic-updates
+          packages:
+            "$id": "#/properties/data/properties/subrepos/items/properties/packages"
+            type: array
+            title: APT Packages
+            items:
+              "$id": "#/properties/data/properties/subrepos/items/properties/packages/items"
+              type: object
+              title: APT Package
+              required:
+                - name
+              properties:
+                name:
+                  "$id": "#/properties/data/properties/subrepos/items/properties/packages/items/properties/name"
+                  type: string
+                  title: Package Name
+                  default: ''
+                  examples:
+                    - tmux
+                    - vim
+                version:
+                  "$id": "#/properties/data/properties/subrepos/items/properties/packages/items/properties/version"
+                  type: string
+                  title: Package Version
+                  default: ''
+                  examples:
+                    - 13.2.4-2~u16.04
+...

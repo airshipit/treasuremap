@@ -1,0 +1,49 @@
+---
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: node-reboot
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: global
+  labels:
+    application: 'drydock'
+    name: node-reboot-global
+  substitutions:
+    - src:
+        schema: pegleg/Script/v1
+        name: node-reboot
+        path: .
+      dest:
+        path: .assets[1].data
+data:
+  signaling: false
+  assets:
+    - path: /etc/systemd/system/node-reboot.service
+      type: unit
+      permissions: '444'
+      data: |
+        [Unit]
+        Description=Service to manage rebootign a node if required
+        DefaultDependencies=no
+        After=linux-crashdump-install.service
+        Before=promjoin.service
+        After=network-online.target local-fs.target cloud-init.target
+
+        [Service]
+        Type=oneshot
+        ExecStart=/opt/node-reboot.sh -s 30
+        RemainAfterExit=true
+
+        [Install]
+        WantedBy=airship.target
+
+      data_pipeline:
+        - utf8_decode
+    - path: /opt/node-reboot.sh
+      type: file
+      permissions: '700'
+      data_pipeline:
+        - utf8_decode
+...

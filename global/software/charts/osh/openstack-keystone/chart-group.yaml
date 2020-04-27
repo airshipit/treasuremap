@@ -4,8 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: openstack-keystone
   labels:
-    name: openstack-keystone-chart-group-global
-    component: keystone
+    name: openstack-keystone-global
   layeringDefinition:
     abstract: false
     layer: global

@@ -1,0 +1,48 @@
+---
+schema: deckhand/PublicKey/v1
+metadata:
+  schema: metadata/Document/v1
+  name: aic_repo_key
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+#
+# pub   rsa2048 2014-11-28 [SC] [expires: 2024-11-25]
+#       3672C5AF7D987C04F31E1976958CAD0460DF77A9
+# uid                      am240k@att.com (AIC Cloud Key) <am240k@att.com>
+# sub   rsa2048 2014-11-28 [E] [expires: 2024-11-25]
+#
+data: |-
+  -----BEGIN PGP PUBLIC KEY BLOCK-----
+  Version: GnuPG v1.4.11 (GNU/Linux)
+
+  mQENBFR4vz4BCACpnkOdegBZdFQ9Mg3fS2xkkFYJGoE6KIcF6UqMnqo0+w4emEfD
+  9ph4DApKEuFR5AUDs9Ey92FdiaaNJo/zvITN0bRQlZecTanJ7Et+pIJhShtepL7z
+  ners2TUYX0lUwPVs7NkEh3IQSDE4og63tzwzC4N/AXT+bUu0y6pScI8uyFvxBhRX
+  7C3UDvTeAZWjr4NDtzp7eRT4WDlaJYYwAa4diDAREZaqZQ1YiXvIvQMGIFEwDMR/
+  jfpkVQwf1IRbK+E7vTw8JzCHdsj4bnY4PJAgWVkDiVYMf91yLGJZmYH6EDWH46kn
+  INBvYz7cgPIzSaXrX0K+4TLbeFqI/dzYNN8PABEBAAG0L2FtMjQwa0BhdHQuY29t
+  IChBSUMgQ2xvdWQgS2V5KSA8YW0yNDBrQGF0dC5jb20+iQE+BBMBAgAoBQJUeL8+
+  AhsDBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCVjK0EYN93qS+F
+  B/9cLoE0oFXzbStzhP/reOcCl8B+bL5s9OLppSMj3XILVv1fBLKzxHmLqS0Nt6tp
+  LotmUbVnby8AK8d2bJa+d31Ug17hZJw6a9XSwFzgYRe8ftYHfoecThXTm1a29GXX
+  TPnAlTmWPmxaYUKaZ6v2P/KYGG/Chv6dClo213F8nnaZFQ4/AIiJFvdFGKdemPzv
+  tNASeauKL7VC92OKWD0VGvw0pvsIgQ5Io6V6sVS99jt9bab4StD44uVj+zRufmZg
+  gGvCk2MA63N3Ol83cBllprtxxxqVgFUZLXehX+lLqS3Thhx2vY2vHOLikyfSrsNF
+  ANUkd8DXhoyBon5/aSZ/8mzeuQENBFR4vz4BCACz5koyNXgO5GtJl2yxURfaQqNa
+  6U8RMVLX8tLqX6MGIzin8l/qBqrvxT7KKN2TDU5vtLSX0lFbjHzunha4zFPuuNkq
+  0+ysNsrqhbE2SpLqptPhf2YSMrgz3AuaYzKcNwCeILgtamPnWu+IKJJWHTflHHQj
+  lBxg21O2tZgRGIaOxMjicCb8XX7Mn7UCDK4B15LHTbxgLuYuTJL/Z2tr4K+oFc29
+  IKlYOAXbAL8gwcnGLCpOH7eDPQaQfLBreeSsldly7mW3BfvmapGYPRKrU0Qm4uM/
+  4vG5ygz3lJbbiKSTKZInF8CjSwPqC6R/+KPF00DMHkkG2uzJygcZmCAA4wWNABEB
+  AAGJASUEGAECAA8FAlR4vz4CGwwFCRLMAwAACgkQlYytBGDfd6kUxQf7BbBV/2LS
+  yRB2NjuOIcOgc0W2sadhymBoZJ5xcmvdC9q65gtOmcAN5Apftz8XKHs6zs49+624
+  hpS0k84TPkJol28B2khUD+iaYeV5qcJ1L28qYNtd6GTro/AH8Cpvtu5PLdQQNg8u
+  Pg0MO9oYeq7X/IclSexpFwLBqX4QN2j375KevLl3jqg3kqr41nre6rKkKz5RApD8
+  gnxwujJF6jZl0xqZtc7MHhedoZReMtY/rBDnt+s14N4YbxtjhRnCpV7IQQt5hy8U
+  VUhi312gc2uGAC+TRcSZJNNMW0jrTrXs2oJmzVGAMMPwr7mt9H1akUq6koEnT0CD
+  JGc+akf1+Py4Qw==
+  =VlE2
+  -----END PGP PUBLIC KEY BLOCK-----
+...

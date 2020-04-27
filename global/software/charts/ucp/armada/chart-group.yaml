@@ -3,15 +3,16 @@ schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-armada
-  labels:
-    name: ucp-armada-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
   storagePolicy: cleartext
+  labels:
+    name: chartgroup-ucp-armada-global
 data:
-  description: Armada
-  sequenced: true
+  description: Armada and Tiller
   chart_group:
     - ucp-tiller
     - ucp-armada
+  sequenced: true
+...

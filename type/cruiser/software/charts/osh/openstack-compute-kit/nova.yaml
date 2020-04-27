@@ -1,0 +1,47 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nova
+  labels:
+    name: nova-cruiser
+    component: nova
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+        name: nova-global
+    actions:
+        - method: merge
+          path: .
+  storagePolicy: cleartext
+  substitutions:
+    # Nova config for OVS-DPDK
+    - src:
+        schema: drydock/HardwareProfile/v1
+        name: dell_r740_purley_adv_nc
+        path: .cpu_sets.vcpu_pin_set
+      dest:
+        path: .values.conf.nova.DEFAULT.vcpu_pin_set
+data:
+  values:
+    pod:
+      use_fqdn:
+        compute: false
+    network:
+      backend:
+       - openvswitch
+       - sriov
+    conf:
+      nova:
+        libvirt:
+          virt_type: kvm
+        DEFAULT:
+          force_config_drive: true
+          cpu_allocation_ratio: 1.0
+        pci:
+          alias: '{"name": "numa0", "capability_type": "pci", "product_id": "154c", "vendor_id": "8086", "device_type": "type-PCI", "numa_policy": "required"}'
+          ## NOTE: Exclude vf0 from each of the sriov nic
+          passthrough_whitelist: |
+              [{"address":{"domain":"0000","bus":"5e","slot":"02","function":"[1-7]"},"physical_network":"sriovnet1", "trusted": "true"},{"address":{"domain":"0000","bus":"5e","slot":"0[3-5]","function":".*"},"physical_network":"sriovnet1", "trusted": "true"},{"address":{"domain":"0000","bus":"87","slot":"0a","function":"[1-7]"},"physical_network":"sriovnet2", "trusted": "true"},{"address":{"domain":"0000","bus":"87","slot":"0[b-d]","function":".*"},"physical_network":"sriovnet2", "trusted": "true"}]
+...

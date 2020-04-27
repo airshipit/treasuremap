@@ -4,8 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: openstack-cinder
   labels:
-    name: openstack-cinder-chart-group-global
-    component: cinder
+    name: openstack-cinder-global
   layeringDefinition:
     abstract: false
     layer: global

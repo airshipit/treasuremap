@@ -51,6 +51,24 @@ metadata:
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: osh_service_accounts
+        path: .osh.oslo_db.sst
+      dest:
+        path: .values.endpoints.oslo_db.auth.sst
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.oslo_db.audit
+      dest:
+        path: .values.endpoints.oslo_db.auth.audit
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.prometheus_mysql_exporter.user
+      dest:
+        path: .values.endpoints.oslo_db.auth.exporter
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
         path: .osh.prometheus_mysql_exporter.user
       dest:
         path: .values.endpoints.prometheus_mysql_exporter.auth.user
@@ -63,7 +81,25 @@ metadata:
         name: osh_oslo_db_admin_password
         path: .
     - dest:
+        path: .values.endpoints.oslo_db.auth.sst.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_oslo_db_sst_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_db.auth.audit.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_oslo_db_audit_password
+        path: .
+    - dest:
         path: .values.endpoints.oslo_db.auth.exporter.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_oslo_db_exporter_password
+        path: .
+    - dest:
+        path: .values.endpoints.prometheus_mysql_exporter.auth.user.password
       src:
         schema: deckhand/Passphrase/v1
         name: osh_oslo_db_exporter_password
@@ -74,19 +110,49 @@ data:
   release: openstack-mariadb
   namespace: openstack
   wait:
-    timeout: 900
+    timeout: 1800
     labels:
-      release_group: airship-openstack-mariadb
+      release_group: clcp-openstack-mariadb
+    resources:
+      - type: job
+      - type: statefulset
+        min_ready: 66%
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
     no_hooks: false
+    options:
+      force: true
     pre:
       delete:
         - type: job
           labels:
-            release_group: airship-openstack-mariadb
+            release_group: clcp-openstack-mariadb
   values:
+    volume:
+      size: 30Gi
+      backup:
+        size: 50Gi
+    monitoring:
+      prometheus:
+        enabled: true
+    pod:
+      replicas:
+        error_page: 2
+      affinity:
+        anti:
+          type:
+            server: requiredDuringSchedulingIgnoredDuringExecution
+            ingress: requiredDuringSchedulingIgnoredDuringExecution
+            ingress-error-pages: requiredDuringSchedulingIgnoredDuringExecution
+      lifecycle:
+        upgrades:
+          deployments:
+            pod_replacement_strategy: RollingUpdate
+            rolling_update:
+              max_unavailable: 50%
     labels:
       server:
         node_selector_key: openstack-control-plane
@@ -94,21 +160,23 @@ data:
       prometheus_mysql_exporter:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
-    monitoring:
-      prometheus:
-        enabled: true
+    jobs:
+      backup_mariadb:
+        cron: "0 */6 * * *"
+    manifests:
+      cron_job_mariadb_backup: true
+      pvc_backup: true
   dependencies:
-    - openstack-mariadb-htk
+    - os-mariadb-htk
 ...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: openstack-mariadb-htk
+  name: os-mariadb-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -116,10 +184,16 @@ metadata:
         path: .charts.osh.mariadb-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: openstack-mariadb-htk
-  release: openstack-mariadb-htk
-  namespace: openstack-mariadb-htk
+  chart_name: os-mariadb-htk
+  release: os-mariadb-htk
+  namespace: os-mariadb-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

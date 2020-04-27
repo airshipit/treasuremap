@@ -1,0 +1,30 @@
+---
+schema: 'drydock/Region/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: region-profile
+  labels:
+    name: region-profile
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - dest:
+        path: .repositories.main_archive
+      src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .packages.repositories.main_archive
+    - dest:
+        path: .repositories.ceph
+      src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .packages.repositories.ceph
+data:
+  tag_definitions: []
+  authorized_keys: []
+  repositories:
+    remove_unlisted: true
+...

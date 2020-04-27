@@ -1,0 +1,20 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-keystone-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: chartgroup-ucp-keystone-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: chartgroup-ucp-keystone-scaled-type
+  storagePolicy: cleartext
+data:
+  chart_group:
+    - ucp-keystone-scaled
+...

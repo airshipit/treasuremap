@@ -3,6 +3,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: tenant-ceph-rgw
+  labels:
+    name: tenant-ceph-rgw-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -93,7 +95,13 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-tenant-ceph-rgw
+      release_group: clcp-tenant-ceph-rgw
+    resources:
+      - type: deployment
+        min_ready: 2
+      - type: job
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -102,7 +110,13 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-tenant-ceph-rgw
+            release_group: clcp-tenant-ceph-rgw
+        - type: pod
+          labels:
+            release_group: clcp-tenant-ceph-rgw
+            component: rgw-test
+  test:
+    enabled: true
   values:
     labels:
       job:
@@ -120,26 +134,24 @@ data:
         namespace: tenant-ceph
     deployment:
       ceph: true
-      client_secrets: false
-      rbd_provisioner: false
-      cephfs_provisioner: false
       rgw_keystone_user_and_endpoints: true
     bootstrap:
       enabled: false
     pod:
+      affinity:
+        anti:
+          type:
+            default: requiredDuringSchedulingIgnoredDuringExecution
       replicas:
-        rgw: 2
+        rgw: 3
     conf:
       rgw_ks:
         enabled: true
-      config:
-          #NOTE (portdirect): See http://tracker.ceph.com/issues/21226
-          rgw_keystone_token_cache_size: '0'
     ceph_client:
       configmap: tenant-ceph-etc
     secrets:
       keyrings:
         admin: pvc-tceph-client-key
   dependencies:
-    - tenant-ceph-htk
+    - ceph-htk
 ...

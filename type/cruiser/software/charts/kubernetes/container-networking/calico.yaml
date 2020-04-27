@@ -1,0 +1,107 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-calico
+  labels:
+    name: kubernetes-calico
+    layer: type
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: kubernetes-calico-global
+    actions:
+      - method: delete
+        path: .values.networking.settings
+      - method: merge
+        path: .
+
+  substitutions:
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.bgp.ipv4.public_service_cidr
+      dest:
+        path: .values.networking.bgp.ipv4.additional_cidrs[0]
+    # Substitution of BGP peer IPs into list of BGP peers
+    # NOTE: The number of substitutions must match:
+    # 1. The size of the BGP peer list below
+    # 2. The number of peer IPs defined in common-addresses.yaml
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.bgp.ipv4.peers[0]
+      dest:
+        path: .values.networking.bgp.ipv4.peers[0].spec.peerIP
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.bgp.ipv4.peers[1]
+      dest:
+        path: .values.networking.bgp.ipv4.peers[1].spec.peerIP
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.pod_cidr
+      dest:
+        path: .values.networking.bgp.ipv4.community_cidr_ref
+        pattern: insert_ksn_vlan_cidr
+        recurse:
+          depth: 2
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.bgp.ipv4.public_service_cidr
+      dest:
+        path: .values.networking.bgp.ipv4.community_cidr_ref
+        pattern: insert_ingress_vip_cidr
+        recurse:
+          depth: 2
+
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      node:
+        CALICO_IPV4POOL_IPIP: "Never"
+    networking:
+      settings:
+        mesh: "off"
+        ippool:
+          ipip:
+            enabled: "false"
+            mode: "Never"
+      bgp:
+        asnumber: 64671
+        ipv4:
+          # NOTE: The size of this list (number of peers) needs to match:
+          # 1. The number of substitutions into this list (above)
+          # 2. The number of peer IPs defined in common-addresses.yaml
+          peers:
+            - apiVersion: projectcalico.org/v3
+              kind: BGPPeer
+              metadata:
+                name: peer-0
+              spec:
+                asNumber: 64688
+            - apiVersion: projectcalico.org/v3
+              kind: BGPPeer
+              metadata:
+                name: peer-1
+              spec:
+                asNumber: 64688
+          community_cidr_ref:
+            ksn_vlan1:
+              community: 10040
+              cidr: insert_ksn_vlan_cidr
+            ksn_vlan2:
+              community: 10060
+              cidr: insert_ksn_vlan_cidr
+            ingress_vip1:
+              community: 10041
+              cidr: insert_ingress_vip_cidr
+            ingress_vip2:
+              community: 10061
+              cidr: insert_ingress_vip_cidr
+...

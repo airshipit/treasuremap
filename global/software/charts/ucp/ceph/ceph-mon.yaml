@@ -45,6 +45,12 @@ metadata:
         path: .ceph.ceph_mon
       dest:
         path: .values.endpoints.ceph_mon
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ceph.ceph_mgr
+      dest:
+        path: .values.endpoints.ceph_mgr
 
     # Secrets
     - dest:
@@ -59,11 +65,15 @@ data:
   release: ucp-ceph-mon
   namespace: ceph
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
     timeout: 1800
     labels:
-      release_group: airship-ucp-ceph-mon
+      release_group: clcp-ucp-ceph-mon
+    resources:
+      - type: daemonset
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -72,7 +82,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-ceph-mon
+            release_group: clcp-ucp-ceph-mon
   values:
     labels:
       job:
@@ -89,6 +99,10 @@ data:
       storage_secrets: true
     bootstrap:
       enabled: true
+    conf:
+      ceph:
+        global:
+          mon_data_avail_warn: 30
   dependencies:
     - ceph-htk
 ...

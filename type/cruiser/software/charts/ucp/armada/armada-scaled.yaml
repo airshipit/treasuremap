@@ -1,0 +1,22 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-armada-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-armada-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: ucp-armada-scaled-type
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        api: 2
+...

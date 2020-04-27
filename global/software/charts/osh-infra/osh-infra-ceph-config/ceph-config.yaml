@@ -48,7 +48,6 @@ metadata:
       dest:
         path: .values.endpoints.ceph_mon
 
-
 data:
   chart_name: osh-infra-ceph-config
   release: osh-infra-ceph-config
@@ -56,7 +55,9 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-osh-infra-ceph-config
+      release_group: clcp-osh-infra-ceph-config
+    resources:
+      - type: job
   install:
     no_hooks: false
   upgrade:
@@ -65,7 +66,13 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-osh-infra-ceph-config
+            release_group: clcp-osh-infra-ceph-config
+        - type: pod
+          labels:
+            release_group: clcp-osh-infra-ceph-config
+            component: test
+  test:
+    enabled: true
   values:
     labels:
       job:
@@ -79,7 +86,6 @@ data:
       client_secrets: true
       rbd_provisioner: false
       cephfs_provisioner: false
-      rgw_keystone_user_and_endpoints: false
     bootstrap:
       enabled: false
     storageclass:
@@ -90,5 +96,5 @@ data:
       cephfs:
         provision_storage_class: false
   dependencies:
-    - ceph-htk
+  - ceph-htk
 ...

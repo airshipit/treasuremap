@@ -1,0 +1,383 @@
+---
+# The purpose of this file is to define the site's endpoint catalog. This should
+# not need to be modified for a new site.
+schema: pegleg/EndpointCatalogue/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp_endpoints
+  labels:
+    name: ucp_endpoints-global
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  ucp:
+    identity:
+      namespace: ucp
+      name: keystone
+      hosts:
+        default: keystone-api
+        public: keystone
+      host_fqdn_override:
+        default: null
+      path:
+        default: /v3
+      scheme:
+        default: http
+      port:
+        admin:
+          default: 35357
+        api:
+          default: 80
+          public: 443
+    armada:
+      name: armada
+      hosts:
+        default: armada-api
+        public: armada
+      port:
+        api:
+          default: 8000
+      path:
+        default: /api/v1.0
+      scheme:
+        default: http
+      host_fqdn_override:
+        default: null
+    deckhand:
+      name: deckhand
+      hosts:
+        default: deckhand-int
+        public: deckhand-api
+      port:
+        api:
+          default: 9000
+      path:
+        default: /api/v1.0
+      scheme:
+        default: http
+      host_fqdn_override:
+        default: null
+    mini_mirror:
+      name: mini-mirror
+      hosts:
+        default: mini-mirror-int
+        public: mini-mirror
+      host_fqdn_override:
+        default: null
+      path:
+        default: /
+      scheme:
+        default: http
+      port:
+        api:
+          default: 80
+    postgresql:
+      name: postgresql
+      hosts:
+        default: postgresql
+      path: /DB_NAME
+      scheme: postgresql+psycopg2
+      port:
+        postgresql:
+          default: 5432
+      host_fqdn_override:
+        default: null
+    prometheus_postgresql_exporter:
+      namespace: ucp
+      hosts:
+        default: postgresql-exporter
+      host_fqdn_override:
+        default: null
+      path:
+        default: /metrics
+      scheme:
+        default: 'http'
+      port:
+        metrics:
+          default: 9187
+    postgresql_airflow_celery:
+      name: postgresql_airflow_celery_db
+      hosts:
+        default: postgresql
+      path: /DB_NAME
+      scheme: db+postgresql
+      port:
+        postgresql:
+          default: 5432
+      host_fqdn_override:
+        default: null
+    oslo_db:
+      hosts:
+        default: mariadb
+        discovery: mariadb-discovery
+      host_fqdn_override:
+        default: null
+      path: /DB_NAME
+      scheme: mysql+pymysql
+      port:
+        mysql:
+          default: 3306
+        wsrep:
+          default: 4567
+    prometheus_mysql_exporter:
+      namespace: ucp
+      hosts:
+        default: mysql-exporter
+      host_fqdn_override:
+        default: null
+      path:
+        default: /metrics
+      scheme:
+        default: 'http'
+      port:
+        metrics:
+          default: 9104
+    key_manager:
+      name: barbican
+      hosts:
+        default: barbican-api
+        public: barbican
+      host_fqdn_override:
+        default: null
+      path:
+        default: /
+      scheme:
+        default: http
+      port:
+        api:
+          default: 9311
+          public: 80
+    airflow_oslo_messaging:
+      namespace: null
+      statefulset:
+        replicas: 1
+        name: clcp-ucp-rabbitmq-rabbitmq
+      hosts:
+        default: rabbitmq
+      host_fqdn_override:
+        default: null
+      path: /airflow
+      scheme: amqp
+      port:
+        amqp:
+          default: 5672
+        http:
+          default: 15672
+    oslo_messaging:
+      namespace: null
+      statefulset:
+        replicas: 1
+        name: clcp-ucp-rabbitmq-rabbitmq
+      hosts:
+        default: rabbitmq
+      host_fqdn_override:
+        default: null
+      path: /keystone
+      scheme: rabbit
+      port:
+        amqp:
+          default: 5672
+    oslo_cache:
+      hosts:
+        default: memcached
+      host_fqdn_override:
+        default: null
+      port:
+        memcache:
+          default: 11211
+    physicalprovisioner:
+      name: drydock
+      hosts:
+        default: drydock-api
+      port:
+        api:
+          default: 9000
+          nodeport: 31900
+      path:
+        default: /api/v1.0
+      scheme:
+        default: http
+      host_fqdn_override:
+        default: null
+    maas_region:
+      name: maas-region
+      hosts:
+        default: maas-region
+      path:
+        default: /MAAS
+      scheme:
+        default: 'http'
+      port:
+        region_api:
+          default: 80
+          nodeport: 31900
+          podport: 80
+          public: 80
+        region_proxy:
+          default: 8000
+      host_fqdn_override:
+        default: null
+    webhook_apiserver:
+      name: webhook_apiserver
+      hosts:
+        default: apiserver-webhook
+        internal: apiserver-webhook-int
+      port:
+        api:
+          default: 6443
+        webhook:
+          default: 8443
+      path:
+        default: /
+        webhook: /webhook
+      scheme:
+        default: https
+      host_fqdn_override:
+        default: null
+    maas_ingress:
+      hosts:
+        default: maas-ingress
+        error_pages: maas-ingress-error
+      host_fqdn_override:
+        public: null
+      port:
+        http:
+          default: 80
+        https:
+          default: 443
+        ingress_default_server:
+          default: 8383
+        error_pages:
+          default: 8080
+          podport: 8080
+        healthz:
+          podport: 10283
+        status:
+          podport: 18089
+    kubernetesprovisioner:
+      name: promenade
+      hosts:
+        default: promenade-api
+      port:
+        api:
+          default: 80
+      path:
+        default: /api/v1.0
+      scheme:
+        default: http
+      host_fqdn_override:
+        default: null
+    shipyard:
+      name: shipyard
+      hosts:
+        default: shipyard-int
+        public: shipyard-api
+      port:
+        api:
+          default: 9000
+          public: 80
+      path:
+        default: /api/v1.0
+      scheme:
+        default: http
+      host_fqdn_override:
+        default: null
+    prometheus_openstack_exporter:
+      namespace: ucp
+      hosts:
+        default: openstack-metrics
+      host_fqdn_override:
+        default: null
+      path:
+        default: null
+      scheme:
+        default: "http"
+      port:
+        exporter:
+          default: 9103
+  ceph:
+    object_store:
+      name: swift
+      namespace: ucp
+      hosts:
+        default: ceph-rgw
+        public: radosgw
+      host_fqdn_override:
+        default: null
+      path:
+        default: /swift/v1/KEY_$(tenant_id)s
+      scheme:
+        default: http
+      port:
+        api:
+          default: 8088
+          public: 80
+    ceph_object_store:
+      name: radosgw
+      namespace: ceph
+      hosts:
+        default: ceph-rgw
+        public: radosgw
+      host_fqdn_override:
+        default: null
+      path:
+        default: /auth/v1.0
+      scheme:
+        default: "http"
+      port:
+        api:
+          default: 8088
+          public: 80
+    ceph_mon:
+      namespace: ceph
+      hosts:
+        default: ceph-mon
+        discovery: ceph-mon-discovery
+      host_fqdn_override:
+        default: null
+      port:
+        mon:
+          default: 6789
+        mon_msgr2:
+          default: 3300
+    tenant_ceph_mon:
+      namespace: tenant-ceph
+      hosts:
+        default: ceph-mon
+        discovery: ceph-mon-discovery
+      host_fqdn_override:
+        default: null
+      port:
+        mon:
+          default: 6790
+        mon_msgr2:
+          default: 3400
+    tenant_ceph_mgr:
+      namespace: tenant-ceph
+      hosts:
+        default: ceph-mgr
+      host_fqdn_override:
+        default: null
+      port:
+        mgr:
+          default: 7001
+        metrics:
+          default: 9284
+      scheme:
+        default: http
+    ceph_mgr:
+      namespace: ceph
+      hosts:
+        default: ceph-mgr
+      host_fqdn_override:
+        default: null
+      port:
+        mgr:
+          default: 7000
+        metrics:
+          default: 9283
+      scheme:
+        default: http
+...

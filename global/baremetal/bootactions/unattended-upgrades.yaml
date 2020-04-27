@@ -1,0 +1,33 @@
+---
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: disable-unattended-upgrades
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: global
+  labels:
+    application: 'drydock'
+data:
+  signaling: false
+  assets:
+    - path: /etc/systemd/system/disable-unattended-upgrades.service
+      type: unit
+      permissions: '444'
+      data: |-
+        [Unit]
+        Description=Disable unattended upgrades
+        After=network-online.target local-fs.target
+
+        [Service]
+        Type=oneshot
+        # Due to bug https://github.com/systemd/systemd/issues/5133
+        # on ubuntu 16.04, we have to mash these all on the same line
+        ExecStart=/bin/bash -c "/bin/chmod 644 /etc/cron.daily/apt-compat ; /bin/systemctl disable apt-daily-upgrade.timer apt-daily.timer ; /bin/systemctl stop apt-daily-upgrade.timer apt-daily.timer"
+
+        [Install]
+        WantedBy=multi-user.target
+      data_pipeline:
+        - utf8_decode
+...

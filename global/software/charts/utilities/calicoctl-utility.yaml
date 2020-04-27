@@ -41,6 +41,13 @@ metadata:
         path: .
       dest:
         path: .values.endpoints.etcd.auth.client.tls.key
+    # Location corridor
+    - src:
+        schema: pegleg/CommonSoftwareConfig/v1
+        name: common-software-config
+        path: .location.location_corridor
+      dest:
+        path: .values.conf.utility.location_corridor
     # IP addresses
     - src:
         schema: pegleg/CommonAddresses/v1
@@ -57,7 +64,7 @@ data:
   wait:
     timeout: 600
     labels:
-      release_group: airship-calicoctl-utility
+      release_group: clcp-calicoctl-utility
   install:
    no_hooks: false
   upgrade:
@@ -65,7 +72,7 @@ data:
   values:
     labels:
       utility:
-        node_selector_key: utility
+        node_selector_key: ucp-control-plane
         node_selector_value: enabled
     endpoints:
       etcd:

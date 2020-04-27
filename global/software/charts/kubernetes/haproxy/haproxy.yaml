@@ -3,8 +3,6 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: haproxy
-  labels:
-    name: haproxy-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -41,22 +39,38 @@ data:
   release: haproxy
   namespace: kube-system
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
-    timeout: 600
+    timeout: 1800
     labels:
-      release_group: airship-haproxy
+      release_group: clcp-haproxy
+  test:
+    enabled: true
   upgrade:
     no_hooks: false
     pre:
       delete:
         - type: job
           labels:
-            release_group: airship-haproxy
+            release_group: clcp-haproxy
   values:
+    pod:
+      lifecycle:
+        upgrades:
+          daemonsets:
+            pod_replacement_strategy: RollingUpdate
+            haproxy_anchor:
+              enabled: true
+              min_ready_seconds: 0
+              max_unavailable: '50%'
+      security_context:
+        haproxy:
+          pod:
+            runAsUser: 0
     conf:
       anchor:
         kubernetes_url: https://KUBERNETES_IP:443
+        enable_cleanup: false
         services:
           default:
             kubernetes:
@@ -72,6 +86,7 @@ data:
                   - option tcp-check
                   - option redispatch
           kube-system:
+            kubernetes-apiserver: null
             kubernetes-etcd:
               server_opts: "check port 2379"
               conf_parts:
@@ -86,6 +101,7 @@ data:
                   - option redispatch
   dependencies:
     - haproxy-htk
+...
 ---
 schema: armada/Chart/v1
 metadata:
@@ -94,7 +110,6 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -102,10 +117,16 @@ metadata:
         path: .charts.kubernetes.haproxy-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
   chart_name: haproxy-htk
   release: haproxy-htk
   namespace: haproxy-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

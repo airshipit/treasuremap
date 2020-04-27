@@ -5,7 +5,6 @@ metadata:
   name: openstack-ingress-controller
   labels:
     name: openstack-ingress-controller-global
-    component: ingress
   layeringDefinition:
     abstract: false
     layer: global
@@ -32,7 +31,12 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-openstack-ingress-controller
+      release_group: clcp-openstack-ingress-controller
+    resources:
+      - type: deployment
+        min_ready: 33%
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -41,7 +45,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-openstack-ingress-controller
+            release_group: clcp-openstack-ingress-controller
   values:
     labels:
       server:
@@ -54,18 +58,38 @@ data:
       replicas:
         ingress: 2
         error_page: 2
+      lifecycle:
+        upgrades:
+          deployments:
+            pod_replacement_strategy: RollingUpdate
+            rolling_update:
+              max_unavailable: 50%
+    endpoints:
+      ingress:
+        port:
+          http:
+            default: 80
+          https:
+            default: 443
+          healthz:
+            default: 10254
+          stream:
+            default: 10247
+          profiler:
+            default: 10245
+          server:
+            default: 8181
   dependencies:
-    - ingress-htk
+    - openstack-ingress-htk
 ...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: ingress-htk
+  name: openstack-ingress-htk
   layeringDefinition:
     abstract: false
     layer: global
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -73,10 +97,16 @@ metadata:
         path: .charts.osh.ingress-htk
       dest:
         path: .source
+  storagePolicy: cleartext
 data:
-  chart_name: ingress-htk
-  release: ingress-htk
-  namespace: ingress-htk
+  chart_name: openstack-ingress-htk
+  release: openstack-ingress-htk
+  namespace: openstack-ingress-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
   values: {}
   dependencies: []
 ...

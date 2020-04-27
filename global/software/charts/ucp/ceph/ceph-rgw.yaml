@@ -2,10 +2,12 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: ucp-ceph-rgw
+  name: ucp-ceph-rgw-global
   layeringDefinition:
     abstract: false
     layer: global
+  labels:
+    name: ucp-ceph-rgw-global
   storagePolicy: cleartext
   substitutions:
     # Chart source
@@ -41,8 +43,8 @@ metadata:
     # Endpoints
     - src:
         schema: pegleg/EndpointCatalogue/v1
-        name: osh_endpoints
-        path: .osh.identity
+        name: ucp_endpoints
+        path: .ucp.identity
       dest:
         path: .values.endpoints.identity
     - src:
@@ -61,14 +63,14 @@ metadata:
     # Credentials
     - src:
         schema: pegleg/AccountCatalogue/v1
-        name: osh_service_accounts
-        path: .osh.keystone.admin
+        name: ucp_service_accounts
+        path: .ucp.keystone.admin
       dest:
         path: .values.endpoints.identity.auth.admin
     - src:
         schema: pegleg/AccountCatalogue/v1
-        name: osh_service_accounts
-        path: .osh.swift.keystone
+        name: ucp_service_accounts
+        path: .ceph.swift.keystone
       dest:
         path: .values.endpoints.identity.auth.swift
 
@@ -77,7 +79,7 @@ metadata:
         path: .values.endpoints.identity.auth.admin.password
       src:
         schema: deckhand/Passphrase/v1
-        name: osh_keystone_admin_password
+        name: ucp_keystone_admin_password
         path: .
     - dest:
         path: .values.endpoints.identity.auth.swift.password
@@ -89,11 +91,17 @@ metadata:
 data:
   chart_name: ucp-ceph-rgw
   release: ucp-ceph-rgw
-  namespace: ceph
+  namespace: ucp
   wait:
     timeout: 900
     labels:
-      release_group: airship-ucp-ceph-rgw
+      release_group: clcp-ucp-ceph-rgw
+    resources:
+      - type: deployment
+        min_ready: 2
+      - type: job
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -102,8 +110,12 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-ceph-rgw
+            release_group: clcp-ucp-ceph-rgw
+  test:
+    enabled: true
   values:
+    manifests:
+      job_bootstrap: true
     labels:
       job:
         node_selector_key: ucp-control-plane
@@ -113,27 +125,33 @@ data:
         node_selector_value: enabled
     endpoints:
       identity:
-        namespace: openstack
+        namespace: ucp
       object_store:
-        namespace: ceph
+        namespace: ucp
       ceph_mon:
         namespace: ceph
     deployment:
       ceph: true
-      rgw_keystone_user_and_endpoints: false
+      rgw_keystone_user_and_endpoints: true
     bootstrap:
       enabled: false
     pod:
+      affinity:
+        anti:
+          type:
+            default: preferredDuringSchedulingIgnoredDuringExecution
       replicas:
-        rgw: 2
+        rgw: 3
     conf:
       rgw_ks:
         enabled: true
-      config:
-          #NOTE (portdirect): See http://tracker.ceph.com/issues/21226
-          rgw_keystone_token_cache_size: '0'
+        config:
+          rgw_keystone_accepted_roles: "admin, member, swift_pool_ro, swift_pool_admin, swift_admin"
     ceph_client:
-      configmap: ceph-client-keys-etc
+      configmap: ceph-etc
+    secrets:
+      keyrings:
+        admin: pvc-ceph-client-key
   dependencies:
     - ceph-htk
 ...

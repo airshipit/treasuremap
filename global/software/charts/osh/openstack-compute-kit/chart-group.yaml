@@ -4,7 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: openstack-compute-kit
   labels:
-    name: openstack-compute-kit-chart-group-global
+    name: openstack-compute-kit-global
   layeringDefinition:
     abstract: false
     layer: global

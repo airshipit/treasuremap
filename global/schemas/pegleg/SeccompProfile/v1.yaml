@@ -14,6 +14,10 @@ data:
       type: 'string'
     savePath:
       type: 'string'
+    allowedProfileNames:
+      type: 'string'
+    defaultProfileName:
+      type: 'string'
     content:
       type: 'string'
-  required: ['seccompDirPath', 'savePath', 'content']
+  required: ['seccompDirPath', 'savePath', 'content', 'allowedProfileNames', 'defaultProfileName']

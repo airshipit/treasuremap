@@ -1,0 +1,103 @@
+---
+schema: pegleg/CommonAddresses/v1
+metadata:
+  schema: metadata/Document/v1
+  name: common-addresses
+  labels:
+    name: common-addresses-global
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # DNS
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .infrastructure.dns.upstream_servers
+      dest:
+        path: .dns.upstream_servers
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .infrastructure.dns.upstream_servers_joined
+      dest:
+        path: .dns.upstream_servers_joined
+    # LDAP
+    # NOTE: ldap.base_url below is only used by 5ec-seaworthy site.
+    # TODO: remove this substitution once we pin to globals versions
+    #       or refactor that site.
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .infrastructure.ldap.fqdn
+      dest:
+        path: .ldap.base_url
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .infrastructure.ldap.auth_path
+      dest:
+        path: .ldap.auth_path
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .infrastructure.ldap.common_name
+      dest:
+        path: .ldap.common_name
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .infrastructure.ldap.subdomain
+      dest:
+        path: .ldap.subdomain
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .infrastructure.ldap.domain
+      dest:
+        path: .ldap.domain
+    # NTP
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .infrastructure.ntp.servers
+      dest:
+        path: .ntp.servers
+    # SMTP
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .infrastructure.smtp.server
+      dest:
+        path: .smtp.server
+
+data:
+  dns:
+    # Kubernetes cluster domain. Do not change. This is internal to the cluster
+    # and should *not* be registered with upstream ATT EISS.
+    cluster_domain: cluster.local
+  kubernetes:
+    # misc k8s port settings
+    apiserver_port: 6443
+    haproxy_port: 6553
+    # Defines the k8s-apiserver node port range (default 30000-32767)
+    service_node_port_range: 30000-32767
+
+  # etcd port settings
+  etcd:
+    container_port: 2379
+    haproxy_port: 2378
+
+  # Environment proxy information.
+  # NOTE: Reference NC sites do not deploy behind a proxy, so this proxy section
+  # is empty.
+  # However, if you are in a lab that requires proxy, ensure that these proxy
+  # settings are overridden at the site level and reachable in your environment.
+  proxy:
+    http: ""
+    no_proxy: []
+
+  ovs-dpdk:
+    ovs_bridge_dpdk: 'br-phy-bond0'
+...

@@ -1,0 +1,67 @@
+---
+schema: drydock/HostProfile/v1
+metadata:
+    schema: metadata/Document/v1
+    name: nd-global
+    labels:
+        hosttype: nd-global
+    layeringDefinition:
+        abstract: true
+        layer: global
+    storagePolicy: cleartext
+    substitutions:
+        - dest:
+            path: .oob.credential
+          src:
+            schema: deckhand/Passphrase/v1
+            name: ipmi_admin_password
+            path: .
+data:
+    oob:
+        type: 'ipmi'
+        network: 'oob'
+        account: 'root'
+    storage:
+        physical_devices:
+            sda:
+                labels:
+                    bootdrive: 'true'
+                partitions:
+                    - name: 'root'
+                      size: '30g'
+                      bootable: true
+                      filesystem:
+                        mountpoint: '/'
+                        fstype: 'ext4'
+                        mount_options: 'defaults'
+                    - name: 'boot'
+                      size: '1g'
+                      filesystem:
+                        mountpoint: '/boot'
+                        fstype: 'ext4'
+                        mount_options: 'defaults'
+                    - name: 'var'
+                      size: '>300g'
+                      filesystem:
+                        mountpoint: '/var'
+                        fstype: 'ext4'
+                        mount_options: 'defaults'
+    platform:
+        image: 'xenial'
+        kernel: 'ga-16.04'
+        kernel_params:
+            console: 'ttyS1,115200n8'
+            cgroup_disable: 'hugetlb'
+            hugepagesz: '1G'
+            hugepages: '210'
+            isolcpus: '2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43'
+    metadata:
+        owner_data:
+            openstack-nova-compute: enabled
+            contrail-vrouter: dpdk
+            openstack-libvirt: dpdk
+            beta.kubernetes.io/fluentd-ds-ready: 'true'
+            sriov: enabled
+            node-exporter: enabled
+            fluentd: enabled
+...

@@ -1,0 +1,28 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-rabbitmq-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.ucp.rabbitmq-htk
+      dest:
+        path: .source
+  storagePolicy: cleartext
+data:
+  chart_name: ucp-rabbitmq-htk
+  release: ucp-rabbitmq-htk
+  namespace: ucp-rabbitmq-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []
+...

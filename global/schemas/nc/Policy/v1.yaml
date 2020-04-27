@@ -1,0 +1,15 @@
+---
+schema: deckhand/DataSchema/v1
+metadata:
+  schema: metadata/Control/v1
+  name: nc/Policy/v1
+data:
+  $schema: http://json-schema.org/schema#
+
+  type: object
+  properties:
+    policy:
+      type: object
+      additionalProperties: true
+
+...

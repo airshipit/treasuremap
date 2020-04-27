@@ -3,6 +3,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: tenant-ceph-config
+  labels:
+    name: tenant-ceph-config-global
   layeringDefinition:
     abstract: false
     layer: global
@@ -53,7 +55,9 @@ data:
   wait:
     timeout: 900
     labels:
-      release_group: airship-tenant-ceph-config
+      release_group: clcp-tenant-ceph-config
+    resources:
+      - type: job
   install:
     no_hooks: false
   upgrade:
@@ -62,24 +66,24 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-tenant-ceph-config
+            release_group: clcp-tenant-ceph-config
   values:
+    conf:
+      ceph:
+        global:
+          mon_host: ceph-mon.tenant-ceph.svc.cluster.local:6790
     labels:
       job:
         node_selector_key: tenant-ceph-control-plane
         node_selector_value: enabled
-      mds:
-        node_selector_key: tenant-ceph-mds
-        node_selector_value: enabled
-      mgr:
-        node_selector_key: tenant-ceph-mgr
+      provisioner:
+        node_selector_key: tenant-ceph-control-plane
         node_selector_value: enabled
     deployment:
       ceph: false
       client_secrets: true
       rbd_provisioner: false
       cephfs_provisioner: false
-      rgw_keystone_user_and_endpoints: false
     bootstrap:
       enabled: false
     storageclass:
@@ -88,10 +92,8 @@ data:
         parameters:
           userSecretName: pvc-tceph-client-key
           adminSecretNamespace: tenant-ceph
-      cephfs:
-        provision_storage_class: false
     manifests:
       helm_tests: false
   dependencies:
-    - tenant-ceph-htk
+    - ceph-htk
 ...

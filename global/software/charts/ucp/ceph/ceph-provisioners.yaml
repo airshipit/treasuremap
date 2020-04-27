@@ -17,6 +17,7 @@ metadata:
         path: .charts.ucp.ceph-provisioners
       dest:
         path: .source
+
     # Images
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -38,6 +39,8 @@ metadata:
         path: .storage.ceph.cluster_cidr
       dest:
         path: .values.network.cluster
+
+    # Endpoints
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: ucp_endpoints
@@ -58,11 +61,16 @@ data:
   release: ucp-ceph-provisioners
   namespace: ceph
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
     timeout: 900
     labels:
-      release_group: airship-ucp-ceph-provisioners
+      release_group: clcp-ucp-ceph-provisioners
+    resources:
+      - type: deployment
+        min_ready: 1
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -71,7 +79,7 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-ceph-provisioners
+            release_group: clcp-ucp-ceph-provisioners
   values:
     labels:
       job:
@@ -87,13 +95,12 @@ data:
       ceph: true
       client_secrets: false
       rbd_provisioner: true
-      cephfs_provisioner: true
+      cephfs_provisioner: false
     bootstrap:
       enabled: true
     pod:
       replicas:
-        cephfs_provisioner: 2
-        rbd_provisioner: 2
+        rbd_provisioner: 1
 
     conf:
       ceph:
@@ -104,6 +111,8 @@ data:
         ceph_configmap_name: ceph-client-keys-etc
         parameters:
           userSecretName: pvc-ceph-client-key
+      cephfs:
+        provision_storage_class: false
   dependencies:
     - ceph-htk
 ...

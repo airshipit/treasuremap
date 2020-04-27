@@ -3,9 +3,6 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-ceph-config
-  labels:
-    name: ucp-ceph-config-global
-    components: ceph
   layeringDefinition:
     abstract: false
     layer: global
@@ -54,10 +51,14 @@ data:
   chart_name: ucp-ceph-config
   release: ucp-ceph-config
   namespace: ucp
+  protected:
+    continue_processing: false
   wait:
-    timeout: 900
+    timeout: 3600
     labels:
-      release_group: airship-ucp-ceph-config
+      release_group: clcp-ucp-ceph-config
+    resources:
+      - type: job
   install:
     no_hooks: false
   upgrade:
@@ -66,7 +67,13 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-ceph-config
+            release_group: clcp-ucp-ceph-config
+        - type: pod
+          labels:
+            release_group: clcp-ucp-ceph-config
+            component: test
+  test:
+    enabled: true
   values:
     labels:
       job:
@@ -80,12 +87,8 @@ data:
       client_secrets: true
       rbd_provisioner: false
       cephfs_provisioner: false
-      rgw_keystone_user_and_endpoints: false
     bootstrap:
       enabled: false
-    conf:
-      rgw_ks:
-        enabled: true
     storageclass:
       rbd:
         ceph_configmap_name: ceph-etc

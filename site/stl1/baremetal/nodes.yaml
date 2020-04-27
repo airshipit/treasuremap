@@ -1,0 +1,546 @@
+---
+# Genesis Node
+#schema: 'drydock/BaremetalNode/v1'
+#metadata:
+#  schema: 'metadata/Document/v1'
+#  name: stl1r01s01
+#  # Serial: BK1NCP2
+#  layeringDefinition:
+#    abstract: false
+#    layer: site
+#  storagePolicy: cleartext
+#data:
+#  host_profile: nc-cp-primary-adv
+#  addressing:
+#    - network: oob
+#      address: 10.253.200.11
+#    - network: pxe
+#      address: 172.30.0.11
+#    - network: oam
+#      address: 10.254.125.141
+#    - network: storage
+#      address: 172.31.0.11
+#    - network: calico
+#      address: 172.29.0.11
+#    - network: overlay
+#      address: 172.17.0.11
+#  metadata:
+#    rack: RACK03
+#    tags:
+#      - 'masters'
+#---
+# Drydock BaremetalNode resources for a specific rack are stored in this file.
+#
+# NOTE: For new sites, you should complete the networks/physical/networks.yaml
+# file before working on this file.
+#
+# In this file, you should make the number of `drydock/BaremetalNode/v1`
+# resources equal the number of bare metal nodes you have in the particular rack,
+# either by deleting excess BaremetalNode definitions (if there are too many), or
+# by copying and pasting the last BaremetalNode in the file until you have the
+# correct number of baremetal nodes (if there are too few).
+#
+# Then in each file, address all additional NEWSITE-CHANGEME markers to update
+# the data in these files with the right values for your new site.
+#
+# NOTE: In the reference NC deployment, there is one control plane node per rack
+# (i.e. node with 'masters' tag*), for a total of 4 (4 racks). You may designate
+# the first node in each rack for this purpose.
+# *NOTE: The Genesis node is counted as one of the control plane nodes. Note
+# that the Genesis node does not appear on this bare metal list, because the
+# procedure to reprovision the Genesis host with MaaS has not yet been
+# implemented. Therefore there will be only three bare metal nodes in this file
+# with the 'masters' tag, as the genesis roles are assigned in a different
+# place (profiles/genesis.yaml).
+# NOTE: The host profiles for the control plane are further divided into two
+# variants: primary and secondary. The only significance this has is that the
+# "primary" nodes are active Ceph nodes, whereas the "secondary" nodes are Ceph
+# standby nodes. For Ceph quorum, this means that the control plane split will
+# be 3 primary + 1 standby host profile, and the Genesis node counts toward one
+# of the 3 primary profiles. Other control plane services are not affected by
+# primary vs secondary designation.
+schema: 'drydock/BaremetalNode/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  # NEWSITE-CHANGEME: Replace with the hostname of the first node in the rack,
+  # after (excluding) genesis.
+  # NOTE: FQDNs for each host need to be registered with upstream ATT corporate
+  # EISS, so that they are resolvable over ATT OAM network. See networks/physical/networks.yaml
+  # file for the FQDN information. Using this host as an example:
+  name: stl1r01s02
+  # Serial: BK0LCP2
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  oob:
+    account: 'root'
+  # NEWSITE-CHANGEME: Set the host profile for the node.
+  # Note that there are different host profiles depending if this is a control
+  # plane vs data plane node, and different profiles that map to different types
+  # hardware. Control plane host profiles are further broken down into "primary"
+  # and "secondary" profiles (refer to the Notes section at the top of this doc).
+  # Select the host profile that matches up to your type of
+  # hardware and function. E.g., the r640 here refers to Dell R640 hardware, the
+  # 'cp' refers to a control plane profile, and the "primary" means it will be
+  # an active member in the ceph quorum. Refer to profiles/host/ for the list
+  # of available host profiles specific to this site (otherwise, you may find
+  # a general set of host profiles at the "type" or "global" layers in a
+  # separate repository, aic-clcp-manifests.
+  # If you have hardware that is not on this list of profiles, you may need to
+  # create a new host profile for that hardware.
+  # Regarding control plane vs other data plane profiles, refer to the notes at
+  # the beginning of this file. There should be one control plane node per rack,
+  # including Genesis. Note Genesis won't actually be listed in this file as a
+  # BaremetalNode, but the rest are.
+  # NEWSITE-CHANGEME: The next node's host profile
+  host_profile: nc-cp-primary-adv
+  # NEWSITE-CHANGEME: The IPv4 address assigned to each logical network on this
+  # node. In the reference NC deployment, this is all logical Networks defined
+  # in networks/physical/networks.yaml. IP addresses are manually assigned, by-hand.
+  # (what could possibly go wrong!) The instructions differ for each logical
+  # network, which are laid out below.
+  addressing:
+    # The iDrac/iLo IP of the node. It's important that this matches with the
+    # node's hostname above, so that the rack number and node position encoded
+    # in the hostname are accurate and matching the node that IPMI operations
+    # will be performed against (for poweron, poweroff, PXE boot to wipe disk or
+    # reconfigure identity, etc - very important to get right for these reasons).
+    # These addresses should already be assigned to nodes racked and stacked in
+    # the environment; these are not addresses which MaaS assigns.
+    - network: oob
+      address: 10.253.200.12
+    # The IP of the node on the PXE network. Refer to the static IP range
+    # defined for the PXE network in networks/physical/networks.yaml. Begin allocating
+    # IPs from this network, starting with the second IP (inclusive) from the
+    # allocation range of this subnet (Genesis node will have the first IP).
+    # Ex: If the start IP for the PXE "static" network is 172.30.0.11, then
+    # genesis will have 172.30.0.11, this node will have 172.30.0.12, and
+    # so on with incrementing IP addresses with each additional node.
+    - network: pxe
+      address: 172.30.0.12
+    # Genesis node gets first IP, all other nodes increment IPs from there
+    # within the allocation range defined for the network in
+    # networks/physical/networks.yaml
+    - network: oam
+      address: 10.254.125.142
+    # Genesis node gets first IP, all other nodes increment IPs from there
+    # within the allocation range defined for the network in
+    # networks/physical/networks.yaml
+    - network: storage
+      address: 172.31.0.12
+    # Genesis node gets first IP, all other nodes increment IPs from there
+    # within the allocation range defined for the network in
+    # networks/physical/networks.yaml
+    - network: calico
+      address: 172.29.0.12
+    # Genesis node gets first IP, all other nodes increment IPs from there
+    # within the allocation range defined for the network in
+    # networks/physical/networks.yaml
+    - network: overlay
+      address: 172.17.0.12
+  metadata:
+    # NEWSITE-CHANGEME: Refer to site engineering package or other supporting
+    # documentation for the specific rack name. This should be a rack name that
+    # is meaningful to data center personnel (i.e. a rack they could locate if
+    # you gave them this rack designation).
+    rack: RACK01
+    tags:
+      # NEWSITE-CHANGEME: See previous comment. Apply 'masters' tag for control
+      # plane node, and 'workers' tag for data plane hosts. Assuming 4 racks,
+      # the first rack should be all workers, and the other racks should have
+      # all 'workers' except for one 'masters' per rack.
+      - 'masters'
+...
+---
+schema: 'drydock/BaremetalNode/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  # NEWSITE-CHANGEME: The next node's hostname
+  # NOTE: Register with upstream ATT corporate EISS the FQDN for this host,
+  # pointing to its OAM IP Address
+  name: stl1r01s03
+  # Serial: GGGNCP2
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  oob:
+    account: 'root'
+  # NEWSITE-CHANGEME: The next node's host profile
+  host_profile: nc-cp-primary-adv
+  # NEWSITE-CHANGEME: The next node's IPv4 addressing
+  addressing:
+    - network: oob
+      address: 10.253.200.13
+    - network: pxe
+      address: 172.30.0.13
+    - network: oam
+      address: 10.254.125.143
+    - network: storage
+      address: 172.31.0.13
+    - network: calico
+      address: 172.29.0.13
+    - network: overlay
+      address: 172.17.0.13
+  metadata:
+    # NEWSITE-CHANGEME: The next node's rack designation
+    rack: RACK01
+    # NEWSITE-CHANGEME: The next node's role designation
+    tags:
+        - 'masters'
+...
+---
+schema: 'drydock/BaremetalNode/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  # NEWSITE-CHANGEME: The next node's hostname
+  # NOTE: Register with upstream ATT corporate EISS the FQDN for this host,
+  # pointing to its OAM IP Address
+  name: stl1r01s04
+  # Serial BK0JCP2
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  oob:
+    account: 'root'
+  # NEWSITE-CHANGEME: The next node's host profile
+  host_profile: nc-cp-secondary-adv
+  # NEWSITE-CHANGEME: The next node's IPv4 addressing
+  addressing:
+    - network: oob
+      address: 10.253.200.14
+    - network: pxe
+      address: 172.30.0.14
+    - network: oam
+      address: 10.254.125.144
+    - network: storage
+      address: 172.31.0.14
+    - network: calico
+      address: 172.29.0.14
+    - network: overlay
+      address: 172.17.0.14
+  metadata:
+    # NEWSITE-CHANGEME: The next node's rack designation
+    rack: RACK01
+    # NEWSITE-CHANGEME: The next node's role designation
+    tags:
+        - 'masters'
+...
+---
+schema: 'drydock/BaremetalNode/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  # NEWSITE-CHANGEME: The next node's hostname
+  # NOTE: Register with upstream ATT corporate EISS the FQDN for this host,
+  # pointing to its OAM IP Address
+  name: stl1r01s05
+  # Serial BK1KCP2
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  oob:
+    account: 'root'
+  # NEWSITE-CHANGEME: The next node's host profile
+  host_profile: nc-p1-adv
+  # NEWSITE-CHANGEME: The next node's IPv4 addressing
+  addressing:
+    - network: oob
+      address: 10.253.200.15
+    - network: pxe
+      address: 172.30.0.15
+    - network: oam
+      address: 10.254.125.145
+    - network: storage
+      address: 172.31.0.15
+    - network: calico
+      address: 172.29.0.15
+    - network: overlay
+      address: 172.17.0.15
+  metadata:
+    # NEWSITE-CHANGEME: The next node's rack designation
+    rack: RACK01
+    # NEWSITE-CHANGEME: The next node's role designation
+    tags:
+        - 'workers'
+...
+---
+schema: 'drydock/BaremetalNode/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  # NEWSITE-CHANGEME: The next node's hostname
+  # NOTE: Register with upstream ATT corporate EISS the FQDN for this host,
+  # pointing to its OAM IP Address
+  name: stl1r01s06
+  # Serial GGGLCP2
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  oob:
+    account: 'root'
+  # This is the second "primary" control plane node after Genesis.
+  host_profile: nc-p1-adv
+  # NEWSITE-CHANGEME: The next node's IPv4 addressing
+  addressing:
+    - network: oob
+      address: 10.253.200.16
+    - network: pxe
+      address: 172.30.0.16
+    - network: oam
+      address: 10.254.125.146
+    - network: storage
+      address: 172.31.0.16
+    - network: calico
+      address: 172.29.0.16
+    - network: overlay
+      address: 172.17.0.16
+  metadata:
+    # NEWSITE-CHANGEME: The next node's rack designation
+    rack: RACK01
+    # NEWSITE-CHANGEME: The next node's role designation
+    tags:
+        - 'workers'
+...
+---
+schema: 'drydock/BaremetalNode/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  # NEWSITE-CHANGEME: The next node's hostname
+  # NOTE: Register with upstream ATT corporate EISS the FQDN for this host,
+  # pointing to its OAM IP Address
+  name: stl1r01s07
+  # Serial BJZLCP2
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  oob:
+    account: 'root'
+  # NEWSITE-CHANGEME: The next node's host profile
+  host_profile: nc-p1-adv
+  # NEWSITE-CHANGEME: The next node's IPv4 addressing
+  addressing:
+    - network: oob
+      address: 10.253.200.17
+    - network: pxe
+      address: 172.30.0.17
+    - network: oam
+      address: 10.254.125.147
+    - network: storage
+      address: 172.31.0.17
+    - network: calico
+      address: 172.29.0.17
+    - network: overlay
+      address: 172.17.0.17
+  metadata:
+    # NEWSITE-CHANGEME: The next node's rack designation
+    rack: RACK01
+    # NEWSITE-CHANGEME: The next node's role designation
+    tags:
+        - 'workers'
+...
+#---
+#schema: 'drydock/BaremetalNode/v1'
+#metadata:
+#  schema: 'metadata/Document/v1'
+#  # NEWSITE-CHANGEME: The next node's hostname
+#  # NOTE: Register with upstream ATT corporate EISS the FQDN for this host,
+#  # pointing to its OAM IP Address
+#  name: stl1r01s08
+#  # Serial BK0NCP2
+#  layeringDefinition:
+#    abstract: false
+#    layer: site
+#  storagePolicy: cleartext
+#data:
+#  oob:
+#    account: 'root'
+#  # NEWSITE-CHANGEME: The next node's host profile
+#  host_profile: nc-p1-adv
+#  # NEWSITE-CHANGEME: The next node's IPv4 addressing
+#  addressing:
+#    - network: oob
+#      address: 10.253.200.18
+#    - network: pxe
+#      address: 172.30.0.18
+#    - network: oam
+#      address: 10.254.125.148
+#    - network: storage
+#      address: 172.31.0.18
+#    - network: calico
+#      address: 172.29.0.18
+#    - network: overlay
+#      address: 172.17.0.18
+#  metadata:
+#    # NEWSITE-CHANGEME: The next node's rack designation
+#    rack: RACK01
+#    # NEWSITE-CHANGEME: The next node's role designation
+#    tags:
+#        - 'workers'
+#...
+#---
+#schema: 'drydock/BaremetalNode/v1'
+#metadata:
+#  schema: 'metadata/Document/v1'
+#  # NEWSITE-CHANGEME: The next node's hostname
+#  # NOTE: Register with upstream ATT corporate EISS the FQDN for this host,
+#  # pointing to its OAM IP Address
+#  name: stl1r01s09
+#  # Serial BK1JCP2
+#  layeringDefinition:
+#    abstract: false
+#    layer: site
+#  storagePolicy: cleartext
+#data:
+#  oob:
+#    account: 'root'
+#  # NEWSITE-CHANGEME: The next node's host profile
+#  host_profile: nc-p1-adv
+#  # NEWSITE-CHANGEME: The next node's IPv4 addressing
+#  addressing:
+#    - network: oob
+#      address: 10.253.200.19
+#    - network: pxe
+#      address: 172.30.0.19
+#    - network: oam
+#      address: 10.254.125.149
+#    - network: storage
+#      address: 172.31.0.19
+#    - network: calico
+#      address: 172.29.0.19
+#    - network: overlay
+#      address: 172.17.0.19
+#  metadata:
+#    # NEWSITE-CHANGEME: The next node's rack designation
+#    rack: RACK01
+#    # NEWSITE-CHANGEME: The next node's role designation
+#    tags:
+#        - 'workers'
+#...
+#---
+#schema: 'drydock/BaremetalNode/v1'
+#metadata:
+#  schema: 'metadata/Document/v1'
+#  # NEWSITE-CHANGEME: The next node's hostname
+#  # NOTE: Register with upstream ATT corporate EISS the FQDN for this host,
+#  # pointing to its OAM IP Address
+#  name: stl1r01s10
+#  # Serial BJZKCP2
+#  layeringDefinition:
+#    abstract: false
+#    layer: site
+#  storagePolicy: cleartext
+#data:
+#  oob:
+#    account: 'root'
+#  # NEWSITE-CHANGEME: The next node's host profile
+#  host_profile: nc-p1-adv
+#  # NEWSITE-CHANGEME: The next node's IPv4 addressing
+#  addressing:
+#    - network: oob
+#      address: 10.253.200.20
+#    - network: pxe
+#      address: 172.30.0.20
+#    - network: oam
+#      address: 10.254.125.150
+#    - network: storage
+#      address: 172.31.0.20
+#    - network: calico
+#      address: 172.29.0.20
+#    - network: overlay
+#      address: 172.17.0.20
+#  metadata:
+#    # NEWSITE-CHANGEME: The next node's rack designation
+#    rack: RACK01
+#    # NEWSITE-CHANGEME: The next node's role designation
+#    tags:
+#        - 'workers'
+#...
+## 3rd rack's nodes
+#---
+#schema: 'drydock/BaremetalNode/v1'
+#metadata:
+#  schema: 'metadata/Document/v1'
+#  # NEWSITE-CHANGEME: The next node's hostname
+#  # NOTE: Register with upstream ATT corporate EISS the FQDN for this host,
+#  # pointing to its OAM IP Address
+#  name: stl1r01s11
+#  # Serial BK1MCP2
+#  layeringDefinition:
+#    abstract: false
+#    layer: site
+#  storagePolicy: cleartext
+#data:
+#  oob:
+#    account: 'root'
+#  # This is the third "primary" control plane node after Genesis.
+#  host_profile: nc-cp-primary-adv
+#  # NEWSITE-CHANGEME: The next node's IPv4 addressing
+#  addressing:
+#    - network: oob
+#      address: 10.253.200.21
+#    - network: pxe
+#      address: 172.30.0.21
+#    - network: oam
+#      address: 10.254.125.151
+#    - network: storage
+#      address: 172.31.0.21
+#    - network: calico
+#      address: 172.29.0.21
+#    - network: overlay
+#      address: 172.17.0.21
+#  metadata:
+#    # NEWSITE-CHANGEME: The next node's rack designation
+#    rack: RACK01
+#    # NEWSITE-CHANGEME: The next node's role designation
+#    tags:
+#        - 'masters'
+#...
+#---
+#schema: 'drydock/BaremetalNode/v1'
+#metadata:
+#  schema: 'metadata/Document/v1'
+#  # NEWSITE-CHANGEME: The next node's hostname
+#  # NOTE: Register with upstream ATT corporate EISS the FQDN for this host,
+#  # pointing to its OAM IP Address
+#  name: stl1r01s12
+#  # Serial BK0HCP2
+#  layeringDefinition:
+#    abstract: false
+#    layer: site
+#  storagePolicy: cleartext
+#data:
+#  oob:
+#    account: 'root'
+#  # NEWSITE-CHANGEME: The next node's host profile
+#  host_profile: nc-p1-adv
+#  # NEWSITE-CHANGEME: The next node's IPv4 addressing
+#  addressing:
+#    - network: oob
+#      address: 10.253.200.22
+#    - network: pxe
+#      address: 172.30.0.22
+#    - network: oam
+#      address: 10.254.125.152
+#    - network: storage
+#      address: 172.31.0.22
+#    - network: calico
+#      address: 172.29.0.22
+#    - network: overlay
+#      address: 172.17.0.22
+#  metadata:
+#    # NEWSITE-CHANGEME: The next node's rack designation
+#    rack: RACK01
+#    # NEWSITE-CHANGEME: The next node's role designation
+#    tags:
+#        - 'workers'
+#...

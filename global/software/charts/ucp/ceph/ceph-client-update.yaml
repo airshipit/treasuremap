@@ -17,6 +17,7 @@ metadata:
         path: .charts.ucp.ceph-client
       dest:
         path: .source
+
     # Images
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -38,12 +39,20 @@ metadata:
         path: .storage.ceph.cluster_cidr
       dest:
         path: .values.network.cluster
+
+    # Endpoints
     - src:
         schema: pegleg/EndpointCatalogue/v1
         name: ucp_endpoints
         path: .ceph.ceph_mon
       dest:
         path: .values.endpoints.ceph_mon
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: ucp_endpoints
+        path: .ceph.ceph_mgr
+      dest:
+        path: .values.endpoints.ceph_mgr
 
     # Secrets
     - dest:
@@ -58,11 +67,17 @@ data:
   release: ucp-ceph-client
   namespace: ceph
   protected:
-    continue_processing: true
+    continue_processing: false
   wait:
-    timeout: 900
+    timeout: 7200
     labels:
-      release_group: airship-ucp-ceph-client
+      release_group: clcp-ucp-ceph-client
+    resources:
+      - type: deployment
+        min_ready: 1
+      - type: job
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
@@ -71,8 +86,17 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-ucp-ceph-client
+            release_group: clcp-ucp-ceph-client
+        - type: pod
+          labels:
+            release_group: clcp-ucp-ceph-client
+            component: test
+  test:
+    enabled: true
   values:
+    manifests:
+      job_bootstrap: true
+      cronjob_defragosds: false
     labels:
       job:
         node_selector_key: ucp-control-plane
@@ -89,16 +113,103 @@ data:
     deployment:
       ceph: true
     bootstrap:
+      # Placed here to run after main ceph compoents laid down/updated
       enabled: true
+      script: |
+        set -x
+        DESIRED_VERSION="nautilus"
+        ADDITIONAL_VERSIONS=1
+        while [ $ADDITIONAL_VERSIONS -gt 0 ]; do
+            sleep 5
+            ADDITIONAL_VERSIONS=$(ceph tell osd.* version --format json | awk -F 'osd.[0-9]*: ' '/^osd/ { print $2}' | jq -r '.version' | awk '{ print $(NF-1) }' | uniq | grep -v ${DESIRED_VERSION} | wc -l )
+        done
+        while [[ `ceph pg ls | tail -n +2 | grep -v "active+\|NOTE"` ]]
+        do
+          sleep 5
+        done
+    jobs:
+      pool_checkPGs:
+        # Run once a month at midnight of the first day of the month
+        cron: "0 0 1 * *"
+        history:
+          # Number of successful job to keep
+          successJob: 1
+          # Number of failed job to keep
+          failJob: 1
+        concurrency:
+          # Skip new job if previous job still active
+          execPolicy: Forbid
+        startingDeadlineSecs: 60
     pod:
+      affinity:
+        anti:
+          type:
+            default: requiredDuringSchedulingIgnoredDuringExecution
       replicas:
-        mds: 2
-        mgr: 2
+        mds: 3
+        mgr: 3
 
     conf:
+      features:
+        pg_autoscaler: false
       pool:
-
-        # NOTE(alanmeadows) spport 4.x 16.04 kernels (non-HWE)
+        spec:
+          # RBD pool
+          - name: rbd
+            application: rbd
+            replication: 3
+            percent_total_data: 15
+          # CephFS pools
+          - name: cephfs_metadata
+            application: cephfs
+            replication: 3
+            percent_total_data: 1
+          - name: cephfs_data
+            application: cephfs
+            replication: 3
+            percent_total_data: 2.5
+          # RadosGW pools
+          - name: .rgw.root
+            application: rgw
+            replication: 3
+            percent_total_data: 0.1
+          - name: default.rgw.control
+            application: rgw
+            replication: 3
+            percent_total_data: 0.1
+          - name: default.rgw.log
+            application: rgw
+            replication: 3
+            percent_total_data: 5
+          - name: default.rgw.intent-log
+            application: rgw
+            replication: 3
+            percent_total_data: 0.1
+          - name: default.rgw.meta
+            application: rgw
+            replication: 3
+            percent_total_data: 0.1
+          - name: default.rgw.usage
+            application: rgw
+            replication: 3
+            percent_total_data: 0.1
+          - name: default.rgw.users.uid
+            application: rgw
+            replication: 3
+            percent_total_data: 0.1
+          - name: default.rgw.buckets.non-ec
+            application: rgw
+            replication: 3
+            percent_total_data: 0.1
+          - name: default.rgw.buckets.index
+            application: rgw
+            replication: 3
+            percent_total_data: 3
+          - name: default.rgw.buckets.data
+            application: rgw
+            replication: 3
+            percent_total_data: 34.8
+        # NOTE(alanmeadowS) spport 4.x 16.04 kernels (non-HWE)
         crush:
           tunables: 'hammer'
 
@@ -109,20 +220,22 @@ data:
           osd: 1
           pg_per_osd: 100
           protected: true
+          # Quota at 10000 to ensure that all pools have quotas greater
+          # than the cluster's capacity. 1000 would get some to about 85%
+          quota: 10000
 
         default:
           # NOTE(alanmeadows): This is required ATM for bootstrapping a Ceph
           # cluster with only one OSD.  Depending on OSD targeting & site
           # configuration this can be changed.
-          crush_rule: replicated_rule
+          crush_rule: rack_replicated_rule
 
       ceph:
         global:
-        # NOTE: This is required ATM for bootstrapping a Ceph
+        # NOTE(mb874d): This is required ATM for bootstrapping a Ceph
         # cluster with only one OSD.  Depending on OSD targeting & site
         # configuration this can be changed.
           osd_pool_default_size: 1
-
   dependencies:
     - ceph-htk
 ...

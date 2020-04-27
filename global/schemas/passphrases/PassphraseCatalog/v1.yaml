@@ -1,0 +1,25 @@
+---
+# The purpose of this file is to define the Passphrases for the environment
+#
+schema: deckhand/DataSchema/v1
+metadata:
+  schema: metadata/Control/v1
+  name: pegleg/PassphraseCatalog/v1
+data:
+  $schema: http://json-schema.org/schema#
+  type: 'object'
+  additionalProperties: false
+  properties:
+    passphrases:
+      type: 'array'
+      items:
+        type: 'object'
+        additionalProperties: true
+        properties:
+          description:
+            type: 'string'
+          document_name:
+            type: 'string'
+          encrypted:
+            type: 'boolean'
+...

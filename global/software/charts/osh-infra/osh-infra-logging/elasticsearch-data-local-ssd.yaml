@@ -1,0 +1,65 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: elasticsearch-data-local-ssd
+  labels:
+    name: elasticsearch-data-local-ssd
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh_infra.local-storage
+      dest:
+        path: .source
+
+data:
+  chart_name: local-storage
+  release: elasticsearch-data-local-ssd
+  namespace: osh-infra
+  wait:
+    resources: []
+  test:
+    enabled: false
+  install:
+    no_hooks: true
+  upgrade:
+    no_hooks: true
+  values:
+    labels:
+      node_affinity:
+        node_selector_key: elasticsearch-data
+        node_selector_value: enabled
+    conf:
+      persistent_volumes:
+        - name: elasticsearch-data-ssd-volume-0
+          reclaim_policy: Retain
+          storage_capacity: "2T"
+          access_modes: [ "ReadWriteOnce" ]
+          local_path: /srv/elasticsearch-data
+        - name: elasticsearch-data-ssd-volume-1
+          reclaim_policy: Retain
+          storage_capacity: "2T"
+          access_modes: [ "ReadWriteOnce" ]
+          local_path: /srv/elasticsearch-data
+        - name: elasticsearch-data-ssd-volume-2
+          reclaim_policy: Retain
+          storage_capacity: "2T"
+          access_modes: [ "ReadWriteOnce" ]
+          local_path: /srv/elasticsearch-data
+        - name: elasticsearch-data-ssd-volume-3
+          reclaim_policy: Retain
+          storage_capacity: "2T"
+          access_modes: [ "ReadWriteOnce" ]
+          local_path: /srv/elasticsearch-data
+    manifests:
+      storage_class: true
+      persistent_volumes: true
+  dependencies:
+    - local-storage-htk
+...

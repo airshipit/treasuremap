@@ -1,0 +1,67 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-falco
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.falco
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.falco
+      dest:
+        path: .values.images.tags
+
+data:
+  chart_name: falco
+  release: kubernetes-falco
+  namespace: kube-system
+  protected:
+    continue_processing: false
+  wait:
+    timeout: 600
+    labels:
+      release_group: clcp-kubernetes-falco
+  dependencies:
+    - falco-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: falco-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.falco-htk
+      dest:
+        path: .source
+  storagePolicy: cleartext
+data:
+  chart_name: falco-htk
+  release: falco-htk
+  namespace: falco-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []
+...

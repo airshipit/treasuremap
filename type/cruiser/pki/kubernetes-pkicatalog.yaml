@@ -1,0 +1,77 @@
+---
+schema: promenade/PKICatalog/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-control-plane
+  labels:
+    name: kubernetes-control-plane-type
+  layeringDefinition:
+    abstract: false
+    layer: type
+  substitutions:
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.api_service_ip
+      dest:
+        path: .certificate_authorities.kubernetes.certificates[0].hosts[2]
+
+    - src:
+        schema: nc/ControlPlaneAddresses/v1
+        name: control-plane-addresses
+        path: .genesis.hostname
+      dest:
+        - path: .certificate_authorities.kubernetes.certificates[1].hosts[0]
+        - path: .certificate_authorities.kubernetes.certificates[1].common_name
+          pattern: HOSTNAME
+
+    - src:
+        schema: nc/ControlPlaneAddresses/v1
+        name: control-plane-addresses
+        path: .genesis.ip.ksn
+      dest:
+        - path: .certificate_authorities.kubernetes.certificates[1].hosts[1]
+
+  storagePolicy: cleartext
+data:
+  certificate_authorities:
+    kubernetes:
+      description: CA for Kubernetes components
+      certificates:
+        - document_name: apiserver
+          description: Service certificate for Kubernetes apiserver
+          common_name: apiserver
+          hosts:
+            - localhost
+            - 127.0.0.1
+            - KUBERNETES_SERVICE_IP
+          kubernetes_service_names:
+            - kubernetes.default.svc.cluster.local
+
+        - document_name: kubelet-genesis
+          common_name: system:node:HOSTNAME
+          hosts:
+            - GENESIS_HOSTNAME
+            - GENESIS_KSN_IP
+          groups:
+            - system:nodes
+
+        - document_name: scheduler
+          description: Service certificate for Kubernetes scheduler
+          common_name: system:kube-scheduler
+        - document_name: controller-manager
+          description: certificate for controller-manager
+          common_name: system:kube-controller-manager
+        - document_name: admin
+          common_name: admin
+          groups:
+            - system:masters
+        - document_name: armada
+          common_name: armada
+          groups:
+            - system:masters
+
+        - document_name: apiserver-webhook-kubelet
+          description: Cert for kubelet access from apiserver w/ webhook
+          common_name: apiserver-webhook
+...
