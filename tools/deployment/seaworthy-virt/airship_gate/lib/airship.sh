@@ -133,6 +133,7 @@ shipyard_action_wait() {
             exit 0
     fi
 
+    log "$(shipyard_cmd describe "${ACTION_ID}")"
     sleep "${poll_time}"
   done
 }

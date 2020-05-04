@@ -52,12 +52,25 @@ check_configdocs_result(){
   fi
 }
 
+CREATE_CONFIGDOCS_RETRIES=${CREATE_CONFIGDOCS_RETRIES:-5}
+
+create_configdocs_design() {
+  for ((i=0; i<${CREATE_CONFIGDOCS_RETRIES}; i++)); do
+    if check_configdocs_result "$(shipyard_cmd create configdocs "$@")"; then
+      log "Create confidocs succeeded."
+      return 0
+    fi
+    log "Failed on atemp $i, retrying ..."
+    sleep 30
+  done
+  log "Create configdocs failed after $i retries."
+  return 1
+}
+
 # Copy site design to genesis node
 ssh_cmd "${BUILD_NAME}" mkdir -p "${BUILD_WORK_DIR}/site"
 rsync_cmd "${DEFINITION_DEPOT}"/*.yaml "${BUILD_NAME}:${BUILD_WORK_DIR}/site/"
-
-sleep 120
-check_configdocs_result "$(shipyard_cmd create configdocs design "--directory=${BUILD_WORK_DIR}/site" --replace)"
+create_configdocs_design design --directory="${BUILD_WORK_DIR}/site" --replace
 
 # Skip certs/gate if already part of site manifests
 if [[ -n "${USE_EXISTING_SECRETS}" ]]
@@ -70,14 +83,14 @@ if [[ "${OMIT_CERTS}" == "0" ]]
 then
   ssh_cmd "${BUILD_NAME}" mkdir -p "${BUILD_WORK_DIR}/certs"
   rsync_cmd "${CERT_DEPOT}"/*.yaml "${BUILD_NAME}:${BUILD_WORK_DIR}/certs/"
-  check_configdocs_result "$(shipyard_cmd create configdocs certs "--directory=${BUILD_WORK_DIR}/certs" --append)"
+  create_configdocs_design certs --directory="${BUILD_WORK_DIR}/certs" --append
 fi
 
 if [[ "${OMIT_GATE}" == "0" ]]
 then
   ssh_cmd "${BUILD_NAME}" mkdir -p "${BUILD_WORK_DIR}/gate"
   rsync_cmd "${GATE_DEPOT}"/*.yaml "${BUILD_NAME}:${BUILD_WORK_DIR}/gate/"
-  check_configdocs_result "$(shipyard_cmd create configdocs gate "--directory=${BUILD_WORK_DIR}/gate" --append)"
+  create_configdocs_design gate --directory="${BUILD_WORK_DIR}/gate" --append
 fi
 
 check_configdocs_result "$(shipyard_cmd commit configdocs)"
