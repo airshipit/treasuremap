@@ -14,8 +14,8 @@
     templates:
       - docs-on-readthedocs
     vars:
-      rtd_webhook_id: '47687'
       rtd_project_name: 'airship-treasuremap'
+      rtd_webhook_id: '47687'
     check:
       jobs:
         - treasuremap-seaworthy-site-lint
@@ -39,7 +39,7 @@
         - treasuremap-upload-git-mirror
     promote:
       jobs:
-        - promote-airship-docs-website
+        - promote-airship-project-docs
 
 
 - nodeset:
