@@ -199,6 +199,7 @@ Process Flows
    airsloop
    airskiff
    development_guide
+   faq
 
 .. _Barbican: https://docs.openstack.org/barbican/latest/api/
 .. _Helm Homepage: https://helm.sh/
