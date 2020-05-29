@@ -3,6 +3,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: tenant-ceph-rgw
+  labels:
+    name: tenant-ceph-rgw-global
   layeringDefinition:
     abstract: false
     layer: global
