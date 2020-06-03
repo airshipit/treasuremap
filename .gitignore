@@ -4,3 +4,13 @@ peggles/
 # Unit test / coverage reports
 .tox/
 config-ssh
+
+# Sphinx Build Files
+_build
+
+# Various user specific files
+.DS_Store
+.idea/
+.vimrc
+*.swp
+.vscode/
