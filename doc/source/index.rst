@@ -1,4 +1,3 @@
-
 Airship Treasuremap
 ===================
 
@@ -188,18 +187,34 @@ Process Flows
 
 .. image:: diagrams/deploy_site.png
 
-
 .. toctree::
+   :caption: Treasuremap
+   :hidden:
    :maxdepth: 2
 
    authoring_and_deployment
    config_update_guide
    troubleshooting_guide
-   seaworthy
-   airsloop
-   airskiff
-   development_guide
    faq
+
+.. toctree::
+   :caption: Try Airship
+   :hidden:
+   :maxdepth: 2
+
+   Airship-in-a-Bottle <https://opendev.org/airship/treasuremap/src/branch/master/tools/deployment/aiab>
+   airskiff
+   airsloop
+   seaworthy
+
+.. toctree::
+   :caption: Airship Project Documentation
+   :hidden:
+
+   Airship Documentation <https://docs.airshipit.org>
+   Airshipctl <https://docs.airshipit.org/airshipctl>
+   Airshipui <https://docs.airshipit.org/airshipui>
+   Treasuremap <https://docs.airshipit.org/treasuremap>
 
 .. _Barbican: https://docs.openstack.org/barbican/latest/api/
 .. _Helm Homepage: https://helm.sh/
