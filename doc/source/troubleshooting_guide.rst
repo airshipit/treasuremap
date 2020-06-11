@@ -18,6 +18,13 @@ to search and create issues.
 .. contents:: Table of Contents
     :depth: 3
 
+**Additional Troubleshooting**
+
+.. toctree::
+   :maxdepth: 3
+
+   troubleshooting_ceph.rst
+
 ---------------------
 Perform Health Checks
 ---------------------
@@ -232,62 +239,3 @@ by Kubernetes to satisfy replication factor.
 
     # Restart Armada API service.
     kubectl delete pod -n ucp armada-api-d5f757d5-6z6nv
-
-----
-Ceph
-----
-
-Many stateful services in Airship rely on Ceph to function correctly.
-For more information on Ceph debugging follow an official
-`Ceph debugging guide <http://docs.ceph.com/docs/mimic/rados/troubleshooting/log-and-debug/>`__.
-
-Although Ceph tolerates failures of multiple OSDs, it is important
-to make sure that your Ceph cluster is healthy.
-
-::
-
-    # Get a name of Ceph Monitor pod.
-    CEPH_MON=$(sudo kubectl get pods --all-namespaces -o=name | \
-        grep ceph-mon | sed -n 1p | sed 's|pod/||')
-    # Get the status of the Ceph cluster.
-    sudo kubectl exec -it -n ceph ${CEPH_MON} -- ceph -s
-
-Cluster is in a helthy state when ``health`` parameter is set to ``HEALTH_OK``.
-
-When the cluster is unhealthy, and some Placement Groups are reported to be in
-degraded or down states, determine the problem by inspecting the logs of
-Ceph OSD that is down using ``kubectl``.
-
-::
-
-    # Get a name of Ceph Monitor pod.
-    CEPH_MON=$(sudo kubectl get pods --all-namespaces -o=name | \
-        grep ceph-mon | sed -n 1p | sed 's|pod/||')
-    # List a hierarchy of OSDs in the cluster to see what OSDs are down.
-    sudo kubectl exec -it -n ceph ${CEPH_MON} -- ceph osd tree
-
-There are a few other commands that may be useful during the debugging:
-
-::
-
-    # Get a name of Ceph Monitor pod.
-    CEPH_MON=$(sudo kubectl get pods --all-namespaces -o=name | \
-        grep ceph-mon | sed -n 1p | sed 's|pod/||')
-
-    # Get a detailed information on the status of every Placement Group.
-    sudo kubectl exec -it -n ceph ${CEPH_MON} -- ceph pg dump
-
-    # List allocated block devices.
-    sudo kubectl exec -it -n ceph ${CEPH_MON} -- rbd ls
-    # See what client uses the device.
-    sudo kubectl exec -it -n ceph ${CEPH_MON} -- rbd status \
-        kubernetes-dynamic-pvc-e71e65a9-3b99-11e9-bf31-e65b6238af01
-
-    # List all Ceph block devices mounted on a specific host.
-    mount | grep rbd
-
-    # Exec into the Monitor pod
-    MON_POD=$(sudo kubectl get --no-headers pods -n=ceph \
-        l="application=ceph,component=mon" | awk '{ print $1; exit }')
-    echo $MON_POD
-    sudo kubectl exec -n ceph ${MON_POD} -- ceph -s
