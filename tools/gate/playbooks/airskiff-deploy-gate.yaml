@@ -23,6 +23,12 @@
         daemon_reload: yes
         name: systemd-resolved
       become: yes
+    - name: ensure pip3 installed
+      apt:
+        name: "{{ item }}"
+      with_items:
+        - python3-pip
+      become: yes
 
     - name: Clone dependencies
       shell: |

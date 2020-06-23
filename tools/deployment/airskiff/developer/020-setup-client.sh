@@ -18,8 +18,8 @@
 set -xe
 
 # Install OpenStack client and create OpenStack client configuration file.
-sudo -H -E pip install "cmd2<=0.8.7"
-sudo -H -E pip install python-openstackclient python-heatclient
+sudo -H -E pip3 install "cmd2<=0.8.7"
+sudo -H -E pip3 install python-openstackclient python-heatclient
 
 sudo -H mkdir -p /etc/openstack
 sudo -H chown -R "$(id -un)": /etc/openstack
