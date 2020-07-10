@@ -1,0 +1,39 @@
+# Type-level networking catalogue.  This info feeds the Templater
+# kustomize plugin config in the hostgenerator-m3 function.
+apiVersion: airshipit.org/v1alpha1
+kind: VariableCatalogue
+metadata:
+  name: common-networking-catalogue
+commonNetworking:
+  links:
+    - id: oam
+      name: enp0s3
+      type: phy
+      mtu: "1500"
+      # ethernet_mac_address: <from host-catalogue> (optional)
+    - id: pxe
+      name: enp0s4
+      type: phy
+      mtu: "1500"
+      # ethernet_mac_address: <from host-catalogue> (optional)
+  networks:
+    - id: oam-ipv4
+      type: ipv4
+      link: oam
+      # ip_address: <from host-catalogue>
+      netmask: 255.255.255.0
+      routes:
+        - network: 0.0.0.0
+          netmask: 0.0.0.0
+          gateway: 10.23.25.1
+    - id: pxe-ipv4
+      type: ipv4
+      link: pxe
+      # ip_address: <from host-catalogue>
+      netmask: 255.255.255.0
+  services:
+    - address: 8.8.8.8
+      type: dns
+    - address: 8.8.4.4
+      type: dns
+

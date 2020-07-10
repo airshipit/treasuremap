@@ -35,7 +35,3 @@ build_docs:
 format:
 	tox -e fmt
 
-lint:
-	mkdir -p build
-	./tools/gate/install-kubeval.sh $(BUILD_DIR)
-	./tools/gate/run-lint.sh

@@ -1,0 +1,27 @@
+# Site-level host catalogue.  This info feeds the Templater
+# kustomize plugin config in the hostgenerator-m3 function.
+apiVersion: airshipit.org/v1alpha1
+kind: VariableCatalogue
+metadata:
+  name: host-catalogue
+hosts:
+  m3:
+    node01:
+      macAddress: 52:54:00:b6:ed:31
+      bmcAddress: redfish+http://10.23.25.1:8000/redfish/v1/Systems/air-target-1
+      bmcUsername: root
+      bmcPassword: r00tme
+      ipAddresses:
+        oam-ipv4: 10.23.25.102
+        pxe-ipv4: 10.23.24.102
+      macAddresses:
+        oam: 52:54:00:9b:27:4c
+        pxe: 52:54:00:b6:ed:31
+    node02:
+      macAddress: 00:3b:8b:0c:ec:8b
+      bmcAddress: redfish+http://10.23.25.2:8000/redfish/v1/Systems/air-target-2
+      bmcUsername: username
+      bmcPassword: password
+      ipAddresses:
+        oam-ipv4: 10.23.25.101
+        pxe-ipv4: 10.23.24.101

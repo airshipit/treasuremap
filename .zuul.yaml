@@ -13,10 +13,10 @@
 - project:
     check:
       jobs:
-        - treasuremap-lint
+        - noop
     gate:
       jobs:
-        - treasuremap-lint
+        - noop
     post:
       jobs:
         - treasuremap-upload-git-mirror
@@ -27,14 +27,6 @@
     nodes:
       - name: ubuntu-bionic
         label: ubuntu-bionic
-- job:
-    name: treasuremap-lint
-    description: Lint treasuremap using kubeval
-    nodeset: treasuremap-single-node
-    timeout: 900
-    pre-run:
-      - tools/gate/playbooks/deploy-kubeval.yaml
-    run: tools/gate/playbooks/yaml-lint.yaml
 
 - secret:
     name: airshipit-github-secret

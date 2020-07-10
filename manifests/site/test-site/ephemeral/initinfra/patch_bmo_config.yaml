@@ -1,0 +1,10 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  labels:
+  name: ironic-vars
+data:
+  PROVISIONING_IP: "10.23.24.101"
+  DHCP_RANGE: "10.23.24.200,10.23.24.250"
+  PROVISIONING_INTERFACE: "enp0s4"
