@@ -1,0 +1,32 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- project:
+    vars:
+      sphinx_build_dir: docs/build
+    check:
+      jobs:
+        - airship-treasuremap-validate-site-docs
+#        - airship-treasuremap-functional-existing-k8s TODO: Enable this when functional tests exist, and a cluster is up
+        - airship-treasuremap-gate-script-runner-test
+    gate:
+      jobs:
+        - noop
+        - airship-treasuremap-validate-site-docs
+#        - airship-treasuremap-functional-existing-k8s TODO: Enable this when functional tests exist, and a cluster is up
+    post:
+      jobs:
+        - treasuremap-upload-git-mirror
+    promote:
+      jobs:
+        - airship-treasuremap-update-github-issues
+

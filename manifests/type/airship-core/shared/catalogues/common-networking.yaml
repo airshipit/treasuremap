@@ -7,12 +7,12 @@ metadata:
 commonNetworking:
   links:
     - id: oam
-      name: enp0s3
+      name: oam
       type: phy
       mtu: "1500"
       # ethernet_mac_address: <from host-catalogue> (optional)
     - id: pxe
-      name: enp0s4
+      name: pxe
       type: phy
       mtu: "1500"
       # ethernet_mac_address: <from host-catalogue> (optional)

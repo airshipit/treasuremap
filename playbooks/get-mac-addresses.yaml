@@ -1,0 +1,64 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: get BareMetalHost objects
+  shell: |
+    set -e
+    kustomize build --enable_alpha_plugins \
+      {{ airship_config_manifest_directory }}/{{ airship_config_site_path }}/{{ path }} |
+    kustomize config grep  "kind=BareMetalHost"
+  register: bmh_command
+  failed_when: "bmh_command.stdout == ''"
+  environment:
+    KUSTOMIZE_PLUGIN_HOME: "{{ ansible_env.HOME }}/.airship/kustomize-plugins"
+    KUSTOMIZE_ENABLE_ALPHA_COMMANDS: "true"
+- set_fact:
+    bmh: "{{ bmh_command.stdout | from_yaml_all | list }}"
+- name: get network configuration for BareMetalHost objects
+  shell: |
+    set -e
+    kustomize build --enable_alpha_plugins \
+      {{ airship_config_manifest_directory }}/{{ airship_config_site_path }}/{{ path }} |
+    kustomize config grep  "metadata.name={{ item.spec.networkData.name }}"
+  register: netdata_command
+  failed_when: "netdata_command.stdout == ''"
+  environment:
+    KUSTOMIZE_PLUGIN_HOME: "{{ ansible_env.HOME }}/.airship/kustomize-plugins"
+    KUSTOMIZE_ENABLE_ALPHA_COMMANDS: "true"
+  with_items: "{{ bmh }}"
+- name: get links from network data per BareMetalHost object
+  set_fact:
+    links: |
+      {{
+        netdata_command.results |
+          map(attribute='stdout')| map('from_yaml') |
+          map(attribute='stringData.networkData') | map('from_yaml') |
+          map(attribute='links') | list
+      }}
+- name: define list of VM mac addresses
+  set_fact:
+    vm_nic: "{{ dict(['nat_mac', 'provision_mac'] | zip([nat_mac_list[0], item.spec.bootMACAddress])) }}"
+  vars:
+    nat_mac_list: |
+      {{
+        links[idx] |
+          rejectattr('ethernet_mac_address', 'undefined') |
+          selectattr('ethernet_mac_address', '!=', item.spec.bootMACAddress) |
+          map(attribute='ethernet_mac_address') | list
+      }}
+  failed_when: nat_mac_list | length == 0
+  loop: "{{ bmh }}"
+  loop_control:
+    index_var: idx
+  register: vm_nic_fact
+- set_fact:
+    "{{ name }}_vm_nics": "{{ vm_nic_fact.results | map(attribute='ansible_facts.vm_nic') | list }}"

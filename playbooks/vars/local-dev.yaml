@@ -1,0 +1,23 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+proxy:
+  enabled: "{{ lookup('env', 'USE_PROXY', default='false') }}"
+  http: "{{ lookup('env', 'HTTP_PROXY', default='') }}"
+  https: "{{ lookup('env', 'HTTPS_PROXY', default='') }}"
+  noproxy: "{{ lookup('env', 'NO_PROXY', default='') }}"
+
+# If remote_work_dir is defined, the deployment script will invoke airshipctl
+# document pull command to download the manifests to the remote_work_dir.
+# Otherwise, the current working dir where the script is launched is used and
+# document pull is skipped.
+#remote_work_dir: "/tmp/airship"

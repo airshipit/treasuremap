@@ -1,0 +1,75 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- job:
+    name: airship-treasuremap-update-github-issues
+    description: Updates and/or closes related issues on Github on merge
+    run: playbooks/airship-treasuremap-update-github-issues.yaml
+    nodeset: airship-treasuremap-single-node
+    secrets:
+      - name: github_credentials
+        secret: airship_treasuremap_airshipit_github_username_password
+
+- job:
+    name: airship-treasuremap-validate-site-docs
+    required-projects:
+      - airship/airshipctl
+    roles:
+      - zuul: airship/airshipctl
+    pre-run:
+      - playbooks/airship-treasuremap-deploy-docker.yaml
+    run: playbooks/airship-treasuremap-gate-runner.yaml
+    nodeset: airship-treasuremap-single-node
+    vars:
+      gate_scripts:
+        - ./tools/deployment/01_install_kubectl.sh
+        - ./tools/deployment/21_systemwide_executable.sh
+        - ./tools/validate_docs
+
+- job:
+    name: treasuremap-upload-git-mirror
+    parent: upload-git-mirror
+    description: Mirrors airship/treasuremap to airshipit/treasuremap
+    vars:
+      git_mirror_repository: airshipit/treasuremap
+    secrets:
+      - name: git_mirror_credentials
+        secret: airship_treasuremap_airshipit_github_key
+        pass-to-parent: true
+
+- job:
+    name: airship-treasuremap-gate-script-runner-test
+    attempts: 1
+    timeout: 3600
+    required-projects:
+      - airship/airshipctl
+    roles:
+      - zuul: airship/airshipctl
+    pre-run:
+      - playbooks/airship-treasuremap-deploy-docker.yaml
+      - playbooks/airship-treasuremap-build-gate.yaml
+    post-run: playbooks/airship-collect-logs.yaml
+    run: playbooks/airship-treasuremap-gate-runner.yaml
+    nodeset: airship-treasuremap-single-16GB-bionic-node
+    vars:
+      site_name: test-site
+      gate_scripts:
+        - ./tools/deployment/01_install_kubectl.sh
+        - ./tools/deployment/22_test_configs.sh
+        - ./tools/deployment/24_build_ephemeral_iso.sh
+        - ./tools/deployment/25_deploy_ephemeral_node.sh
+        - ./tools/deployment/26_deploy_metal3_capi_ephemeral_node.sh
+        - ./tools/deployment/30_deploy_controlplane.sh
+      serve_dir: /srv/iso
+      serve_port: 8099
+    voting: false
+
