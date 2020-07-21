@@ -52,6 +52,7 @@
     name: treasuremap-site-lint
     description:
       Lint a site using Pegleg. Default site is seaworthy.
+    voting: false
     nodeset: treasuremap-single-node
     timeout: 900
     pre-run:
@@ -68,6 +69,7 @@
     name: treasuremap-seaworthy-site-lint
     description: |
       Lint the seaworthy site using Pegleg.
+    voting: false
     parent: treasuremap-site-lint
     vars:
       site: seaworthy
@@ -83,6 +85,7 @@
     name: treasuremap-seaworthy-virt-site-lint
     description: |
       Lint the seaworthy site using Pegleg.
+    voting: false
     parent: treasuremap-site-lint
     vars:
       site: seaworthy-virt
@@ -98,6 +101,7 @@
     name: treasuremap-airskiff-ubuntu-site-lint
     description: |
       Lint the airskiff site using Pegleg.
+    voting: false
     parent: treasuremap-site-lint
     vars:
       site: airskiff
@@ -113,6 +117,7 @@
     name: treasuremap-airskiff-suse-site-lint
     description: |
       Lint the airskiff-suse site using Pegleg.
+    voting: false
     parent: treasuremap-site-lint
     vars:
       site: airskiff-suse
@@ -128,6 +133,7 @@
     name: treasuremap-airsloop-site-lint
     description: |
       Lint the airsloop site using Pegleg.
+    voting: false
     parent: treasuremap-site-lint
     vars:
       site: airsloop
@@ -143,6 +149,7 @@
     name: treasuremap-aiab-site-lint
     description: |
       Lint the aiab site using Pegleg.
+    voting: false
     parent: treasuremap-site-lint
     pre-run:
       - tools/gate/playbooks/generate-certs.yaml
