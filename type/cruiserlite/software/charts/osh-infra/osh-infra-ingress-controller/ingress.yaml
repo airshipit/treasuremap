@@ -1,0 +1,26 @@
+---
+# The purpose of this file is to define the environment-specific public-facing
+# VIP for the ingress controller
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: osh-infra-ingress-controller
+  labels:
+    name: osh-infra-ingress-controller-global
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: osh-infra-ingress-controller-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      ingress:
+        # The default number is set to the number of cpus, wich is 88 in the Intel lab.
+        worker-processes: "10"
+...

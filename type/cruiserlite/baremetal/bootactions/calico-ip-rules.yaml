@@ -1,0 +1,69 @@
+---
+# This file defines a boot action for MaaS to deploy the calico-ip-rules script
+# to nodes, register with systemd, and runs the script on all PXE booted nodes.
+# On the genesis node, this is a manual step detailed in deployment documentation.
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: calico-ip-rules
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: type
+  labels:
+    name: calico-ip-rules
+    application: 'drydock'
+  substitutions:
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.ip_rule.gateway
+      dest:
+        path: .assets[0].data
+        pattern: DH_SUB_GATEWAY_IP
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.pod_cidr
+      dest:
+        path: .assets[0].data
+        pattern: DH_SUB_POD_CIDR
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.bgp.ipv4.public_service_cidr
+      dest:
+        path: .assets[0].data
+        pattern: DH_SUB_INGRESS_CIDR
+    # Substitution of the configure-ip-rules script into this bootaction
+    - src:
+        schema: pegleg/Script/v1
+        name: configure-ip-rules
+        path: .
+      dest:
+        path: .assets[1].data
+data:
+  signaling: false
+  assets:
+    - path: /etc/systemd/system/configure-ip-rules.service
+      type: unit
+      permissions: '444'
+      data: |-
+        [Unit]
+        Description=IP Rules Initialization Service
+        After=network-online.target local-fs.target
+
+        [Service]
+        Type=simple
+        ExecStart=/opt/configure-ip-rules.sh -g DH_SUB_GATEWAY_IP -c DH_SUB_POD_CIDR -s DH_SUB_INGRESS_CIDR
+
+        [Install]
+        WantedBy=multi-user.target
+      data_pipeline:
+        - utf8_decode
+    - path: /opt/configure-ip-rules.sh
+      type: file
+      permissions: '700'
+      data_pipeline:
+        - utf8_decode
+...

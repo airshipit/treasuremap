@@ -1,0 +1,45 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: horizon
+  labels:
+    name: horizon-cruiserlite
+    component: horizon
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: horizon-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  wait:
+    timeout: 1800
+  test:
+    timeout: 1200
+  values:
+    pod:
+      replicas:
+        server: 2
+    conf:
+      software:
+        apache2:
+          site_dir: /etc/apache2/sites-available
+          conf_dir: /etc/apache2/conf-available
+          mods_dir: /etc/apache2/mods-available
+      horizon:
+        local_settings:
+          config:
+            secure_proxy_ssl_header: false
+            csrf_cookie_secure: "False"
+            session_cookie_secure: "False"
+            session_cookie_httponly: "True"
+            allowed_hosts:
+              - '*'
+              - .DOMAIN
+              - '.cluster.local'
+...

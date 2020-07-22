@@ -1,0 +1,21 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: osh-infra-logging
+  labels:
+    name: osh-infra-logging-cruiserlite
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: osh-infra-logging-global
+    actions:
+      - method: replace
+        path: .chart_group
+  storagePolicy: cleartext
+data:
+  chart_group:
+    - elasticsearch
+    - fluentd

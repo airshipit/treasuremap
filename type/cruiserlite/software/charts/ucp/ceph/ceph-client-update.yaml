@@ -1,0 +1,88 @@
+---
+# The purpose of this file is to define environment-specific parameters for ceph
+# client update
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-ceph-client-update
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-ceph-client-update-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        # (jamesgu) adjust down to 2 to work around the issue that a fourth pod
+        # is stuck at pending during Aramada phase. Intel pod has one genesis and
+        # two controller nodes vs 3 controller nodes in wwt lab.
+        mds: 2
+    conf:
+      pool:
+        spec:
+          # RBD pool
+          - name: rbd
+            application: rbd
+            replication: 2
+            percent_total_data: 40
+          # CephFS pools
+          - name: cephfs_metadata
+            application: cephfs
+            replication: 2
+            percent_total_data: 1
+          - name: cephfs_data
+            application: cephfs
+            replication: 2
+            percent_total_data: 2.5
+          # RadosGW pools
+          - name: .rgw.root
+            application: rgw
+            replication: 2
+            percent_total_data: 0.1
+          - name: default.rgw.control
+            application: rgw
+            replication: 2
+            percent_total_data: 0.1
+          - name: default.rgw.log
+            application: rgw
+            replication: 2
+            percent_total_data: 5
+          - name: default.rgw.intent-log
+            application: rgw
+            replication: 2
+            percent_total_data: 0.1
+          - name: default.rgw.meta
+            application: rgw
+            replication: 2
+            percent_total_data: 0.1
+          - name: default.rgw.usage
+            application: rgw
+            replication: 2
+            percent_total_data: 0.1
+          - name: default.rgw.users.uid
+            application: rgw
+            replication: 2
+            percent_total_data: 0.1
+          - name: default.rgw.buckets.non-ec
+            application: rgw
+            replication: 2
+            percent_total_data: 0.1
+          - name: default.rgw.buckets.index
+            application: rgw
+            replication: 2
+            percent_total_data: 3
+          - name: default.rgw.buckets.data
+            application: rgw
+            replication: 2
+            percent_total_data: 34.8
+        target:
+          # NEWSITE-CHANGEME: Total number of OSDs. Does not need to change if
+          # your HW matches this site's HW. Verify for your environment.
+          # 8 OSDs per node x 3 nodes = 24
+          osd: 3
+...

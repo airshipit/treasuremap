@@ -1,0 +1,30 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: fluentd
+  labels:
+    hosttype: fluentd-cruiserlite
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      hosttype: fluentd-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+
+data:
+  values:
+    pod:
+      resources:
+        fluentd:
+          limits:
+            memory: '4Gi'
+            cpu: '2000m'
+          requests:
+            memory: '2Gi'
+            cpu: '1000m'
+...

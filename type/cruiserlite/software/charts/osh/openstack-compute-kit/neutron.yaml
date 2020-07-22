@@ -1,0 +1,391 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: neutron
+  labels:
+    name: neutron-cruiserlite
+    component: neutron
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: neutron-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+  substitutions:
+    # OVS-DPDK settings for neutron
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .ovs-dpdk.ovs_bridge_dpdk
+      dest:
+        - path: .values.conf.ovs_dpdk.bridges[0].name
+          pattern: TUNNEL_BRIDGE
+        - path: .values.conf.ovs_dpdk.bonds[0].bridge
+          pattern: TUNNEL_BRIDGE
+        - path: .values.conf.plugins.openvswitch_agent.ovs.bridge_mappings
+          pattern: TUNNEL_BRIDGE
+    ## NOTE: setting MTU same as  overlay(9150) for now
+    - src:
+        schema: pegleg/NetworkSettings/v1
+        name: network-settings
+        path: .mtu.primary_bond
+      dest:
+        path: .values.conf.ovs_dpdk.bonds[0].mtu
+    - src:
+        schema: drydock/HardwareProfile/v1
+        name: intel-s2600wt
+        path: .device_aliases.data_nic2.address
+      dest:
+        path: .values.conf.ovs_dpdk.bonds[0].nics[0].pci_id
+    - src:
+        schema: drydock/HardwareProfile/v1
+        name: intel-s2600wt
+        path: .device_aliases.data_nic2.address
+      dest:
+        path: .values.conf.ovs_dpdk.bonds[0].nics[1].pci_id
+    # Site data mappings
+    # routable network
+    - src:
+        schema: drydock/Network/v1
+        name: routable
+        path: .vlan
+      dest:
+        path: .values.bootstrap.script
+        pattern: PUBLIC_SEGMENTATION_ID_VALUE
+    - src:
+        schema: drydock/Network/v1
+        name: routable
+        path: .labels.enabled
+      dest:
+        path: .values.bootstrap.script
+        pattern: PUBLIC_NETWORK_ENABLED_VALUE
+    - src:
+        schema: drydock/Network/v1
+        name: routable
+        path: ranges[0].start
+      dest:
+        path: .values.bootstrap.script
+        pattern: PUBLIC_START_IP_ADDRESS_VALUE
+    - src:
+        schema: drydock/Network/v1
+        name: routable
+        path: ranges[0].end
+      dest:
+        path: .values.bootstrap.script
+        pattern: PUBLIC_END_IP_ADDRESS_VALUE
+    - src:
+        schema: drydock/Network/v1
+        name: routable
+        path: .routes[0].gateway
+      dest:
+        path: .values.bootstrap.script
+        pattern: PUBLIC_NETWORK_GATEWAY_VALUE
+    - src:
+        schema: drydock/Network/v1
+        name: routable
+        path: .cidr
+      dest:
+        path: .values.bootstrap.script
+        pattern: PUBLIC_NETWORK_CIDR_VALUE
+    # overlay network
+    - src:
+        schema: drydock/Network/v1
+        name: overlay
+        path: .vlan
+      dest:
+        path: .values.bootstrap.script
+        pattern: OVERLAY_SEGMENTATION_ID_VALUE
+    - src:
+        schema: drydock/Network/v1
+        name: overlay
+        path: .labels.enabled
+      dest:
+        path: .values.bootstrap.script
+        pattern: OVERLAY_NETWORK_ENABLED_VALUE
+    - src:
+        schema: drydock/Network/v1
+        name: overlay
+        path: ranges[1].start
+      dest:
+        path: .values.bootstrap.script
+        pattern: OVERLAY_START_IP_ADDRESS_VALUE
+    - src:
+        schema: drydock/Network/v1
+        name: overlay
+        path: ranges[1].end
+      dest:
+        path: .values.bootstrap.script
+        pattern: OVERLAY_END_IP_ADDRESS_VALUE
+    - src:
+        schema: drydock/Network/v1
+        name: overlay
+        path: .routes[0].gateway
+      dest:
+        path: .values.bootstrap.script
+        pattern: OVERLAY_NETWORK_GATEWAY_VALUE
+    - src:
+        schema: drydock/Network/v1
+        name: overlay
+        path: .cidr
+      dest:
+        path: .values.bootstrap.script
+        pattern: OVERLAY_NETWORK_CIDR_VALUE
+data:
+  wait:
+    timeout: 12000
+  test:
+    timeout: 1200
+  values:
+    pod:
+      use_fqdn:
+        neutron_agent: false
+      replicas:
+        server: 3
+    labels:
+      sriov:
+        node_selector_key: sriov
+        node_selector_value: enabled
+    network:
+      interface:
+        sriov:
+          - device: ens785f1
+            num_vfs: 32
+            promisc: false
+            qos:
+              - vf_num: 0
+                share: 20
+      backend:
+        - openvswitch
+        - sriov
+    conf:
+      # FIXME(je808k) confirm with NCD
+      auto_bridge_add:
+        br-bond1: null
+      dhcp_agent:
+        DEFAULT:
+          ovs_use_veth: true
+      ovs_dpdk:
+        enabled: true
+        driver: vfio-pci
+        nics: []
+        bridges:
+          - name: TUNNEL_BRIDGE
+        bonds:
+          - name: dpdkbond0
+            bridge: TUNNEL_BRIDGE
+            # The IP from the first nic in nics list shall be used
+            migrate_ip: false
+            n_rxq: 4
+            n_rxq_size: 4096
+            n_txq_size: 4096
+            ovs_options: "bond_mode=active-backup"
+            nics:
+              - name: dpdk_b0s0
+                vf_index: 0
+              - name: dpdk_b0s1
+                vf_index: 1
+      neutron:
+        DEFAULT:
+          #service_plugins: router,taas,trunk
+          service_plugins: router,trunk,neutron.services.qos.qos_plugin.QoSPlugin
+      plugins:
+        openvswitch_agent:
+          default:
+            ovs_vsctl_timeout: 30
+          agent:
+            tunnel_types: ""
+          securitygroup:
+            enable_security_group: False
+            firewall_driver: neutron.agent.firewall.NoopFirewallDriver
+          ovs:
+            bridge_mappings: ovsnet:TUNNEL_BRIDGE
+            datapath_type: netdev
+            of_connect_timeout: 60
+            of_request_timeout: 30
+            vhostuser_socket_dir: /var/run/openvswitch/vhostuser
+        ml2_conf:
+          ml2:
+            mechanism_drivers: l2population,openvswitch,sriovnicswitch
+            extension_drivers: port_security, qos
+          agent:
+            extensions: qos
+          ml2_type_vlan:
+            ## NOTE: Must have at least 1 sriov network defined
+            network_vlan_ranges: external,sriovnet1:100:4000,ovsnet:2:4094
+
+        sriov_agent:
+          securitygroup:
+            firewall_driver: neutron.agent.firewall.NoopFirewallDriver
+          sriov_nic:
+            physical_device_mappings: sriovnet1:ens785f1
+            exclude_devices: ens785f1:0000:05:06.0; 0000:05:06.1
+        taas:
+          taas:
+            enabled: True
+      taas_plugin:
+        service_providers:
+          service_provider: TAAS:TAAS:neutron_taas.services.taas.service_drivers.taas_rpc.TaasRpcDriver:default
+    # Need to wait for sriov agent to come up and configure VFs first
+    dependencies:
+      dynamic:
+        targeted:
+          openvswitch:
+            ovs_agent:
+              pod:
+                - requireSameNode: true
+                  labels:
+                    application: neutron
+                    component: neutron-sriov-agent
+
+    # Disable the boostrap script for now because there is no longer an oam network
+    # on vlan45 to put the public network on.
+    bootstrap:
+      enabled: false
+      ks_user: neutron
+      script: |
+        # TODO this should be moved out of neutron into an ending chart group that config
+        #      a running openstack site to the targeted tenet's needs.
+        set +e
+        # Static Values
+        export PUBLIC_PHYSICAL_NETWORK="ovsnet"
+        export RESOURCE_DOMAIN=qa
+        export RESOURCE_PROJECT=aqua-admin
+
+        # Non-site data
+        export DNS_UPSTREAM_SERVERS="DNS_UPSTREAM_SERVERS_JOINED_VALUE"
+
+        # Site Data
+        # Declare associative arrays with each network data
+        declare -A PUBLIC_NET=(
+          [NETWORK_NAME]="routable"
+          [NETWORK_ENABLED]="PUBLIC_NETWORK_ENABLED_VALUE"
+          [SEGMENTATION_ID]="PUBLIC_SEGMENTATION_ID_VALUE"
+          [START_IP_ADDRESS]="PUBLIC_START_IP_ADDRESS_VALUE"
+          [END_IP_ADDRESS]="PUBLIC_END_IP_ADDRESS_VALUE"
+          [NETWORK_GATEWAY]="PUBLIC_NETWORK_GATEWAY_VALUE"
+          [NETWORK_CIDR]="PUBLIC_NETWORK_CIDR_VALUE"
+          [EXTERNAL]="true"
+        )
+        export PUBLIC_NET
+
+        declare -A OVERLAY_NET=(
+          [NETWORK_NAME]="default-private"
+          [NETWORK_ENABLED]="OVERLAY_NETWORK_ENABLED_VALUE"
+          [SEGMENTATION_ID]="OVERLAY_SEGMENTATION_ID_VALUE"
+          [START_IP_ADDRESS]="OVERLAY_START_IP_ADDRESS_VALUE"
+          [END_IP_ADDRESS]="OVERLAY_END_IP_ADDRESS_VALUE"
+          [NETWORK_GATEWAY]="OVERLAY_NETWORK_GATEWAY_VALUE"
+          [NETWORK_CIDR]="OVERLAY_NETWORK_CIDR_VALUE"
+          [EXTERNAL]="false"
+        )
+        export OVERLAY_NET
+
+        # Defining function for validating ip address
+        valid_ip() {
+            local ip=$1
+            if expr "$ip" : '[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*$' >/dev/null; then
+                for i in 1 2 3 4; do
+                    if [ $(echo "$ip" | cut -d. -f$i) -gt 255 ]; then
+                        return 1
+                    fi
+                done
+                return 0
+            else
+                return 1
+            fi
+        }
+
+        # Declare array of names of associative arrays
+        export networks=("${!PUBLIC_NET@}" "${!OVERLAY_NET@}")
+
+        # Declare loop variable as nameref
+        declare -n net_ref
+
+        # Loop over networks
+        for net_ref in "${networks[@]}"; do
+          # NOTE: If the network is not found, just assume this is a new deployment
+          # and create all the essentials if enabled.
+
+          NET_ENABLED=$(echo "${net_ref[NETWORK_ENABLED]}" | tr [:upper:] [:lower:])
+          if [ "${NET_ENABLED}" = "true" ]; then
+
+            EXISTING_NET=($(openstack network list \
+              --provider-physical-network "${PUBLIC_PHYSICAL_NETWORK}" \
+              --provider-network-type vlan \
+              --provider-segment "${net_ref[SEGMENTATION_ID]}" \
+              --long -f value -c ID -c Name -c Project))
+
+            if [ ! -z "${EXISTING_NET[0]}" ]; then
+              echo "WARN network [${EXISTING_NET[0]}], [${EXISTING_NET[1]}] already exists in project ${EXISTING_NET[2]}"
+              CURNET="${EXISTING_NET[0]}"
+            else
+              ## NOTE: Due to this nova RBAC rule "network:attach_external_network:!"
+              ##       the routable network cannot be created with --external
+              ##       otherwise will not be able to create VM directly off of it.
+              echo "INFO Creating network with name [${net_ref[NETWORK_NAME]}]"
+              CURNET=$(openstack network create "${net_ref[NETWORK_NAME]}" \
+                --enable \
+                --provider-physical-network "${PUBLIC_PHYSICAL_NETWORK}" \
+                --provider-network-type vlan \
+                --provider-segment "${net_ref[SEGMENTATION_ID]}" \
+                --enable-port-security \
+                --project-domain "${RESOURCE_DOMAIN}" \
+                --project "${RESOURCE_PROJECT}" -f value -c id)
+
+              if [ -z "${CURNET}" ]; then
+                echo "ERROR Failed to create network"
+                exit 0
+              fi
+            fi
+
+            SUBNET=$(openstack subnet list --name "${net_ref[NETWORK_NAME]}-subnet" \
+              --network "${CURNET}" -f value -c ID)
+
+            if [ "${SUBNET}" = "" ]; then
+
+              export EXTRA_SUBNET_ARGS=()
+              # we should have dns servers only for routable network
+              if [ "${net_ref[EXTERNAL]}" = "true" ]; then
+                for dns_server in $(echo "${DNS_UPSTREAM_SERVERS}" | tr ',' ' '); do
+                  EXTRA_SUBNET_ARGS+=(--dns-nameserver "${dns_server}")
+                done
+              fi
+
+              if ! valid_ip "${net_ref[NETWORK_GATEWAY]}"; then
+                net_ref[NETWORK_GATEWAY]=none
+              fi
+
+              EXTRA_SUBNET_ARGS+=(
+                --gateway "${net_ref[NETWORK_GATEWAY]}"
+              )
+
+              echo "INFO Creating subnet for network ${net_ref[NETWORK_NAME]}"
+              SUBNET=$(openstack subnet create "${net_ref[NETWORK_NAME]}-subnet" \
+                --network "${CURNET}" \
+                --allocation-pool start="${net_ref[START_IP_ADDRESS]}",end="${net_ref[END_IP_ADDRESS]}" \
+                "${EXTRA_SUBNET_ARGS[@]}" \
+                --subnet-range "${net_ref[NETWORK_CIDR]}" \
+                --dhcp \
+                --project-domain "${RESOURCE_DOMAIN}" \
+                --project "${RESOURCE_PROJECT}" -f value -c id)
+
+              if [ -z "${SUBNET}" ]; then
+                echo "ERROR Failed to create subnet [${net_ref[NETWORK_NAME]}-subnet]"
+                exit 0
+              fi
+            else
+              echo "WARN Subnet [${net_ref[NETWORK_NAME]}-subnet] for [${net_ref[NETWORK_NAME]}] already exists, not re-creating."
+            fi
+
+          else
+            echo "INFO The creation of a public network [${net_ref[NETWORK_NAME]}] was disabled, no attempt to create related resources was made."
+          fi
+
+        done
+
+        exit 0
+...

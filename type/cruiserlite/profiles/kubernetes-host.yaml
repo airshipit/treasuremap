@@ -1,0 +1,42 @@
+---
+schema: promenade/HostSystem/v1
+metadata:
+  schema: metadata/Document/v1
+  name: host-system
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: host-system-global
+    actions:
+      - method: merge
+        path: .data.files[11]
+      - method: merge
+        path: .data.files[12]
+      - method: merge
+        path: .data.files[13]
+  storagePolicy: cleartext
+data:
+  files:
+    # placeholders for merge with parent document.
+    - {} # 0
+    - {} # 1
+    - {} # 2
+    - {} # 3
+    - {} # 4
+    - {} # 5
+    - {} # 6
+    - {} # 7
+    - {} # 8
+    - {} # 9
+    - {} # 10
+    - path: /srv/elasticsearch-data/.info
+      content: "elasticsearch-data folder"
+      mode: 0640
+    - path: /srv/elasticsearch-master/.info
+      content: "elasticsearch-master folder"
+      mode: 0640
+    - path: /srv/prometheus-data/.info
+      content: "prometheus-data folder"
+      mode: 0640

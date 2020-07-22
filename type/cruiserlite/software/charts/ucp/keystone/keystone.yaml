@@ -1,0 +1,18 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-keystone
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-keystone-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: ucp-keystone-type
+  storagePolicy: cleartext
+data: {}
+...

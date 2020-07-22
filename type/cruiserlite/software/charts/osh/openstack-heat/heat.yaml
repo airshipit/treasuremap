@@ -1,0 +1,28 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: heat
+  labels:
+    name: heat-cruiserlite
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: heat-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  test:
+    timeout: 1200
+  values:
+    pod:
+      replicas:
+        api: 2
+        cfn: 2
+        cloudwatch: 2
+        engine: 2
+...

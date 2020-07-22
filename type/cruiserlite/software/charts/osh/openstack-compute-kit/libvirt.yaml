@@ -1,0 +1,26 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: libvirt
+  replacement: true
+  labels:
+    name: libvirt-cruiserlite
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: libvirt-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  wait:
+    timeout: 12000
+  values:
+    network:
+      backend:
+        - openvswitch
+        - sriov
+...

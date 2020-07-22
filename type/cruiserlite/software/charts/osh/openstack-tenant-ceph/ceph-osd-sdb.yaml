@@ -1,0 +1,37 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: tenant-ceph-osd-sdb
+  labels:
+    name: tenant-ceph-osd-sdb-nc
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: tenant-ceph-osd-global
+    actions:
+      - method: replace
+        path: .values.conf.storage.osd
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  chart_name: tenant-ceph-osd-sdb
+  release: tenant-ceph-osd-sdb
+  wait:
+    labels:
+      release_group: clcp-tenant-ceph-osd-sdb
+  values:
+    daemonset:
+      prefix_name: "clcp-tenant-ceph-osd-sdb"
+
+    conf:
+      storage:
+        failure_domain_by_hostname: 1-11
+        osd:
+          - data:
+              type: bluestore
+              location: /dev/sdb
+
+...

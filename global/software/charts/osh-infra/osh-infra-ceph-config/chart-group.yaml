@@ -4,7 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: osh-infra-ceph-config
   labels:
-    name: osh-infra-ceph-config-global
+    name: osh-infra-ceph-config-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global

@@ -1,0 +1,37 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-calico
+  labels:
+    name: kubernetes-calico
+    layer: type
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: kubernetes-calico-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    conf:
+      node:
+        CALICO_STARTUP_LOGLEVEL: INFO
+        CLUSTER_TYPE: "k8s,bgp"
+        ETCD_CA_CERT_FILE: /etc/calico/pki/ca
+        ETCD_CERT_FILE: /etc/calico/pki/crt
+        ETCD_KEY_FILE: /etc/calico/pki/key
+        WAIT_FOR_STORAGE: "true"
+    networking:
+      settings:
+        mesh: "on"
+        ippool:
+          ipip:
+            enabled: "true"
+            mode: "Always"
+          nat_outgoing: "true"
+          disabled: "false"
+...

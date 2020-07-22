@@ -1,0 +1,252 @@
+---
+schema: 'drydock/NetworkLink/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: oob
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  # MaaS doesn't own this network like it does the others,
+  # so the noconfig label is specified.
+  labels:
+    noconfig: enabled
+  bonding:
+    mode: disabled
+  mtu: 1500
+  linkspeed: auto
+  trunking:
+    mode: disabled
+    default_network: oob
+  allowed_networks:
+    - oob
+...
+---
+schema: 'drydock/NetworkLink/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: pxe
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  bonding:
+    mode: disabled
+  mtu: 1500
+  linkspeed: auto
+  trunking:
+    mode: disabled
+    default_network: pxe
+  allowed_networks:
+    - pxe
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: oob-cruiser
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: oob
+    topology: cruiserlite
+  storagePolicy: cleartext
+data:
+  mtu: 1500
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: pxe-cruiserlite
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: pxe
+    topology: cruiserlite
+  substitutions:
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .dns.node_domain
+      dest:
+        path: .dns.domain
+  storagePolicy: cleartext
+data:
+  mtu: 1500
+...
+---
+schema: 'drydock/NetworkLink/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: dmz
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  bonding:
+    mode: disabled
+  mtu: 1500
+  linkspeed: auto
+  trunking:
+    mode: disabled
+    default_network: oam
+  allowed_networks:
+    - oam
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: oam-cruiserlite
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: oam
+    topology: cruiserlite
+  substitutions:
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .dns.node_domain
+      dest:
+        path: .dns.domain
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .dns.upstream_servers_joined
+      dest:
+        path: .dns.servers
+  storagePolicy: cleartext
+data:
+  mtu: 1500
+...
+---
+schema: 'drydock/NetworkLink/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: data1
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  bonding:
+    mode: disabled
+  # NEWSITE-CHANGEME: Ensure the network switches in the environment are
+  # configured for this MTU or greater.
+  mtu: 1500
+  linkspeed: auto
+  trunking:
+    mode: 802.1q
+  allowed_networks:
+    - calico
+    - overlay
+...
+---
+schema: 'drydock/NetworkLink/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: data2
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  bonding:
+    mode: disabled
+  # NEWSITE-CHANGEME: Ensure the network switches in the environment are
+  # configured for this MTU or greater.
+  mtu: 1500
+  linkspeed: auto
+  trunking:
+    mode: 802.1q
+    default_network: storage
+  allowed_networks:
+    - storage
+    - routable
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: storage-cruiserlite
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: storage
+    topology: cruiserlite
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Set the VLAN ID which the Storage network is on
+  # use '0' if the vlan is untagged
+  vlan: '0'
+  # NEWSITE-CHANGEME: Ensure the network switches in the environment are
+  # configured for this MTU or greater.
+  mtu: 1500
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: calico-cruiserlite
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: calico
+    topology: cruiserlite
+  storagePolicy: cleartext
+data:
+  mtu: 1500
+  # NEWSITE-CHANGEME: Set the VLAN ID which the Private network is on
+  # use '0' if the vlan is untagged
+  vlan: '0'
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: overlay-cruiserlite
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: os-overlay
+    topology: cruiserlite
+  storagePolicy: cleartext
+data:
+  mtu: 1500
+  # MaaS doesnt own this network like it does the others, so the noconfig label
+  # is specified.
+  labels:
+    noconfig: enabled
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: routable-cruiserlite
+  layeringDefinition:
+    abstract: true
+    layer: type
+  labels:
+    network_role: os-routable
+    topology: cruiserlite
+  storagePolicy: cleartext
+data:
+  # NEWSITE-CHANGEME: Ensure the network switches in the environment are
+  # configured for this MTU or greater.
+  mtu: 1500
+  # MaaS doesnt own this network like it does the others, so the noconfig label
+  # is specified.
+  labels:
+    noconfig: enabled
+...

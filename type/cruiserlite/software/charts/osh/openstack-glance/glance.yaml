@@ -1,0 +1,29 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: glance
+  labels:
+    name: glance-type
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: glance-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  test:
+    enabled: false
+  values:
+    pod:
+      replicas:
+        api: 3
+        registry: 3
+    conf:
+      rally_tests:
+        run_tempest: false
+...

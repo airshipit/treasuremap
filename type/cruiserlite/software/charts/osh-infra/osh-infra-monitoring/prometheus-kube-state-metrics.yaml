@@ -1,0 +1,30 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: prometheus-kube-state-metrics
+  labels:
+    name: prometheus-kube-state-metrics-cruiserlite
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: prometheus-kube-state-metrics-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      resources:
+        enabled: true
+        kube_state_metrics:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
+...

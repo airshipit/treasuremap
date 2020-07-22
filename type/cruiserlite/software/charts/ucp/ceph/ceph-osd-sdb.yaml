@@ -1,0 +1,35 @@
+---
+# The purpose of this file is to define environment-specific parameters for
+# ceph-osd
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-ceph-osd-sdb
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-ceph-osd-global
+    actions:
+      - method: replace
+        path: .values.conf.storage.osd
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  chart_name: ucp-ceph-osd-sdb
+  release: ucp-ceph-osd-sdb
+  wait:
+    labels:
+      release_group: clcp-ucp-ceph-osd-sdb
+  values:
+    daemonset:
+      prefix_name: "clcp-ucp-ceph-osd-sdb"
+    conf:
+      storage:
+        failure_domain_by_hostname: 1-11
+        osd:
+          - data:
+              type: bluestore
+              location: /dev/sdb
+...

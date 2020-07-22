@@ -1,0 +1,36 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: kibana
+  labels:
+    name: kibana-cruiserlite
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: kibana-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      resources:
+        apache_proxy:
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+        kibana:
+          requests:
+            memory: "512Mi"
+            cpu: "100m"
+          limits:
+            memory: "2048Mi"
+            cpu: "2000m"
+...

@@ -1,0 +1,138 @@
+---
+schema: 'drydock/HardwareProfile/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: intel-s2600wt
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  # Vendor of the server chassis
+  vendor: Intel
+  # Generation of the chassis model
+  generation: '4'
+  # Version of the chassis model within its generation - not version of the hardware definition
+  hw_version: '3'
+  # The certified version of the chassis BIOS
+  bios_version: 'SE5C610.86B.01.01.0019.101220160604'
+  # Mode of the default boot of hardware - bios, uefi
+  boot_mode: bios
+  # Protocol of boot of the hardware - pxe, usb, hdd
+  bootstrap_protocol: pxe
+  # Which interface to use for network booting within the OOB manager, not OS device
+  pxe_interface: 0
+
+  # Map hardware addresses to aliases/roles to allow a mix of hardware configs
+  # in a site to result in a consistent configuration
+
+  device_aliases:
+    ## network
+    # $ sudo lspci |grep -i ethernet
+    # 03:00.0 Ethernet controller: Intel Corporation I350 Gigabit Network Connection (rev 01)
+    # 03:00.3 Ethernet controller: Intel Corporation I350 Gigabit Network Connection (rev 01)
+    # 05:00.0 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 01)
+    # 05:00.1 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 01)
+    # 05:00.2 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 01)
+    # 05:00.3 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 01)
+
+    # control networks
+    # eno1
+    ctrl_nic1:
+      address: '0000:03:00.0'
+      dev_type: 'I350 Gigabit Network Connection'
+      bus_type: 'pci'
+    # eno2
+    ctrl_nic2:
+      address: '0000:03:00.3'
+      dev_type: 'I350 Gigabit Network Connection'
+      bus_type: 'pci'
+
+    # data networks
+    # ens785f0
+    data_nic1:
+      address: '0000:05:00.0'
+      dev_type: 'Ethernet Controller X710 for 10GbE SFP+'
+      bus_type: 'pci'
+    # ens785f1
+    data_nic2:
+      address: '0000:05:00.1'
+      dev_type: 'Ethernet Controller X710 for 10GbE SFP+'
+      bus_type: 'pci'
+    # ens785f2
+    data_nic3:
+      address: '0000:05:00.2'
+      dev_type: 'Ethernet Controller X710 for 10GbE SFP+'
+      bus_type: 'pci'
+    # ens785f3
+    data_nic4:
+      address: '0000:05:00.3'
+      dev_type: 'Ethernet Controller X710 for 10GbE SFP+'
+      bus_type: 'pci'
+
+    ## storage
+    # $ sudo lshw -c disk
+    #   *-disk                  
+    #        description: ATA Disk
+    #        product: INTEL SSDSC2BB48
+    #        physical id: 0.0.0
+    #        bus info: scsi@4:0.0.0
+    #        logical name: /dev/sda
+    #        version: 0101
+    #        serial: PHDV637602LL480BGN
+    #        size: 447GiB (480GB)
+    #        capabilities: gpt-1.00 partitioned partitioned:gpt
+    #        configuration: ansiversion=5 guid=ea7d0b6a-c105-4409-8d4c-dc104cb38737 logicalsectorsize=512 sectorsize=4096
+    #   *-disk
+    #        description: ATA Disk
+    #        product: ST91000640NS
+    #        vendor: Seagate
+    #        physical id: 0.0.0
+    #        bus info: scsi@5:0.0.0
+    #        logical name: /dev/sdb
+    #        version: SN03
+    #        serial: 9XG6LX48
+    #        size: 931GiB (1TB)
+    #        capabilities: gpt-1.00 partitioned partitioned:gpt
+    #        configuration: ansiversion=5 guid=27f17348-e081-4b00-8d4c-5960513a40cd logicalsectorsize=512 sectorsize=512
+
+    # /dev/sda
+    bootdisk:
+      address: '4:0.0.0'
+      dev_type: 'INTEL SSDSC2BB48'
+      bus_type: 'scsi'
+    # /dev/sdb
+    datadisk:
+      address: '5:0.0.0'
+      dev_type: 'ST91000640NS'
+      bus_type: 'scsi'
+  cpu_sets:
+    # CPUS pinning
+    # Host OS CPUs are inferred, and will be the remaining cores
+    kvm: '2-21,24-43,46-65,68-87'
+    # Kernel config
+    # Reduce OS jitter on the offloaded CPUs.
+    rcu_nocbs: '2-21,24-43,46-65,68-87'
+    # Nova config
+    # CPUs dedicated to tenant workload.
+    vcpu_pin_set: '4-21,26-43,48-65,70-87'
+    # OVS config
+    # CPUs used by OVS-DPDK processes, same as CPUs used by host OS.
+    # For this lab, the CPU/Numa allocation is as followed:
+    #   NUMA node0 CPU(s):     0-21,44-65
+    #   NUMA node1 CPU(s):     22-43,66-87
+    # So to spread them about both numa, the following is assigned:
+    # VCPUs 0,44,1,45,22,66,23,67 = first 4 CPU cores
+    dpdk-lcore-mask: '0x0C0000300000C00003'
+    # OVS config
+    # CPUs used by dpdk Poll Mode Drivers (PMD)
+    # OVS configu paramter for DPDK.
+    # VCPUs 2,46,3,47,24,68,25,69 CPU cores 4-7
+    pmd-cpu-mask: '0x300000C0000300000C'
+  hugepages:
+    dpdk:
+      size: '1G'
+      # Referenced in the compute host profile. Control host profile sets its own value.
+      count: 32
+      socket-mem: '4096,4096'
+...

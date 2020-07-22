@@ -1,0 +1,36 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: nagios
+  labels:
+    name: nagios-cruiserlite
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: nagios-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      resources:
+        nagios:
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+        apache_proxy:
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+...

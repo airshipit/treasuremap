@@ -4,7 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: openstack-rabbitmq
   labels:
-    name: openstack-rabbitmq-global
+    name: openstack-rabbitmq-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global

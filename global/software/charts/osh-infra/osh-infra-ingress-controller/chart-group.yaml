@@ -4,7 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: osh-infra-ingress-controller
   labels:
-    name: osh-infra-ingress-controller-global
+    name: osh-infra-ingress-controller-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global

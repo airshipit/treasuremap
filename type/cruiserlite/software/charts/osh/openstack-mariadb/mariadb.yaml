@@ -1,0 +1,33 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: openstack-mariadb
+  labels:
+    name: openstack-mariadb-cruiserlite
+    component: mariadb
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: openstack-mariadb-global
+      component: mariadb
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+
+data:
+  values:
+    volume:
+      size: 10Gi
+      backup:
+        size: 15Gi
+    monitoring:
+      prometheus:
+        enabled: true
+    pod:
+      replicas:
+        error_page: 2
+...

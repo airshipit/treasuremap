@@ -138,6 +138,12 @@ data:
         do
           sleep 5
         done
+    ceph_mgr_enabled_modules:
+      - restful
+      - status
+      - prometheus
+      - balancer
+      - iostat
     jobs:
       pool_checkPGs:
         # Run once a month at midnight of the first day of the month

@@ -1,0 +1,62 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nova
+  labels:
+    name: nova-cruiserlite
+    component: nova
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+        name: nova-global
+    actions:
+        - method: merge
+          path: .
+  storagePolicy: cleartext
+  substitutions:
+    # Nova config for OVS-DPDK
+    - src:
+        schema: drydock/HardwareProfile/v1
+        name: intel-s2600wt
+        path: .cpu_sets.vcpu_pin_set
+      dest:
+        path: .values.conf.nova.DEFAULT.vcpu_pin_set
+data:
+  wait:
+    timeout: 12000
+  test:
+    timeout: 1200
+  values:
+    pod:
+      use_fqdn:
+        compute: false
+      replicas:
+        api_metadata: 3
+        compute_ironic: 3
+        placement: 3
+        osapi: 3
+        conductor: 3
+        consoleauth: 3
+        scheduler: 3
+        novncproxy: 3
+        spiceproxy: 3
+    network:
+      backend:
+       - openvswitch
+       - sriov
+    conf:
+      nova:
+        libvirt:
+          virt_type: kvm
+        DEFAULT:
+          force_config_drive: true
+          cpu_allocation_ratio: 1.0
+        pci:
+          alias: '{"name": "numa0", "capability_type": "pci", "product_id": "154c", "vendor_id": "8086", "device_type": "type-PCI", "numa_policy": "required"}'
+          ## NOTE: Exclude vf0 from each of the sriov nic
+          passthrough_whitelist: |
+              [{"address": {"domain":"0000","bus":"05","slot":"06","function":"[2-7]"}, "physical_network": "sriovnet1"},{"address": "0000:05:07.*", "physical_network": "sriovnet1"},{"address": "0000:05:08.*", "physical_network": "sriovnet1"},{"address": "0000:05:09.*", "physical_network": "sriovnet1"}]
+
+...

@@ -1,0 +1,29 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: prometheus-node-exporter
+  labels:
+    name: prometheus-node-exporter-cruiserlite
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: prometheus-node-exporter-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      resources:
+        node_exporter:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
+...

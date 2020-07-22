@@ -4,7 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: osh-infra-radosgw
   labels:
-    name: osh-infra-radosgw-global
+    name: osh-infra-radosgw-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global

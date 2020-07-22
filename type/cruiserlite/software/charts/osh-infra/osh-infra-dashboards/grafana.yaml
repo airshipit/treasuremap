@@ -1,0 +1,29 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: grafana
+  labels:
+    name: grafana-cruiserlite
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: grafana-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      resources:
+        grafana:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
+...

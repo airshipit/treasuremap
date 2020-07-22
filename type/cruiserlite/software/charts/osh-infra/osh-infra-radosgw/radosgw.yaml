@@ -1,0 +1,25 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: osh-infra-radosgw
+  labels:
+    name: osh-infra-radosgw-cruiserlite
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: osh-infra-radosgw-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+
+data:
+  values:
+    pod:
+      replicas:
+        rgw: 2
+...
+

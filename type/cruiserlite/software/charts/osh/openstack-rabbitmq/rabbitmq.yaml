@@ -1,0 +1,22 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: openstack-rabbitmq
+  labels:
+    name: openstack-rabbitmq-cruiserlite
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: openstack-rabbitmq-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    volume:
+      size: 5Gi
+...

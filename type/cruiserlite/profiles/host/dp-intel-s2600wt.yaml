@@ -1,0 +1,128 @@
+---
+# The data plane host profile for Airship for DELL R720s, and should
+# not need to be altered if you are using matching HW. The host profile is setup
+# for cpu isolation (for nova pinning), hugepages, and sr-iov.
+schema: drydock/HostProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: dp-intel-s2600wt
+  storagePolicy: cleartext
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      hosttype: nc-p1-adv
+    actions:
+      - method: replace
+        path: .interfaces
+      - method: replace
+        path: .storage
+      - method: merge
+        path: .
+  substitutions:
+    - dest:
+        path: .oob.credential
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ipmi_admin_password
+        path: .
+    - dest:
+        path: .interfaces.data2.sriov.device
+      src:
+        schema: drydock/HardwareProfile/v1
+        name: intel-s2600wt
+        path: .device_aliases.data_nic2.address
+    - dest:
+        - path: .platform.kernel_params.isolcpus
+      src:
+        schema: drydock/HardwareProfile/v1
+        name: intel-s2600wt
+        path: .cpu_sets.kvm
+    - dest:
+        - path: .platform.kernel_params.rcu_nocbs
+      src:
+        schema: drydock/HardwareProfile/v1
+        name: intel-s2600wt
+        path: .cpu_sets.rcu_nocbs
+    - dest:
+        path: .platform.kernel_params.dpdk-socket-mem
+      src:
+        schema: drydock/HardwareProfile/v1
+        name: intel-s2600wt
+        path: .hugepages.dpdk.socket-mem
+data:
+  hardware_profile: intel-s2600wt
+
+  primary_network: dmz
+  interfaces:
+    dmz:
+      device_link: dmz
+      slaves:
+        - ctrl_nic1
+      networks:
+        - oam
+    pxe:
+      device_link: pxe
+      slaves:
+        - ctrl_nic2
+      networks:
+        - pxe
+    data1:
+      device_link: data1
+      slaves:
+        - data_nic1
+      networks:
+        - calico
+        - overlay
+    data2:
+      device_link: data2
+      slaves:
+        - data_nic2
+      networks:
+        - storage
+        - routable
+      sriov:
+        num_vfs: 32
+        promisc: false
+      ovs_dpdk:
+        vf_index: 0
+      pci_whitelist:
+        trusted: false
+  storage:
+    physical_devices:
+      bootdisk:
+        labels:
+          bootdrive: 'true'
+        partitions:
+          - name: 'root'
+            size: '30g'
+            bootable: true
+            filesystem:
+              mountpoint: '/'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'boot'
+            size: '1g'
+            filesystem:
+              mountpoint: '/boot'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'log'
+            size: '100g'
+            filesystem:
+              mountpoint: '/var/log'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var'
+            size: '100g'
+            filesystem:
+              mountpoint: '/var'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'nova'
+            size: '>200g'
+            filesystem:
+              mountpoint: '/var/lib/nova'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+...

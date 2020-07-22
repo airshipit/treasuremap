@@ -1,0 +1,515 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: elasticsearch
+  labels:
+    name: elasticsearch-cruiserlite
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      hosttype: elasticsearch-global
+    actions:
+      - method: replace
+        path: .values.conf.curator.action_file
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        master: 3
+        data: 3
+        client: 3
+      resources:
+        client:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        master:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        data:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+    storage:
+      data:
+        requests:
+          storage: 200G
+        storage_class: general
+      master:
+        requests:
+          storage: 5G
+        storage_class: general
+    conf:
+      jvm_options: |
+        -Xms1g
+        -Xmx1g
+        -XX:+UseConcMarkSweepGC
+        -XX:CMSInitiatingOccupancyFraction=75
+        -XX:+UseCMSInitiatingOccupancyOnly
+        -Des.networkaddress.cache.ttl=60
+        -Des.networkaddress.cache.negative.ttl=10
+        -XX:+AlwaysPreTouch
+        -Xss1m
+        -Djava.awt.headless=true
+        -Dfile.encoding=UTF-8
+        -Djna.nosys=true
+        -XX:-OmitStackTraceInFastThrow
+        -Dio.netty.noUnsafe=true
+        -Dio.netty.noKeySetOptimization=true
+        -Dio.netty.recycler.maxCapacityPerThread=0
+        -Dlog4j.shutdownHookEnabled=false
+        -Dlog4j2.disable.jmx=true
+        -Djava.io.tmpdir=${ES_TMPDIR}
+        -XX:+HeapDumpOnOutOfMemoryError
+        -XX:HeapDumpPath=data
+        -XX:ErrorFile=logs/hs_err_pid%p.log
+        8:-XX:+PrintGCDetails
+        8:-XX:+PrintGCDateStamps
+        8:-XX:+PrintTenuringDistribution
+        8:-XX:+PrintGCApplicationStoppedTime
+        8:-Xloggc:logs/gc.log
+        8:-XX:+UseGCLogFileRotation
+        8:-XX:NumberOfGCLogFiles=32
+        8:-XX:GCLogFileSize=64m
+        9-:-Xlog:gc*,gc+age=trace,safepoint:file=logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m
+        9-:-Djava.locale.providers=COMPAT
+        10-:-XX:UseAVX=2
+      elasticsearch:
+        env:
+          java_opts:
+            client: "-Xms1g -Xmx1g"
+            data: "-Xms1g -Xmx1g"
+            master: "-Xms1g -Xmx1g"
+      curator:
+        #run every 12th hour
+        schedule:  "0 */12 * * *"
+        action_file:
+          actions:
+            1:
+              # Below indices for non-security-logs-snapshot
+              # libvirt-|qemu- #libvirt and qemu indices
+              # |journal-|kernel-|syslog-|kernel_syslog- #journald, kernel, and syslog indices
+              # |ceph-|tenant_ceph- #ceph and tenant_ceph indices
+              # |calico- #calico indices
+              # |armada- #armada indices
+              # |logstash- #generic logstash indices
+              # |flows- #flowlogs indices
+              # |utility_access- #utility container indices
+              # |openvswitch- #openvswitch log indices
+              action: snapshot
+              description: >-
+                "Snapshot all non-security logs indices older than 10 days"
+              options:
+                repository: logstash_snapshots
+                name: "non-security-logs-snapshot-%Y.%m.%d.%H.%M"
+                wait_for_completion: True
+                max_wait: -1
+                wait_interval: 30
+                ignore_empty_list: True
+                continue_if_exception: False
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: '^(libvirt-|qemu-|journal-|kernel-|syslog-|kernel_syslog-|ceph-|tenant_ceph-|calico-|armada-|logstash-|flows-|utility_access-|openvswitch-).*$'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            2:
+              # Below indices for security-logs-snapshot
+              # keystone-|glance-|cinder-|nova-|neutron-|heat-|horizon-|openstack-|ro-|ranger- #openstack indices
+              # |grafana-|prometheus-|nagios-|kibana-|elasticsearch-|lma- #grafana, prometheus, nagios, kibana and elasticsearch indices
+              # |auth- #auth indices
+              # |shipyard- #shipyard indices
+              # |jenkins- #jenkins indices
+              # |airship- #airship indices
+              # |audit_tsee- #tsee audit logs
+              action: snapshot
+              description: >-
+                "Snapshot all security logs indices older than 10 days"
+              options:
+                repository: logstash_snapshots
+                name: "security-logs-snapshot-%Y.%m.%d.%H.%M"
+                wait_for_completion: True
+                max_wait: -1
+                wait_interval: 30
+                ignore_empty_list: True
+                continue_if_exception: False
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: '^(keystone-|glance-|cinder-|nova-|neutron-|heat-|horizon-|openstack-|ro-|ranger-|grafana-|prometheus-|nagios-|kibana-|elasticsearch-|lma-|auth-|shipyard-|jenkins-|airship-|audit_tsee-).*$'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            3:
+              action: delete_indices
+              description: >-
+                "Delete libvirt and qemu indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: '^(libvirt-|qemu-).*$'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            4:
+              action: delete_indices
+              description: >-
+                "Delete journald, kernel, and syslog indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: '^(journal-|kernel-|syslog-|kernel_syslog-).*$'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            5:
+              action: delete_indices
+              description: >-
+                "Delete ceph and tenant_ceph indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: '^(ceph-|tenant_ceph-).*$'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+
+            6:
+              action: delete_indices
+              description: >-
+                "Delete Openvswitch log indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: 'openvswitch-'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            7:
+              action: delete_indices
+              description: >-
+                "Delete calico indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: 'calico-'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            8:
+              action: delete_indices
+              description: >-
+                "Delete armada indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: 'armada-'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            9:
+              action: delete_indices
+              description: >-
+                "Delete generic logstash indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: 'logstash-'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            10:
+              action: delete_indices
+              description: >-
+                "Delete openstack service indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: '^(keystone-|glance-|cinder-|nova-|neutron-|heat-|horizon-|openstack-).*$'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            11:
+              action: delete_indices
+              description: >-
+                "Delete grafana, prometheus, nagios, kibana and elasticsearch indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: '^(grafana-|prometheus-|nagios-|kibana-|elasticsearch-|lma-).*$'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            12:
+              action: delete_indices
+              description: >-
+                "Delete auth indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: 'auth-'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            13:
+              action: delete_indices
+              description: >-
+                "Delete shipyard indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: 'shipyard-'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            14:
+              action: delete_indices
+              description: >-
+                "Delete jenkins indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: 'jenkins-'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            15:
+              action: delete_indices
+              description: >-
+                "Delete flows indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: 'flows-'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            16:
+              action: delete_indices
+              description: >-
+                "Delete airship indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: 'airship-'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            17:
+              action: delete_indices
+              description: >-
+                "Delete tsee audit indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: 'audit_tsee-'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            18:
+              action: delete_indices
+              description: >-
+                "Delete utility container log indices older than 14 days"
+              options:
+                timeout_override: 7200
+                continue_if_exception: False
+                ignore_empty_list: True
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: 'utility_access-'
+              - filtertype: age
+                source: name
+                direction: older
+                timestring: '%Y.%m.%d'
+                unit: days
+                unit_count: 2
+            19:
+              action: delete_snapshots
+              description: >-
+                "Delete non-security logs snapshots older than 14 days"
+              options:
+                repository: logstash_snapshots
+                timeout_override: 21600
+                retry_interval: 120
+                retry_count: 5
+                ignore_empty_list: True
+                continue_if_exception: False
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: 'non-security-logs-snapshot-'
+              - filtertype: age
+                source: creation_date
+                direction: older
+                unit: days
+                unit_count: 2
+            20:
+              action: delete_snapshots
+              description: >-
+                "Delete security logs snapshots older than 180 days"
+              options:
+                repository: logstash_snapshots
+                timeout_override: 21600
+                retry_interval: 120
+                retry_count: 5
+                ignore_empty_list: True
+                continue_if_exception: False
+                disable_action: False
+              filters:
+              - filtertype: pattern
+                kind: prefix
+                value: 'security-logs-snapshot-'
+              - filtertype: age
+                source: creation_date
+                direction: older
+                unit: days
+                unit_count: 2
+...

@@ -4,7 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: osh-infra-dashboards
   labels:
-    name: osh-infra-dashboards-global
+    name: osh-infra-dashboards-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global

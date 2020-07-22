@@ -29,14 +29,15 @@ data:
       docker: docker.io
     repo_urls:
       artfactory_web_url: artifacts-example.com/artifactory
+    auth_key: changeme
   infrastructure:
     dns:
       upstream_servers:
         - 8.8.8.8
-        - 1.1.1.1
+        - 4.4.4.4
       # Repeat the same values as above, but formatted as a common separated
       # string
-      upstream_servers_joined: 8.8.8.8,1.1.1.1
+      upstream_servers_joined: 8.8.8.8, 4.4.4.4
     ntp:
       # Verify that a minimum of three (3) ATT NTP servers are reachable in your
       # environment; otherwise override them at the site level
@@ -50,10 +51,8 @@ data:
       # 2. A DNS failure scenario would not result in the common-mode failure of
       #    nodes to be able to maintain accurate time.
       servers:
-        # time WWT
-        - 10.255.0.1
-        # cloudfare
-        - 1.1.1.1
+        - 0.ubuntu.pool.ntp.org
+        - 1.ubuntu.pool.ntp.org
 
     smtp:
         server: smtp.test.com
@@ -117,6 +116,7 @@ data:
       user_home: /home/aic-ord
       ranger_agent_keystone_user: ranger-agent-admin
       rds_listener_endpoint: https://ranger.example.com/v1/rds/status
+      keystone_password: changeme
   calico:
     calico_startup_loglevel: 'Debug'
     felix_logseverity: 'Info'

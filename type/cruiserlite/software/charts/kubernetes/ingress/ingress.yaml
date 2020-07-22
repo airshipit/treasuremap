@@ -1,0 +1,37 @@
+---
+# The purpose of this file is to define the environment-specific public-facing
+# VIP for the ingress controller
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  replacement: true
+  name: ingress-kube-system
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      ingress: kube-system
+    actions:
+      - method: merge
+        path: .
+  substitutions:
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.bgp.ipv4.ingress_vip
+      dest:
+        path: .values.network.vip.addr
+  storagePolicy: cleartext
+data:
+  values:
+    network:
+      ingress:
+        disable-ipv6: 'true'
+      vip:
+        manage: true
+        interface: ingress0
+    conf:
+      ingress:
+        # The default number is set to the number of cpus, wich is 88 in the Intel lab.
+        worker-processes: "10"
+...

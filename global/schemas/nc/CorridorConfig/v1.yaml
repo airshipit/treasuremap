@@ -43,11 +43,6 @@ data:
           type: string
 
       additionalProperties: false
-      required:
-        - auth_key
-        - hostnames
-        - artfactory_ip
-        - repo_urls
 
     gstools:
       type: object
@@ -377,13 +372,6 @@ data:
             debug_level:
               type: string
           additionalProperties: false
-          required:
-            - rds_listener_endpoint
-            - ranger_agent_keystone_user
-            - user
-            - user_home
-            - keystone_password
-            - debug_level
 
       additionalProperties: false
       required:

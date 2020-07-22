@@ -1,0 +1,91 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-ingress-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-ingress-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: ucp-ingress-scaled-type
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        ingress: 2
+        error_page: 2
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-mariadb-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-mariadb-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: ucp-mariadb-scaled-type
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        server: 3
+        ingress: 2
+        error_page: 2
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-rabbitmq-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-rabbitmq-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: ucp-rabbitmq-scaled-type
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        server: 2
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-postgresql-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-postgresql-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: ucp-postgresql-scaled-type
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        server: 3
+...

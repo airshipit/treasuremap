@@ -1,0 +1,18 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-infra-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  description: Common UCP Components
+  chart_group:
+    - ucp-ingress-scaled
+    - ucp-mariadb-scaled
+    - ucp-postgresql-scaled
+    - ucp-rabbitmq-scaled
+    - ucp-keystone-memcached
+...

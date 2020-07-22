@@ -1,0 +1,27 @@
+---
+schema: promenade/PKICatalog/v1
+metadata:
+  schema: metadata/Document/v1
+  name: webhook-apiserver
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  certificate_authorities:
+    keystone-webhook:
+      description: Certificates for the Keystone Webhook
+      certificates:
+        - document_name: keystone-webhook-server
+          description: Server cert for Keystone Webhook
+          common_name: keystone-webhook
+          hosts:
+            - 127.0.0.1
+            - localhost
+    apiserver-webhook:
+      description: Certificates for APIservers w/ Webhook
+      certificates:
+        - document_name: apiserver-webhook-server
+          description: Server cert for APIserver w/ webhook
+          common_name: apiserver-webhook
+...

@@ -1,0 +1,43 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: coredns-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: coredns-global
+    actions:
+      - method: merge
+        path: .
+  labels:
+    name: coredns-scaled-type
+  storagePolicy: cleartext
+data:
+  values:
+#    conf:
+#      coredns:
+#        corefile: |
+#          .:53 {
+#              errors
+#              loadbalance round_robin
+#              health
+#              autopath @kubernetes
+#              kubernetes CLUSTER_DOMAIN SERVICE_CIDR POD_CIDR {
+#                pods insecure
+#                fallthrough in-addr.arpa ip6.arpa
+#                upstream UPSTREAM1
+#              }
+#              prometheus :9253
+#              forward . UPSTREAM1
+#              cache 30
+#              log . {
+#                class denial error
+#              }
+#          }
+    manifests:
+      # scale out a daemonset in addition to the deployment
+      daemonset: true
+      deployment: false
+...
