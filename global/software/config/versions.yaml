@@ -44,11 +44,17 @@ metadata:
         path: .
       dest:
         - path: .packages.repositories.main_archive.gpgkey
-        - path: .packages.repositories.ceph.gpgkey
-        - path: .packages.repositories.docker.gpgkey
         - path: .packages.repositories.linux_dell.gpgkey
         - path: .packages.repositories.nc_extra.gpgkey
         - path: .packages.repositories.zfs_dkms.gpgkey
+    # mirantis apt repository keys
+    - src:
+        schema: deckhand/PublicKey/v1
+        name: mirantis_repo_key
+        path: .
+      dest:
+        - path: .packages.repositories.ceph.gpgkey
+        - path: .packages.repositories.docker.gpgkey
     # apt urls
     - src:
         schema: pegleg/CommonAddresses/v1

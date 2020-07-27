@@ -2,3 +2,4 @@
 host=review.opendev.org
 port=29418
 project=airship/treasuremap.git
+defaultbranch=v1.8-prime
