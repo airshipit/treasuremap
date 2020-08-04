@@ -1,3 +1,5 @@
 # Unit test / coverage reports
 .tox/
 build/
+
+manifests/site/virtual-network-cloud/ephemeral/controlplane/before.yaml

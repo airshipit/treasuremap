@@ -1,0 +1,4 @@
+resources:
+  - ../../../../type/network-cloud/ephemeral/initinfra
+patchesStrategicMerge:
+  - patch_bmo_config.yaml
