@@ -1,0 +1,4 @@
+resources:
+  - ../../../airship-core/ephemeral/initinfra
+commonLabels:
+  airshipit.org/stage: initinfra
