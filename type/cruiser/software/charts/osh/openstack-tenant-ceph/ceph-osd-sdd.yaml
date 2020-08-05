@@ -25,6 +25,8 @@ data:
   values:
     daemonset:
       prefix_name: "clcp-tenant-ceph-osd-sdd"
+    deploy:
+      tool: "ceph-volume"
     conf:
       storage:
         failure_domain_by_hostname: 1-8
