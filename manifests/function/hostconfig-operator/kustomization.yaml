@@ -1,0 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - hostconfig.airshipit.org_hostconfigs_crd.yaml
+  - rbac
+  - deployment.yaml

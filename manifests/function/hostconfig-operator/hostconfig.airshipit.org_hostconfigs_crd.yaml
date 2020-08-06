@@ -1,0 +1,101 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: hostconfigs.hostconfig.airshipit.org
+spec:
+  group: hostconfig.airshipit.org
+  names:
+    kind: HostConfig
+    listKind: HostConfigList
+    plural: hostconfigs
+    singular: hostconfig
+    shortNames:
+    - hc
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      type: object
+      x-kubernetes-preserve-unknown-fields: true
+      properties:
+        spec:
+          description: "HostConfig Spec to perform hostconfig Opertaions."
+          type: object
+          properties:
+            host_groups:
+              description: "Array of host_groups to select hosts on which to perform host configuration."
+              type: array
+              items:
+                type: object
+                description: "Node labels to be given as key value pairs. Values can be given as list."
+                properties:
+                  name:
+                    type: string
+                    description: "Node label key values for host selection."
+                  values:
+                    type: array
+                    description: "Node label values for host selection."
+                    items:
+                      type: string
+                required:
+                  - name
+                  - values
+            match_host_groups:
+              type: boolean
+              description: "Set to true to perform an AND opertion of all the host_groups specified."
+            sequential:
+              type: boolean
+              description: "Set to true if the host_groups execution needs to happen in sequence."
+            reexecute:
+              type: boolean
+              description: "Set to true if execution needs to happen on the success nodes as well. Is applicable only when atleast one of the node fails. The execution repeats for all the nodes."
+            stop_on_failure:
+              type: boolean
+              description: "Set to true if any one node configuration fails, to stop the execution of the other nodes as well."
+            max_hosts_parallel:
+              type: integer
+              description: "Set to integer number, stating max how many hosts can execute at the same time."
+            max_failure_percentage:
+              type: integer
+              description: "Set the integer percentage value, to state how much max percentage of hosts can fail for every iteration before stoping the execution."
+            config:
+              type: object
+              description: "The configuration details that needs to be performed on the targeted kubernetes nodes."
+              properties:
+                ulimit:
+                  description: "An array of ulimit configuration to be performed on the target nodes."
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      user:
+                        type: string
+                      type:
+                        type: string
+                      item:
+                        type: string
+                      value:
+                        type: string
+                    required:
+                      - user
+                      - value
+                      - type
+                      - item
+                sysctl:
+                  description: "An array of sysctl configuration to be performed on the target nodes."
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      value:
+                        type: string
+                    required:
+                      - name
+                      - value
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true

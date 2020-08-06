@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airship-host-config
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: airship-host-config
+  template:
+    metadata:
+      labels:
+        name: airship-host-config
+    spec:
+      serviceAccountName: airship-host-config
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: name
+                operator: In
+                values:
+                - airship-host-config
+            topologyKey: "kubernetes.io/hostname"
+      nodeSelector:
+          node-type: controlplane
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      containers:
+        - name: airship-host-config
+          # Replace this with the latest image name
+          # built in the hostconfig-operator repository
+          image: "quay.io/airshipit/hostconfig-operator:latest"
+          imagePullPolicy: "IfNotPresent"
+          volumeMounts:
+          - mountPath: /tmp/ansible-operator/runner
+            name: runner
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "airship-host-config"
+            - name: ANSIBLE_FILTER_PLUGINS
+              value: /opt/ansible/plugins/filter
+            - name: ANSIBLE_FORKS
+              value: "100"
+            - name: ANSIBLE_GATHERING
+              value: explicit
+            - name: ANSIBLE_INVENTORY
+              value: /opt/ansible/inventory
+            - name: USER
+              value: "USERNAME"
+            - name: PASS
+              value: "PASSWORD"
+            - name: SECRET_NAMESPACE
+              value: "default"
+      volumes:
+        - name: runner
+          emptyDir: {}

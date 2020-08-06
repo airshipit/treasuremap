@@ -1,0 +1,11 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: airship-host-config
+subjects:
+- kind: ServiceAccount
+  name: airship-host-config
+roleRef:
+  kind: Role
+  name: airship-host-config
+  apiGroup: rbac.authorization.k8s.io
