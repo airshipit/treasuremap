@@ -2,7 +2,6 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  labels:
   name: ironic-vars
 data:
   PROVISIONING_IP: "10.23.24.101"
