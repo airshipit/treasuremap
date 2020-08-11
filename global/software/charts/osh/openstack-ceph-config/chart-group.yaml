@@ -4,7 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: openstack-ceph-config
   labels:
-    name: openstack-ceph-config-global
+    name: openstack-ceph-config-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global

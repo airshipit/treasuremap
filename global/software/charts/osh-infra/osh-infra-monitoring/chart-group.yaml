@@ -4,7 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: osh-infra-monitoring
   labels:
-    name: osh-infra-monitoring-global
+    name: osh-infra-monitoring-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global

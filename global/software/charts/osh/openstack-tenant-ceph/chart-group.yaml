@@ -3,12 +3,12 @@ schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
   name: openstack-tenant-ceph-global
+  labels:
+    name: openstack-tenant-ceph-chart-group-global
   layeringDefinition:
     abstract: true
     layer: global
   storagePolicy: cleartext
-  labels:
-    name: openstack-tenant-ceph-global
 data:
   description: Ceph Storage
   sequenced: true

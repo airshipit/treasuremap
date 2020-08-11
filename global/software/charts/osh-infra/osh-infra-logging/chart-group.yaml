@@ -4,7 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: osh-infra-logging
   labels:
-    name: osh-infra-logging-global
+    name: osh-infra-logging-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global

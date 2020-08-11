@@ -4,7 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: openstack-heat
   labels:
-    name: openstack-heat-global
+    name: openstack-heat-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global

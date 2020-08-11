@@ -4,7 +4,7 @@ metadata:
   schema: metadata/Document/v1
   name: openstack-radosgw
   labels:
-    name: openstack-radosgw-global
+    name: openstack-radosgw-chart-group-global
   layeringDefinition:
     abstract: false
     layer: global
