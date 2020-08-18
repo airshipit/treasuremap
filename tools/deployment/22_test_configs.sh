@@ -16,8 +16,10 @@ set -xe
 
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 : ${TREASUREMAP_PROJECT:="$(pwd)"}
+
 export AIRSHIPCTL_WS=${AIRSHIPCTL_WS:-$AIRSHIPCTL_PROJECT}
-export AIRSHIP_SITE_NAME="${TREASUREMAP_PROJECT}/manifests/site/test-site"
+export AIRSHIP_CONFIG_MANIFEST_DIRECTORY=${AIRSHIP_CONFIG_MANIFEST_DIRECTORY:-$TREASUREMAP_PROJECT}
+export AIRSHIP_SITE_NAME=${AIRSHIP_SITE_NAME:-"manifests/site/test-site"}
 
 cd ${AIRSHIPCTL_PROJECT}
 ./tools/deployment/22_test_configs.sh
