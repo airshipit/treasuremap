@@ -71,6 +71,7 @@
         - ./tools/deployment/30_deploy_controlplane.sh
         - ./tools/deployment/31_deploy_initinfra_target_node.sh
         - ./tools/deployment/32_cluster_init_target_node.sh
+        - ./tools/deployment/33_deploy_workload.sh
       serve_dir: /srv/iso
       serve_port: 8099
     voting: false
