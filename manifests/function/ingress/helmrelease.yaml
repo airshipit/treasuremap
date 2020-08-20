@@ -1,0 +1,26 @@
+---
+apiVersion: "helm.fluxcd.io/v1"
+kind: HelmRelease
+metadata:
+  name: ingress
+spec:
+  wait: true
+  timeout: 600
+  values:
+    controller:
+      service:
+        type: NodePort
+        nodePorts:
+          http: 80
+          https: 443
+      kind: DaemonSet
+      hostNetwork: "false"
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+  chart:
+    repository: https://kubernetes-charts.storage.googleapis.com
+    name: nginx-ingress
+    version: 1.40.1
