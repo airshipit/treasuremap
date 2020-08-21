@@ -1,5 +1,6 @@
 resources:
   - ../../shared/clusterctl
   - ../../../../../../airshipctl/manifests/function/baremetal-operator/
+  - ../../../../../../airshipctl/manifests/function/helm-operator/
 commonLabels:
   airshipit.org/stage: initinfra
