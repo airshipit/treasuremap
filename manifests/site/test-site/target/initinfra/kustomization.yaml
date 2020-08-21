@@ -1,4 +1,4 @@
 resources:
-  - ../../../../type/airship-core/ephemeral/initinfra
+  - ../../../../type/airship-core/target/initinfra
 patchesStrategicMerge:
   - patch_bmo_config.yaml
