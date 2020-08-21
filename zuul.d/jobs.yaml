@@ -69,6 +69,8 @@
         - ./tools/deployment/25_deploy_ephemeral_node.sh
         - ./tools/deployment/26_deploy_metal3_capi_ephemeral_node.sh
         - ./tools/deployment/30_deploy_controlplane.sh
+        - ./tools/deployment/31_deploy_initinfra_target_node.sh
+        - ./tools/deployment/32_cluster_init_target_node.sh
       serve_dir: /srv/iso
       serve_port: 8099
     voting: false
