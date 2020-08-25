@@ -41,7 +41,6 @@
       shell: |
         cd {{ local_src_dir | default(zuul.project.src_dir) }}
         ./tools/deployment/21_systemwide_executable.sh
-
     - name: make sure serve directory exists
       file:
         dest: "{{ serve_dir }}"
@@ -60,9 +59,9 @@
         - name: clone document model
           command: git clone -q {{ airship_config_primary_repo_url }} {{ remote_work_dir }}
           when: remote_work_dir is defined
-    - name: get MACs from BareMetalHost objects
+    - name: get VM config(MACs and bootMode) from BareMetalHost objects
       include_tasks:
-        file: get-mac-addresses.yaml
+        file: get-vm-config.yaml
       vars:
         name: "{{ roleinputvar.name }}"
         path: "{{ roleinputvar.path }}"
@@ -85,19 +84,19 @@
             name: "default"
         airship_gate_flavors:
           medium:
-            target_vm_memory_mb: 4096
-            target_vm_vcpus: 2
+            disk_format: qcow2
+            ephemeral_disk_size: 20G
+            ephemeral_vm_cfg: "{{ ephemeral_vm_cfg }}"
             ephemeral_vm_memory_mb: 6124
             ephemeral_vm_vcpus: 4
-            ephemeral_disk_size: 20G
-            ephemeral_vm_nics: "{{ ephemeral_vm_nics }}"
             target_disk_size: 10G
-            disk_format: qcow2
+            target_vm_cfg: "{{ target_vm_cfg }}"
+            target_vm_memory_mb: 4096
+            target_vm_vcpus: 2
             target_vms_count: 1
-            target_vm_nics: "{{ target_vm_nics }}"
+            worker_disk_size: 10G
             worker_vm_memory_mb: 1024
             worker_vm_vcpus: 1
-            worker_disk_size: 10G
             worker_vms_count: 1
         airship_gate_file_exchanger:
           servername: "localhost"
