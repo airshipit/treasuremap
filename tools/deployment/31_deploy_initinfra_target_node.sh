@@ -14,7 +14,17 @@
 
 set -ex
 
+export KUBECONFIG=${KUBECONFIG:-"$HOME/.airship/kubeconfig"}
+NODENAME="node01"
+export KUBECONFIG_TARGET_CONTEXT=${KUBECONFIG_TARGET_CONTEXT:-"target-cluster"}
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 
 cd ${AIRSHIPCTL_PROJECT}
+
+kubectl \
+  --kubeconfig $KUBECONFIG \
+  --context $KUBECONFIG_TARGET_CONTEXT \
+  --request-timeout 10s \
+  label node $NODENAME node-type=controlplane
+
 ./tools/deployment/31_deploy_initinfra_target_node.sh
