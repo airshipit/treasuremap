@@ -980,11 +980,11 @@ data:
       armada:
         api: quay.io/airshipit/armada:50384e47c762438b9e39abe4677f3c29f3c09184-ubuntu_xenial
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        helm: docker.io/lachlanevenson/k8s-helm:v2.14.1
+        helm: docker.io/lachlanevenson/k8s-helm:v2.16.9
         ks_endpoints: docker.io/openstackhelm/heat:newton
         ks_service: docker.io/openstackhelm/heat:newton
         ks_user: docker.io/openstackhelm/heat:newton
-        tiller: gcr.io/kubernetes-helm/tiller:v2.16.1
+        tiller: gcr.io/kubernetes-helm/tiller:v2.16.9
       barbican:
         barbican_api: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
         barbican_db_sync: docker.io/openstackhelm/barbican:ocata-ubuntu_xenial
