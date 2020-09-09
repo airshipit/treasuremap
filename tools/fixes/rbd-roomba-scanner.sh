@@ -3,7 +3,7 @@ set -ex
 
 CLUSTER_DNS=${CLUSTER_DNS:-10.96.0.10}
 
-KUBECTL_IMAGE=${KUBECTL_IMAGE:-gcr.io/google-containers/hyperkube-amd64:v1.18.6}
+KUBECTL_IMAGE=${KUBECTL_IMAGE:-gcr.io/google-containers/hyperkube-amd64:v1.17.3}
 UBUNTU_IMAGE=${UBUNTU_IMAGE:-docker.io/ubuntu:16.04}
 
 cat > /tmp/rbd-roomba-scanner.yaml << 'EOF'
