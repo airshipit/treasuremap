@@ -614,7 +614,7 @@ data:
         type: git
 
   files:
-    kubernetes: https://dl.k8s.io/v1.18.6/kubernetes-node-linux-amd64.tar.gz
+    kubernetes: https://dl.k8s.io/v1.17.3/kubernetes-node-linux-amd64.tar.gz
 
   images:
     calico:
@@ -700,13 +700,13 @@ data:
         rgw_s3_admin: docker.io/openstackhelm/ceph-config-helper:ubuntu_xenial-20191119
     kubernetes:
       apiserver:
-        anchor: &hyperkube gcr.io/google-containers/hyperkube-amd64:v1.18.6
-        apiserver: *hyperkube
+        anchor: gcr.io/google-containers/hyperkube-amd64:v1.17.3
+        apiserver: gcr.io/google-containers/hyperkube-amd64:v1.17.3
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        key_rotate: *hyperkube
+        key_rotate: gcr.io/google-containers/hyperkube-amd64:v1.17.3
       controller-manager:
-        anchor: *hyperkube
-        controller_manager: *hyperkube
+        anchor: gcr.io/google-containers/hyperkube-amd64:v1.17.3
+        controller_manager: gcr.io/google-containers/hyperkube-amd64:v1.17.3
       coredns:
         coredns: docker.io/coredns/coredns:1.6.2
         test: quay.io/airshipit/promenade:64807416b71958e31156ef7a50e169813acc4e15
@@ -714,10 +714,10 @@ data:
         etcd: quay.io/coreos/etcd:v3.4.2
         etcdctl: quay.io/coreos/etcd:v3.4.2
       haproxy:
-        anchor: *hyperkube
+        anchor: gcr.io/google-containers/hyperkube-amd64:v1.17.3
         haproxy: docker.io/library/haproxy:1.8.19
         test: docker.io/library/python:3.6
-      hyperkube: *hyperkube
+      hyperkube: gcr.io/google-containers/hyperkube-amd64:v1.17.3
       ingress:
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         entrypoint: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
@@ -728,10 +728,10 @@ data:
         keepalived: docker.io/osixia/keepalived:1.4.5
       pause: gcr.io/google-containers/pause-amd64:3.1
       proxy:
-        proxy: *hyperkube
+        proxy: gcr.io/google-containers/hyperkube-amd64:v1.17.3
       scheduler:
-        anchor: *hyperkube
-        scheduler: *hyperkube
+        anchor: gcr.io/google-containers/hyperkube-amd64:v1.17.3
+        scheduler: gcr.io/google-containers/hyperkube-amd64:v1.17.3
       validation:
         pod_logs:
           image: docker.io/library/busybox:1.28.3
@@ -804,8 +804,8 @@ data:
         db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
-        horizon: docker.io/openstackhelm/horizon:ocata-ubuntu_xenial
-        horizon_db_sync: docker.io/openstackhelm/horizon:ocata-ubuntu_xenial
+        horizon: docker.io/openstackhelm/horizon:ocata-ubuntu_xenial-20200513
+        horizon_db_sync: docker.io/openstackhelm/horizon:ocata-ubuntu_xenial-20200513
         test: docker.io/openstackhelm/osh-selenium:latest-ubuntu_bionic
       ingress:
         dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
@@ -1076,7 +1076,7 @@ data:
         prometheus_postgresql_exporter_create_user: docker.io/library/postgres:9.5
       promenade:
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
-        hyperkube: *hyperkube
+        hyperkube: gcr.io/google_containers/hyperkube-amd64:v1.17.3
         ks_endpoints: docker.io/openstackhelm/heat:newton
         ks_service: docker.io/openstackhelm/heat:newton
         ks_user: docker.io/openstackhelm/heat:newton
