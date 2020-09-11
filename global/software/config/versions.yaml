@@ -4,7 +4,7 @@ data:
     kubernetes:
       apiserver:
         location: https://opendev.org/airship/promenade
-        reference: 97427904bc69387d365834f73a377a48fa06e813
+        reference: 64807416b71958e31156ef7a50e169813acc4e15
         subpath: charts/apiserver
         type: git
       apiserver-htk:
@@ -25,7 +25,7 @@ data:
           type: git
         etcd:
           location: https://opendev.org/airship/promenade
-          reference: 97427904bc69387d365834f73a377a48fa06e813
+          reference: 64807416b71958e31156ef7a50e169813acc4e15
           subpath: charts/etcd
           type: git
         etcd-htk:
@@ -35,7 +35,7 @@ data:
           type: git
       controller-manager:
         location: https://opendev.org/airship/promenade
-        reference: 97427904bc69387d365834f73a377a48fa06e813
+        reference: 64807416b71958e31156ef7a50e169813acc4e15
         subpath: charts/controller_manager
         type: git
       controller-manager-htk:
@@ -45,7 +45,7 @@ data:
         type: git
       coredns:
         location: https://opendev.org/airship/promenade
-        reference: 97427904bc69387d365834f73a377a48fa06e813
+        reference: 64807416b71958e31156ef7a50e169813acc4e15
         subpath: charts/coredns
         type: git
       coredns-htk:
@@ -55,7 +55,7 @@ data:
         type: git
       etcd:
         location: https://opendev.org/airship/promenade
-        reference: 97427904bc69387d365834f73a377a48fa06e813
+        reference: 64807416b71958e31156ef7a50e169813acc4e15
         subpath: charts/etcd
         type: git
       etcd-htk:
@@ -65,7 +65,7 @@ data:
         type: git
       haproxy:
         location: https://opendev.org/airship/promenade
-        reference: 97427904bc69387d365834f73a377a48fa06e813
+        reference: 64807416b71958e31156ef7a50e169813acc4e15
         subpath: charts/haproxy
         type: git
       haproxy-htk:
@@ -85,7 +85,7 @@ data:
         type: git
       proxy:
         location: https://opendev.org/airship/promenade
-        reference: 97427904bc69387d365834f73a377a48fa06e813
+        reference: 64807416b71958e31156ef7a50e169813acc4e15
         subpath: charts/proxy
         type: git
       proxy-htk:
@@ -95,7 +95,7 @@ data:
         type: git
       scheduler:
         location: https://opendev.org/airship/promenade
-        reference: 97427904bc69387d365834f73a377a48fa06e813
+        reference: 64807416b71958e31156ef7a50e169813acc4e15
         subpath: charts/scheduler
         type: git
       scheduler-htk:
@@ -621,14 +621,14 @@ data:
       calico:
         calico_cni: quay.io/calico/cni:v3.4.0
         calico_ctl: docker.io/calico/ctl:v3.4.0
-        calico_etcd: quay.io/coreos/etcd:v3.4.3
+        calico_etcd: quay.io/coreos/etcd:v3.4.2
         calico_kube_controllers: quay.io/calico/kube-controllers:v3.4.0
         calico_node: quay.io/calico/node:v3.4.0
         calico_settings: docker.io/calico/ctl:v3.4.0
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
       etcd:
-        etcd: quay.io/coreos/etcd:v3.4.3
-        etcdctl: quay.io/coreos/etcd:v3.4.3
+        etcd: quay.io/coreos/etcd:v3.4.2
+        etcdctl: quay.io/coreos/etcd:v3.4.2
     ceph:
       ceph-client:
         ceph_bootstrap: docker.io/openstackhelm/ceph-daemon:ubuntu_xenial-20191119
@@ -711,8 +711,8 @@ data:
         coredns: docker.io/coredns/coredns:1.6.2
         test: quay.io/airshipit/promenade:64807416b71958e31156ef7a50e169813acc4e15
       etcd:
-        etcd: quay.io/coreos/etcd:v3.4.3
-        etcdctl: quay.io/coreos/etcd:v3.4.3
+        etcd: quay.io/coreos/etcd:v3.4.2
+        etcdctl: quay.io/coreos/etcd:v3.4.2
       haproxy:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.17.3
         haproxy: docker.io/library/haproxy:1.8.19
