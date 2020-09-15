@@ -2,8 +2,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../../../type/network-cloud/ephemeral/controlplane
+  - ../../shared/catalogues
   # TODO (dukov) It's recocommended to upload BareMetalHost objects separately
   # otherwise nodes will hang in 'registering' state for quite a long time
   - nodes
 patchesStrategicMerge:
-  - control-machine-template-patch.yaml
+  - versions-catalogue-patch.yaml
+transformers:
+  - ../../../../type/network-cloud/ephemeral/controlplane/replacements

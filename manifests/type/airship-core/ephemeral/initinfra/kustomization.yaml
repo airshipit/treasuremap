@@ -1,5 +1,5 @@
 resources:
-  - ../../shared/clusterctl
+  - ../../../../function/clusterctl
   - ../../../../../../airshipctl/manifests/composite/infra/
   - ../../../../../../airshipctl/manifests/function/baremetal-operator/
 commonLabels:

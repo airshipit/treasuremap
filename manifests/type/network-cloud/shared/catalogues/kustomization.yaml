@@ -6,3 +6,7 @@ resources:
 # NOTE(drewwalters96): Uncomment to patch common-networking catalogue.
 # patchesStrategicMerge:
 #   - common-networking.yaml
+# Uncomment to patch versions catalogue once needed
+# patchesStrategicMerge:
+#   - versions.yaml
+

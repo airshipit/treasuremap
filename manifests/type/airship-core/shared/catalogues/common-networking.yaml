@@ -3,6 +3,8 @@
 apiVersion: airshipit.org/v1alpha1
 kind: VariableCatalogue
 metadata:
+  labels:
+    airshipit.org/deploy-k8s: "false"
   name: common-networking-catalogue
 commonNetworking:
   links:

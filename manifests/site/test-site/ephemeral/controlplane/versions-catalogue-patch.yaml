@@ -1,0 +1,11 @@
+# Patch the versions catalogue to use the site-specific local image URL
+# TODO: patch this in from a site-networking catalogue in the future
+apiVersion: airshipit.org/v1alpha1
+kind: VariableCatalogue
+metadata:
+  name: versions-airshipctl
+files:
+  k8scontrol:
+    cluster_controlplane_image:
+      url: http://10.23.24.1:8099/target-image.qcow2
+      checksum: http://10.23.24.1:8099/target-image.qcow2.md5sum

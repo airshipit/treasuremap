@@ -1,4 +1,7 @@
 resources:
   - ../../../../type/airship-core/target/initinfra
+  - ../../shared/catalogues
 patchesStrategicMerge:
   - patch_bmo_config.yaml
+transformers:
+  - ../../../../type/airship-core/target/initinfra/replacements

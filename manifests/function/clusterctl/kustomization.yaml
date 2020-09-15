@@ -1,0 +1,9 @@
+resources:
+  - ../../../../airshipctl/manifests/function/clusterctl
+patchesJson6902:
+  - target:
+      group: airshipit.org
+      version: v1alpha1
+      kind: Clusterctl
+      name: clusterctl-v1
+    path: clusterctl-patch.yaml
