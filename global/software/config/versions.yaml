@@ -590,7 +590,7 @@ data:
         type: git
       ceph-rgw:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 8d9b7fdd2b146dc8a1578d6ee23c79aa3116f87e
+        reference: 2f8ea3977ba31a4576ffb9bf98282d0586d1aa25
         subpath: ceph-rgw
         type: git
       tenant-ceph-client:
@@ -620,7 +620,7 @@ data:
         type: git
       tenant-ceph-rgw:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 8d9b7fdd2b146dc8a1578d6ee23c79aa3116f87e
+        reference: 2f8ea3977ba31a4576ffb9bf98282d0586d1aa25
         subpath: ceph-rgw
         type: git
       deckhand:
