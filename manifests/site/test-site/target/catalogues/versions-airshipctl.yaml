@@ -1,11 +1,12 @@
-# Patch the versions catalogue to use the site-specific local image URL
-# TODO: patch this in from a site-networking catalogue in the future
+# Override default controlplane image location
 apiVersion: airshipit.org/v1alpha1
 kind: VariableCatalogue
 metadata:
   name: versions-airshipctl
+
 files:
   k8scontrol:
+    # Host the image in a locally served location for CI
     cluster_controlplane_image:
       url: http://10.23.24.1:8099/target-image.qcow2
       checksum: http://10.23.24.1:8099/target-image.qcow2.md5sum

@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
   - ../../../airship-core/shared/catalogues
 
-# NOTE(drewwalters96): Uncomment to patch common-networking catalogue.
+# NOTE(drewwalters96): Uncomment to patch networking catalogue.
 # patchesStrategicMerge:
 #   - common-networking.yaml
 # Uncomment to patch versions catalogue once needed
