@@ -29,7 +29,6 @@ data:
           additionalProperties: false
       required:
         - global
-        - secrets
       additionalProperties: false
     site_type:
       type: string
