@@ -1,0 +1,13 @@
+apiVersion: airshipit.org/v1alpha1
+kind: PhasePlan
+metadata:
+  name: phasePlan
+phaseGroups:
+  - name: group1
+    phases:
+      - name: initinfra-ephemeral
+      - name: clusterctl-init-ephemeral
+      - name: controlplane-ephemeral
+      - name: initinfra-target
+      - name: workers-target
+      - name: workload-target

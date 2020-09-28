@@ -1,0 +1,9 @@
+resources:
+  - phases.yaml
+  - plan.yaml
+  - executors.yaml
+  - cluster-map.yaml
+  - kubeconfig.yaml
+  - ../../../function/clusterctl
+patchesStrategicMerge:
+  - clusterctl_init_options.yaml

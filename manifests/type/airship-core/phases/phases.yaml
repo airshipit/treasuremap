@@ -1,0 +1,106 @@
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: bootstrap
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: ImageConfiguration
+    name: isogen
+  documentEntryPoint: manifests/site/test-site/ephemeral/bootstrap
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: initinfra-ephemeral
+  clusterName: ephemeral-cluster
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: KubernetesApply
+    name: kubernetes-apply
+  documentEntryPoint: manifests/site/test-site/ephemeral/initinfra
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: controlplane-ephemeral
+  clusterName: ephemeral-cluster
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: KubernetesApply
+    name: kubernetes-apply
+  documentEntryPoint: manifests/site/test-site/ephemeral/controlplane
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: initinfra-target
+  clusterName: target-cluster
+config:
+  cluster: target-cluster
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: KubernetesApply
+    name: kubernetes-apply
+  documentEntryPoint: manifests/site/test-site/target/initinfra
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: workers-target
+  clusterName: target-cluster
+config:
+  cluster: target-cluster
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: KubernetesApply
+    name: kubernetes-apply
+  documentEntryPoint: manifests/site/test-site/target/workers
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: clusterctl-init-ephemeral
+  clusterName: ephemeral-cluster
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: Clusterctl
+    name: clusterctl_init
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: clusterctl-init-target
+  clusterName: target-cluster
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: Clusterctl
+    name: clusterctl_init
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: clusterctl-move
+  clusterName: target-cluster
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: Clusterctl
+    name: clusterctl_move
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: workload-target
+  clusterName: target-cluster
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: KubernetesApply
+    name: kubernetes-apply
+  documentEntryPoint: manifests/site/test-site/target/workload

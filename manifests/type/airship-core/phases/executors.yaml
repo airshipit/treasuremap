@@ -1,0 +1,34 @@
+---
+apiVersion: airshipit.org/v1alpha1
+kind: KubernetesApply
+metadata:
+  labels:
+    airshipit.org/deploy-k8s: "false"
+  name: kubernetes-apply
+config:
+  waitOptions:
+    timeout: 2000
+  pruneOptions:
+    prune: false
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Clusterctl
+metadata:
+  name: clusterctl_move
+move-options: {}
+action: move
+---
+apiVersion: airshipit.org/v1alpha1
+kind: ImageConfiguration
+metadata:
+  name: isogen
+  labels:
+    airshipit.org/deploy-k8s: "false"
+builder:
+  networkConfigFileName: network-config
+  outputMetadataFileName: output-metadata.yaml
+  userDataFileName: user-data
+container:
+  containerRuntime: docker
+  image: quay.io/airshipit/isogen:latest-ubuntu_focal
+  volume: /srv/iso:/config

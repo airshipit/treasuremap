@@ -1,0 +1,6 @@
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Clusterctl
+metadata:
+  name: clusterctl_init
+action: init
