@@ -1,0 +1,32 @@
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: initinfra-ephemeral
+  clusterName: ephemeral-cluster
+config:
+  documentEntryPoint: manifests/site/test-site/ephemeral/initinfra
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: controlplane-ephemeral
+  clusterName: ephemeral-cluster
+config:
+  documentEntryPoint: manifests/site/test-site/ephemeral/controlplane
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: initinfra-target
+  clusterName: target-cluster
+config:
+  documentEntryPoint: manifests/site/test-site/target/initinfra
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: workers-target
+  clusterName: target-cluster
+config:
+  documentEntryPoint: manifests/site/test-site/target/workers
