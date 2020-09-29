@@ -10,7 +10,7 @@ metadata:
     abstract: false
     layer: type
     parentSelector:
-      name: osh-infra-monitoring-global
+      name: osh-infra-monitoring-chart-group-global
     actions:
       - method: replace
         path: .chart_group

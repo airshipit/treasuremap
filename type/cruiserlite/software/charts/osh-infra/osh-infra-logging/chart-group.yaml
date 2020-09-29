@@ -10,7 +10,7 @@ metadata:
     abstract: false
     layer: type
     parentSelector:
-      name: osh-infra-logging-global
+      name: osh-infra-logging-chart-group-global
     actions:
       - method: replace
         path: .chart_group
