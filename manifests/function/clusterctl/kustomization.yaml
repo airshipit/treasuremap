@@ -5,5 +5,5 @@ patchesJson6902:
       group: airshipit.org
       version: v1alpha1
       kind: Clusterctl
-      name: clusterctl-v1
+      name: clusterctl_init
     path: clusterctl-patch.yaml
