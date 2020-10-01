@@ -1,0 +1,10 @@
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+kind: Metal3MachineTemplate
+metadata:
+  name: worker-1
+spec:
+  template:
+    spec:
+      image:
+        url: http://10.23.24.1:8099/target-image.qcow2
+        checksum: http://10.23.24.1:8099/target-image.qcow2.md5sum

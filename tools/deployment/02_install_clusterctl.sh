@@ -17,8 +17,4 @@ set -ex
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 
 cd ${AIRSHIPCTL_PROJECT}
-
-echo "Deploy workload"
-airshipctl config use-context target-cluster-admin@target-cluster
-airshipctl config set-context target-cluster-admin@target-cluster --manifest dummy_manifest
-airshipctl phase apply workload
+./tools/deployment/02_install_clusterctl.sh

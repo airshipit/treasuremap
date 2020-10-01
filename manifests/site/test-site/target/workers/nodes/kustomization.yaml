@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generators:
+  - ../hostgenerator
+
+commonLabels:
+  airshipit.org/k8s-role: controlplane-host
