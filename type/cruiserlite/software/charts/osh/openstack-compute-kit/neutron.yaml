@@ -225,7 +225,7 @@ data:
             exclude_devices: ens785f1:0000:05:06.0; 0000:05:06.1
         taas:
           taas:
-            enabled: True
+            enabled: False
       taas_plugin:
         service_providers:
           service_provider: TAAS:TAAS:neutron_taas.services.taas.service_drivers.taas_rpc.TaasRpcDriver:default

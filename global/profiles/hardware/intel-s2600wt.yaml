@@ -111,7 +111,7 @@ data:
   cpu_sets:
     # CPUS pinning
     # Host OS CPUs are inferred, and will be the remaining cores
-    kvm: '2-21,24-43,46-65,68-87'
+    isolcpus: '2-21,24-43,46-65,68-87'
     # Kernel config
     # Reduce OS jitter on the offloaded CPUs.
     rcu_nocbs: '2-21,24-43,46-65,68-87'

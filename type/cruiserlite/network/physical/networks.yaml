@@ -248,5 +248,7 @@ data:
   # MaaS doesnt own this network like it does the others, so the noconfig label
   # is specified.
   labels:
+    # if it is not managed by maas
     noconfig: enabled
+    enabled: true
 ...

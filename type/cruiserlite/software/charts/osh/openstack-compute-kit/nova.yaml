@@ -58,5 +58,4 @@ data:
           ## NOTE: Exclude vf0 from each of the sriov nic
           passthrough_whitelist: |
               [{"address": {"domain":"0000","bus":"05","slot":"06","function":"[2-7]"}, "physical_network": "sriovnet1"},{"address": "0000:05:07.*", "physical_network": "sriovnet1"},{"address": "0000:05:08.*", "physical_network": "sriovnet1"},{"address": "0000:05:09.*", "physical_network": "sriovnet1"}]
-
 ...

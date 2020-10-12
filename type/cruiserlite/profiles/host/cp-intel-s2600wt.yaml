@@ -122,7 +122,7 @@ data:
       # substitution at run time.  See nc-p1-adv profile for
       # preferred substitution pattern.
       hugepagesz: '1G'
-      hugepages: '12'
+      hugepages: '10'
   metadata:
     owner_data:
       openstack-ranger-agent: enabled

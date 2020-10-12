@@ -37,7 +37,7 @@ metadata:
       src:
         schema: drydock/HardwareProfile/v1
         name: intel-s2600wt
-        path: .cpu_sets.kvm
+        path: .cpu_sets.isolcpus
     - dest:
         - path: .platform.kernel_params.rcu_nocbs
       src:

@@ -5,7 +5,7 @@ metadata:
   replacement: true
   name: glance
   labels:
-    name: glance-type
+    name: glance-cruiserlite
   layeringDefinition:
     abstract: false
     layer: type
@@ -26,4 +26,17 @@ data:
     conf:
       rally_tests:
         run_tempest: false
+      policy:
+        add_image: rule:tenant_snapshot_create or role:tenant_glance_create or role:_member_
+        delete_image: rule:tenant_snapshot_delete or role:tenant_glance_delete or role:_member_
+        get_image: rule:tenant_read or role:tenant_glance_read or role:_member_
+        get_images: rule:tenant_read or role:tenant_glance_read or role:_member_
+        modify_image: rule:tenant_snapshot_create or role:tenant_glance_create or role:_member_
+        publicize_image: rule:admin_create or role:admin_glance_create or role:_member_
+        communitize_image: rule:admin_create or role:admin_glance_create or role:_member_
+        copy_from: rule:admin_create or role:admin_glance_create or role:_member_
+        download_image: rule:tenant_create or role:tenant_glance_create or role:_member_
+        upload_image: rule:tenant_snapshot_create or role:tenant_glance_create or role:_member_
+        get_image_location: rule:tenant_create or role:tenant_glance_create or role:_member_
+        set_image_location: rule:admin_create or role:admin_glance_create or role:_member_
 ...
