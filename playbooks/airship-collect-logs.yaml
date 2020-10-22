@@ -20,6 +20,7 @@
     - airship-gather-apache-logs
     - airship-gather-libvirt-logs
     - airship-gather-runtime-logs
+    - describe-kubernetes-objects
     - airship-airshipctl-gather-configs
   environment:
     LIBVIRT_DEFAULT_URI: qemu:///system
