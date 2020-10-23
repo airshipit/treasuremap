@@ -10,12 +10,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# TODO(drewwalters96): Move this logic to an airshipctl role so breaking changes
+# do not impact Treasuremap.
+
 - name: get BareMetalHost objects
   shell: |
     set -e
     kustomize build --enable_alpha_plugins \
       {{ airship_config_manifest_directory }}/{{ airship_config_site_path }}/{{ path }} |
-    kustomize config grep  "kind=BareMetalHost"
+    kustomize cfg grep  "kind=BareMetalHost"
   register: bmh_command
   failed_when: "bmh_command.stdout == ''"
   environment:
@@ -30,7 +33,7 @@
     set -e
     kustomize build --enable_alpha_plugins \
       {{ airship_config_manifest_directory }}/{{ airship_config_site_path }}/{{ path }} |
-    kustomize config grep  "metadata.name={{ item.spec.networkData.name }}"
+    kustomize cfg grep  "metadata.name={{ item.spec.networkData.name }}"
   register: netdata_command
   failed_when: "netdata_command.stdout == ''"
   environment:
