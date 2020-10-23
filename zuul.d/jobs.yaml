@@ -64,7 +64,6 @@
       site_name: test-site
       gate_scripts:
         - ./tools/deployment/01_install_kubectl.sh
-        - ./tools/deployment/02_install_clusterctl.sh
         - ./tools/deployment/22_test_configs.sh
         - ./tools/deployment/24_build_ephemeral_iso.sh
         - ./tools/deployment/25_deploy_ephemeral_node.sh
