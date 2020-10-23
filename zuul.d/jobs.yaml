@@ -55,16 +55,21 @@
     roles:
       - zuul: airship/airshipctl
     pre-run:
+      - playbooks/airship-treasuremap-ensure-checkout.yaml
       - playbooks/airship-treasuremap-deploy-docker.yaml
       - playbooks/airship-treasuremap-build-gate.yaml
     post-run: playbooks/airship-collect-logs.yaml
     run: playbooks/airship-treasuremap-gate-runner.yaml
     nodeset: airship-treasuremap-single-16GB-bionic-node
     vars:
+      # NOTE(drewwalters96): Set airshipctl_ref to a commit SHA in order to pin
+      # the cloned version of airshipctl to a known/compatible reference.
+      # airshipctl_ref: ""
       site_name: test-site
       gate_scripts:
         - ./tools/deployment/01_install_kubectl.sh
         - ./tools/deployment/22_test_configs.sh
+        - ./tools/deployment/23_pull_documents.sh
         - ./tools/deployment/24_build_ephemeral_iso.sh
         - ./tools/deployment/25_deploy_ephemeral_node.sh
         - ./tools/deployment/26_deploy_metal3_capi_ephemeral_node.sh
@@ -74,7 +79,6 @@
         - ./tools/deployment/33_cluster_move_target_node.sh
         - ./tools/deployment/34_deploy_worker_node.sh
         - ./tools/deployment/35_deploy_workload.sh
-
       serve_dir: /srv/iso
       serve_port: 8099
     voting: false

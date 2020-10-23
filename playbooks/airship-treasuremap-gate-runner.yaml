@@ -25,8 +25,14 @@
           - ./tools/deployment/30_deploy_controlplane.sh
 
     - name: "Run gate scripts"
-      include_role:
-        name: airshipctl-run-script
+      shell: |
+          {{ gate_script_path }}
+      args:
+        chdir: "{{ zuul.project.src_dir }}"
+      environment:
+        AIRSHIPCTL_REF: "{{ airshipctl_ref | default('') }}"
+        AIRSHIPCTL_REPO_URL: "https://opendev.org/airship/airshipctl.git"
+        TREASUREMAP_PROJECT: "{{ ansible_user_dir }}/{{ zuul.project.src_dir }}"
       vars:
         gate_script_path: "{{ item }}"
       with_items: "{{ gate_scripts | default(gate_scripts_default) }}"
