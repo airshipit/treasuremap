@@ -17,7 +17,7 @@
     nodeset: airship-treasuremap-single-node
     secrets:
       - name: github_credentials
-        secret: airship_treasuremap_airshipit_github_username_password
+        secret: airship_treasuremap_airshipit_github_token
 
 - job:
     name: airship-treasuremap-validate-site-docs

@@ -15,10 +15,9 @@ import sys
 
 import github
 
-GH_USER = sys.argv[1]
-GH_PW = sys.argv[2]
-ZUUL_MESSAGE = sys.argv[3]
-GERRIT_URL = sys.argv[4]
+GH_TOKEN = sys.argv[1]
+ZUUL_MESSAGE = sys.argv[2]
+GERRIT_URL = sys.argv[3]
 REPO_NAME = 'airshipit/airshipctl'
 PROCESS_LABELS = ['wip', 'ready for review', 'triage', 'blocked']
 
@@ -65,7 +64,7 @@ def remove_duplicated_issue_numbers(issue_dict: dict) -> dict:
 if __name__ == '__main__':
     issue_number_dict = parse_issue_number(ZUUL_MESSAGE)
     issue_number_dict = remove_duplicated_issue_numbers(issue_number_dict)
-    gh = github.Github(GH_USER, GH_PW)
+    gh = github.Github(GH_TOKEN)
     repo = gh.get_repo(REPO_NAME)
     for key, issue_list in issue_number_dict.items():
         for issue_number in issue_list:
