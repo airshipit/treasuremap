@@ -27,8 +27,7 @@
         executable: pip3
     - name: Run python script
       script: >
-        update_github_issues.py "{{ github_credentials.username }}" \
-          "{{ github_credentials.password }}" \
+        update_github_issues.py "{{ github_credentials.token }}" \
           "{{ zuul.message | b64decode }}" \
           "{{ zuul.change_url }}"
       args:
