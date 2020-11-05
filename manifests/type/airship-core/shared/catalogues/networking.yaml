@@ -1,12 +1,17 @@
-# Type-level networking catalogue.  This info feeds the Templater
-# kustomize plugin config in the hostgenerator-m3 function.
+# The default networking catalogue for functions hosted in the airshipctl project.
+# These values can be overridden at the site, type, etc levels as appropriate.
 apiVersion: airshipit.org/v1alpha1
 kind: VariableCatalogue
 metadata:
   labels:
     airshipit.org/deploy-k8s: "false"
-  name: common-networking-catalogue
-commonNetworking:
+  name: networking
+
+# This section is only relevant when using Metal3 BareMetalHosts, and
+# is consumed by the `hostgenerator-m3` function.
+# It defines host-level networking that is common across all BMHs in a site,
+# and will typically be fully overridden at the Type and Site level.
+commonHostNetworking:
   links:
     - id: oam
       name: oam
@@ -38,4 +43,3 @@ commonNetworking:
       type: dns
     - address: 8.8.4.4
       type: dns
-

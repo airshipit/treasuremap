@@ -1,0 +1,19 @@
+# This makes a couple small networking tweaks that are specific to the
+# ephemeral cluster, on top of the target cluster networking definition.
+# These values can be overridden at the site, type, etc levels as appropriate.
+apiVersion: airshipit.org/v1alpha1
+kind: VariableCatalogue
+metadata:
+  name: networking
+
+# The catalogue should be overridden as appropriate for different kubernetes
+# clusters, e.g. ephemeral vs target vs tenant
+kubernetes:
+  controlPlaneEndpoint:
+    host: "10.23.25.102"
+  apiserverCertSANs: "[10.23.25.102, 10.23.24.102]"
+
+ironic:
+  provisioningIp: "10.23.24.102"
+  dhcpRange: "10.23.24.200,10.23.24.250"
+
