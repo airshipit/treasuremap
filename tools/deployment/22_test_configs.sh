@@ -17,22 +17,31 @@ set -xe
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 : ${TREASUREMAP_PROJECT:="$(pwd)"}
 
-export AIRSHIPCTL_WS=${AIRSHIPCTL_WS:-$AIRSHIPCTL_PROJECT}
-export AIRSHIP_CONFIG_MANIFEST_DIRECTORY=${AIRSHIP_CONFIG_MANIFEST_DIRECTORY:-$TREASUREMAP_PROJECT}
-export AIRSHIP_SITE_NAME=${AIRSHIP_SITE_NAME:-"manifests/site/test-site"}
+export AIRSHIP_SITE_NAME=${AIRSHIP_SITE_NAME:-"test-site"}
+export AIRSHIP_CONFIG_METADATA_PATH=${AIRSHIP_CONFIG_METADATA_PATH:-"treasuremap/manifests/site/$AIRSHIP_SITE_NAME/metadata.yaml"}
 
-export AIRSHIP_CONFIG_METADATA_PATH=${AIRSHIP_CONFIG_METADATA_PATH:-"$AIRSHIP_SITE_NAME/metadata.yaml"}
+# Primary repo options
+export AIRSHIP_CONFIG_PRIMARY_REPO_URL=${AIRSHIP_CONFIG_PRIMARY_REPO_URL:-"${TREASUREMAP_PROJECT}"}
+export AIRSHIPCTL_REPO_URL=${AIRSHIPCTL_REPO_URL:-"https://opendev.org/airship/airshipctl.git"}
+export TREASUREMAP_REF=${TREASUREMAP_REF:-"$(git rev-parse HEAD)"}
 
 cd ${AIRSHIPCTL_PROJECT}
+# NOTE(drewwalters96): Override $AIRSHIPCTL_REF to pin airshipctl to a specific
+# git commit. Defaults to cloned version.
+export AIRSHIPCTL_REF=${AIRSHIPCTL_REF:-"$(git rev-parse HEAD)"}
+
 ./tools/deployment/22_test_configs.sh
 
-# TODO: may not need/want this since treasuremap repo is already present,
-# and branch checkout seems not to be working anyway for some reason?
+# Add the airshipctl manifest defintion
+airshipctl config set-manifest treasuremap_ci \
+        --repo airshipctl \
+        --url "${AIRSHIPCTL_REPO_URL}" \
+        --commithash "${AIRSHIPCTL_REF}"
 
-# Add the manifest defintion for Treasuremap
-#airshipctl config set-manifest dummy_manifest \
-#    --repo treasuremap \
-#    --url https://opendev.org/airship/treasuremap \
-#    --branch v2 \
-#    --primary
+airshipctl config set-manifest treasuremap_ci \
+        --repo primary \
+        --url "${AIRSHIP_CONFIG_PRIMARY_REPO_URL}" \
+        --commithash "${TREASUREMAP_REF}" \
 
+airshipctl config set-context ephemeral-cluster --manifest treasuremap_ci
+airshipctl config set-context target-cluster --manifest treasuremap_ci
