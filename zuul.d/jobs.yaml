@@ -47,7 +47,7 @@
         pass-to-parent: true
 
 - job:
-    name: airship-treasuremap-gate-script-runner-test
+    name: airship-treasuremap-deploy-test-site
     attempts: 1
     timeout: 7200
     required-projects:
@@ -83,3 +83,8 @@
       serve_port: 8099
     voting: false
 
+- job:
+    name: airship-treasuremap-deploy-virtual-network-cloud
+    parent: airship-treasuremap-deploy-test-site
+    vars:
+      site_name: virtual-network-cloud
