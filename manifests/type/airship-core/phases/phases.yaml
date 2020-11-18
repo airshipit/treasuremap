@@ -8,7 +8,7 @@ config:
     apiVersion: airshipit.org/v1alpha1
     kind: ImageConfiguration
     name: isogen
-  documentEntryPoint: manifests/site/test-site/ephemeral/bootstrap
+  documentEntryPoint: ephemeral/bootstrap
 ---
 apiVersion: airshipit.org/v1alpha1
 kind: Phase
@@ -20,7 +20,7 @@ config:
     apiVersion: airshipit.org/v1alpha1
     kind: KubernetesApply
     name: kubernetes-apply
-  documentEntryPoint: manifests/site/test-site/ephemeral/initinfra
+  documentEntryPoint: ephemeral/initinfra
 ---
 apiVersion: airshipit.org/v1alpha1
 kind: Phase
@@ -32,7 +32,7 @@ config:
     apiVersion: airshipit.org/v1alpha1
     kind: KubernetesApply
     name: kubernetes-apply
-  documentEntryPoint: manifests/site/test-site/ephemeral/controlplane
+  documentEntryPoint: ephemeral/controlplane
 ---
 apiVersion: airshipit.org/v1alpha1
 kind: Phase
@@ -45,7 +45,7 @@ config:
     apiVersion: airshipit.org/v1alpha1
     kind: KubernetesApply
     name: kubernetes-apply
-  documentEntryPoint: manifests/site/test-site/target/initinfra
+  documentEntryPoint: target/initinfra
 ---
 apiVersion: airshipit.org/v1alpha1
 kind: Phase
@@ -58,7 +58,7 @@ config:
     apiVersion: airshipit.org/v1alpha1
     kind: KubernetesApply
     name: kubernetes-apply
-  documentEntryPoint: manifests/site/test-site/target/workers
+  documentEntryPoint: target/workers
 ---
 apiVersion: airshipit.org/v1alpha1
 kind: Phase
@@ -103,4 +103,4 @@ config:
     apiVersion: airshipit.org/v1alpha1
     kind: KubernetesApply
     name: kubernetes-apply
-  documentEntryPoint: manifests/site/test-site/target/workload
+  documentEntryPoint: target/workload

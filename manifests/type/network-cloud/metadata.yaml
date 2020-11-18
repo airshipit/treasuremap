@@ -1,2 +1,3 @@
 phase:
+  docEntryPointPrefix: manifests/type/network-cloud
   path: manifests/type/network-cloud/phases
