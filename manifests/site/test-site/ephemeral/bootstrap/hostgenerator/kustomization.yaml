@@ -7,3 +7,4 @@ resources:
 
 transformers:
   - ../../../../../../../airshipctl/manifests/function/hostgenerator-m3/replacements
+  - patch-delete-catalogues.yaml

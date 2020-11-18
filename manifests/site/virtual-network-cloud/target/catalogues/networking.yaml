@@ -4,7 +4,7 @@
 apiVersion: airshipit.org/v1alpha1
 kind: VariableCatalogue
 metadata:
-  name: networking-catalogue
+  name: networking
 
 # The catalogue should be overridden as appropriate for different kubernetes
 # clusters, e.g. ephemeral vs target vs tenant
