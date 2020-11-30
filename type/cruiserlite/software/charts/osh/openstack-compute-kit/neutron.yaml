@@ -12,6 +12,14 @@ metadata:
     parentSelector:
       name: neutron-global
     actions:
+      - method: delete
+        path: .values.labels.agent.l3
+      - method: delete
+        path: .values.conf.neutron.DEFAULT.l3_ha
+      - method: delete
+        path: .values.conf.neutron.DEFAULT.max_l3_agents_per_router
+      - method: delete
+        path: .values.conf.neutron.DEFAULT.l3_ha_network_type
       - method: merge
         path: .
   storagePolicy: cleartext
@@ -138,6 +146,9 @@ data:
   wait:
     timeout: 12000
   test:
+    # disabled test as the router test is expected to fail after router
+    # plugin is removed.
+    enabled: false
     timeout: 1200
   values:
     pod:
@@ -191,7 +202,7 @@ data:
       neutron:
         DEFAULT:
           #service_plugins: router,taas,trunk
-          service_plugins: router,trunk,neutron.services.qos.qos_plugin.QoSPlugin
+          service_plugins: trunk,neutron.services.qos.qos_plugin.QoSPlugin
       plugins:
         openvswitch_agent:
           default:

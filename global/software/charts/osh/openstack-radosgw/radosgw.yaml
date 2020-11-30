@@ -147,6 +147,9 @@ data:
     conf:
       rgw_ks:
         enabled: true
+        config:
+          rgw_keystone_accepted_roles: "admin, _member_, member"
+          rgw_keystone_accepted_admin_roles: "admin"
     ceph_client:
       configmap: tenant-ceph-etc
     secrets:

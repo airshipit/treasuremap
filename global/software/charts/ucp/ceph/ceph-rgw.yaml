@@ -146,7 +146,7 @@ data:
       rgw_ks:
         enabled: true
         config:
-          rgw_keystone_accepted_roles: "admin, member, swift_pool_ro, swift_pool_admin, swift_admin"
+          rgw_keystone_accepted_roles: "admin, _member_, member"
     ceph_client:
       configmap: ceph-etc
     secrets:
