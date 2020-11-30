@@ -1,0 +1,3 @@
+phase:
+  docEntryPointPrefix: manifests/site/virtual-network-cloud
+  path: manifests/site/virtual-network-cloud/phases

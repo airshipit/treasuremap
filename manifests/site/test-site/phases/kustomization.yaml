@@ -1,5 +1,2 @@
 resources:
   - ../../../type/airship-core/phases
-
-patchesStrategicMerge:
-  - patch-entrypoints.yaml
