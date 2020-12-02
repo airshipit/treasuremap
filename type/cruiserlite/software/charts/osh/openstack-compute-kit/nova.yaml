@@ -47,6 +47,9 @@ data:
        - openvswitch
        - sriov
     conf:
+      policy:
+        # add _member_ to tenant_snapshot for CNTT functest
+        tenant_snapshot: role:snapshot_member or role:_member_ or rule:admin_snapshot
       nova:
         libvirt:
           virt_type: kvm
