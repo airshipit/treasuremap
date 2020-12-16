@@ -507,11 +507,11 @@ data:
         os_compute_api:os-agents:discoverable: rule:tenant_read or role:tenant_nova_read
         os_compute_api:os-aggregates:set_metadata: rule:admin_update or role:admin_nova_update
         os_compute_api:os-aggregates:add_host: rule:admin_update or role:admin_nova_update
-        os_compute_api:os-aggregates:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-aggregates:discoverable: rule:admin_read or role:admin_nova_read
         os_compute_api:os-aggregates:create: rule:admin_create or role:admin_nova_create
         os_compute_api:os-aggregates:remove_host: rule:admin_delete or role:admin_nova_delete
         os_compute_api:os-aggregates:update: rule:admin_update or role:admin_nova_update
-        os_compute_api:os-aggregates:index: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-aggregates:index: rule:admin_read or role:admin_nova_read
         os_compute_api:os-aggregates:delete: rule:admin_delete or role:admin_nova_delete
         os_compute_api:os-aggregates:show: rule:admin_read or role:admin_nova_read
         os_compute_api:os-assisted-volume-snapshots:create: rule:admin_create or role:admin_nova_create
@@ -618,7 +618,7 @@ data:
         os_compute_api:os-instance-actions: rule:tenant_read or role:tenant_nova_read
         os_compute_api:os-instance-actions:discoverable: rule:tenant_read or role:tenant_nova_read
         os_compute_api:os-instance-usage-audit-log: rule:admin_read or role:admin_nova_read
-        os_compute_api:os-instance-usage-audit-log:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-instance-usage-audit-log:discoverable: rule:admin_read or role:admin_nova_read
         os_compute_api:ips:discoverable: rule:tenant_read or role:tenant_nova_read
         os_compute_api:ips:show: rule:tenant_read or role:tenant_nova_read
         os_compute_api:ips:index: rule:tenant_read or role:tenant_nova_read
@@ -699,8 +699,8 @@ data:
         os_compute_api:os-server-tags:update: rule:tenant_update or role:tenant_nova_update
         os_compute_api:os-server-tags:show: rule:tenant_read or role:tenant_nova_read
         os_compute_api:os-server-tags:discoverable: rule:tenant_read or role:tenant_nova_read
-        os_compute_api:os-server-usage: rule:tenant_read or role:tenant_nova_read
-        os_compute_api:os-server-usage:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-server-usage: rule:admin_read or role:admin_nova_read
+        os_compute_api:os-server-usage:discoverable: rule:admin_read or role:admin_nova_read
         os_compute_api:servers:index: rule:tenant_read or role:tenant_nova_read
         os_compute_api:servers:detail: rule:tenant_read or role:tenant_nova_read
         os_compute_api:servers:detail:get_all_tenants: rule:admin_read or role:admin_nova_read
@@ -738,9 +738,9 @@ data:
         os_compute_api:os-shelve:unshelve: rule:admin_or_owner
         os_compute_api:os-shelve:shelve_offload: rule:tenant_update or role:tenant_nova_update
         os_compute_api:os-shelve:discoverable: rule:tenant_read or role:tenant_nova_read
-        os_compute_api:os-simple-tenant-usage:show: rule:tenant_read or role:tenant_nova_read
-        os_compute_api:os-simple-tenant-usage:list: rule:tenant_read or role:tenant_nova_read
-        os_compute_api:os-simple-tenant-usage:discoverable: rule:tenant_read or role:tenant_nova_read
+        os_compute_api:os-simple-tenant-usage:show: rule:admin_read or role:admin_nova_read or rule:admin_or_owner
+        os_compute_api:os-simple-tenant-usage:list: rule:admin_read or role:admin_nova_read
+        os_compute_api:os-simple-tenant-usage:discoverable: rule:admin_read or role:admin_nova_read
         os_compute_api:os-suspend-server:resume: rule:tenant_update or role:tenant_nova_update
         os_compute_api:os-suspend-server:suspend: rule:tenant_update or role:tenant_nova_update
         os_compute_api:os-suspend-server:discoverable: rule:tenant_read or role:tenant_nova_read

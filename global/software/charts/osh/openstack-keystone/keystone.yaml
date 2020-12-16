@@ -311,8 +311,8 @@ data:
               --project-domain="${OS_PROJECT_DOMAIN_NAME}" \
               --project="${OS_PROJECT_NAME}" \
               "heat_stack_owner"
-         openstack domain create nc
-         openstack user create --domain nc --password test123 admin-nc 
+         openstack domain create --or-show nc 
+         openstack user create --or-show --domain nc --password test123 admin-nc
          #NOTE(rk760n): these are standrd roles that evenutally should go to keystone heat bootstrap yaml
          openstack role create --or-show support_member
          openstack role create --or-show viewer
@@ -565,7 +565,7 @@ data:
         identity:create_endpoint: rule:admin_only or role:admin_keystone_create
         identity:update_endpoint: rule:admin_only or role:admin_keystone_update
         identity:delete_endpoint: rule:admin_only or role:admin_keystone_delete
-        identity:get_domain: rule:admin_required or role:admin_keystone_read
+        identity:get_domain: rule:admin_required or role:admin_keystone_read or token.domain.id:%(target.domain.id)s or token.project.domain.id:%(target.domain.id)s
         identity:list_domains: rule:admin_required or role:admin_keystone_read
         identity:create_domain: rule:admin_only or role:admin_keystone_create
         identity:update_domain: rule:admin_only or role:admin_keystone_update
@@ -585,8 +585,8 @@ data:
         identity:delete_user: rule:admin_only or role:admin_keystone_delete
         identity:change_password: rule:admin_only or rule:owner
         identity:get_group: rule:admin_required or role:admin_keystone_read
-        identity:list_groups: rule:admin_required or role:admin_keystone_read
-        identity:list_groups_for_user: rule:admin_or_owner or role:admin_keystone_read
+        identity:list_groups: rule:admin_required or role:admin_keystone_read or (rule:tenant_read and domain_id:%(target.group.domain_id)s)
+        identity:list_groups_for_user: rule:admin_or_owner or role:admin_keystone_read or (rule:tenant_read and domain_id:%(target.group.domain_id)s)
         identity:create_group: rule:admin_create or role:admin_keystone_create
         identity:update_group: rule:admin_only or role:admin_keystone_update
         identity:delete_group: rule:admin_only or role:admin_keystone_delete
@@ -723,10 +723,10 @@ data:
         identity:list_project_tags: rule:admin_required
         identity:delete_project_tags: rule:admin_only
         identity:update_project_tags: rule:admin_create
-        identity:get_application_credential: '!'
-        identity:list_application_credentials: '!'
-        identity:create_application_credential: '!'
-        identity:delete_application_credential: '!'
+        identity:get_application_credential: rule:owner
+        identity:list_application_credentials: rule:admin_keystone_read or rule:owner
+        identity:create_application_credential: 'user_id:%(user_id)s'
+        identity:delete_application_credential: rule:admin_only or role:admin_keystone_delete or rule:owner
       keystone:
         DEFAULT:
           max_token_size: 16384
@@ -761,6 +761,11 @@ data:
           domain_config_dir: /etc/keystonedomains
         cache:
           backend_argument: "server_max_value_length:10485760"
+        security_compliance:
+          lockout_failure_attempts: 3
+          # Lockout duration in number of seconds. Use a greater value in production environment.
+          lockout_duration: 60
+          unique_last_password_count: 2
       paste:
         filter:att_account_adder_extension:
           use: egg:keystone#att_account_adder_extension
