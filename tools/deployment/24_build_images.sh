@@ -17,5 +17,5 @@ set -xe
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 
 cd ${AIRSHIPCTL_PROJECT}
-./tools/deployment/24_build_ephemeral_iso.sh
+./tools/deployment/24_build_images.sh
 

@@ -19,16 +19,14 @@ move-options: {}
 action: move
 ---
 apiVersion: airshipit.org/v1alpha1
-kind: ImageConfiguration
+kind: IsoConfiguration
 metadata:
   name: isogen
   labels:
     airshipit.org/deploy-k8s: "false"
 builder:
-  networkConfigFileName: network-config
-  outputMetadataFileName: output-metadata.yaml
-  userDataFileName: user-data
+  outputFileName: ephemeral.iso
 container:
   containerRuntime: docker
-  image: quay.io/airshipit/isogen:latest-ubuntu_focal
-  volume: /srv/iso:/config
+  image: quay.io/airshipit/image-builder:latest-ubuntu_focal
+  volume: /srv/images:/config

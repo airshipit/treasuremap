@@ -2,11 +2,11 @@
 apiVersion: airshipit.org/v1alpha1
 kind: Phase
 metadata:
-  name: bootstrap
+  name: bootstrap-iso
 config:
   executorRef:
     apiVersion: airshipit.org/v1alpha1
-    kind: ImageConfiguration
+    kind: IsoConfiguration
     name: isogen
   documentEntryPoint: ephemeral/bootstrap
 ---
