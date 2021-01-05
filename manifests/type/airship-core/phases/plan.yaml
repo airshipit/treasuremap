@@ -6,8 +6,10 @@ phaseGroups:
   - name: group1
     phases:
       - name: initinfra-ephemeral
+      - name: initinfra-networking-ephemeral
       - name: clusterctl-init-ephemeral
       - name: controlplane-ephemeral
       - name: initinfra-target
+      - name: initinfra-networking-target
       - name: workers-target
       - name: workload-target

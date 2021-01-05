@@ -11,6 +11,23 @@ config:
   pruneOptions:
     prune: false
 ---
+# This is added to support phase with no-wait
+# When there is a wait, then it does status-check and fails
+# if the resource status(condition) is not met.
+# There are cases where the resource do not have status
+# field implemented. So a wait will fail with status check
+apiVersion: airshipit.org/v1alpha1
+kind: KubernetesApply
+metadata:
+  labels:
+    airshipit.org/deploy-k8s: "false"
+  name: kubernetes-apply-nowait
+config:
+  waitOptions:
+    timeout: 0
+  pruneOptions:
+    prune: false
+---
 apiVersion: airshipit.org/v1alpha1
 kind: Clusterctl
 metadata:

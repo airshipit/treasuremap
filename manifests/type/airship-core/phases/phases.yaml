@@ -25,6 +25,18 @@ config:
 apiVersion: airshipit.org/v1alpha1
 kind: Phase
 metadata:
+  name: initinfra-networking-ephemeral
+  clusterName: ephemeral-cluster
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: KubernetesApply
+    name: kubernetes-apply-nowait
+  documentEntryPoint: ephemeral/initinfra-networking
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
   name: controlplane-ephemeral
   clusterName: ephemeral-cluster
 config:
@@ -46,6 +58,19 @@ config:
     kind: KubernetesApply
     name: kubernetes-apply
   documentEntryPoint: target/initinfra
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: initinfra-networking-target
+  clusterName: target-cluster
+config:
+  cluster: target-cluster
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: KubernetesApply
+    name: kubernetes-apply-nowait
+  documentEntryPoint: target/initinfra-networking
 ---
 apiVersion: airshipit.org/v1alpha1
 kind: Phase
