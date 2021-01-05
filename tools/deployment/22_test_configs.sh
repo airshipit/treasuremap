@@ -41,7 +41,7 @@ airshipctl config set-manifest treasuremap_ci \
 airshipctl config set-manifest treasuremap_ci \
         --repo primary \
         --url "${AIRSHIP_CONFIG_PRIMARY_REPO_URL}" \
-        --commithash "${TREASUREMAP_REF}" \
+        --commithash "${TREASUREMAP_REF}"
 
 airshipctl config set-context ephemeral-cluster --manifest treasuremap_ci
 airshipctl config set-context target-cluster --manifest treasuremap_ci
