@@ -24,6 +24,7 @@
   environment:
     KUSTOMIZE_PLUGIN_HOME: "/tmp"
     KUSTOMIZE_ENABLE_ALPHA_COMMANDS: "true"
+    SOPS_IMPORT_PGP: "{{ airship_config_pgp }}"
 
 - set_fact:
     bmh: "{{ bmh_command.stdout | from_yaml_all | list }}"
@@ -39,6 +40,7 @@
   environment:
     KUSTOMIZE_PLUGIN_HOME: "/tmp"
     KUSTOMIZE_ENABLE_ALPHA_COMMANDS: "true"
+    SOPS_IMPORT_PGP: "{{ airship_config_pgp }}"
   with_items: "{{ bmh }}"
 
 - name: get links from network data per BareMetalHost object

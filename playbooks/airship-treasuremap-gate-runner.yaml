@@ -11,6 +11,11 @@
 # limitations under the License.
 
 - hosts: primary
+  vars_files:
+    - vars/test-config.yaml
+  environment:
+    SOPS_IMPORT_PGP: "{{ airship_config_pgp }}"
+    SOPS_PGP_FP: "{{ airship_config_pgp_fp }}"
   tasks:
     - name: "set default gate scripts"
       set_fact:
@@ -19,20 +24,21 @@
           - ./tools/deployment/21_systemwide_executable.sh
           - ./tools/deployment/22_test_configs.sh
           - ./tools/deployment/23_pull_documents.sh
+          - ./tools/deployment/23_generate_secrets.sh
           - ./tools/deployment/24_build_ephemeral_iso.sh
           - ./tools/deployment/25_deploy_ephemeral_node.sh
           - ./tools/deployment/26_deploy_metal3_capi_ephemeral_node.sh
           - ./tools/deployment/30_deploy_controlplane.sh
+          - ./tools/deployment/31_deploy_initinfra_target_node.sh
+          - ./tools/deployment/32_cluster_init_target_node.sh
+          - ./tools/deployment/33_cluster_move_target_node.sh
+          - ./tools/deployment/34_deploy_worker_node.sh
+          - ./tools/deployment/35_deploy_workload.sh
+          - ./tools/deployment/36_verify_hwcc_profiles.sh
 
     - name: "Run gate scripts"
-      shell: |
-          {{ gate_script_path }}
-      args:
-        chdir: "{{ zuul.project.src_dir }}"
-      environment:
-        AIRSHIPCTL_REF: "{{ airshipctl_ref | default('') }}"
-        AIRSHIPCTL_REPO_URL: "https://opendev.org/airship/airshipctl.git"
-        TREASUREMAP_PROJECT: "{{ ansible_user_dir }}/{{ zuul.project.src_dir }}"
+      include_role:
+        name: airshipctl-run-script
       vars:
         gate_script_path: "{{ item }}"
       with_items: "{{ gate_scripts | default(gate_scripts_default) }}"

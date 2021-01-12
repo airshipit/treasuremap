@@ -17,9 +17,13 @@
 set -xe
 
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
+: ${MANIFEST_ROOT:="$(dirname "${PWD}")"}
+: ${SITE_ROOTS:="$(basename "${PWD}")/manifests/site"}
+: ${MANIFEST_REPO_URL:="https://review.opendev.org/airship/treasuremap"}
+export MANIFEST_ROOT=$MANIFEST_ROOT
+export SITE_ROOTS=$SITE_ROOTS
+export MANIFEST_REPO_URL=$MANIFEST_REPO_URL
 
-export MANIFEST_ROOT="${PWD}"
-export SITE_ROOTS="/manifests/site"
 cd ${AIRSHIPCTL_PROJECT}
 ./tools/validate_docs
 

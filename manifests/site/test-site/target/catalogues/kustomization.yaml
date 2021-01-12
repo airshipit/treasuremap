@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ../../../../type/airship-core/shared/catalogues
   - hosts.yaml
+  - ../generator/results
 
 patchesStrategicMerge:
   - versions-airshipctl.yaml

@@ -8,5 +8,5 @@ files:
   k8scontrol:
     # Host the image in a locally served location for CI
     cluster_controlplane_image:
-      url: http://10.23.24.1:8099/target-image.qcow2
-      checksum: http://10.23.24.1:8099/target-image.qcow2.md5sum
+      url: http://10.23.24.101:80/images/control-plane.qcow2
+      checksum: http://10.23.24.101:80/images/control-plane.qcow2.md5sum

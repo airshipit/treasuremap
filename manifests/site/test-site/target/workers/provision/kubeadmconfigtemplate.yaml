@@ -1,0 +1,30 @@
+apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+kind: KubeadmConfigTemplate
+metadata:
+  name: worker-1
+spec:
+  template:
+    spec:
+      joinConfiguration:
+        nodeRegistration:
+          name: '{{ ds.meta_data.name }}'
+          kubeletExtraArgs:
+            node-labels: 'metal3.io/uuid={{ ds.meta_data.uuid }},node-type=worker'
+            provider-id: 'metal3://{{ ds.meta_data.uuid }}'
+            feature-gates: "IPv6DualStack=true"
+      files:
+        - path: "/etc/systemd/system/docker.service.d/http-proxy.conf"
+          content: |
+            [Service]
+            Environment="HTTP_PROXY=REPLACEMENT_HTTP_PROXY"
+            Environment="HTTPS_PROXY=REPLACEMENT_HTTPS_PROXY"
+            Environment="NO_PROXY=REPLACEMENT_NO_PROXY"
+      preKubeadmCommands:
+        # Restart docker to apply any proxy settings
+        - export HOME=/root
+        - systemctl restart docker
+      users:
+        - name: deployer
+          sshAuthorizedKeys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDK5jnOafJwnoN+vp77LgayzLZ7O6tu96cObzwjIEwOowi2KHTk+G4sUXzE4mt2QbPTbyOF45d/omcRZYixrTmYwwtJ9QGPbwWw/qpCRzVo5uV4qbwBd3iRUqXryOmZRCCFac678JXZS9f8AfOP9rHkh2jqhA6dJdtvqYTOpPLtmw8pYjScH/YqBXZObNSFS5PlSPl901UhZH4FNUAuYeR9JGY99wgM+R9XHRRgfBPJzwzvOQ7ZYfvxb+n4TuBr7u7jZtYC+pmG/eOYbIt2/vexO0y/rNomtC+hjDAXZO2VFwHejYW6r+ZPpkNrdr+5U8s0aENGg4BJkVa2n3LwUrZF segorov@node1
+          sudo: ALL=(ALL) NOPASSWD:ALL

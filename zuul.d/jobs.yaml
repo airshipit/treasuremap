@@ -21,6 +21,7 @@
 
 - job:
     name: airship-treasuremap-validate-site-docs
+    timeout: 5400
     required-projects:
       - airship/airshipctl
     roles:
@@ -33,6 +34,7 @@
       gate_scripts:
         - ./tools/deployment/01_install_kubectl.sh
         - ./tools/deployment/21_systemwide_executable.sh
+        - ./tools/deployment/22_test_configs.sh
         - ./tools/validate_docs
 
 - job:
@@ -70,6 +72,7 @@
         - ./tools/deployment/01_install_kubectl.sh
         - ./tools/deployment/22_test_configs.sh
         - ./tools/deployment/23_pull_documents.sh
+        - ./tools/deployment/23_generate_secrets.sh
         - ./tools/deployment/24_build_images.sh
         - ./tools/deployment/25_deploy_ephemeral_node.sh
         - ./tools/deployment/26_deploy_capi_ephemeral_node.sh
@@ -77,10 +80,9 @@
         - ./tools/deployment/31_deploy_initinfra_target_node.sh
         - ./tools/deployment/32_cluster_init_target_node.sh
         - ./tools/deployment/33_cluster_move_target_node.sh
-        # NOTE(drewwalters96): Re-enable worker node deployment once it is
-        # functional.
-        # - ./tools/deployment/34_deploy_worker_node.sh
+        - ./tools/deployment/34_deploy_worker_node.sh
         - ./tools/deployment/35_deploy_workload.sh
+        - ./tools/deployment/36_verify_hwcc_profiles.sh
       serve_dir: /srv/images
       serve_port: 8099
     voting: false

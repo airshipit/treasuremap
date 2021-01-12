@@ -1,4 +1,5 @@
 resources:
   - namespace.yaml
+  - helmrepository.yaml
   - helmrelease.yaml
 namespace: ingress

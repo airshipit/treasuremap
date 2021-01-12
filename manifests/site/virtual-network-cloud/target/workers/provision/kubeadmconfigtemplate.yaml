@@ -27,6 +27,20 @@ spec:
           net.bridge.bridge-nf-call-iptables = 1
           EOF
         - sysctl --system
+        - |
+          mkdir -p /etc/systemd/system/docker.service.d/
+          cat <<EOF | tee /etc/systemd/system/docker.service.d/http-proxy.conf
+          [Service]
+          Environment="HTTP_PROXY=REPLACEMENT_HTTP_PROXY"
+          Environment="HTTPS_PROXY=REPLACEMENT_HTTPS_PROXY"
+          Environment="NO_PROXY=REPLACEMENT_NO_PROXY"
+          EOF
+        - export HTTP_PROXY=REPLACEMENT_HTTP_PROXY
+        - export HTTPS_PROXY=REPLACEMENT_HTTPS_PROXY
+        - export http_proxy=${HTTP_PROXY}
+        - export https_proxy=${HTTPS_PROXY}
+        - export NO_PROXY=REPLACEMENT_NO_PROXY
+        - export no_proxy=${NO_PROXY}
         - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
         - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
         - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -41,6 +55,7 @@ spec:
         - apt-mark hold kubelet kubeadm
         - systemctl mask ntp
         - systemctl enable --now systemd-timesyncd
+        - unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY no_proxy NO_PROXY
       users:
         - name: deployer
           sshAuthorizedKeys:
