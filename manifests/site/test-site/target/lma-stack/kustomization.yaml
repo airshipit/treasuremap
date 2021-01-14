@@ -1,4 +1,9 @@
 resources:
   - ../../../../composite/monitoring-stack
+  - ../../../../function/minio
+  - minio-admin-secret.yaml
 
 namespace: lma-infra
+
+patches:
+  - path: patches/minio.yaml

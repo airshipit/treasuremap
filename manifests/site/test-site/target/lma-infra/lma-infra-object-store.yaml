@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: lma-infra-object-store
+type: Opaque
+stringData:
+  fluentd-accesskey: admin
+  fluentd-secretkey: changeme
+  thanos-config.yaml: |
+    type: s3
+    config:
+      insecure: true
+      endpoint: minio.lma-infra.svc.cluster.local:9000
+      bucket: metrics
+      region: lma-infra
+      access_key: admin
+      secret_key: changeme

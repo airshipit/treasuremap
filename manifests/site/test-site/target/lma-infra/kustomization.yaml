@@ -1,2 +1,5 @@
 resources:
   - ../../../../composite/lma-infra
+  - lma-infra-object-store.yaml
+
+namespace: lma-infra

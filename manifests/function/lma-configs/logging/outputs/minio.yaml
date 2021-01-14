@@ -1,0 +1,25 @@
+apiVersion: logging.banzaicloud.io/v1beta1
+kind: Output
+metadata:
+  name: lma-infra-minio
+spec:
+  loggingRef: lma-infra-logging
+  s3:
+    aws_key_id:
+      valueFrom:
+        secretKeyRef:
+          key: fluentd-accesskey
+          name: lma-infra-object-store
+    aws_sec_key:
+      valueFrom:
+        secretKeyRef:
+          key: fluentd-secretkey
+          name: lma-infra-object-store
+    buffer:
+      timekey: 10s
+      timekey_use_utc: true
+      timekey_wait: 0s
+    force_path_style: "true"
+    path: ${tag}/%Y/%m/%d/
+    s3_bucket: logs
+    s3_endpoint: http://minio.lma-infra.svc.cluster.local:9000

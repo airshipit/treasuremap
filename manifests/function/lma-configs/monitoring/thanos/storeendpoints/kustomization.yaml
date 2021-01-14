@@ -1,0 +1,3 @@
+resources:
+  - lma-infra-prometheus.yaml
+  - lma-infra-minio.yaml

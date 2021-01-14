@@ -1,0 +1,2 @@
+resources:
+  - servicemonitors/lma-infra-minio.yaml

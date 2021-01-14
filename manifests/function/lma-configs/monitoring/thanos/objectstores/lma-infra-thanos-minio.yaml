@@ -1,0 +1,12 @@
+apiVersion: monitoring.banzaicloud.io/v1alpha1
+kind: ObjectStore
+metadata:
+  name: lma-infra-thanos-minio
+spec:
+  config:
+    mountFrom:
+      secretKeyRef:
+        name: lma-infra-object-store
+        key: thanos-config.yaml
+  bucketWeb: {}
+  compactor: {}
