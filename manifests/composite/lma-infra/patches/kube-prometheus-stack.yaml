@@ -14,6 +14,12 @@ spec:
         tolerations:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
+        podMetadata:
+          labels:
+            storeAPI: enabled
+        thanos:
+          image: quay.io/thanos/thanos:v0.17.2
+          version: v0.17.2
 
     prometheusOperator:
       admissionWebhooks:

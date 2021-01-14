@@ -1,0 +1,9 @@
+apiVersion: monitoring.banzaicloud.io/v1alpha1
+kind: Thanos
+metadata:
+  name: lma-infra-thanos
+spec:
+  queryDiscovery: true
+  query: {}
+  rule: {}
+  storeGateway: {}

@@ -1,5 +1,6 @@
 resources:
   - ../../../../../../airshipctl/manifests/function/airshipctl-base-catalogues
   - ../../../../../../airshipctl/manifests/type/gating/target/workload
+
 transformers:
   - ../../../../../../airshipctl/manifests/type/gating/target/workload/ingress/replacements

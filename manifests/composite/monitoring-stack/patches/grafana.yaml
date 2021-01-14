@@ -1,0 +1,36 @@
+apiVersion: "helm.toolkit.fluxcd.io/v2beta1"
+kind: HelmRelease
+metadata:
+  name: grafana
+spec:
+  values:
+    adminUser: admin
+    adminPassword: changeme
+    defaultDashboardsEnabled: true
+    datasources:
+      datasources.yaml:
+        apiVersion: 1
+        datasources:
+        - name: lma-infra-thanos
+          type: prometheus
+          url: lma-infra-thanos-query.lma-infra.svc.cluster.local:10902
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - name: default
+            orgId: 1
+            type: file
+            disableDeletion: false
+            options:
+              path: /var/lib/grafana/dashboards/default
+    dashboards:
+      default:
+        logging:
+          gnetId: 7752
+          revision: 4
+          datasource: lma-infra-thanos
+        minio:
+          gnetId: 13502
+          revision: 4
+          datasource: lma-infra-thanos

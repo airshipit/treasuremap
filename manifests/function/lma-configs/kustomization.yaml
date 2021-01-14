@@ -1,0 +1,6 @@
+resources:
+  - logging
+  - monitoring
+  - alerting
+
+namespace: lma-infra

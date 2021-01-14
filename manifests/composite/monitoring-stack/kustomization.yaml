@@ -1,0 +1,9 @@
+resources:
+  - ../../function/grafana
+  - ../../function/thanos-operator
+
+namespace: lma-infra
+
+patches:
+  - path: patches/grafana.yaml
+  - path: patches/thanos-operator.yaml

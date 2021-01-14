@@ -1,0 +1,4 @@
+resources:
+  - ../../../../composite/monitoring-stack
+
+namespace: lma-infra

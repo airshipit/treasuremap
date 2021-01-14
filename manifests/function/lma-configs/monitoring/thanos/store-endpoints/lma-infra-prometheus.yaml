@@ -1,0 +1,10 @@
+apiVersion: monitoring.banzaicloud.io/v1alpha1
+kind: StoreEndpoint
+metadata:
+  name: lma-infra-prometheus
+spec:
+  thanos: lma-infra-thanos
+  selector:
+    labels:
+      app: prometheus
+      storeAPI: enabled
