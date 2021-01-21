@@ -1,0 +1,19 @@
+resources:
+  - ../../../function/elasticsearch
+
+patches:
+  - patch: |-
+      - op: replace
+        path: /metadata/name
+        value: elasticsearch-ingest
+    target:
+      kind: HelmRelease
+      name: elasticsearch
+  - patch: |-
+      - op: replace
+        path: /metadata/name
+        value: elasticsearch-ingest
+    target:
+      kind: HelmRepository
+      name: elasticsearch
+  - path: patches/elasticsearch-ingest.yaml

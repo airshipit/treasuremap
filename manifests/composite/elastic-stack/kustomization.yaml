@@ -1,0 +1,9 @@
+resources:
+  - elasticsearch-ingest
+  - elasticsearch-data
+  - ../../function/kibana
+
+namespace: lma
+
+patches:
+  - path: patches/kibana.yaml

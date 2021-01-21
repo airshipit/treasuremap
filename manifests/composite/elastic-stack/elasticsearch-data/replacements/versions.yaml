@@ -1,0 +1,59 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: elasticsearch-data-versions-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2
+replacements:
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.helm_repositories.elastic.url}"
+  target:
+    objref:
+      kind: HelmRepository
+      name: elasticsearch-data
+    fieldrefs: ["{.spec.url}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.elasticsearch.chart}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: elasticsearch-data
+    fieldrefs: ["{.spec.chart.spec.chart}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.elasticsearch.version}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: elasticsearch-data
+    fieldrefs: ["{.spec.chart.version}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.elasticsearch.elasticsearch.repository}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: elasticsearch-data
+    fieldrefs: ["{.spec.values.image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.elasticsearch.elasticsearch.tag}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: elasticsearch-data
+    fieldrefs: ["{.spec.values.imageTag}"]

@@ -1,10 +1,12 @@
 resources:
+  - ../../../../composite/elastic-stack
   - ../../../../composite/monitoring-stack
   - ../../../../function/minio
   - ../catalogues
   - minio-admin-secret.yaml
 
 transformers:
+  - ../../../../composite/elastic-stack/replacements
   - ../../../../composite/monitoring-stack/replacements
   - ../../../../function/minio/replacements
 

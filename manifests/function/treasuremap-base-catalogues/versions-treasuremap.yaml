@@ -12,6 +12,8 @@ spec:
         checksum: 4a6909d1480ac30d676accd7b37ec711
 
   helm_repositories:
+    elastic:
+      url: https://helm.elastic.co
     grafana:
       url: https://grafana.github.io/helm-charts
     prometheus_community:
@@ -29,9 +31,15 @@ spec:
       url: http://helm-chart-collator.collator.svc:8080
 
   charts:
+    elasticsearch:
+      chart: elasticsearch
+      version: 7.12.1
     grafana:
       chart: grafana
       version: 6.9.1
+    kibana:
+      chart: kibana
+      version: 7.12.1
     kube_prometheus_stack:
       chart: kube-prometheus-stack
       version: 16.0.1
@@ -133,10 +141,18 @@ spec:
   # image_components are organized by
   #   <function>:
   #     <container>:
+    elasticsearch:
+      elasticsearch:
+        repository: docker.elastic.co/elasticsearch/elasticsearch
+        tag: 7.12.1
     grafana:
       grafana:
         repository: grafana/grafana
         tag: 7.5.5
+    kibana:
+      kibana:
+        repository: docker.elastic.co/kibana/kibana
+        tag: 7.12.1
     kube_prometheus_stack:
       admission_webhooks:
         repository: jettech/kube-webhook-certgen
