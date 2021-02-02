@@ -17,4 +17,4 @@ set -xe
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 
 cd ${AIRSHIPCTL_PROJECT}
-./tools/deployment/26_deploy_metal3_capi_ephemeral_node.sh
+./tools/deployment/26_deploy_capi_ephemeral_node.sh
