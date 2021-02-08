@@ -1,0 +1,22 @@
+apiVersion: "helm.toolkit.fluxcd.io/v2beta1"
+kind: HelmRelease
+metadata:
+  name: logging-operator
+  namespace: logging
+spec:
+  releaseName: logging-operator
+  interval: 5m
+  chart:
+    spec:
+      chart: logging-operator
+      sourceRef:
+        kind: HelmRepository
+        name: banzaicloud
+    version: 3.8.3
+    interval: 1m
+  timeout: 5m
+  # Reference values at
+  # https://github.com/banzaicloud/logging-operator/blob/master/charts/logging-operator/values.yaml
+  values:
+    # Use `createCustomResource=false` with Helm v3
+    createCustomResource: false

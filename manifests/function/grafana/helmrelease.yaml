@@ -1,0 +1,19 @@
+apiVersion: "helm.toolkit.fluxcd.io/v2beta1"
+kind: HelmRelease
+metadata:
+  name: grafana
+spec:
+  releaseName: grafana
+  interval: 5m
+  chart:
+    spec:
+      chart: grafana
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+    version: 6.1.0
+    interval: 1m
+  timeout: 5m
+  # Reference values at
+  # https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
+  values: {}
