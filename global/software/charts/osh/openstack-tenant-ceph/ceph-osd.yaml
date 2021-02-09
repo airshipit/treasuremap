@@ -88,8 +88,6 @@ data:
         type: apparmor
         ceph-osd-default:
           ceph-osd-default: unconfined
-    deploy:
-      tool: "ceph-volume"
     manifests:
       cronjob_defragosds: false
     labels:
