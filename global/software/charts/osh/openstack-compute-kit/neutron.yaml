@@ -794,20 +794,15 @@ data:
         delete_service_profile: rule:admin_only or rule:admin_neutron_delete
         get_service_profiles: rule:admin_only or rule:admin_neutron_read
         get_service_profile: rule:admin_only or rule:admin_neutron_read
-        get_policy: rule:tenant_read or rule:tenant_neutron_read
         create_policy: rule:admin_only or rule:admin_neutron_create
         update_policy: rule:admin_only or rule:admin_neutron_update
         delete_policy: rule:admin_only or rule:admin_neutron_delete
-        get_policy_bandwidth_limit_rule: rule:tenant_read or rule:tenant_neutron_read
         create_policy_bandwidth_limit_rule: rule:admin_only or rule:admin_neutron_create
         delete_policy_bandwidth_limit_rule: rule:admin_only or rule:admin_neutron_delete
         update_policy_bandwidth_limit_rule: rule:admin_only or rule:admin_neutron_update
-        get_policy_dscp_marking_rule: rule:tenant_read or rule:tenant_neutron_read
         create_policy_dscp_marking_rule: rule:admin_only or rule:admin_neutron_create
         delete_policy_dscp_marking_rule: rule:admin_only or rule:admin_neutron_delete
         update_policy_dscp_marking_rule: rule:admin_only or rule:admin_neutron_update
-        get_rule_type: rule:tenant_read or rule:tenant_neutron_read
-        get_policy_minimum_bandwidth_rule: rule:tenant_read or rule:tenant_neutron_read
         create_policy_minimum_bandwidth_rule: rule:admin_only or rule:admin_neutron_create
         delete_policy_minimum_bandwidth_rule: rule:admin_only or rule:admin_neutron_delete
         update_policy_minimum_bandwidth_rule: rule:admin_only or rule:admin_neutron_update
