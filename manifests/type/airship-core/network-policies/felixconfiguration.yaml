@@ -1,0 +1,50 @@
+# Note: These are the default values, re-specifying them here for example purposes
+# To set failsafeOutboundHostPorts and InboundHostPorts to none set the spec as follows
+#      spec:
+#        failsafeInboundHostPorts:
+#        failsafeOutboundHostPorts:
+# Refer https://docs.projectcalico.org/reference/felix/configuration for more details.
+
+apiVersion: projectcalico.org/v3
+kind: FelixConfiguration
+metadata:
+  name: default
+spec:
+  failsafeInboundHostPorts:
+  - protocol: tcp
+    port: 22
+  - protocol: udp
+    port: 68
+  - protocol: tcp
+    port: 179
+  - protocol: tcp
+    port: 2379
+  - protocol: tcp
+    port: 2380
+  - protocol: tcp
+    port: 5473
+  - protocol: tcp
+    port: 6443
+  - protocol: tcp
+    port: 6666
+  - protocol: tcp
+    port: 6667
+  failsafeOutboundHostPorts:
+  - protocol: udp
+    port: 53
+  - protocol: udp
+    port: 67
+  - protocol: tcp
+    port: 179
+  - protocol: tcp
+    port: 2379
+  - protocol: tcp
+    port: 2380
+  - protocol: tcp
+    port: 5473
+  - protocol: tcp
+    port: 6443
+  - protocol: tcp
+    port: 6666
+  - protocol: tcp
+    port: 6667
