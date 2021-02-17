@@ -5,3 +5,4 @@ resources:
   - ../../../../function/synclabeller
   - ../../../../function/vino
   - ../../../../function/helm-chart-repository/
+  - ../../../../function/local-storage

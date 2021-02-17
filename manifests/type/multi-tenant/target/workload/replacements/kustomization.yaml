@@ -5,3 +5,4 @@ resources:
   - ../../../../../function/synclabeller/replacements
   - ../../../../../function/vino/replacements
   - ../../../../../function/helm-chart-repository/replacements
+  - ../../../../../function/local-storage/replacements

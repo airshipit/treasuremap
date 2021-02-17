@@ -1,0 +1,39 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: localvolume-provisioner-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:latest
+replacements:
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.localstorage.provisioner.provisioner.image}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: provisioner
+    fieldrefs: ["{.spec.values.daemonset.image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.provisioner.chart}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: provisioner
+    fieldrefs: ["{.spec.chart.spec.chart}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.provisioner.version}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: provisioner
+    fieldrefs: ["{.spec.chart.spec.version}"]

@@ -66,6 +66,9 @@ spec:
     dex-aio:
       chart: dex-aio
       version: 0.1.0
+    provisioner:
+      chart: provisioner
+      version: ""
 
   images:
   # images are organized by
@@ -150,6 +153,10 @@ spec:
           image: ceph/ceph:v15.2.11
         rook-ceph-tools:
           image: rook/ceph:v1.6.3
+    localstorage:
+      provisioner:
+        provisioner:
+          image: k8s.gcr.io/sig-storage/local-volume-provisioner:v2.4.0
 
   image_components:
   # image_components are organized by
