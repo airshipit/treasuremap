@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ../../../../type/network-cloud/ephemeral/bootstrap
+  - ../../../../type/multi-tenant/ephemeral/bootstrap
   - ../catalogues
 
 generators:
@@ -11,4 +11,4 @@ patchesStrategicMerge:
   - baremetalhost.yaml
 
 transformers:
-  - ../../../../type/network-cloud/ephemeral/bootstrap/replacements
+  - ../../../../type/multi-tenant/ephemeral/bootstrap/replacements

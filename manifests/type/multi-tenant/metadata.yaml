@@ -1,0 +1,3 @@
+phase:
+  docEntryPointPrefix: manifests/type/multi-tenant
+  path: manifests/type/multi-tenant/phases
