@@ -1,6 +1,5 @@
 resources:
   - ../../../../type/airship-core/target/initinfra
-  - ../../../../function/hostconfig-operator
   - ../catalogues
 transformers:
   - ../../../../type/airship-core/target/initinfra/replacements
