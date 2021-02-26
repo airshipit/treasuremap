@@ -32,7 +32,7 @@
     nodeset: airship-treasuremap-single-node
     vars:
       gate_scripts:
-        - ./tools/deployment/01_install_kubectl.sh
+        - ./tools/deployment/01_install_essentials.sh
         - ./tools/deployment/21_systemwide_executable.sh
         - ./tools/deployment/22_test_configs.sh
         - ./tools/deployment/23_pull_documents.sh
@@ -70,7 +70,7 @@
       # airshipctl_ref: ""
       site_name: test-site
       gate_scripts:
-        - ./tools/deployment/01_install_kubectl.sh
+        - ./tools/deployment/01_install_essentials.sh
         - ./tools/deployment/22_test_configs.sh
         - ./tools/deployment/23_pull_documents.sh
         - ./tools/deployment/23_generate_secrets.sh

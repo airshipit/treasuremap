@@ -21,14 +21,14 @@
     - name: "set default gate scripts"
       set_fact:
         gate_scripts_default:
-          - ./tools/deployment/01_install_kubectl.sh
+          - ./tools/deployment/01_install_essentials.sh
           - ./tools/deployment/21_systemwide_executable.sh
           - ./tools/deployment/22_test_configs.sh
           - ./tools/deployment/23_pull_documents.sh
           - ./tools/deployment/23_generate_secrets.sh
-          - ./tools/deployment/24_build_ephemeral_iso.sh
+          - ./tools/deployment/24_build_images.sh
           - ./tools/deployment/25_deploy_ephemeral_node.sh
-          - ./tools/deployment/26_deploy_metal3_capi_ephemeral_node.sh
+          - ./tools/deployment/26_deploy_capi_ephemeral_node.sh
           - ./tools/deployment/30_deploy_controlplane.sh
           - ./tools/deployment/31_deploy_initinfra_target_node.sh
           - ./tools/deployment/32_cluster_init_target_node.sh

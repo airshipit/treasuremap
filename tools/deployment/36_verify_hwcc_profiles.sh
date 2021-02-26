@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -xe
+set -ex
 
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 
 cd ${AIRSHIPCTL_PROJECT}
-./tools/deployment/01_install_kubectl.sh
+./tools/deployment/36_verify_hwcc_profiles.sh
