@@ -68,6 +68,7 @@
       loop:
         - { name: 'target', path: 'ephemeral/controlplane' }
         - { name: 'ephemeral', path: 'ephemeral/bootstrap' }
+        - { name: 'worker', path: 'target/workers' }
       loop_control:
         loop_var: roleinputvar
 

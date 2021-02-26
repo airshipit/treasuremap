@@ -12,20 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
+set -xe
 
-export KUBECONFIG=${KUBECONFIG:-"$HOME/.airship/kubeconfig"}
-NODENAME="node01"
-export KUBECONFIG_TARGET_CONTEXT=${KUBECONFIG_TARGET_CONTEXT:-"target-cluster"}
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 
 cd ${AIRSHIPCTL_PROJECT}
-
-kubectl \
-  --kubeconfig $KUBECONFIG \
-  --context $KUBECONFIG_TARGET_CONTEXT \
-  --request-timeout 10s \
-  label node $NODENAME node-type=controlplane
-
-./tools/deployment/31_deploy_initinfra_target_node.sh
-
+./tools/gate/10_build_gate.sh
