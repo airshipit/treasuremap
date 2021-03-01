@@ -16,6 +16,7 @@
   environment:
     SOPS_IMPORT_PGP: "{{ airship_config_pgp }}"
     SOPS_PGP_FP: "{{ airship_config_pgp_fp }}"
+    AIRSHIPCTL_REF: "681f8547c989e862d155f2e9f2c794c89326d931"
   tasks:
     - name: "set default gate scripts"
       set_fact:
