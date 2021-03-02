@@ -28,3 +28,5 @@ kubectl \
   label node $NODENAME node-type=controlplane
 
 ./tools/deployment/31_deploy_initinfra_target_node.sh
+
+airshipctl phase run lma-infra-target --debug

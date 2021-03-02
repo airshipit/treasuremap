@@ -1,0 +1,42 @@
+apiVersion: "helm.toolkit.fluxcd.io/v2beta1"
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+spec:
+  releaseName: lma-infra-monitoring
+  values:
+    fullnameOverride: lma-infra-monitoring
+    grafana:
+      enabled: false
+    prometheus:
+      prometheusSpec:
+        serviceMonitorSelectorNilUsesHelmValues: false
+        tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+
+    prometheusOperator:
+      admissionWebhooks:
+        patch:
+          tolerations:
+          - key: node-role.kubernetes.io/master
+            effect: NoSchedule
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+
+    alertmanager:
+      alertmanagerSpec:
+        tolerations:
+          - key: node-role.kubernetes.io/master
+            effect: NoSchedule
+
+    prometheus-node-exporter:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+
+    kube-state-metrics:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule

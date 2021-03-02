@@ -1,0 +1,47 @@
+apiVersion: "helm.toolkit.fluxcd.io/v2beta1"
+kind: HelmRelease
+metadata:
+  name: logging-operator-logging
+spec:
+  releaseName: lma-infra-logging
+  dependsOn:
+  - name: logging-operator
+  # Reference values at
+  # https://github.com/banzaicloud/logging-operator/blob/master/charts/logging-operator-logging/values.yaml
+  values:
+    controlNamespace: lma-infra
+    loggingRef: lma-infra-logging
+    nameOverride: lma-infra-logging
+    fullnameOverride: lma-infra-logging
+    fluentbit:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      metrics:
+        serviceMonitor: true
+    fluentd:
+      fluentLogDestination: stdout
+      disablePvc: true
+      metrics:
+        serviceMonitor: true
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+    clusterFlows:
+      - name: all-pods
+        spec:
+          globalOutputRefs:
+            - elasticsearch
+    clusterOutputs:
+      - name: elasticsearch
+        spec:
+          elasticsearch:
+            host: elasticsearch-elasticsearch-cluster.default.svc.cluster.local
+            port: 9200
+            scheme: https
+            ssl_verify: false
+            ssl_version: TLSv1_2
+            buffer:
+              timekey: 1m
+              timekey_wait: 30s
+              timekey_use_utc: true

@@ -2,7 +2,6 @@ apiVersion: "helm.toolkit.fluxcd.io/v2beta1"
 kind: HelmRelease
 metadata:
   name: logging-operator
-  namespace: logging
 spec:
   releaseName: logging-operator
   interval: 5m

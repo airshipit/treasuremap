@@ -1,0 +1,11 @@
+resources:
+  - namespace.yaml
+  - ../../function/logging-operator
+  - ../../function/kube-prometheus-stack
+
+namespace: lma-infra
+
+patches:
+  - path: patches/kube-prometheus-stack.yaml
+  - path: patches/logging-operator.yaml
+  - path: patches/logging-spec.yaml
