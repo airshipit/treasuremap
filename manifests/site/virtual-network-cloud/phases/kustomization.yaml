@@ -1,2 +1,2 @@
 resources:
-  - ../../../type/network-cloud/phases
+  - ../../../type/multi-tenant/phases
