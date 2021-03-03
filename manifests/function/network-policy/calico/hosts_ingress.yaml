@@ -1,0 +1,20 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: hosts-ingress-rule
+spec:
+  order: 0
+  selector: all()
+  ingress:
+  action: Allow
+  protocol: TCP
+  source:
+    nets:
+    - 192.0.1.52/32
+  destination:
+    ports:
+    - 80
+    - 443
+  doNotTrack: false
+  preDNAT: false
+  applyOnForward: true

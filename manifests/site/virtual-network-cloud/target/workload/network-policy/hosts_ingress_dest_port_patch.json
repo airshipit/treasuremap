@@ -1,0 +1,12 @@
+[
+    { "op": "add","path": "/spec/destination/ports/-","value": 2378 },
+    { "op": "add","path": "/spec/destination/ports/-","value": 4149 },
+    { "op": "add","path": "/spec/destination/ports/-","value": 6443 },
+    { "op": "add","path": "/spec/destination/ports/-","value": 6553 },
+    { "op": "add","path": "/spec/destination/ports/-","value": 6666 },
+    { "op": "add","path": "/spec/destination/ports/-","value": 6667 },
+    { "op": "add","path": "/spec/destination/ports/-","value": 9099 },
+    { "op": "add","path": "/spec/destination/ports/-","value": 10250 },
+    { "op": "add","path": "/spec/destination/ports/-","value": 10255 },
+    { "op": "add","path": "/spec/destination/ports/-","value": 10256 }
+]

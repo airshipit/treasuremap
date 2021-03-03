@@ -1,0 +1,3 @@
+[
+    { "op": "replace","path": "/spec/source/nets/0","value": "192.0.2.56/32" }
+]
