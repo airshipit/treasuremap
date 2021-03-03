@@ -1,45 +1,45 @@
 # The default networking catalogue for functions hosted in the airshipctl project.
 # These values can be overridden at the site, type, etc levels as appropriate.
 apiVersion: airshipit.org/v1alpha1
-kind: VariableCatalogue
+kind: NetworkCatalogue
 metadata:
   labels:
     airshipit.org/deploy-k8s: "false"
   name: networking
-
-# This section is only relevant when using Metal3 BareMetalHosts, and
-# is consumed by the `hostgenerator-m3` function.
-# It defines host-level networking that is common across all BMHs in a site,
-# and will typically be fully overridden at the Type and Site level.
-commonHostNetworking:
-  links:
-    - id: oam
-      name: oam
-      type: phy
-      mtu: "1500"
-      # ethernet_mac_address: <from host-catalogue> (optional)
-    - id: pxe
-      name: pxe
-      type: phy
-      mtu: "1500"
-      # ethernet_mac_address: <from host-catalogue> (optional)
-  networks:
-    - id: oam-ipv4
-      type: ipv4
-      link: oam
-      # ip_address: <from host-catalogue>
-      netmask: 255.255.255.0
-      routes:
-        - network: 0.0.0.0
-          netmask: 0.0.0.0
-          gateway: 10.23.25.1
-    - id: pxe-ipv4
-      type: ipv4
-      link: pxe
-      # ip_address: <from host-catalogue>
-      netmask: 255.255.255.0
-  services:
-    - address: 8.8.8.8
-      type: dns
-    - address: 8.8.4.4
-      type: dns
+spec:
+  # This section is only relevant when using Metal3 BareMetalHosts, and
+  # is consumed by the `hostgenerator-m3` function.
+  # It defines host-level networking that is common across all BMHs in a site,
+  # and will typically be fully overridden at the Type and Site level.
+  commonHostNetworking:
+    links:
+      - id: oam
+        name: oam
+        type: phy
+        mtu: "1500"
+        # ethernet_mac_address: <from host-catalogue> (optional)
+      - id: pxe
+        name: pxe
+        type: phy
+        mtu: "1500"
+        # ethernet_mac_address: <from host-catalogue> (optional)
+    networks:
+      - id: oam-ipv4
+        type: ipv4
+        link: oam
+        # ip_address: <from host-catalogue>
+        netmask: 255.255.255.0
+        routes:
+          - network: 0.0.0.0
+            netmask: 0.0.0.0
+            gateway: 10.23.25.1
+      - id: pxe-ipv4
+        type: ipv4
+        link: pxe
+        # ip_address: <from host-catalogue>
+        netmask: 255.255.255.0
+    services:
+      - address: 8.8.8.8
+        type: dns
+      - address: 8.8.4.4
+        type: dns
