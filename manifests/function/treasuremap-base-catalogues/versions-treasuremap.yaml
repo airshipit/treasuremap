@@ -1,0 +1,10 @@
+apiVersion: airshipit.org/v1alpha1
+kind: VersionsCatalogue
+metadata:
+  name: versions-treasuremap
+  labels:
+    airshipit.org/deploy-k8s: "false"
+spec:
+  images:
+    sip:
+      manager: quay.io/airshipit/sip:51e7ff85d617c0e94fa98920fdbacce3ad9e6bc0
