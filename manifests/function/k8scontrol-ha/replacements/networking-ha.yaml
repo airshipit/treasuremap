@@ -1,0 +1,49 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: networking-ha-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:latest
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: networking-ha
+    fieldref: vrrp.kubernetes.virtual_ipaddress
+  target:
+    objref:
+      kind: KubeadmControlPlane
+    fieldrefs:
+      -  "spec.kubeadmConfigSpec.files[path=/etc/keepalived/keepalived.conf].content%REPLACEMENT_VIP_1%"
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: networking-ha
+    fieldref: vrrp.ingress.virtual_ipaddress
+  target:
+    objref:
+      kind: KubeadmControlPlane
+    fieldrefs:
+      -  "spec.kubeadmConfigSpec.files[path=/etc/keepalived/keepalived.conf].content%REPLACEMENT_VIP_2%"
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: networking-ha
+    fieldref: vrrp.kubernetes.interface
+  target:
+    objref:
+      kind: KubeadmControlPlane
+    fieldrefs:
+      -  "spec.kubeadmConfigSpec.files[path=/etc/keepalived/keepalived.conf].content%REPLACEMENT_INTERFACE_1%"
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: networking-ha
+    fieldref: vrrp.ingress.interface
+  target:
+    objref:
+      kind: KubeadmControlPlane
+    fieldrefs:
+      -  "spec.kubeadmConfigSpec.files[path=/etc/keepalived/keepalived.conf].content%REPLACEMENT_INTERFACE_2%"

@@ -1,3 +1,2 @@
 resources:
-  - versions-treasuremap.yaml
   - networking-ha.yaml

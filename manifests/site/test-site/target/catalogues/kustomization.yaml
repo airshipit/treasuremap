@@ -9,3 +9,4 @@ resources:
 patchesStrategicMerge:
   - versions-airshipctl.yaml
   - networking.yaml
+  - networking-ha.yaml
