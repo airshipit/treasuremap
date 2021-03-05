@@ -1,0 +1,11 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: upstream/default
+upstream:
+  type: git
+  git:
+    commit: eac22786d83f1a4f524f9f32ea36bb57b164ea1b
+    repo: https://opendev.org/airship/sip
+    directory: config/default
+    ref: eac22786d83f1a4f524f9f32ea36bb57b164ea1b

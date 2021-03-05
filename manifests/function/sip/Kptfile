@@ -1,0 +1,23 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+dependencies:
+- name: upstream/crd
+  git:
+    repo: "https://opendev.org/airship/sip"
+    directory: "config/crd"
+    ref: "194346b22e1df3e922a8fd32dd2fb785856731a9"
+- name: upstream/default
+  git:
+    repo: "https://opendev.org/airship/sip"
+    directory: "config/default"
+    ref: "eac22786d83f1a4f524f9f32ea36bb57b164ea1b"
+- name: upstream/manager
+  git:
+    repo: "https://opendev.org/airship/sip"
+    directory: "config/manager"
+    ref: "eac22786d83f1a4f524f9f32ea36bb57b164ea1b"
+- name: upstream/rbac
+  git:
+    repo: "https://opendev.org/airship/sip"
+    directory: "config/rbac"
+    ref: "eac22786d83f1a4f524f9f32ea36bb57b164ea1b"

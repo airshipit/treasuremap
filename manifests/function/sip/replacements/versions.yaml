@@ -1,0 +1,29 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: sip-versions-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:latest
+replacements:
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.sip.manager}"
+  target:
+    objref:
+      kind: Deployment
+      name: sipcluster-controller-manager
+    fieldrefs: ["{.spec.template.spec.containers[?(.name == 'manager')].image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.sip.kube-rbac-proxy}"
+  target:
+    objref:
+      kind: Deployment
+      name: sipcluster-controller-manager
+    fieldrefs: ["{.spec.template.spec.containers[?(.name == 'kube-rbac-proxy')].image}"]

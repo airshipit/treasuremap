@@ -1,0 +1,11 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: upstream/crd
+upstream:
+  type: git
+  git:
+    commit: 194346b22e1df3e922a8fd32dd2fb785856731a9
+    repo: https://opendev.org/airship/sip
+    directory: config/crd
+    ref: 194346b22e1df3e922a8fd32dd2fb785856731a9
