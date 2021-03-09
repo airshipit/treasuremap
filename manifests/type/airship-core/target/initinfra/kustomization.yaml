@@ -4,6 +4,7 @@ resources:
   - ../../../../function/clusterctl
   - ../../../../function/hostconfig-operator
   - ../../../../../../airshipctl/manifests/composite/flux-helm/
+  - ../../../../../../airshipctl/manifests/function/helm-chart-collator/
 
 commonLabels:
   airshipit.org/stage: initinfra
