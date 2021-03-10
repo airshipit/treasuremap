@@ -16,13 +16,11 @@
   environment:
     SOPS_IMPORT_PGP: "{{ airship_config_pgp }}"
     SOPS_PGP_FP: "{{ airship_config_pgp_fp }}"
-    AIRSHIPCTL_REF: "5820e22d9f436df2f93d8b71286b2ad0492279bc"
   tasks:
     - name: "set default gate scripts"
       set_fact:
         gate_scripts_default:
           - ./tools/deployment/01_install_essentials.sh
-          - ./tools/deployment/21_systemwide_executable.sh
           - ./tools/deployment/22_test_configs.sh
           - ./tools/deployment/23_pull_documents.sh
           - ./tools/deployment/23_generate_secrets.sh

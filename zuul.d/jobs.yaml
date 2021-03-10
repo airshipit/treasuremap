@@ -52,7 +52,7 @@
 - job:
     name: airship-treasuremap-deploy-test-site
     attempts: 1
-    timeout: 7200
+    timeout: 8000
     required-projects:
       - airship/airshipctl
     roles:
@@ -65,9 +65,9 @@
     run: playbooks/airship-treasuremap-gate-runner.yaml
     nodeset: airship-treasuremap-single-16GB-bionic-node
     vars:
-      # NOTE(drewwalters96): Set airshipctl_ref to a commit SHA in order to pin
+      # NOTE(drewwalters96): Set AIRSHIPCTL_REF to a commit SHA in order to pin
       # the cloned version of airshipctl to a known/compatible reference.
-      # airshipctl_ref: ""
+      AIRSHIPCTL_REF: "5820e22d9f436df2f93d8b71286b2ad0492279bc"
       site_name: test-site
       gate_scripts:
         - ./tools/deployment/01_install_essentials.sh
@@ -91,5 +91,6 @@
 - job:
     name: airship-treasuremap-deploy-virtual-network-cloud
     parent: airship-treasuremap-deploy-test-site
+    timeout: 8000
     vars:
       site_name: virtual-network-cloud

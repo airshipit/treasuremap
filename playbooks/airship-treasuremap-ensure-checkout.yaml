@@ -15,7 +15,7 @@
 - hosts: primary
   tasks:
     - name: Checkout version
-      shell: git checkout "{{ airshipctl_ref | default('HEAD') }}"
+      shell: git checkout "{{ AIRSHIPCTL_REF | default('HEAD') }}"
       args:
         chdir: "{{ zuul.projects['opendev.org/airship/airshipctl'].src_dir }}"
 
