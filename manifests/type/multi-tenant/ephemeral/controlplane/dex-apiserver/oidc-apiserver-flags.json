@@ -1,0 +1,41 @@
+[
+  {
+    "op": "add",
+    "path": "/spec/kubeadmConfigSpec/clusterConfiguration/apiServer",
+    "value": {
+      "extraArgs":
+      {
+        "oidc-ca-file": "/etc/kubernetes/certs/dex-cert",
+        "oidc-client-id": "function-kubernetes",
+        "oidc-groups-claim": "groups",
+        "oidc-issuer-url": "https://dex.function.local:30556/dex",
+        "oidc-username-claim": "email",
+        "oidc-username-prefix": "oidc:"
+      },
+      "extraVolumes":
+      [
+        {
+          "hostPath": "/etc/kubernetes/certs/dex-cert",
+          "mountPath": "/etc/kubernetes/certs/dex-cert",
+          "name": "dex-cert",
+          "readOnly": true
+        }
+      ]
+    }
+  },
+  {
+    "op": "add",
+    "path": "/spec/kubeadmConfigSpec/files/-",
+    "value": {
+      "contentFrom": {
+        "secret": {
+          "key": "tls.crt",
+          "name": "dex-apiserver-secret"
+        }
+      },
+      "owner": "root:root",
+      "path": "/etc/kubernetes/certs/dex-cert",
+      "permissions": "0644"
+    }
+  }
+]

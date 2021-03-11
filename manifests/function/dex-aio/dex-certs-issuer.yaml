@@ -1,0 +1,8 @@
+---
+apiVersion: cert-manager.io/v1alpha3
+kind: ClusterIssuer
+metadata:
+  name: dex-ca-issuer
+spec:
+  ca:
+    secretName: dex-ca-key-pair

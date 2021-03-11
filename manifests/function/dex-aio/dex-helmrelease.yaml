@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dex
+---
+# Dex Helm Charts from Helm Repository (Helm Collator)
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: dex-helm-repo
+  namespace: collator
+spec:
+  interval: 5m
+  url: http://helm-chart-collator.collator.svc:8080
+---
+# Dex Helm Charts from Git Repository
+# apiVersion: source.toolkit.fluxcd.io/v1beta1
+# kind: GitRepository
+# metadata:
+#   name: dex-git-repo
+#   namespace: collator
+# spec:
+#   interval: 5m
+#   url: https://github.com/airshipit/charts.git
+#   ref:
+#     branch: master
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: dex-aio
+  namespace: dex
+spec:
+  releaseName: dex-aio
+  targetNamespace: dex
+  interval: 5m
+  chart:
+    spec:
+      chart: dex-aio
+      # Referencing Dex Helm charts from Helm Collator repo
+      sourceRef:
+        kind: HelmRepository
+        name: dex-helm-repo
+        namespace: collator
+      # Referencing Dex Helm charts from Git repo
+      # sourceRef:
+      #   kind: GitRepository
+      #   name: dex-git-repo
+      #   namespace: collator
+  values:
+    params:
+      site:
+        name: Dex-Function
+      endpoints:
+        hostname: dex.fuction.local
+        port:
+          https: 30556
+          http: 30554
+          k8s: 8443
+        nodePort:
+          https: 30556
+          http: 30554
+      oidc:
+        client_id: function-kubernetes
+        client_secret: pUBnBOY80SnXgjibTYM9ZWNzY2xreNGQok
+      service:
+        type: NodePort
