@@ -9,4 +9,3 @@ resources:
 # Uncomment to patch versions catalogue once needed
 # patchesStrategicMerge:
 #   - versions.yaml
-

@@ -1,2 +1,5 @@
 resources:
   - ../../../../type/airship-core/target/workload
+  - ../catalogues
+transformers:
+  - ../../../../../../airshipctl/manifests/type/gating/target/workload/ingress/replacements

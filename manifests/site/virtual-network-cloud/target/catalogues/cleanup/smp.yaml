@@ -27,3 +27,9 @@ patches: |-
   metadata:
     name: versions-airshipctl
   $patch: delete
+  ---
+  apiVersion: airshipit.org/v1alpha1
+  kind: VersionsCatalogue
+  metadata:
+    name: versions-treasuremap
+  $patch: delete
