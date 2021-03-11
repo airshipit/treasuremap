@@ -1,0 +1,33 @@
+# These rules take artifactory-specific data out of the subcluster catalogue,
+# and overwrites it into the networking catalogue
+# as well as some (TODO) catalogue that feeds into subcluster NodePorts
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: lma-subcluster-networking
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:latest
+replacements:
+# Replace Kubernetes networking info
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: subcluster-networking
+    fieldref: "{.spec.lma.kubernetes}"
+  target:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldrefs: ["{.spec.kubernetes}"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: subcluster-networking
+    fieldref: "{.spec.lma.port_range}"
+  target:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldrefs: ["{.spec.port_range}"]

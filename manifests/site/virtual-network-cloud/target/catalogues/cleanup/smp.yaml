@@ -39,3 +39,10 @@ patches: |-
   metadata:
     name: networking-ha
   $patch: delete
+  ---
+  apiVersion: airshipit.org/v1alpha1
+  kind: VariableCatalogue
+  metadata:
+    name: subcluster-networking
+  $patch: delete
+

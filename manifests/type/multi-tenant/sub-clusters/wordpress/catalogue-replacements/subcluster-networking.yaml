@@ -1,0 +1,30 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: wordpress-subcluster-networking
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:latest
+replacements:
+# Replace Kubernetes networking info
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: subcluster-networking
+    fieldref: "{.spec.wordpress.kubernetes}"
+  target:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldrefs: ["{.spec.kubernetes}"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: subcluster-networking
+    fieldref: "{.spec.wordpress.port_range}"
+  target:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldrefs: ["{.spec.port_range}"]

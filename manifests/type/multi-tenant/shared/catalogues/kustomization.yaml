@@ -2,10 +2,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../../airship-core/shared/catalogues
+  - subcluster-networking.yaml
 
-# NOTE(drewwalters96): Uncomment to patch networking catalogue.
-# patchesStrategicMerge:
-#   - networking.yaml
-# Uncomment to patch versions catalogue once needed
-# patchesStrategicMerge:
-#   - versions.yaml
