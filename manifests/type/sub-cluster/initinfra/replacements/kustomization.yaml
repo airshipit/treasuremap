@@ -1,0 +1,3 @@
+resources:
+  - ../../../../../../../airshipctl/manifests/function/flux/source-controller/replacements
+  - ../../../../../../../airshipctl/manifests/function/flux/helm-controller/replacements
