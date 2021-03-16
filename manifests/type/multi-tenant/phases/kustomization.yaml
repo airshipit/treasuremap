@@ -1,5 +1,6 @@
 resources:
   - ../../airship-core/phases
   - ../sub-clusters/wordpress/phases
+  - workload-config.yaml
 patchesStrategicMerge:
   - cluster_map_patch.yaml

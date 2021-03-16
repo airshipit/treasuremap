@@ -1,0 +1,62 @@
+apiVersion: airship.airshipit.org/v1
+kind: Vino
+metadata:
+  name: vino-test-cr
+  #  labels: ...
+spec:
+  nodeSelector:
+    matchLabels:
+      beta.kubernetes.io/os: linux
+  configuration:
+      cpuExclude: 0-4,54-60
+      redfishCredentialSecret:
+        name: redfishSecret
+  networks:
+    - name: management
+      subnet: 192.168.2.0/20
+      type: ipv4
+      allocationStart: 192.168.2.10
+      allocationStop: 192.168.2.14 # docs should specify that the range should = number of vms (to permit future expansion over multiple vino crs etc)
+      routes:
+        - network: 10.0.0.0
+          netmask: 255.255.255.0
+          gateway: $vino.nodebridgegw # vino will need to populate this from the nodelabel value `airshipit.org/vino.nodebridgegw`
+      dns_servers: ["135.188.34.124"]
+    - name: external
+      subnet: 169.0.0.0/24
+      type: ipv4
+      routes:
+        - network: 0.0.0.0
+          netmask: 0.0.0.0
+          gateway: 169.0.0.1
+      allocationStart: 169.0.0.10
+      allocationStop: 169.0.0.254
+
+  vmBridge: lo
+  nodes:
+    - name: "worker"
+      count: 3
+      networkDataTemplate:
+        name: "test-template"
+        namespace: "default"
+      networkInterfaces:
+        - name: management
+          type: bridge
+          network: management
+          mtu: 1500
+          options:
+            bridgeName: vminfra-bridge
+        - name: external
+          type: sriov-bond
+          network: external
+          mtu: 9100
+          options:
+            # this is an 'open-ended' set of k/v pairs, validation is perfomed by vino rather than crd schema.
+            pf: "[enp29s0f0,enp219s1f1]"
+            vlan: "100"
+            bond_mode: 802.3ad
+            bond_xmit_hash_policy: layer3+4
+            bond_miimon: "100"
+  bmcCredentials:
+    username: "admin"
+    password: "passw0rd"

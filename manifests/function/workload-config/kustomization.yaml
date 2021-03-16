@@ -1,0 +1,3 @@
+resources:
+  - vino-cr.yaml
+  - network-template-secret.yaml
