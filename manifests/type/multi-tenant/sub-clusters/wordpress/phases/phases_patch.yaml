@@ -1,0 +1,24 @@
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: initinfra
+  clusterName: wordpress
+config:
+  documentEntryPoint: sub-clusters/wordpress/initinfra
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: initinfra-networking
+  clusterName: wordpress
+config:
+  documentEntryPoint: sub-clusters/wordpress/initinfra-networking
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: workload
+  clusterName: wordpress
+config:
+  documentEntryPoint: sub-clusters/wordpress/workload

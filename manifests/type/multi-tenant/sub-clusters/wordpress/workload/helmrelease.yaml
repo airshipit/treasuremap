@@ -1,0 +1,27 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: wordpress-helm-repo
+  namespace: wordpress
+spec:
+  interval: 5m
+  url: https://kubernetes-charts.banzaicloud.com
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: wordpress-helm-release
+  namespace: wordpress
+spec:
+  releaseName: wordpress
+  targetNamespace: wordpress
+  interval: 5m
+  chart:
+    spec:
+      chart: wordpress
+      sourceRef:
+        kind: HelmRepository
+        name: wordpress-helm-repo
+        namespace: wordpress
+  values: {}

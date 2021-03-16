@@ -1,0 +1,23 @@
+---
+apiVersion: airshipit.org/v1alpha1
+kind: ClusterMap
+metadata:
+  labels:
+    airshipit.org/deploy-k8s: "false"
+  name: main-map
+map:
+  # NOTE: Add sub-clusters to the multi-tenant phase map here.
+  wordpress:
+    parent: target-cluster
+    kubeconfigSources:
+      - type: "clusterAPI"
+        clusterAPI:
+          clusterNamespacedName:
+            name: wordpress
+            namespace: wordpress
+      # NOTE: This context does not exist unless added on disk manually. This
+      # entry is here for backup.
+      - type: "filesystem"
+        filesystem:
+          path: ~/.airship/kubeconfig
+          contextName: wordpress
