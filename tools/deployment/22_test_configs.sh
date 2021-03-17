@@ -19,6 +19,7 @@ set -xe
 
 export AIRSHIP_SITE_NAME=${AIRSHIP_SITE_NAME:-"test-site"}
 export AIRSHIP_CONFIG_METADATA_PATH=${AIRSHIP_CONFIG_METADATA_PATH:-"treasuremap/manifests/site/$AIRSHIP_SITE_NAME/metadata.yaml"}
+export AIRSHIP_CONFIG_MANIFEST_DIRECTORY=${AIRSHIP_CONFIG_MANIFEST_DIRECTORY:-"/tmp/treasuremap"}
 
 # Primary repo options
 export AIRSHIP_CONFIG_PHASE_REPO_URL=${AIRSHIP_CONFIG_PHASE_REPO_URL:-"${TREASUREMAP_PROJECT}"}
@@ -36,12 +37,14 @@ export AIRSHIPCTL_REF=${AIRSHIPCTL_REF:-"$(git rev-parse HEAD)"}
 airshipctl config set-manifest treasuremap_ci \
         --repo airshipctl \
         --url "${AIRSHIPCTL_REPO_URL}" \
-        --commithash "${AIRSHIPCTL_REF}"
+        --commithash "${AIRSHIPCTL_REF}" \
+        --target-path "${AIRSHIP_CONFIG_MANIFEST_DIRECTORY}"
 
 airshipctl config set-manifest treasuremap_ci \
         --repo primary \
         --url "${AIRSHIP_CONFIG_PHASE_REPO_URL}" \
-        --commithash "${TREASUREMAP_REF}"
+        --commithash "${TREASUREMAP_REF}" \
+        --target-path "${AIRSHIP_CONFIG_MANIFEST_DIRECTORY}"
 
 airshipctl config set-context ephemeral-cluster --manifest treasuremap_ci
 airshipctl config set-context target-cluster --manifest treasuremap_ci
