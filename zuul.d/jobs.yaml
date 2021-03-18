@@ -27,6 +27,7 @@
     roles:
       - zuul: airship/airshipctl
     pre-run:
+      - playbooks/airship-treasuremap-ensure-checkout.yaml
       - playbooks/airship-treasuremap-deploy-docker.yaml
     run: playbooks/airship-treasuremap-gate-runner.yaml
     nodeset: airship-treasuremap-single-node
@@ -65,9 +66,6 @@
     run: playbooks/airship-treasuremap-gate-runner.yaml
     nodeset: airship-treasuremap-single-16GB-bionic-node
     vars:
-      # NOTE(drewwalters96): Set AIRSHIPCTL_REF to a commit SHA in order to pin
-      # the cloned version of airshipctl to a known/compatible reference.
-      AIRSHIPCTL_REF: "5820e22d9f436df2f93d8b71286b2ad0492279bc"
       site_name: test-site
       gate_scripts:
         - ./tools/deployment/01_install_essentials.sh
