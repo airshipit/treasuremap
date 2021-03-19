@@ -14,9 +14,18 @@
 
 set -xe
 
+pkg_check() {
+  for pkg in $@; do
+    sudo dpkg -s $pkg &> /dev/null || sudo DEBIAN_FRONTEND=noninteractive apt -y install $pkg
+  done
+}
+
+pkg_check software-properties-common curl wget ca-certificates docker.io make
+
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 
 cd ${AIRSHIPCTL_PROJECT}
+./tools/deployment/provider_common/02_install_jq.sh
 ./tools/deployment/provider_common/03_install_pip.sh
 ./tools/deployment/provider_common/04_install_yq.sh
 ./tools/deployment/01_install_kubectl.sh

@@ -16,5 +16,17 @@ set -ex
 
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 
+export TARGET_IP=${TARGET_IP:-"$(airshipctl phase render controlplane-target \
+	-k Metal3Cluster \
+	-l airshipit.org/stage=initinfra \
+       	2> /dev/null | \
+	yq .spec.controlPlaneEndpoint.host |
+	sed 's/"//g')"}
+export TARGET_PORT=${TARGET_PORT:-"$(airshipctl phase render controlplane-target \
+	-k Metal3Cluster -l airshipit.org/stage=initinfra \
+       	2> /dev/null | \
+	yq .spec.controlPlaneEndpoint.port)"}
+
+echo $TARGET_IP $TARGET_PORT
 cd ${AIRSHIPCTL_PROJECT}
 ./tools/deployment/35_deploy_workload.sh
