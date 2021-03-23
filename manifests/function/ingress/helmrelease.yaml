@@ -14,7 +14,13 @@ spec:
   values:
     defaultBackend:
       enabled: true
+      image:
+        repository: k8s.gcr.io/defaultbackend-amd64
+        tag:
     controller:
+      image:
+        repository: k8s.gcr.io/ingress-nginx/controller
+        tag:
       service:
         type: NodePort
         nodePorts:

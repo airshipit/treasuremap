@@ -1,2 +1,2 @@
 resources:
-  - ../../../../../../airshipctl/manifests/type/gating/target/workload
+  - ingress

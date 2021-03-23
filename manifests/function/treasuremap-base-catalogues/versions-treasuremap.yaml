@@ -17,6 +17,8 @@ spec:
       url: https://helm.min.io
     thanos:
       url: https://kubernetes-charts.banzaicloud.com
+    ingress-nginx:
+      url: https://kubernetes.github.io/ingress-nginx
 
   charts:
     grafana:
@@ -37,6 +39,9 @@ spec:
     thanos:
       chart: thanos-operator
       version: 0.1.0
+    ingress-nginx:
+      chart: ingress-nginx
+      version: 3.5.1
 
   images:
     grafana:
@@ -97,3 +102,10 @@ spec:
     thanos:
       repository: banzaicloud/thanos-operator
       tag: latest
+    ingress-nginx:
+      controller:
+        repository: k8s.gcr.io/ingress-nginx/controller
+        tag: v0.44.0
+      defaultBackend:
+        repository: k8s.gcr.io/defaultbackend-amd64
+        tag: 1.5

@@ -2,6 +2,6 @@ resources:
   - ../../../../type/multi-tenant/target/workload
   - ../catalogues
 transformers:
-  - ../../../../../../airshipctl/manifests/type/gating/target/workload/ingress/replacements
+  - ../../../../function/ingress/replacements
   - ../../../../function/sip/replacements
 

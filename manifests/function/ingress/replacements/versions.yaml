@@ -1,0 +1,79 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: ingress-versions-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:latest
+replacements:
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.helm_repositories.ingress-nginx.url}"
+  target:
+    objref:
+      kind: HelmRepository
+      name: ingress-nginx
+    fieldrefs: ["{.spec.url}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.ingress-nginx.chart}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: ingress
+    fieldrefs: ["{.spec.chart.spec.chart}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.ingress-nginx.version}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: ingress
+    fieldrefs: ["{.spec.chart.spec.version}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.ingress-nginx.controller.repository}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: ingress
+    fieldrefs: ["{.spec.values.controller.image.repository}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.ingress-nginx.controller.tag}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: ingress
+    fieldrefs: ["{.spec.values.controller.image.tag}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.ingress-nginx.defaultBackend.repository}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: ingress
+    fieldrefs: ["{.spec.values.defaultBackend.image.repository}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.ingress-nginx.defaultBackend.tag}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: ingress
+    fieldrefs: ["{.spec.values.defaultBackend.image.tag}"]
