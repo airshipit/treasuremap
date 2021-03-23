@@ -18,8 +18,6 @@ spec:
           labels:
             storeAPI: enabled
         thanos:
-          image: quay.io/thanos/thanos:v0.17.2
-          version: v0.17.2
           objectStorageConfig:
             name: lma-infra-object-store
             key: thanos-config.yaml
