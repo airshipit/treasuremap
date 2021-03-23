@@ -1,7 +1,11 @@
 resources:
   - ../../../../composite/monitoring-stack
   - ../../../../function/minio
+  - ../catalogues
   - minio-admin-secret.yaml
+
+transformers:
+  - ../../../../composite/monitoring-stack/replacements
 
 namespace: lma-infra
 
