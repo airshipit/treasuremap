@@ -3,5 +3,4 @@ kind: HelmRepository
 metadata:
   name: banzaicloud
 spec:
-  url: https://kubernetes-charts.banzaicloud.com
   interval: 10m

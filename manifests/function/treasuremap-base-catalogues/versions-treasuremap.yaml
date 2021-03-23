@@ -10,6 +10,9 @@ spec:
       url: https://grafana.github.io/helm-charts
     kube_prometheus_stack:
       url: https://prometheus-community.github.io/helm-charts
+    # NOTE: logging-operator and logging-operator-logging charts share this repository
+    logging_operator:
+      url: https://kubernetes-charts.banzaicloud.com
 
   charts:
     grafana:
@@ -18,6 +21,12 @@ spec:
     kube_prometheus_stack:
       chart: kube-prometheus-stack
       version: 12.8.0
+    logging_operator:
+      chart: logging-operator
+      version: 3.8.3
+    logging_operator_logging:
+      chart: logging-operator-logging
+      version: 3.8.3
 
   images:
     grafana:
@@ -49,6 +58,22 @@ spec:
       thanos:
         image: quay.io/thanos/thanos:v0.17.2
         version: v0.17.2
+    logging_operator:
+      repository: ghcr.io/banzaicloud/logging-operator
+      tag: 3.9.1
+    logging_operator_logging:
+      config_reloader:
+        repository: jimmidyson/configmap-reload
+        tag: v0.2.2
+      fluentbit:
+        repository: fluent/fluent-bit
+        tag: 1.6.10
+      fluentd:
+        repository: ghcr.io/banzaicloud/fluentd
+        tag: v1.11.5-alpine-9
+      volume_mod:
+        repository: busybox
+        tag: latest
     sip:
       kube-rbac-proxy: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
       manager: quay.io/airshipit/sip:51e7ff85d617c0e94fa98920fdbacce3ad9e6bc0

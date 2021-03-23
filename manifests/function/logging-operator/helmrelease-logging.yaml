@@ -7,11 +7,9 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: logging-operator-logging
       sourceRef:
         kind: HelmRepository
         name: banzaicloud
-    version: 3.8.3
     interval: 1m
   timeout: 5m
   # Reference values at

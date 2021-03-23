@@ -1,2 +1,3 @@
 resources:
   - ../../../function/kube-prometheus-stack/replacements
+  - ../../../function/logging-operator/replacements
