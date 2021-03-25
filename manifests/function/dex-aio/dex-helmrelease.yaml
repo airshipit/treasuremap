@@ -57,11 +57,11 @@ spec:
           https: 30556
           http: 30554
           k8s: 8443
-        nodePort:
-          https: 30556
-          http: 30554
       oidc:
         client_id: function-kubernetes
         client_secret: pUBnBOY80SnXgjibTYM9ZWNzY2xreNGQok
-      service:
-        type: NodePort
+      tls:
+        cert_manager: true
+        issuer:
+          name: dex-ca-issuer
+          kind: ClusterIssuer
