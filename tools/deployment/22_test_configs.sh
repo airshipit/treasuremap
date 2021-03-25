@@ -17,8 +17,8 @@ set -xe
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 : ${TREASUREMAP_PROJECT:="$(pwd)"}
 
-export AIRSHIP_SITE_NAME=${AIRSHIP_SITE_NAME:-"test-site"}
-export AIRSHIP_CONFIG_METADATA_PATH=${AIRSHIP_CONFIG_METADATA_PATH:-"treasuremap/manifests/site/$AIRSHIP_SITE_NAME/metadata.yaml"}
+export SITE=${SITE:-"test-site"}
+export AIRSHIP_CONFIG_METADATA_PATH=${AIRSHIP_CONFIG_METADATA_PATH:-"treasuremap/manifests/site/$SITE/metadata.yaml"}
 export AIRSHIP_CONFIG_MANIFEST_DIRECTORY=${AIRSHIP_CONFIG_MANIFEST_DIRECTORY:-"/tmp/treasuremap"}
 
 # Primary repo options

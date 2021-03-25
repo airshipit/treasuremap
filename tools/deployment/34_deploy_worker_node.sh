@@ -16,5 +16,10 @@ set -ex
 
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 
+export WORKER_NODE=${WORKER_NODE:-"$(airshipctl phase render workers-target \
+	-k BareMetalHost 2> /dev/null | \
+	yq .metadata.name | \
+	sed 's/"//g')"}
+
 cd ${AIRSHIPCTL_PROJECT}
 ./tools/deployment/34_deploy_worker_node.sh

@@ -15,9 +15,14 @@
 set -ex
 
 export KUBECONFIG=${KUBECONFIG:-"$HOME/.airship/kubeconfig"}
-NODENAME="node01"
 export KUBECONFIG_TARGET_CONTEXT=${KUBECONFIG_TARGET_CONTEXT:-"target-cluster"}
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
+
+TARGET_NODE=${TARGET_NODE:-"$(airshipctl phase render controlplane-ephemeral \
+	-k BareMetalHost -l airshipit.org/k8s-role=controlplane-host \
+	2> /dev/null | \
+	yq .metadata.name | \
+	sed 's/"//g')"}
 
 cd ${AIRSHIPCTL_PROJECT}
 
@@ -25,7 +30,7 @@ kubectl \
   --kubeconfig $KUBECONFIG \
   --context $KUBECONFIG_TARGET_CONTEXT \
   --request-timeout 10s \
-  label node $NODENAME node-type=controlplane
+  label nodes $TARGET_NODE node-type=controlplane
 
 ./tools/deployment/31_deploy_initinfra_target_node.sh
 
