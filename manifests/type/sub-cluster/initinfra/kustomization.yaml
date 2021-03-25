@@ -1,0 +1,2 @@
+resources:
+  - ../../../../../airshipctl/manifests/composite/flux-helm/

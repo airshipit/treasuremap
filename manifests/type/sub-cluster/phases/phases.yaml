@@ -1,0 +1,36 @@
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: initinfra
+  clusterName: sub-cluster
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: KubernetesApply
+    name: kubernetes-apply
+  documentEntryPoint: sub-clusters/sub-cluster/initinfra
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: initinfra-networking
+  clusterName: sub-cluster
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: KubernetesApply
+    name: kubernetes-apply
+  documentEntryPoint: sub-clusters/sub-cluster/initinfra-networking
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: workload
+  clusterName: sub-cluster
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: KubernetesApply
+    name: kubernetes-apply
+  documentEntryPoint: sub-clusters/sub-cluster/workload
