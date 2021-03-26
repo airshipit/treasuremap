@@ -1,0 +1,62 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: minio-versions-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:latest
+replacements:
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.helm_repositories.minio}"
+  target:
+    objref:
+      kind: HelmRepository
+      name: minio
+    fieldrefs: ["{.spec}"]
+
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.minio.chart}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: minio
+    fieldrefs: ["{.spec.chart.spec.chart}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.minio.version}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: minio
+    fieldrefs: ["{.spec.chart.version}"]
+
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.minio.minio}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: minio
+    fieldrefs: ["{.spec.values.image}"]
+
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.minio.mc}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: minio
+    fieldrefs: ["{.spec.values.mcImage}"]

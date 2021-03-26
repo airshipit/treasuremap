@@ -7,11 +7,9 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: minio
       sourceRef:
         kind: HelmRepository
         name: minio
-    version: 8.0.9
     interval: 1m
   wait: false
   timeout: 5m

@@ -6,6 +6,7 @@ resources:
 
 transformers:
   - ../../../../composite/monitoring-stack/replacements
+  - ../../../../function/minio/replacements
 
 namespace: lma-infra
 
