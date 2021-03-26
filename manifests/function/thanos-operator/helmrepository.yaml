@@ -1,7 +1,6 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: banzaicloud
+  name: thanos
 spec:
-  url: https://kubernetes-charts.banzaicloud.com
   interval: 10m

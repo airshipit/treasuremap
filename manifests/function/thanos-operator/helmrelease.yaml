@@ -7,11 +7,9 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: thanos-operator
       sourceRef:
         kind: HelmRepository
-        name: banzaicloud
-    version: 0.1.0
+        name: thanos
     interval: 1m
   wait: false
   timeout: 5m
