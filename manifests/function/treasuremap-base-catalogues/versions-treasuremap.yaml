@@ -8,16 +8,47 @@ spec:
   helm_repositories:
     grafana:
       url: https://grafana.github.io/helm-charts
+    kube_prometheus_stack:
+      url: https://prometheus-community.github.io/helm-charts
 
   charts:
     grafana:
       chart: grafana
       version: 6.1.0
+    kube_prometheus_stack:
+      chart: kube-prometheus-stack
+      version: 12.8.0
 
   images:
     grafana:
       repository: grafana/grafana
       tag: 7.4.5
+    kube_prometheus_stack:
+      admission_webhooks:
+        repository: jettech/kube-webhook-certgen
+        tag: v1.5.0
+      alertmanager:
+        repository: quay.io/prometheus/alertmanager
+        tag: v0.21.0
+      prometheus:
+        repository: quay.io/prometheus/prometheus
+        tag: v2.24.0
+      prometheus_config_reloader:
+        repository: quay.io/prometheus-operator/prometheus-config-reloader
+        tag: v0.46.0
+      prometheus_operator:
+        # NOTE: For prometheus and alertmanager instances managed by the operator
+        # https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L1487
+        alertmanagerDefaultBaseImage: quay.io/prometheus/alertmanager
+        prometheusDefaultBaseImage: quay.io/prometheus/prometheus
+
+        # Prometheus operator image
+        image:
+          repository: quay.io/prometheus-operator/prometheus-operator
+          tag: v0.46.0
+      thanos:
+        image: quay.io/thanos/thanos:v0.17.2
+        version: v0.17.2
     sip:
       kube-rbac-proxy: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
       manager: quay.io/airshipit/sip:51e7ff85d617c0e94fa98920fdbacce3ad9e6bc0

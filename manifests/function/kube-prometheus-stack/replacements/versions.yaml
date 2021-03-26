@@ -1,0 +1,124 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: kube-prometheus-stack-versions-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:latest
+replacements:
+# Helm Repo
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.helm_repositories.kube_prometheus_stack}"
+  target:
+    objref:
+      kind: HelmRepository
+      name: prometheus-community
+    fieldrefs: ["{.spec}"]
+
+# Chart
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.kube_prometheus_stack.chart}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.chart.spec.chart}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.kube_prometheus_stack.version}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.chart.version}"]
+
+# Images
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.kube_prometheus_stack.admission_webhooks}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.values.prometheusOperator.admissionWebhooks.patch.image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.kube_prometheus_stack.alertmanager}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.values.alertmanager.alertmanagerSpec.image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.kube_prometheus_stack.prometheus}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.values.prometheusOperator.prometheusSpec.image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.kube_prometheus_stack.prometheus_config_reloader}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.values.prometheusOperator.prometheusConfigReloaderImage}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.kube_prometheus_stack.prometheus_operator.alertmanagerDefaultBaseImage}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.values.prometheusOperator.alertmanagerDefaultBaseImage}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.kube_prometheus_stack.prometheus_operator.prometheusDefaultBaseImage}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.values.prometheusOperator.prometheusDefaultBaseImage}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.kube_prometheus_stack.prometheus_operator.image}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.values.prometheusOperator.image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.kube_prometheus_stack.thanos}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.values.prometheus.prometheusSpec.thanos.image}"]
