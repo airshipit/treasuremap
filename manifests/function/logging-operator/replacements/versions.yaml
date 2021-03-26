@@ -1,0 +1,118 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: logging-operator-versions-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:latest
+replacements:
+# Helm Repo (logging-operator and logging-operator-logging charts)
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.helm_repositories.logging_operator}"
+  target:
+    objref:
+      kind: HelmRepository
+      name: banzaicloud
+    fieldrefs: ["{.spec}"]
+
+# Logging-operator Chart
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.logging_operator.chart}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: logging-operator
+    fieldrefs: ["{.spec.chart.spec.chart}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.logging_operator.version}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: logging-operator
+    fieldrefs: ["{.spec.chart.version}"]
+
+# Logging-operator-logging Chart
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.logging_operator_logging.chart}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: logging-operator-logging
+    fieldrefs: ["{.spec.chart.spec.chart}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.logging_operator_logging.version}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: logging-operator-logging
+    fieldrefs: ["{.spec.chart.version}"]
+
+# Logging-operator Chart Image
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.logging_operator}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: logging-operator
+    fieldrefs: ["{.spec.values.image}"]
+
+# Logging-operator-logging Chart Images
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.logging_operator_logging.config_reloader}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: logging-operator-logging
+    fieldrefs: ["{.spec.values.fluentd.configReloaderImage}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.logging_operator_logging.fluentbit}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: logging-operator-logging
+    fieldrefs: ["{.spec.values.fluentbit.image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.logging_operator_logging.fluentd}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: logging-operator-logging
+    fieldrefs: ["{.spec.values.fluentd.image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.logging_operator_logging.volume_mod}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: logging-operator-logging
+    fieldrefs: ["{.spec.values.fluentd.volumeModImage}"]
