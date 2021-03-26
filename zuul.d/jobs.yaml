@@ -64,7 +64,7 @@
       - playbooks/airship-treasuremap-build-gate.yaml
     post-run: playbooks/airship-collect-logs.yaml
     run: playbooks/airship-treasuremap-gate-runner.yaml
-    nodeset: airship-treasuremap-single-16GB-bionic-node
+    nodeset: airship-treasuremap-single-32GB-bionic-node
     vars:
       site_name: test-site
       gate_scripts:
