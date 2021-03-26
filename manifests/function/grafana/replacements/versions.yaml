@@ -1,0 +1,49 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: grafana-versions-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:latest
+replacements:
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.helm_repositories.grafana}"
+  target:
+    objref:
+      kind: HelmRepository
+      name: grafana
+    fieldrefs: ["{.spec}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.grafana.chart}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: grafana
+    fieldrefs: ["{.spec.chart.spec.chart}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.grafana.version}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: grafana
+    fieldrefs: ["{.spec.chart.version}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.grafana}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: grafana
+    fieldrefs: ["{.spec.values.image}"]

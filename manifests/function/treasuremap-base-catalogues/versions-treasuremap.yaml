@@ -5,7 +5,19 @@ metadata:
   labels:
     airshipit.org/deploy-k8s: "false"
 spec:
+  helm_repositories:
+    grafana:
+      url: https://grafana.github.io/helm-charts
+
+  charts:
+    grafana:
+      chart: grafana
+      version: 6.1.0
+
   images:
+    grafana:
+      repository: grafana/grafana
+      tag: 7.4.5
     sip:
       kube-rbac-proxy: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
       manager: quay.io/airshipit/sip:51e7ff85d617c0e94fa98920fdbacce3ad9e6bc0
