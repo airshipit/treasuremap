@@ -1,10 +1,2 @@
 resources:
   - ../../../../../type/airship-core/target/workload/network-policy
-
-patchesJson6902:
-  - target:
-      group: projectcalico.org
-      version: v3
-      kind: GlobalNetworkPolicy
-      name: "hosts-ingress-rule"
-    path: hosts_ingress_dest_port_patch.json
