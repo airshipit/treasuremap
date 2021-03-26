@@ -53,7 +53,7 @@
 - job:
     name: airship-treasuremap-deploy-test-site
     attempts: 1
-    timeout: 8000
+    timeout: 9500
     required-projects:
       - airship/airshipctl
     roles:
@@ -89,6 +89,5 @@
 - job:
     name: airship-treasuremap-deploy-virtual-network-cloud
     parent: airship-treasuremap-deploy-test-site
-    timeout: 8000
     vars:
       site_name: virtual-network-cloud
