@@ -1,0 +1,3 @@
+resources:
+  - ../../../../sub-cluster/workload
+  - helmrelease.yaml
