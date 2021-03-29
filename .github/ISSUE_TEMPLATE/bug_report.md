@@ -18,10 +18,12 @@ Minimal steps to reproduce the issue.
 A clear and concise description of what you expected to happen.
 
 **Environment**
-- airshipctl Version:
-- Treasuremp site type :
-- Operating System:
+- Treasuremap version:
+- Treasuremp site type:
+- Airshipctl version:
+- Operating system:
 - Kernel version:
-- Kubernetes Version:
+- Kubernetes version:
 - Go version:
+- Hypervisor level 0 (if applicable):
 - Hardware specs (e.g. 4 vCPUs, 16GB RAM, bare metal vs VM):
