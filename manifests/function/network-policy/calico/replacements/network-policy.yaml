@@ -1,0 +1,29 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: networking-policy-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:latest
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: networking-ha
+    fieldref: "{.vrrp.ingress.oam_cidr}"
+  target:
+    objref:
+      kind: GlobalNetworkPolicy
+      name: hosts-ingress-rule
+    fieldrefs: ["{.spec.source.nets[0]}"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: networking-ha
+    fieldref: "{.vrrp.ingress.destination.ports}"
+  target:
+    objref:
+      kind: GlobalNetworkPolicy
+      name: hosts-ingress-rule
+    fieldrefs: ["{.spec.destination.ports}"]
