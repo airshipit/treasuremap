@@ -9,7 +9,7 @@ metadata:
 replacements:
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.images.sip.manager}"
   target:
@@ -19,7 +19,7 @@ replacements:
     fieldrefs: ["{.spec.template.spec.containers[?(.name == 'manager')].image}"]
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.images.sip.kube-rbac-proxy}"
   target:

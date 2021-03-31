@@ -10,7 +10,7 @@ replacements:
 # Helm Repo (logging-operator and logging-operator-logging charts)
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.helm_repositories.logging_operator}"
   target:
@@ -22,7 +22,7 @@ replacements:
 # Logging-operator Chart
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.logging_operator.chart}"
   target:
@@ -32,7 +32,7 @@ replacements:
     fieldrefs: ["{.spec.chart.spec.chart}"]
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.logging_operator.version}"
   target:
@@ -44,7 +44,7 @@ replacements:
 # Logging-operator-logging Chart
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.logging_operator_logging.chart}"
   target:
@@ -54,7 +54,7 @@ replacements:
     fieldrefs: ["{.spec.chart.spec.chart}"]
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.logging_operator_logging.version}"
   target:
@@ -66,7 +66,7 @@ replacements:
 # Logging-operator Chart Image
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.images.logging_operator}"
   target:
@@ -78,7 +78,7 @@ replacements:
 # Logging-operator-logging Chart Images
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.images.logging_operator_logging.config_reloader}"
   target:
@@ -88,7 +88,7 @@ replacements:
     fieldrefs: ["{.spec.values.fluentd.configReloaderImage}"]
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.images.logging_operator_logging.fluentbit}"
   target:
@@ -98,7 +98,7 @@ replacements:
     fieldrefs: ["{.spec.values.fluentbit.image}"]
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.images.logging_operator_logging.fluentd}"
   target:
@@ -108,7 +108,7 @@ replacements:
     fieldrefs: ["{.spec.values.fluentd.image}"]
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.images.logging_operator_logging.volume_mod}"
   target:

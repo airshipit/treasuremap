@@ -9,7 +9,7 @@ metadata:
 replacements:
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.helm_repositories.minio}"
   target:
@@ -20,7 +20,7 @@ replacements:
 
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.minio.chart}"
   target:
@@ -30,7 +30,7 @@ replacements:
     fieldrefs: ["{.spec.chart.spec.chart}"]
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.minio.version}"
   target:
@@ -41,7 +41,7 @@ replacements:
 
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.images.minio.minio}"
   target:
@@ -52,7 +52,7 @@ replacements:
 
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.images.minio.mc}"
   target:

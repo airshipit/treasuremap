@@ -35,7 +35,7 @@ patches: |-
   $patch: delete
   ---
   apiVersion: airshipit.org/v1alpha1
-  kind: VersionsCatalogue
+  kind: VariableCatalogue
   metadata:
     name: versions-treasuremap
   $patch: delete

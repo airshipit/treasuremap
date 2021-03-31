@@ -9,7 +9,7 @@ metadata:
 replacements:
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.helm_repositories.grafana}"
   target:
@@ -19,7 +19,7 @@ replacements:
     fieldrefs: ["{.spec}"]
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.grafana.chart}"
   target:
@@ -29,7 +29,7 @@ replacements:
     fieldrefs: ["{.spec.chart.spec.chart}"]
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.grafana.version}"
   target:
@@ -39,7 +39,7 @@ replacements:
     fieldrefs: ["{.spec.chart.version}"]
 - source:
     objref:
-      kind: VersionsCatalogue
+      kind: VariableCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.images.grafana}"
   target:
