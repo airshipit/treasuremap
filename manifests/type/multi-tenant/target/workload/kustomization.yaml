@@ -1,5 +1,5 @@
 resources:
-  - ../../../airship-core/target/workload
+  - ../../../../function/ingress
   - ../../../../function/sip
   - ../../../../function/synclabeller
   - ../../../../function/vino

@@ -1,0 +1,5 @@
+resources:
+  - ../../../../airshipctl/manifests/function/baremetal-operator/
+  - ../../function/clusterctl
+commonLabels:
+  airshipit.org/stage: initinfra

@@ -1,2 +1,2 @@
 resources:
-  - ../../../../type/airship-core/ephemeral/initinfra-networking
+  - ../../../../type/multi-tenant/ephemeral/initinfra-networking

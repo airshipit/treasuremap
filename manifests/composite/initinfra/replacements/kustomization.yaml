@@ -1,0 +1,3 @@
+resources:
+  - ../../../../../airshipctl/manifests/function/baremetal-operator/replacements
+  - ../../../function/clusterctl/replacements

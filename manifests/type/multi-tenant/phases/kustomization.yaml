@@ -1,5 +1,5 @@
 resources:
-  - ../../airship-core/phases
+  - ../../../../../airshipctl/manifests/phases
   - ../sub-clusters/lma/phases
   - ../sub-clusters/wordpress/phases
   - workload-config.yaml

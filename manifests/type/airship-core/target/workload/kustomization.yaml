@@ -1,3 +1,3 @@
 resources:
-  - ingress
+  - ../../../../function/ingress
   - storage/rook

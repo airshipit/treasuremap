@@ -1,0 +1,10 @@
+apiVersion: airshipit.org/v1alpha1
+kind: BaremetalManager
+metadata:
+  name: RemoteDirectEphemeral
+spec:
+  hostSelector:
+    name: node02
+  operationOptions:
+    remoteDirect:
+      isoURL: http://localhost:8099/ephemeral.iso

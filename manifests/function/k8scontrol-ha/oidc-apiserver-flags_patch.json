@@ -1,0 +1,55 @@
+[
+    {
+      "op": "add",
+      "path": "/spec/kubeadmConfigSpec/clusterConfiguration/apiServer",
+      "value": {
+        "extraArgs":
+        {
+          "oidc-ca-file": "/etc/kubernetes/certs/dex-cert",
+          "oidc-client-id": "function-kubernetes",
+          "oidc-groups-claim": "group",
+          "oidc-issuer-url": "https://dex.function.local:32556/dex",
+          "oidc-username-claim": "email"
+        },
+        "extraVolumes":
+        [
+          {
+            "hostPath": "/etc/kubernetes/certs/dex-cert",
+            "mountPath": "/etc/kubernetes/certs/dex-cert",
+            "name": "dex-cert",
+            "readOnly": true
+          }
+        ],
+        "certSANs":
+        [
+          "dex.function.local",
+          "dex.baremetal.local"
+        ]
+      }
+    },
+    {
+      "op": "add",
+      "path": "/spec/kubeadmConfigSpec/files/-",
+      "value": {
+        "contentFrom": {
+          "secret": {
+            "key": "tls.crt",
+            "name": "dex-apiserver-secret"
+          }
+        },
+        "owner": "root:root",
+        "path": "/etc/kubernetes/certs/dex-cert",
+        "permissions": "0644"
+      }
+    },
+    {
+      "op": "add",
+      "path": "/spec/kubeadmConfigSpec/preKubeadmCommands/-",
+      "value": "echo '10.23.25.102 dex.baremetal.local' | tee -a /etc/hosts"
+    },
+    {
+      "op": "add",
+      "path": "/spec/kubeadmConfigSpec/preKubeadmCommands/-",
+      "value": "echo '10.23.25.102 dex.function.local' | tee -a /etc/hosts"
+    }
+  ]

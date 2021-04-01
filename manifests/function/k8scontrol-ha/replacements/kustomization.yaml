@@ -1,2 +1,4 @@
 resources:
+  - ../../../../../airshipctl/manifests/function/k8scontrol/replacements
   - networking-ha.yaml
+  - update-dex.yaml

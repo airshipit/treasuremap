@@ -2,4 +2,3 @@ resources:
   - ../../../../../composite/initinfra/replacements
   - ../../../../../../../airshipctl/manifests/function/helm-chart-collator/replacements
   - ../../../../../function/hostconfig-operator/replacements
-  - ../../../../../function/rook-operator/replacements

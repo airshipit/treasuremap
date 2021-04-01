@@ -1,6 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ../../../airship-core/shared/catalogues
+  - ../../../../../../airshipctl/manifests/function/airshipctl-base-catalogues
+  - ../../../../function/treasuremap-base-catalogues
   - subcluster-networking.yaml
   - vm-networking.yaml

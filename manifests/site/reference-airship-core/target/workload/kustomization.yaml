@@ -1,5 +1,5 @@
 resources:
-  - ../../../../type/airship-core/target/workload/ingress
+  - ../../../../type/airship-core/target/workload
   - ../catalogues
 transformers:
   - ../../../../function/ingress/replacements
