@@ -33,4 +33,7 @@
     promote:
       jobs:
         - airship-treasuremap-update-github-issues
+    tag:
+      jobs:
+        - treasuremap-upload-git-mirror
 
