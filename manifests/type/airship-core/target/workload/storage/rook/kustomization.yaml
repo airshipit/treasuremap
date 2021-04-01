@@ -1,0 +1,41 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: rook-ceph
+resources:
+  - namespace.yaml  # Name space (rook-ceph) should be installed together with the rook-operator
+                    # however we add this file here, to make sure we do have this ns deployed.
+  - ceph-conf.yaml
+  - cephcluster.yaml
+  - rook-ceph-tools.yaml
+  # Below is the functions section. You are free to comment out or in oppsite to remove comments
+  # enabling or disabling any function in the list.
+  # All functions are independent, and can be deployed simultaneously at any moment.
+  - ../../../../../../function/rook-cluster/pools
+  - ../../../../../../function/rook-cluster/cephfs
+  - ../../../../../../function/rook-cluster/dashboard/http
+patchesJSON6902:
+- target:
+    kind: CephCluster
+    name: ceph
+  patch: |-
+    - op: replace
+      path: /spec/dashboard/enabled
+      value: true
+
+    - op: replace
+      path: /spec/dashboard/ssl
+      value: true
+# If you enabling ssl for the dashboard, do not forget
+# to enable the patch below
+- target:
+    kind: Service
+    name: rook-ceph-mgr-dashboard
+  patch: |-
+    - op: replace
+      path: "/spec/ports"
+      value:
+        - name: dashboard
+          port: 8443
+          protocol: TCP
+          targetPort: 8443
+

@@ -1,0 +1,30 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: rook-ceph-cluster-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2
+replacements:
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref:  "{.spec.images.storage-rook.ceph.rook-ceph-tools.image}"
+  target:
+    objref:
+      kind: Deployment
+      name: rook-ceph-tools
+    fieldrefs: ["{.spec.template.spec.containers[?(.name == 'rook-ceph-tools')].image}"]
+
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref:  "{.spec.images.storage-rook.ceph.ceph.ceph-version.image}"
+  target:
+    objref:
+      kind: CephCluster
+      name: ceph
+    fieldrefs: ["{.spec.cephVersion.image}"]

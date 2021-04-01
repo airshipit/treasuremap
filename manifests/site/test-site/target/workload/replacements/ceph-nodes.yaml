@@ -1,0 +1,21 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: ceph-nodes-replacements
+  labels:
+    airshipit.org/deploy-k8s: "false"
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: storage
+    fieldref: "{.spec.storage}"
+  target:
+    objref:
+      kind: CephCluster
+      name: ceph
+    fieldrefs: ["{.spec.storage}"]

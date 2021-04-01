@@ -5,45 +5,81 @@ metadata:
   annotations:
     config.kubernetes.io/function: |-
       container:
-        image: quay.io/airshipit/replacement-transformer:latest
+        image: quay.io/airshipit/replacement-transformer:v2
 replacements:
 - source:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.rook-operator}"
+    fieldref: "{.spec.images.rook-operator.rook-ceph-operator.rook-ceph-operator.image}"
   target:
     objref:
-      kind: HelmRepository
-      name: rook-release
-    fieldrefs: ["{.spec}"]
+      kind: Deployment
+      name: rook-ceph-operator
+    fieldrefs: ["{.spec.template.spec.containers[?(.name == 'rook-ceph-operator')].image}"]
+
 - source:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.charts.rook-operator.chart}"
+    fieldref: "{.spec.images.rook-operator.rook-ceph-operator-config.rook_csi_ceph_image.image}"
   target:
     objref:
-      kind: HelmRelease
-      name: rook-ceph-operator
-    fieldrefs: ["{.spec.chart.spec.chart}"]
+      kind: ConfigMap
+      name: rook-ceph-operator-config
+    fieldrefs: ["{.data.ROOK_CSI_CEPH_IMAGE}"]
+
 - source:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.charts.rook-operator.version}"
+    fieldref: "{.spec.images.rook-operator.rook-ceph-operator-config.rook_csi_registrar_image.image}"
   target:
     objref:
-      kind: HelmRelease
-      name: rook-ceph-operator
-    fieldrefs: ["{.spec.chart.version}"]
+      kind: ConfigMap
+      name: rook-ceph-operator-config
+    fieldrefs: ["{.data.ROOK_CSI_REGISTRAR_IMAGE}"]
+
 - source:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.image_components.rook-operator.rook-operator}"
+    fieldref: "{.spec.images.rook-operator.rook-ceph-operator-config.rook_csi_resizer_image.image}"
   target:
     objref:
-      kind: HelmRelease
-      name: rook-ceph-operator
-    fieldrefs: ["{.spec.values.image}"]
+      kind: ConfigMap
+      name: rook-ceph-operator-config
+    fieldrefs: ["{.data.ROOK_CSI_RESIZER_IMAGE}"]
+
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.rook-operator.rook-ceph-operator-config.rook_csi_provisioner_image.image}"
+  target:
+    objref:
+      kind: ConfigMap
+      name: rook-ceph-operator-config
+    fieldrefs: ["{.data.ROOK_CSI_PROVISIONER_IMAGE}"]
+
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.rook-operator.rook-ceph-operator-config.rook_csi_snapshotter_image.image}"
+  target:
+    objref:
+      kind: ConfigMap
+      name: rook-ceph-operator-config
+    fieldrefs: ["{.data.ROOK_CSI_SNAPSHOTTER_IMAGE}"]
+
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.rook-operator.rook-ceph-operator-config.rook_csi_attacher_image.image}"
+  target:
+    objref:
+      kind: ConfigMap
+      name: rook-ceph-operator-config
+    fieldrefs: ["{.data.ROOK_CSI_ATTACHER_IMAGE}"]

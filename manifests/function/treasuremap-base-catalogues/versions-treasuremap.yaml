@@ -93,6 +93,32 @@ spec:
       airship-host-config:
         airship-host-config:
           image: quay.io/airshipit/hostconfig-operator:latest
+    rook-operator:
+      rook-ceph-operator:
+        rook-ceph-operator:
+          image: rook/ceph:v1.5.9
+      rook-ceph-operator-config:
+        ceph_daemon:
+          image: ceph/ceph:v15.2.10
+        rook_csi_ceph_image:
+          image: quay.io/cephcsi/cephcsi:v3.2.1
+        rook_csi_registrar_image:
+          image: k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.0.1
+        rook_csi_resizer_image:
+          image: k8s.gcr.io/sig-storage/csi-resizer:v1.0.1
+        rook_csi_provisioner_image:
+          image: k8s.gcr.io/sig-storage/csi-provisioner:v2.0.4
+        rook_csi_snapshotter_image:
+          image: k8s.gcr.io/sig-storage/csi-snapshotter:v3.0.2
+        rook_csi_attacher_image:
+          image: k8s.gcr.io/sig-storage/csi-attacher:v3.0.2
+    storage-rook:
+      ceph:
+        ceph-version:
+          image: ceph/ceph:v15.2.10
+      rook-ceph-tools:
+        rook-ceph-tools:
+          image: rook/ceph:v1.5.9
 
   image_components:
   # image_components are organized by
@@ -153,10 +179,6 @@ spec:
       defaultBackend:
         repository: k8s.gcr.io/defaultbackend-amd64
         tag: "1.5"
-    rook-operator:
-      rook-operator:
-        repository: rook/ceph
-        tag: v1.5.8
     dex-aio:
     # NOTE: The dex-aio chart uses a different format for declaring images, so
     # the 'name' property is required. 'repository' should contain only the name

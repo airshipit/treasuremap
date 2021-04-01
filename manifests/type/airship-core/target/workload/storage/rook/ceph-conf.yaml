@@ -1,0 +1,21 @@
+# Use the config section below to create your custom
+# ceph.conf file
+# Refer to the documentation at:
+# https://rook.io/docs/rook/v1.5/ceph-advanced-configuration.html#custom-cephconf-settings
+# Be aware - the rook operator doesn't perform any validations and syntax check against
+# the configuration below. Even a typo in this file can cause the entire cluster failure.
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: rook-config-override
+  namespace: rook-ceph # namespace:cluster
+data:
+  config: |
+    [global]
+    osd_pool_default_size = 3
+    mon_warn_on_pool_no_redundancy = true
+    # # You can add other default configuration sections
+    # # to create fully customized ceph.conf
+    # [mon]
+    # [osd]
+    # [rgw]

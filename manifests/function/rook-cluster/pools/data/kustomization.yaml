@@ -1,0 +1,5 @@
+resources:
+- ../base
+namePrefix: data-
+patchesStrategicMerge:
+- data-pool.yaml

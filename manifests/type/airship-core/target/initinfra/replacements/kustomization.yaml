@@ -3,3 +3,4 @@ resources:
   - ../../../../../../../airshipctl/manifests/function/hwcc/replacements
   - ../../../../../../../airshipctl/manifests/function/helm-chart-collator/replacements
   - ../../../../../function/hostconfig-operator/replacements
+  - ../../../../../function/rook-operator/replacements

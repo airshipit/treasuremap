@@ -1,0 +1,13 @@
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: "pool"
+  namespace: rook-ceph # namespace:cluster
+spec:
+    failureDomain: host
+    replicated:
+      size: 3
+    quotas:
+      maxSize: "0" # valid suffixes include K, M, G, T, P, Ki, Mi, Gi, Ti, Pi, eg: "10Gi"
+                   # "0" means no quotas. Since rook 1.5.9 you must use string as a value's type
+      maxObjects: 0 # 1000000000 = billion objects, 0 means no quotas

@@ -1,0 +1,5 @@
+resources:
+- ../base
+namePrefix: rbd-
+patchesStrategicMerge:
+- rbd-pool.yaml

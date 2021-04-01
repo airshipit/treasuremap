@@ -1,0 +1,35 @@
+# This makes a couple small networking tweaks that are specific to the
+# ephemeral cluster, on top of the target cluster networking definition.
+# These values can be overridden at the site, type, etc levels as appropriate.
+apiVersion: airshipit.org/v1alpha1
+kind: VariableCatalogue
+metadata:
+  name: storage
+  labels:
+    airshipit.org/deploy-k8s: "false"
+spec:
+  storage:
+    useAllNodes: false   # We define per node/per device configuration below
+    useAllDevices: false # We define per node/per device configuration below
+    nodes:
+      - name: stl2r01s02
+        devicePathFilter: "^/dev/disk/by-path/pci-0000:18:00.0-scsi-0:2:[3-8]:0"
+        # Or you can use device filter
+        # deviceFilter: "^/dev/sd[d-k]"
+      - name: stl2r01s04
+        devicePathFilter: "^/dev/disk/by-path/pci-0000:18:00.0-scsi-0:2:[3-8]:0"
+        # Or you can use device filter
+        # deviceFilter: "^/dev/sd[d-k]"
+      - name: stl2r01s05
+        devicePathFilter: "^/dev/disk/by-path/pci-0000:18:00.0-scsi-0:2:[3-8]:0"
+        # Or you can use device filter
+        # deviceFilter: "^/dev/sd[d-k]"
+      - name: stl2r01s06
+        devicePathFilter: "^/dev/disk/by-path/pci-0000:18:00.0-scsi-0:2:[3-8]:0"
+        # Or you can use device filter
+        # deviceFilter: "^/dev/sd[d-k]"
+      - name: stl2r01s07
+        devicePathFilter: "^/dev/disk/by-path/pci-0000:18:00.0-scsi-0:2:[3-8]:0"
+        # Or you can use device filter
+        # deviceFilter: "^/dev/sd[d-k]"
+---

@@ -1,0 +1,60 @@
+apiVersion: ceph.rook.io/v1
+kind: CephCluster
+metadata:
+  name: ceph
+  namespace: rook-ceph
+spec:
+  dataDirHostPath: /var/lib/rook
+  cephVersion:
+    #see: https://tracker.ceph.com/issues/48797
+    image: ceph/ceph:v15.2.10
+    #allowUnsupported: true
+  mon:
+    count: 3
+    allowMultiplePerNode: false
+  dashboard:
+    enabled: true
+    # If you are going to use the dashboard together with ingress-controller,
+    # make sure it is deployed.
+    ssl: true
+  crashCollector:
+    disable: false
+  network:
+    # Instead of 'host' you can enable the 'multus' network provider.
+    # However, the Multus network is in the EXPERIMENTAL stage.
+    provider: host
+  storage:
+    # Using settings below is not recommended for the production environment
+    useAllNodes: true   # Recommended setting is `false`
+    useAllDevices: true # Recommended setting is `false`
+    # # To gain more control over you deployment, you should uncomment settings
+    # # listed below and setup your storage layout per node.
+    # # Please refer to the official rook documentation
+    # nodes:
+    #   - name: changemes02
+    #     devices:
+    #       # You can use a list of devices (by path)
+    #       # - name: /dev/disk/by-path/pci-0000:18:00.0-scsi-0:2:3:0
+    #       # - name: /dev/disk/by-path/pci-0000:18:00.0-scsi-0:2:4:0
+    #       # - name: /dev/disk/by-path/pci-0000:18:00.0-scsi-0:2:5:0
+    #       # - name: /dev/disk/by-path/pci-0000:18:00.0-scsi-0:2:6:0
+    #       # - name: /dev/disk/by-path/pci-0000:18:00.0-scsi-0:2:7:0
+    #       # - name: /dev/disk/by-path/pci-0000:18:00.0-scsi-0:2:8:0
+    #   - name: changemes04
+    #     # Instead of enlisting available devices you can use regex
+    #     devicePathFilter: "^/dev/disk/by-path/pci-0000:18:00.0-scsi-0:2:[3-8]:0"
+    #   - name: changemes05
+    #     devices:
+    #       # Or you can use drive names (directly)
+    #       # - name: /dev/sdc
+    #       # - name: /dev/sdd
+    #       # - name: /dev/sde
+    #       # - name: /dev/sdf
+    #       # - name: /dev/sdg
+    #       # - name: /dev/sdh
+    #   - name: changemes06
+    #       # Or via regex
+    #     deviceFilter: "^/dev/sd[c-h]"
+    # Also you can configure each device and/or each node. Please refer to the official rook
+    # documentation for the branch 1.5.x
+---
