@@ -1,0 +1,14 @@
+resources:
+  - ../../../../composite/monitoring-stack
+  - ../../../../function/minio
+  - ../catalogues
+  - minio-admin-secret.yaml
+
+transformers:
+  - ../../../../composite/monitoring-stack/replacements
+  - ../../../../function/minio/replacements
+
+namespace: lma-infra
+
+patches:
+  - path: patches/minio.yaml

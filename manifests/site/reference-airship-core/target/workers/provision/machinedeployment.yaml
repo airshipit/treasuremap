@@ -1,0 +1,30 @@
+apiVersion: cluster.x-k8s.io/v1alpha3
+kind: MachineDeployment
+metadata:
+  name: worker-1
+  labels:
+    cluster.x-k8s.io/cluster-name: target-cluster
+spec:
+  clusterName: target-cluster
+  ## NEWSITE_CHANGEME: update the below with the total number of worker nodes
+  replicas: 2
+  selector:
+    matchLabels:
+      cluster.x-k8s.io/cluster-name: target-cluster
+  template:
+    metadata:
+      labels:
+        cluster.x-k8s.io/cluster-name: target-cluster
+    spec:
+      clusterName: target-cluster
+      version: v1.18.3
+      bootstrap:
+        configRef:
+          name: worker-1
+          apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+          kind: KubeadmConfigTemplate
+      infrastructureRef:
+        name: worker-1
+        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+        kind: Metal3MachineTemplate
+---

@@ -1,0 +1,19 @@
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha4
+kind: Metal3MachineTemplate
+metadata:
+  annotations:
+    config.kubernetes.io/path: metal3machinetemplate_cluster-controlplane-2.yaml
+  name: cluster-controlplane-2
+spec:
+  template:
+    spec:
+      hostSelector:
+        matchLabels:
+          airshipit.org/k8s-role: controlplane-host
+      image:
+        ## NEWSITE_CHANGEME: update the below ips with the first target node pxe ips
+        url: http://172.63.0.11/images/control-plane.qcow2
+        checksum: http://172.63.0.11/images/control-plane.qcow2.md5sum
+
+

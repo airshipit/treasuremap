@@ -1,0 +1,6 @@
+phase:
+  docEntryPointPrefix: manifests/site/reference-airship-core
+  path: manifests/site/reference-airship-core/phases
+
+inventory:
+  path: manifests/site/reference-airship-core/host-inventory

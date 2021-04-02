@@ -1,0 +1,41 @@
+# These rules inject env vars into the workers.
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: workers-env-vars-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2.0.2
+replacements:
+# Replace the proxy vars
+- source:
+    objref:
+      name: env-vars-catalogue
+    fieldref: env.HTTP_PROXY
+  target:
+    objref:
+      kind: KubeadmConfigTemplate
+      name: worker-1
+    fieldrefs:
+      - "spec.template.spec.files[path=/etc/systemd/system/docker.service.d/http-proxy.conf].content%REPLACEMENT_HTTP_PROXY%"
+- source:
+    objref:
+      name: env-vars-catalogue
+    fieldref: env.HTTPS_PROXY
+  target:
+    objref:
+      kind: KubeadmConfigTemplate
+      name: worker-1
+    fieldrefs:
+      - "spec.template.spec.files[path=/etc/systemd/system/docker.service.d/http-proxy.conf].content%REPLACEMENT_HTTPS_PROXY%"
+- source:
+    objref:
+      name: env-vars-catalogue
+    fieldref: env.NO_PROXY
+  target:
+    objref:
+      kind: KubeadmConfigTemplate
+      name: worker-1
+    fieldrefs:
+      - "spec.template.spec.files[path=/etc/systemd/system/docker.service.d/http-proxy.conf].content%REPLACEMENT_NO_PROXY%"
