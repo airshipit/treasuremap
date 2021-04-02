@@ -1,0 +1,9 @@
+resources:
+  - ../../../../composite/lma-infra
+  - ../catalogues
+  - lma-infra-object-store.yaml
+
+transformers:
+  - ../../../../composite/lma-infra/replacements
+
+namespace: lma-infra

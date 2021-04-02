@@ -1,0 +1,10 @@
+apiVersion: operator.tigera.io/v1
+kind: Installation
+metadata:
+  name: default
+spec:
+  calicoNetwork:
+    nodeAddressAutodetectionV4:
+      firstFound: false
+      ## NEWSITE_CHANGEME: update the interface with the calico network
+      interface: "bond0.64"

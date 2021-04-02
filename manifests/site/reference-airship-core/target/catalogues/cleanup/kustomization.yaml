@@ -1,0 +1,3 @@
+resources:
+- smp.yaml
+- ../../generator/results/cleanup/

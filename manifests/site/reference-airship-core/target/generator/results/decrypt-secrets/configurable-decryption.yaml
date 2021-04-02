@@ -1,0 +1,28 @@
+apiVersion: airshipit.org/v1alpha1
+kind: Templater
+metadata:
+  name: secret-template
+  annotations:
+    config.kubernetes.io/function: |
+      container:
+        image: quay.io/airshipit/templater:v2.0.2
+        envs:
+        - TOLERATE_DECRYPTION_FAILURES
+template: |
+  {{- $tolerate := env "TOLERATE_DECRYPTION_FAILURES" }}
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: my-config2
+    annotations:
+      config.k8s.io/function: |
+        container:
+          image: gcr.io/kpt-fn-contrib/sops:v0.1.0
+          envs:
+          - SOPS_IMPORT_PGP
+  data:
+    ignore-mac: true
+    cmd: decrypt
+    {{- if eq $tolerate "true" }}
+    cmd-tolerate-failures: true
+    {{- end }}

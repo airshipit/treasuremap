@@ -1,0 +1,31 @@
+apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+kind: KubeadmConfigTemplate
+metadata:
+  name: worker-1
+spec:
+  template:
+    spec:
+      joinConfiguration:
+        nodeRegistration:
+          name: '{{ ds.meta_data.name }}'
+          kubeletExtraArgs:
+            node-labels: 'metal3.io/uuid={{ ds.meta_data.uuid }},node-type=worker'
+            provider-id: 'metal3://{{ ds.meta_data.uuid }}'
+            feature-gates: "IPv6DualStack=true"
+      files:
+        - path: "/etc/systemd/system/docker.service.d/http-proxy.conf"
+          content: |
+            [Service]
+            Environment="HTTP_PROXY=REPLACEMENT_HTTP_PROXY"
+            Environment="HTTPS_PROXY=REPLACEMENT_HTTPS_PROXY"
+            Environment="NO_PROXY=REPLACEMENT_NO_PROXY"
+      preKubeadmCommands:
+        # Restart docker to apply any proxy settings
+        - export HOME=/root
+        - systemctl daemon-reload
+        - systemctl restart docker
+      users:
+        - name: deployer
+          sshAuthorizedKeys:
+          - REPLACE_HOST_SSH_KEY
+          sudo: ALL=(ALL) NOPASSWD:ALL

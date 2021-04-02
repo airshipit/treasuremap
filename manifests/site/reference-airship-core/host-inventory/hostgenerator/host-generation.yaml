@@ -1,0 +1,18 @@
+# Site-level, phase-specific lists of hosts to generate
+# This is used by the hostgenerator-m3 function to narrow down the site-level
+# host-catalogue to just the hosts needed for a particular phase.
+apiVersion: airshipit.org/v1alpha1
+kind: VariableCatalogue
+metadata:
+  name: host-generation-catalogue
+hosts:
+  m3:
+    # Note: this list should be kept up to date with
+    # the full list of hosts in the cluster
+    ## NEWSITE_CHANGEME: list of all the hosts
+    - stl3r01s01
+    - stl3r01s02
+    - stl3r01s03
+    - stl3r01s04
+    - stl3r01s05
+    - stl3r01s06

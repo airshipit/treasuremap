@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../../../../../airshipctl/manifests/function/hostgenerator-m3
+  - ../../../../../../../airshipctl/manifests/function/hardwareprofile-example
+  - ../../catalogues/
+  - host-generation.yaml
+
+transformers:
+  - ../../../../../../../airshipctl/manifests/function/hostgenerator-m3/replacements
+  - ../../../../../../../airshipctl/manifests/function/hardwareprofile-example/replacements
+  - ../../../../../../../airshipctl/manifests/function/hostgenerator-m3/cleanup
+  - ../../catalogues/cleanup
+  - ../../../../../../../airshipctl/manifests/function/hardwareprofile-example/cleanup
