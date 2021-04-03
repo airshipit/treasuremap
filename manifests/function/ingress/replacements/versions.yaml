@@ -9,7 +9,7 @@ metadata:
 replacements:
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.helm_repositories.ingress-nginx.url}"
   target:
@@ -19,7 +19,7 @@ replacements:
     fieldrefs: ["{.spec.url}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.ingress-nginx.chart}"
   target:
@@ -29,7 +29,7 @@ replacements:
     fieldrefs: ["{.spec.chart.spec.chart}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.ingress-nginx.version}"
   target:
@@ -39,9 +39,9 @@ replacements:
     fieldrefs: ["{.spec.chart.spec.version}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.ingress-nginx.controller.repository}"
+    fieldref: "{.spec.image_components.ingress-nginx.controller.repository}"
   target:
     objref:
       kind: HelmRelease
@@ -49,9 +49,9 @@ replacements:
     fieldrefs: ["{.spec.values.controller.image.repository}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.ingress-nginx.controller.tag}"
+    fieldref: "{.spec.image_components.ingress-nginx.controller.tag}"
   target:
     objref:
       kind: HelmRelease
@@ -59,9 +59,9 @@ replacements:
     fieldrefs: ["{.spec.values.controller.image.tag}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.ingress-nginx.defaultBackend.repository}"
+    fieldref: "{.spec.image_components.ingress-nginx.defaultBackend.repository}"
   target:
     objref:
       kind: HelmRelease
@@ -69,9 +69,9 @@ replacements:
     fieldrefs: ["{.spec.values.defaultBackend.image.repository}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.ingress-nginx.defaultBackend.tag}"
+    fieldref: "{.spec.image_components.ingress-nginx.defaultBackend.tag}"
   target:
     objref:
       kind: HelmRelease

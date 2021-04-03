@@ -10,7 +10,7 @@ replacements:
 # Helm Repo
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.helm_repositories.kube_prometheus_stack}"
   target:
@@ -22,7 +22,7 @@ replacements:
 # Chart
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.kube_prometheus_stack.chart}"
   target:
@@ -32,7 +32,7 @@ replacements:
     fieldrefs: ["{.spec.chart.spec.chart}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.kube_prometheus_stack.version}"
   target:
@@ -44,9 +44,9 @@ replacements:
 # Images
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.kube_prometheus_stack.admission_webhooks}"
+    fieldref: "{.spec.image_components.kube_prometheus_stack.admission_webhooks}"
   target:
     objref:
       kind: HelmRelease
@@ -54,9 +54,9 @@ replacements:
     fieldrefs: ["{.spec.values.prometheusOperator.admissionWebhooks.patch.image}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.kube_prometheus_stack.alertmanager}"
+    fieldref: "{.spec.image_components.kube_prometheus_stack.alertmanager}"
   target:
     objref:
       kind: HelmRelease
@@ -64,9 +64,9 @@ replacements:
     fieldrefs: ["{.spec.values.alertmanager.alertmanagerSpec.image}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.kube_prometheus_stack.prometheus}"
+    fieldref: "{.spec.image_components.kube_prometheus_stack.prometheus}"
   target:
     objref:
       kind: HelmRelease
@@ -74,9 +74,9 @@ replacements:
     fieldrefs: ["{.spec.values.prometheusOperator.prometheusSpec.image}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.kube_prometheus_stack.prometheus_config_reloader}"
+    fieldref: "{.spec.image_components.kube_prometheus_stack.prometheus_config_reloader}"
   target:
     objref:
       kind: HelmRelease
@@ -84,9 +84,9 @@ replacements:
     fieldrefs: ["{.spec.values.prometheusOperator.prometheusConfigReloaderImage}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.kube_prometheus_stack.prometheus_operator.alertmanagerDefaultBaseImage}"
+    fieldref: "{.spec.images.kube_prometheus_stack.prometheus_operator.alertmanagerDefaultBaseImage.image}"
   target:
     objref:
       kind: HelmRelease
@@ -94,9 +94,9 @@ replacements:
     fieldrefs: ["{.spec.values.prometheusOperator.alertmanagerDefaultBaseImage}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.kube_prometheus_stack.prometheus_operator.prometheusDefaultBaseImage}"
+    fieldref: "{.spec.images.kube_prometheus_stack.prometheus_operator.prometheusDefaultBaseImage.image}"
   target:
     objref:
       kind: HelmRelease
@@ -104,9 +104,9 @@ replacements:
     fieldrefs: ["{.spec.values.prometheusOperator.prometheusDefaultBaseImage}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.kube_prometheus_stack.prometheus_operator.image}"
+    fieldref: "{.spec.image_components.kube_prometheus_stack.prometheus_operator}"
   target:
     objref:
       kind: HelmRelease
@@ -114,9 +114,9 @@ replacements:
     fieldrefs: ["{.spec.values.prometheusOperator.image}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.kube_prometheus_stack.thanos}"
+    fieldref: "{.spec.images.kube_prometheus_stack.thanos.thanos.image}"
   target:
     objref:
       kind: HelmRelease
