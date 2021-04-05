@@ -37,15 +37,14 @@ export AIRSHIPCTL_REF=${AIRSHIPCTL_REF:-"$(git rev-parse HEAD)"}
 airshipctl config set-manifest treasuremap_ci \
         --repo airshipctl \
         --url "${AIRSHIPCTL_REPO_URL}" \
-        --commithash "${AIRSHIPCTL_REF}"
+        --commithash "${AIRSHIPCTL_REF}" \
+        --target-path "${AIRSHIP_CONFIG_MANIFEST_DIRECTORY}" \
+        --metadata-path "${AIRSHIP_CONFIG_METADATA_PATH}"
 
 airshipctl config set-manifest treasuremap_ci \
         --repo primary \
         --url "${AIRSHIP_CONFIG_PHASE_REPO_URL}" \
-        --commithash "${TREASUREMAP_REF}"
-
-# Add target path and metadata path
-airshipctl config set-manifest treasuremap_ci \
+        --commithash "${TREASUREMAP_REF}" \
         --target-path "${AIRSHIP_CONFIG_MANIFEST_DIRECTORY}" \
         --metadata-path "${AIRSHIP_CONFIG_METADATA_PATH}"
 
