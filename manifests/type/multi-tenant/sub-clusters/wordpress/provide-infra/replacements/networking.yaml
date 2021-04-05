@@ -1,0 +1,47 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: subcluster-provide-infra-networking-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2
+replacements:
+  - source:
+      objref:
+        kind: VariableCatalogue
+        name: subcluster-networking
+      fieldref: "{.spec.wordpress.exposed_services[?(.name == 'auth')].nodePort}"
+    target:
+      objref:
+        kind: SIPCluster
+        name: wordpress
+      # NOTE: The SIPCluster CR accepts multiple infra service definitions,
+      # but we only deploy one instance of each.
+      fieldrefs: ["{.spec.services.auth[0].nodePort}"]
+  - source:
+      objref:
+        kind: VariableCatalogue
+        name: subcluster-networking
+      fieldref: "{.spec.wordpress.exposed_services[?(.name == 'jumpHost')].nodePort}"
+    target:
+      objref:
+        kind: SIPCluster
+        name: wordpress
+      # NOTE: The SIPCluster CR accepts multiple infra service definitions,
+      # but we only deploy one instance of each.
+      fieldrefs: ["{.spec.services.jumpHost[0].nodePort}"]
+  # NOTE: newer versions of SIP will have an additional load balancer for the
+  # worker nodes.
+  - source:
+      objref:
+        kind: VariableCatalogue
+        name: subcluster-networking
+      fieldref: "{.spec.wordpress.exposed_services[?(.name == 'loadBalancerControlPlane')].nodePort}"
+    target:
+      objref:
+        kind: SIPCluster
+        name: wordpress
+      # NOTE: The SIPCluster CR accepts multiple infra service definitions,
+      # but we only deploy one instance of each.
+      fieldrefs: ["{.spec.services.loadBalancer[0].nodePort}"]

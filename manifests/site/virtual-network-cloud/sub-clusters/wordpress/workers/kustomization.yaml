@@ -1,0 +1,7 @@
+resources:
+  - ../../../../../type/multi-tenant/sub-clusters/wordpress/workers
+  - ../../../target/catalogues
+  - metal3machinetemplate.yaml
+
+transformers:
+  - ../../../../../type/multi-tenant/sub-clusters/wordpress/workers/replacements

@@ -8,4 +8,5 @@ resources:
 
 patchesStrategicMerge:
   - versions-airshipctl.yaml
+  - versions-treasuremap.yaml
   - networking.yaml

@@ -46,7 +46,8 @@ spec:
         name: http
 
   wordpress:
-  # This stanza is replaced directly into lma's networking catalogue
+    # This stanza is replaced directly into the Wordpress sub-cluster's
+    # networking catalogue at the site level.
     kubernetes:
       serviceCidr: "10.0.80.0/20"
       podCidr: "192.168.0.0/18"
@@ -55,4 +56,14 @@ spec:
         port: 6443
       apiserverCertSANs: [10.23.25.201, 10.23.24.201]
 
-    port_range: ["11040:11059"]
+    exposed_services:
+      - name: auth
+        nodePort: 30556
+      - name: jumpHost
+        nodePort: 30001
+      - name: loadBalancerControlPlane
+        nodePort: 30002
+      # TODO: Uncomment when SIP supports a Worker load balancer.
+      # Potential ports that can be used by sub-cluster services.
+      # - name: loadBalancerWorkers
+      #   nodePort: ["30003:30020"]
