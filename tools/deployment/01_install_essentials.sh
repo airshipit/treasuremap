@@ -29,4 +29,7 @@ cd ${AIRSHIPCTL_PROJECT}
 ./tools/deployment/provider_common/03_install_pip.sh
 ./tools/deployment/provider_common/04_install_yq.sh
 ./tools/deployment/01_install_kubectl.sh
-./tools/install_kustomize.sh
+if ! $(which kustomize > /dev/null); then
+  ./tools/install_kustomize.sh
+fi
+

@@ -36,7 +36,6 @@
       include_role:
         name: install-kustomize
 
-    # Installs kustomize plugin functionality needed for rendering below
     - name: install airshipctl
       shell: |
         cd {{ local_src_dir | default(zuul.project.src_dir) }}
