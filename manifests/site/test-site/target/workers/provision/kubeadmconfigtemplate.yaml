@@ -22,9 +22,10 @@ spec:
       preKubeadmCommands:
         # Restart docker to apply any proxy settings
         - export HOME=/root
+        - systemctl daemon-reload
         - systemctl restart docker
       users:
         - name: deployer
           sshAuthorizedKeys:
-          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDK5jnOafJwnoN+vp77LgayzLZ7O6tu96cObzwjIEwOowi2KHTk+G4sUXzE4mt2QbPTbyOF45d/omcRZYixrTmYwwtJ9QGPbwWw/qpCRzVo5uV4qbwBd3iRUqXryOmZRCCFac678JXZS9f8AfOP9rHkh2jqhA6dJdtvqYTOpPLtmw8pYjScH/YqBXZObNSFS5PlSPl901UhZH4FNUAuYeR9JGY99wgM+R9XHRRgfBPJzwzvOQ7ZYfvxb+n4TuBr7u7jZtYC+pmG/eOYbIt2/vexO0y/rNomtC+hjDAXZO2VFwHejYW6r+ZPpkNrdr+5U8s0aENGg4BJkVa2n3LwUrZF segorov@node1
+          - REPLACE_HOST_SSH_KEY
           sudo: ALL=(ALL) NOPASSWD:ALL
