@@ -1,0 +1,24 @@
+# permissions for end users to edit vinoes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: vino-editor-role
+rules:
+- apiGroups:
+  - airship.airshipit.org
+  resources:
+  - vinoes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - airship.airshipit.org
+  resources:
+  - vinoes/status
+  verbs:
+  - get

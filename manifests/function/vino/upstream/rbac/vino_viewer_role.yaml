@@ -1,0 +1,20 @@
+# permissions for end users to view vinoes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: vino-viewer-role
+rules:
+- apiGroups:
+  - airship.airshipit.org
+  resources:
+  - vinoes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - airship.airshipit.org
+  resources:
+  - vinoes/status
+  verbs:
+  - get

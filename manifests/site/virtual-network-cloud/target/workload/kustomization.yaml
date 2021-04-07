@@ -4,4 +4,4 @@ resources:
 transformers:
   - ../../../../function/ingress/replacements
   - ../../../../function/sip/replacements
-
+  - ../../../../function/vino/replacements

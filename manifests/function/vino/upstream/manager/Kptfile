@@ -1,0 +1,19 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: upstream/manager
+upstream:
+  type: git
+  git:
+    commit: 3dc0698a85f618a24c40bd7862d1dd807fc73ae3
+    repo: https://github.com/airshipit/vino
+    directory: config/manager
+    ref: 3dc0698a85f618a24c40bd7862d1dd807fc73ae3
+openAPI:
+  definitions:
+    io.k8s.cli.setters.replicas:
+      x-k8s-cli:
+        setter:
+          name: replicas
+          value: "3"
+          isSet: true

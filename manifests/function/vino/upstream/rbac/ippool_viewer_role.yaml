@@ -1,0 +1,20 @@
+# permissions for end users to view ippools.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ippool-viewer-role
+rules:
+- apiGroups:
+  - airship.airshipit.org
+  resources:
+  - ippools
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - airship.airshipit.org
+  resources:
+  - ippools/status
+  verbs:
+  - get

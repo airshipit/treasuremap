@@ -1,0 +1,86 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.3.0
+  creationTimestamp: null
+  name: ippools.airship.airshipit.org
+spec:
+  group: airship.airshipit.org
+  names:
+    kind: IPPool
+    listKind: IPPoolList
+    plural: ippools
+    singular: ippool
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      description: IPPool is the Schema for the ippools API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: IPPoolSpec tracks allocation ranges and statuses within a specific
+            subnet IPv4 or IPv6 subnet.  It has a set of ranges of IPs within the
+            subnet from which IPs can be allocated by IPAM, and a set of IPs that
+            are currently allocated already.
+          properties:
+            allocatedIPs:
+              items:
+                description: AllocatedIP Allocates an IP to an entity
+                properties:
+                  allocatedTo:
+                    type: string
+                  ip:
+                    type: string
+                required:
+                - allocatedTo
+                - ip
+                type: object
+              type: array
+            ranges:
+              items:
+                description: Range has (inclusive) bounds within a subnet from which
+                  IPs can be allocated
+                properties:
+                  start:
+                    type: string
+                  stop:
+                    type: string
+                required:
+                - start
+                - stop
+                type: object
+              type: array
+            subnet:
+              type: string
+          required:
+          - allocatedIPs
+          - ranges
+          - subnet
+          type: object
+        status:
+          description: IPPoolStatus defines the observed state of IPPool
+          type: object
+      type: object
+  version: v1
+  versions:
+  - name: v1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

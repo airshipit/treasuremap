@@ -1,0 +1,23 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+dependencies:
+- name: upstream/crd
+  git:
+    repo: "https://opendev.org/airship/vino"
+    directory: "config/crd"
+    ref: "3dc0698a85f618a24c40bd7862d1dd807fc73ae3"
+- name: upstream/default
+  git:
+    repo: "https://opendev.org/airship/vino"
+    directory: "config/default"
+    ref: "3dc0698a85f618a24c40bd7862d1dd807fc73ae3"
+- name: upstream/manager
+  git:
+    repo: "https://opendev.org/airship/vino"
+    directory: "config/manager"
+    ref: "3dc0698a85f618a24c40bd7862d1dd807fc73ae3"
+- name: upstream/rbac
+  git:
+    repo: "https://opendev.org/airship/vino"
+    directory: "config/rbac"
+    ref: "3dc0698a85f618a24c40bd7862d1dd807fc73ae3"

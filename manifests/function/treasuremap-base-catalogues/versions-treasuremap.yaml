@@ -109,3 +109,7 @@ spec:
       defaultBackend:
         repository: k8s.gcr.io/defaultbackend-amd64
         tag: 1.5
+    vino:
+      kube-rbac-proxy: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
+      libvirt: quay.io/airshipit/libvirt
+      manager: quay.io/airshipit/vino:6480ddc3ba98fba21fd692b8489adb0177abb8b5

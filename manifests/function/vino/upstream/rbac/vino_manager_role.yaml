@@ -1,0 +1,47 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cluster-manager-role
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - create
+      - get
+      - watch
+      - list
+      - delete
+      - update
+  - apiGroups:
+      - airship.airshipit.org
+    resources:
+      - vinoes
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - airship.airshipit.org
+    resources:
+      - vinoes/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - metal3.io
+    resources:
+      - baremetalhosts
+    verbs:
+      - create
+      - get
+      - list
+      - patch
+      - update

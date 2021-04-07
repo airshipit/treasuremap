@@ -1,0 +1,9 @@
+resources:
+- manager.yaml
+
+configMapGenerator:
+- name: daemonset-template
+  options:
+    disableNameSuffixHash: true
+  files:
+  - template=daemonset-template.yaml
