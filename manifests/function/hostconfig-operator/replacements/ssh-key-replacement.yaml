@@ -1,0 +1,21 @@
+# These rules inject env vars into the k8scontrol function.
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: hco-generated-ssh-key-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2.0.2
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: generated-secrets
+    fieldref: "{.sshKeys.privateKey}"
+  target:
+    objref:
+      kind: Secret
+      name: hco-ssh-auth
+    fieldrefs:
+      - "data.ssh-privatekey%REPLACEMENT_SSH_PRIVATEKEY%"
