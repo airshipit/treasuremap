@@ -49,5 +49,9 @@ do
     kubectl \
       --kubeconfig $KUBECONFIG \
       --context $KUBECONFIG_TARGET_CONTEXT \
+      --request-timeout 10s label --overwrite ${hosts[i]} node-type=controlplane
+    kubectl \
+      --kubeconfig $KUBECONFIG \
+      --context $KUBECONFIG_TARGET_CONTEXT \
       --request-timeout 10s label --overwrite ${hosts[i]} kubernetes.io/role=master
 done
