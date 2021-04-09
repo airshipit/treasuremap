@@ -34,3 +34,24 @@ kubectl \
 
 ./tools/deployment/31_deploy_initinfra_target_node.sh
 
+hosts=$(`kubectl \
+  --kubeconfig $KUBECONFIG \
+  --context $KUBECONFIG_TARGET_CONTEXT \
+  --request-timeout 10s get nodes -o name`)
+
+# Annotate node for hostconfig-operator
+for i in "${!hosts[@]}"
+do
+    kubectl \
+      --kubeconfig $KUBECONFIG \
+      --context $KUBECONFIG_TARGET_CONTEXT \
+      --request-timeout 10s annotate ${hosts[i]} secret=hco-ssh-auth
+    kubectl \
+      --kubeconfig $KUBECONFIG \
+      --context $KUBECONFIG_TARGET_CONTEXT \
+      --request-timeout 10s label ${hosts[i]} node-type=controlplane
+    kubectl \
+      --kubeconfig $KUBECONFIG \
+      --context $KUBECONFIG_TARGET_CONTEXT \
+      --request-timeout 10s label ${hosts[i]} kubernetes.io/role=master
+done

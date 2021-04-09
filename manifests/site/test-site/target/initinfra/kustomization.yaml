@@ -3,5 +3,6 @@ resources:
   - ../catalogues
 transformers:
   - ../../../../type/airship-core/target/initinfra/replacements
+  - ../../../../function/hostconfig-operator/replacements
   - ../../../../../../airshipctl/manifests/function/flux/source-controller/replacements
   - ../../../../../../airshipctl/manifests/function/flux/helm-controller/replacements

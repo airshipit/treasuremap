@@ -5,3 +5,4 @@ resources:
   - hostconfig.airshipit.org_hostconfigs_crd.yaml
   - rbac
   - deployment.yaml
+  - ssh-key.yaml
