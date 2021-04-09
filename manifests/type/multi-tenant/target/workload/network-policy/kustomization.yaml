@@ -3,7 +3,9 @@ kind: Kustomization
 resources:
   - ../../../../../function/network-policy
   - ../../../../../function/treasuremap-base-catalogues
+  - netpol.yaml
 
 transformers:
   - ../../../../../function/network-policy/calico/replacements
+  - ../../../../../function/treasuremap-cleanup
 

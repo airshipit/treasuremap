@@ -1,0 +1,27 @@
+apiVersion: airshipit.org/v1alpha1
+kind: GenericContainer
+metadata:
+  name: calicoctl-apply
+  labels:
+    airshipit.org/deploy-k8s: "false"
+spec:
+  image: quay.io/airshipit/toolbox:latest
+  hostNetwork: true
+configRef:
+  kind: ConfigMap
+  name: calicoctl-apply
+  apiVersion: v1
+---
+apiVersion: airshipit.org/v1alpha1
+kind: GenericContainer
+metadata:
+  name: calicoctl-delete
+  labels:
+    airshipit.org/deploy-k8s: "false"
+spec:
+  image: quay.io/airshipit/toolbox:latest
+  hostNetwork: true
+configRef:
+  kind: ConfigMap
+  name: calicoctl-delete
+  apiVersion: v1

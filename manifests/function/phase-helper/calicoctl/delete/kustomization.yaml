@@ -1,0 +1,6 @@
+configMapGenerator:
+- name: calicoctl-delete
+  options:
+    disableNameSuffixHash: true
+  files:
+  - script=calicoctl-delete.sh

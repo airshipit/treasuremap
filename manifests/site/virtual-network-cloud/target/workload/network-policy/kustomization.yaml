@@ -1,2 +1,2 @@
 resources:
-  - ../../../../../type/airship-core/target/workload/network-policy
+  - ../../../../../type/multi-tenant/target/workload/network-policy
