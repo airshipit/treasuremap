@@ -1,0 +1,8 @@
+resources:
+  - ../../../../sub-cluster/workers
+
+commonLabels:
+  cluster.x-k8s.io/cluster-name: lma
+
+patchesStrategicMerge:
+  - patches/machinedeployment.yaml

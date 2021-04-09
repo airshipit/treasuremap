@@ -2,8 +2,6 @@ apiVersion: cluster.x-k8s.io/v1alpha3
 kind: MachineDeployment
 metadata:
   name: worker-1
-  labels:
-    cluster.x-k8s.io/cluster-name: target-cluster
 spec:
   clusterName: target-cluster
   replicas: 1
