@@ -1,5 +1,6 @@
 resources:
   - ../../../airship-core/target/workload
   - ../../../../function/sip
+  - ../../../../function/synclabeller
   - ../../../../function/vino
   #- network-policy

@@ -1,0 +1,24 @@
+# permissions for end users to edit metal3labelsyncs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: metal3labelsync-editor-role
+rules:
+- apiGroups:
+  - airship.airshipit.org
+  resources:
+  - metal3labelsyncs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - airship.airshipit.org
+  resources:
+  - metal3labelsyncs/status
+  verbs:
+  - get

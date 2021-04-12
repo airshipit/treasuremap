@@ -1,0 +1,23 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+dependencies:
+- name: upstream/crd
+  git:
+    repo: "https://github.com/airshipit/synclabeller"
+    directory: "config/crd"
+    ref: "72766d8519e064ffeacb44ddb9afa85c994907ee"
+- name: upstream/default
+  git:
+    repo: "https://github.com/airshipit/synclabeller"
+    directory: "config/default"
+    ref: "72766d8519e064ffeacb44ddb9afa85c994907ee"
+- name: upstream/manager
+  git:
+    repo: "https://github.com/airshipit/synclabeller"
+    directory: "config/manager"
+    ref: "72766d8519e064ffeacb44ddb9afa85c994907ee"
+- name: upstream/rbac
+  git:
+    repo: "https://github.com/airshipit/synclabeller"
+    directory: "config/rbac"
+    ref: "72766d8519e064ffeacb44ddb9afa85c994907ee"
