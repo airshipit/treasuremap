@@ -23,7 +23,13 @@ export AIRSHIP_CONFIG_METADATA_PATH=${AIRSHIP_CONFIG_METADATA_PATH:-"treasuremap
 export AIRSHIP_CONFIG_MANIFEST_DIRECTORY=${AIRSHIP_CONFIG_MANIFEST_DIRECTORY:-"/tmp/treasuremap"}
 
 # Primary repo options
-export AIRSHIP_CONFIG_PHASE_REPO_URL=${AIRSHIP_CONFIG_PHASE_REPO_URL:-"https://review.opendev.org/airship/treasuremap"}
+# Only the last item in the repo url path, e.g., 'treasuremap', is used by
+# the generate secret command.
+# In the case the init_site script was used to generate the project and site
+# directory outside of treasuremap, set it to the PROJECT value so we don't
+# need to ask the user to set the repo url.
+export PROJECT=${PROJECT:-"treasuremap"}
+export AIRSHIP_CONFIG_PHASE_REPO_URL=${AIRSHIP_CONFIG_PHASE_REPO_URL:-$PROJECT}
 
 cd ${AIRSHIPCTL_PROJECT}
 ./tools/deployment/23_generate_secrets.sh
