@@ -24,7 +24,7 @@ export WORKER_NODE=${WORKER_NODE:-"$(airshipctl phase render workers-target \
 	sed 's/"//g')"}
 
 cd ${AIRSHIPCTL_PROJECT}
-./tools/deployment/34_deploy_worker_node.sh
+./tools/deployment/35_deploy_worker_node.sh
 
 hosts=$(`kubectl \
   --kubeconfig $KUBECONFIG \
