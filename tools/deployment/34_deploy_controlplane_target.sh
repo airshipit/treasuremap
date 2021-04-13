@@ -14,39 +14,7 @@
 
 set -ex
 
-export KUBECONFIG=${KUBECONFIG:-"$HOME/.airship/kubeconfig"}
-export KUBECONFIG_TARGET_CONTEXT=${KUBECONFIG_TARGET_CONTEXT:-"target-cluster"}
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 
-export TARGET_IP=${TARGET_IP:-"$(airshipctl phase render controlplane-target \
-	-k Metal3Cluster \
-	-l airshipit.org/stage=initinfra \
-       	2> /dev/null | \
-	yq .spec.controlPlaneEndpoint.host |
-	sed 's/"//g')"}
-export TARGET_PORT=${TARGET_PORT:-"$(airshipctl phase render controlplane-target \
-	-k Metal3Cluster -l airshipit.org/stage=initinfra \
-       	2> /dev/null | \
-	yq .spec.controlPlaneEndpoint.port)"}
-
-echo $TARGET_IP $TARGET_PORT
 cd ${AIRSHIPCTL_PROJECT}
-./tools/deployment/34_deploy_worker_node.sh
-
-hosts=$(kubectl \
-  --kubeconfig $KUBECONFIG \
-  --context $KUBECONFIG_TARGET_CONTEXT \
-  --request-timeout 10s get nodes -o name)
-
-# Annotate node for hostconfig-operator
-for i in "${!hosts[@]}"
-do
-    kubectl \
-      --kubeconfig $KUBECONFIG \
-      --context $KUBECONFIG_TARGET_CONTEXT \
-      --request-timeout 10s annotate ${hosts[i]} secret=hco-ssh-auth
-    kubectl \
-      --kubeconfig $KUBECONFIG \
-      --context $KUBECONFIG_TARGET_CONTEXT \
-      --request-timeout 10s label ${hosts[i]} kubernetes.io/role=master
-done
+./tools/deployment/34_deploy_controlplane_target.sh
