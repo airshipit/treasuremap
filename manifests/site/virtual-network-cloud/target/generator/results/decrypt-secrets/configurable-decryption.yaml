@@ -5,7 +5,7 @@ metadata:
   annotations:
     config.kubernetes.io/function: |
       container:
-        image: quay.io/airshipit/templater:latest
+        image: quay.io/airshipit/templater:v2
         envs:
         - TOLERATE_DECRYPTION_FAILURES
 template: |
