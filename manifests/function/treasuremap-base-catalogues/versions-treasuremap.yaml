@@ -47,6 +47,9 @@ spec:
     grafana:
       repository: grafana/grafana
       tag: 7.4.5
+    airship-host-config:
+      airship-host-config:
+        image: quay.io/airshipit/hostconfig-operator:latest
     kube_prometheus_stack:
       admission_webhooks:
         repository: jettech/kube-webhook-certgen
