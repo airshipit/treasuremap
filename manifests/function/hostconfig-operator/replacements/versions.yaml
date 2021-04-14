@@ -1,0 +1,20 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: airship-host-config-version-replacement
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2
+replacements:
+# Container versions for the airship-host-config Deployment
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.airship-host-config.airship-host-config.image}"
+  target:
+    objref:
+      kind: Deployment
+      name: airship-host-config
+    fieldrefs: ["{.spec.template.spec.containers[?(.name == 'airship-host-config')].image}"]
