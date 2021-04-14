@@ -30,7 +30,7 @@ kubectl \
   --kubeconfig $KUBECONFIG \
   --context $KUBECONFIG_TARGET_CONTEXT \
   --request-timeout 10s \
-  label nodes $TARGET_NODE node-type=controlplane
+  label --overwrite nodes $TARGET_NODE node-type=controlplane
 
 ./tools/deployment/31_deploy_initinfra_target_node.sh
 
@@ -49,9 +49,9 @@ do
     kubectl \
       --kubeconfig $KUBECONFIG \
       --context $KUBECONFIG_TARGET_CONTEXT \
-      --request-timeout 10s label ${hosts[i]} node-type=controlplane
+      --request-timeout 10s label --overwrite ${hosts[i]} node-type=controlplane
     kubectl \
       --kubeconfig $KUBECONFIG \
       --context $KUBECONFIG_TARGET_CONTEXT \
-      --request-timeout 10s label ${hosts[i]} kubernetes.io/role=master
+      --request-timeout 10s label --overwrite ${hosts[i]} kubernetes.io/role=master
 done

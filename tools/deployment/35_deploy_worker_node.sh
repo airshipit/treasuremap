@@ -23,6 +23,28 @@ export WORKER_NODE=${WORKER_NODE:-"$(airshipctl phase render workers-target \
 	yq .metadata.name | \
 	sed 's/"//g')"}
 
+# Annotate node for hostconfig-operator
+hosts=(`kubectl \
+  --kubeconfig $KUBECONFIG \
+  --context $KUBECONFIG_TARGET_CONTEXT \
+  --request-timeout 10s get nodes -o name`)
+
+for i in "${!hosts[@]}"
+do
+    kubectl \
+      --kubeconfig $KUBECONFIG \
+      --context $KUBECONFIG_TARGET_CONTEXT \
+      --request-timeout 10s annotate ${hosts[i]} secret=hco-ssh-auth
+    kubectl \
+      --kubeconfig $KUBECONFIG \
+      --context $KUBECONFIG_TARGET_CONTEXT \
+      --request-timeout 10s label --overwrite ${hosts[i]} node-type=controlplane
+    kubectl \
+      --kubeconfig $KUBECONFIG \
+      --context $KUBECONFIG_TARGET_CONTEXT \
+      --request-timeout 10s label --overwrite ${hosts[i]} kubernetes.io/role=master
+done
+
 cd ${AIRSHIPCTL_PROJECT}
 ./tools/deployment/35_deploy_worker_node.sh
 
@@ -41,5 +63,5 @@ do
     kubectl \
       --kubeconfig $KUBECONFIG \
       --context $KUBECONFIG_TARGET_CONTEXT \
-      --request-timeout 10s label ${hosts[i]} kubernetes.io/role=master
+      --request-timeout 10s label --overwrite ${hosts[i]} kubernetes.io/role=master
 done
