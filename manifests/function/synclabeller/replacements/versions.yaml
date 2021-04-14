@@ -1,0 +1,29 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: synclabeller-versions-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:latest
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.synclabeller.manager}"
+  target:
+    objref:
+      kind: Deployment
+      name: synclabeller-controller-manager
+    fieldrefs: ["{.spec.template.spec.containers[?(.name == 'manager')].image}"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.synclabeller.kube-rbac-proxy}"
+  target:
+    objref:
+      kind: Deployment
+      name: synclabeller-controller-manager
+    fieldrefs: ["{.spec.template.spec.containers[?(.name == 'kube-rbac-proxy')].image}"]
