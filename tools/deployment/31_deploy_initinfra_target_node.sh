@@ -34,10 +34,10 @@ kubectl \
 
 ./tools/deployment/31_deploy_initinfra_target_node.sh
 
-hosts=$(`kubectl \
+hosts=$(kubectl \
   --kubeconfig $KUBECONFIG \
   --context $KUBECONFIG_TARGET_CONTEXT \
-  --request-timeout 10s get nodes -o name`)
+  --request-timeout 10s get nodes -o name)
 
 # Annotate node for hostconfig-operator
 for i in "${!hosts[@]}"
