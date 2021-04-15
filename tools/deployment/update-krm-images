@@ -17,9 +17,9 @@
 # under the License.
 set -xe
 export MANIFEST_DIR=${MANIFEST_DIR:-"$(pwd)"}
-export OLD_REPLACEMENT_TRANSFORMER=${OLD_REPLACEMENT_TRANSFORMER:-"quay.io/airshipit/replacement-transformer:v2"}
-export OLD_TEMPLATER=${OLD_TEMPLATER:-"quay.io/airshipit/templater:v2"}
-export OLD_CLOUD_INIT=${OLD_CLOUD_INIT:-"quay.io/airshipit/cloud-init:v2"}
+export OLD_REPLACEMENT_TRANSFORMER=${OLD_REPLACEMENT_TRANSFORMER:-"quay.io/airshipit/replacement-transformer:v2.0.2"}
+export OLD_TEMPLATER=${OLD_TEMPLATER:-"quay.io/airshipit/templater:v2.0.2"}
+export OLD_CLOUD_INIT=${OLD_CLOUD_INIT:-"quay.io/airshipit/cloud-init:v2.0.2"}
 export OLD_SOPS=${OLD_SOPS:-"gcr.io/kpt-fn-contrib/sops:v0.1.0"}
 export NEW_REPLACEMENT_TRANSFORMER=${NEW_REPLACEMENT_TRANSFORMER:-$OLD_REPLACEMENT_TRANSFORMER}
 export NEW_TEMPLATER=${NEW_TEMPLATER:-$OLD_TEMPLATER}
