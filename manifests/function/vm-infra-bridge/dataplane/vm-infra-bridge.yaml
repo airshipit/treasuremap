@@ -1,0 +1,66 @@
+- op: add
+  path: "/spec/template/spec/preKubeadmCommands/-"
+  value:
+     systemctl enable --now vm-infra-bridge.service
+- op: add
+  path: "/spec/template/spec/files/-"
+  value:
+    path: /etc/systemd/system/vm-infra-bridge.service
+    permissions: "0644"
+    owner: root:root
+    content: |
+      [Unit]
+      Description=Service to setup vm-infra-bridge and NAT using iptables
+      Wants=network-online.target
+      After=network.target network-online.target
+
+      [Service]
+      User=root
+      WorkingDirectory=/usr/bin
+      ExecStart=/usr/bin/vm-infra-bridge.sh
+
+      [Install]
+      WantedBy=multi-user.target
+- op: add
+  path: "/spec/template/spec/files/-"
+  value:
+    path: /usr/bin/vm-infra-bridge.sh
+    permissions: "0744"
+    owner: root:root
+    content: |
+      #!/bin/bash
+      export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+      export DEBCONF_NONINTERACTIVE_SEEN=true
+      export DEBIAN_FRONTEND=noninteractive
+
+      # activate ip_forwarding
+      echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
+
+      # retrieve the last octet as the vm-bridge ip addresses will follow
+      # the pattern of  <first three octet from the VM_NETWORK>:<last octet from the oam
+      # IP's last octet>
+      octet=$(ip addr show dev REPLACEMENT_MGMT_INTF | grep 'inet ' | awk 'NR==1{print $2}' | awk -F "/" '{print $1}' | awk -F "." '{print $4}')
+      # Given the CIDR for oam network is /26 (with 62 possible hosts), the below modulo 44 division
+      # is to ensure that the octet is within the range of the OAM last octet.
+      # TODO : Need to make the modulo value configurable for future release.
+      mgmtoctet=$(($octet % 44))
+      vm_ip_address=$(awk -F"." '{print $1"."$2"."$3"."}'<<<"REPLACEMENT_VM_NETWORK")${mgmtoctet}
+      echo "Going to use ${vm_ip_address}"
+      # convert the subnet information to CIDR format
+      vm_ip_cidr=$(awk -F. '{
+                  split($0, octets)
+                  for (i in octets) {
+                    mask += 8 - log(2**8 - octets[i])/log(2);
+                    }
+                    print "/" mask
+                   }' <<< "REPLACEMENT_VMNETWORK_SUBNET_MASK")
+      # add bridge if it doesn't exist
+      if ! brctl show | grep -q vm-infra-bridge; then
+           brctl addbr vm-infra-bridge
+           ip link set vm-infra-bridge up
+           ip addr add  ${vm_ip_address}${vm_ip_cidr} dev vm-infra-bridge
+           brctl addif vm-infra-bridge REPLACEMENT_VM_INFRA_INTF
+      fi;
+      # add iptables postrouting nat
+      iptables -t nat -A POSTROUTING -s REPLACEMENT_VM_NETWORK${vm_ip_cidr} -o REPLACEMENT_VM_INFRA_INTF -j MASQUERADE
+      exit 0

@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - ../../../airship-core/shared/catalogues
   - subcluster-networking.yaml
+  - vm-networking.yaml

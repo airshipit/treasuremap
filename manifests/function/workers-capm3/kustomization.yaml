@@ -1,0 +1,4 @@
+resources:
+  - kubeadmconfigtemplate.yaml
+  - machinedeployment.yaml
+  - metal3machinetemplate.yaml

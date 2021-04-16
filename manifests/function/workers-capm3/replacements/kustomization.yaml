@@ -1,0 +1,3 @@
+resources:
+  - workers-env-vars.yaml
+  - metal3machinetemplate_vars.yaml

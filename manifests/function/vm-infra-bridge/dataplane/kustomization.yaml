@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../workers-capm3
+
+patchesJson6902:
+- target:
+    group: bootstrap.cluster.x-k8s.io
+    version: v1alpha3
+    kind: KubeadmConfigTemplate
+    name: worker-1
+  path: vm-infra-bridge.yaml
