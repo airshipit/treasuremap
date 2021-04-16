@@ -45,7 +45,7 @@ do
     kubectl \
       --kubeconfig $KUBECONFIG \
       --context $KUBECONFIG_TARGET_CONTEXT \
-      --request-timeout 10s annotate ${hosts[i]} secret=hco-ssh-auth
+      --request-timeout 10s annotate --overwrite ${hosts[i]} secret=hco-ssh-auth
     kubectl \
       --kubeconfig $KUBECONFIG \
       --context $KUBECONFIG_TARGET_CONTEXT \
