@@ -17,11 +17,3 @@ We also encourage new contributors and operators alike to join us in our
 
 You can learn more about Airship on the [Airship
 wiki](https://wiki.openstack.org/wiki/Airship).
-
-## Please Note:
-The branching structure of this repository will be changing to the following:
-* The 'v2' branch will become the 'master' branch
-* The current 'master' branch will become a new 'v1.9' branch
-* The current 'v1.8' branch will remain the same
-
-These changes are planned to take effect on Thursday, April 1, 2021, or slightly thereafter.
