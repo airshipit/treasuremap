@@ -1,3 +1,2 @@
 resources:
   - ../../../../../../../airshipctl/manifests/function/baremetal-operator/replacements
-  - ../../../../../../../airshipctl/manifests/function/hwcc/replacements
