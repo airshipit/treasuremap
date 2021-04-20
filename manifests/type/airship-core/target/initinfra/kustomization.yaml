@@ -1,6 +1,5 @@
 resources:
   - ../../../../../../airshipctl/manifests/function/baremetal-operator/
-  - ../../../../../../airshipctl/manifests/function/hwcc
   - ../../../../function/clusterctl
   - ../../../../function/hostconfig-operator
   - ../../../../../../airshipctl/manifests/composite/flux-helm/
