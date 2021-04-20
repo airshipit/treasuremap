@@ -22,7 +22,7 @@ cd ${AIRSHIPCTL_PROJECT}
 
 ./tools/deployment/31_deploy_initinfra_target_node.sh
 
-hosts=(kubectl \
+hosts=$(kubectl \
   --kubeconfig $KUBECONFIG \
   --context $KUBECONFIG_TARGET_CONTEXT \
   --request-timeout 10s get nodes -o name)
@@ -33,11 +33,7 @@ do
     kubectl \
       --kubeconfig $KUBECONFIG \
       --context $KUBECONFIG_TARGET_CONTEXT \
-      --request-timeout 10s annotate ${hosts[i]} secret=hco-ssh-auth
-    kubectl \
-      --kubeconfig $KUBECONFIG \
-      --context $KUBECONFIG_TARGET_CONTEXT \
-      --request-timeout 10s label --overwrite ${hosts[i]} node-type=controlplane
+      --request-timeout 10s annotate --overwrite ${hosts[i]} secret=hco-ssh-auth
     kubectl \
       --kubeconfig $KUBECONFIG \
       --context $KUBECONFIG_TARGET_CONTEXT \

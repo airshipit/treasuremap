@@ -18,6 +18,11 @@ export KUBECONFIG=${KUBECONFIG:-"$HOME/.airship/kubeconfig"}
 export KUBECONFIG_TARGET_CONTEXT=${KUBECONFIG_TARGET_CONTEXT:-"target-cluster"}
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 
+export WORKER_NODE=${WORKER_NODE:-"$(airshipctl phase render workers-target \
+	-k BareMetalHost 2> /dev/null | \
+	yq .metadata.name | \
+	sed 's/"//g')"}
+
 # Annotate node for hostconfig-operator
 hosts=(kubectl \
   --kubeconfig $KUBECONFIG \
@@ -29,11 +34,7 @@ do
     kubectl \
       --kubeconfig $KUBECONFIG \
       --context $KUBECONFIG_TARGET_CONTEXT \
-      --request-timeout 10s annotate ${hosts[i]} secret=hco-ssh-auth
-    kubectl \
-      --kubeconfig $KUBECONFIG \
-      --context $KUBECONFIG_TARGET_CONTEXT \
-      --request-timeout 10s label --overwrite ${hosts[i]} node-type=controlplane
+      --request-timeout 10s annotate --overwrite ${hosts[i]} secret=hco-ssh-auth
     kubectl \
       --kubeconfig $KUBECONFIG \
       --context $KUBECONFIG_TARGET_CONTEXT \
@@ -43,7 +44,7 @@ done
 cd ${AIRSHIPCTL_PROJECT}
 ./tools/deployment/35_deploy_worker_node.sh
 
-hosts=(kubectl \
+hosts=$(kubectl \
   --kubeconfig $KUBECONFIG \
   --context $KUBECONFIG_TARGET_CONTEXT \
   --request-timeout 10s get nodes -o name)
@@ -54,7 +55,7 @@ do
     kubectl \
       --kubeconfig $KUBECONFIG \
       --context $KUBECONFIG_TARGET_CONTEXT \
-      --request-timeout 10s annotate ${hosts[i]} secret=hco-ssh-auth
+      --request-timeout 10s annotate --overwrite ${hosts[i]} secret=hco-ssh-auth
     kubectl \
       --kubeconfig $KUBECONFIG \
       --context $KUBECONFIG_TARGET_CONTEXT \
