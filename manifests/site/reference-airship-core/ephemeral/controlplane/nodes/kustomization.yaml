@@ -1,0 +1,12 @@
+# Note: this weird extra layer between the .. and ../hostgenerator
+# is purely to apply the label below to the generated hosts.
+# When can come up with a better way to declare (e.g. via catalogue)
+# that the host is a controlplane host, we should get rid of this.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generators:
+  - ../hostgenerator
+
+commonLabels:
+  airshipit.org/k8s-role: controlplane-host

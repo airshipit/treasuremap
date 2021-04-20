@@ -1,0 +1,17 @@
+apiVersion: "helm.toolkit.fluxcd.io/v2beta1"
+kind: HelmRelease
+metadata:
+  name: minio
+spec:
+  values:
+    replicas: 1
+    persistence:
+      enabled: false
+    existingSecret: minio-admin-secret
+    buckets:
+      - name: logs
+        policy: none
+        purge: false
+      - name: metrics
+        policy: none
+        purge: false
