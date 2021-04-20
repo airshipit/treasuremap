@@ -1,5 +1,4 @@
 resources:
   - ../../../../../../../airshipctl/manifests/function/baremetal-operator/replacements
-  - ../../../../../../../airshipctl/manifests/function/hwcc/replacements
   - ../../../../../../../airshipctl/manifests/function/helm-chart-collator/replacements
   - ../../../../../function/hostconfig-operator/replacements
