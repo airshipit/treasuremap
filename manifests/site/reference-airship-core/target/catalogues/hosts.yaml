@@ -10,6 +10,7 @@ metadata:
     airshipit.org/deploy-k8s: "false"
 
 hosts:
+  # NEWSITE_CHANGEME: update with the site specific host details for all hosts
   m3:
     stl3r01s01:
       bootMode: legacy

@@ -6,12 +6,12 @@ metadata:
   labels:
     airshipit.org/ephemeral-node: "true"
     airshipit.org/deploy-k8s: "false"
- ## NEWSITE_CHANGEME : ephemeral node name
+  # NEWSITE_CHANGEME : ephemeral node name
   name: stl3r01s02
 spec:
   online: true
   bmc:
-    ## NEWSITE_CHANGEME: ephemeral node redhish api endpoint
+    # NEWSITE_CHANGEME: ephemeral node redhish api endpoint
     address: redfish+https://10.253.200.36/redfish/v1/Systems/System.Embedded.1
 status:
   provisioning:
