@@ -9,9 +9,11 @@ metadata:
   labels:
     airshipit.org/deploy-k8s: "false"
 vrrp:
+  # NEWSITE_CHANGEME: Update kubernetes virtual ip and OAM interface
   kubernetes:
     interface: bond0.61
     virtual_ipaddress: 10.254.125.239
+  # NEWSITE_CHANGEME: Update ingress virtual ip and OAM interface
   ingress:
     interface: bond0.61
     virtual_ipaddress: 10.254.125.240
