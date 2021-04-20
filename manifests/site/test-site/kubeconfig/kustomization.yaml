@@ -4,4 +4,4 @@ resources:
 
 transformers:
   - update-target.yaml
-  - ../target/catalogues/cleanup
+  - ../../../function/treasuremap-cleanup

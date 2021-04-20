@@ -1,0 +1,3 @@
+resources:
+  - ../../../../airshipctl/manifests/function/airshipctl-cleanup/
+  # place here more treasuremap specific catalogue kinds 
