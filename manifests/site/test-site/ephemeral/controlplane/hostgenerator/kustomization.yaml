@@ -9,6 +9,4 @@ resources:
 transformers:
   - ../../../../../../../airshipctl/manifests/function/hostgenerator-m3/replacements
   - ../../../../../../../airshipctl/manifests/function/hardwareprofile-example/replacements
-  - ../../../../../../../airshipctl/manifests/function/hostgenerator-m3/cleanup
-  - ../../catalogues/cleanup
-  - ../../../../../../../airshipctl/manifests/function/hardwareprofile-example/cleanup
+  - ../../../../../function/treasuremap-cleanup

@@ -24,7 +24,7 @@ export WORKER_NODE=${WORKER_NODE:-"$(airshipctl phase render workers-target \
 	sed 's/"//g')"}
 
 # Annotate node for hostconfig-operator
-hosts=(kubectl \
+hosts=$(kubectl \
   --kubeconfig $KUBECONFIG \
   --context $KUBECONFIG_TARGET_CONTEXT \
   --request-timeout 10s get nodes -o name)
