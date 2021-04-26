@@ -29,5 +29,10 @@
 - op: add
   path: "/spec/kubeadmConfigSpec/preKubeadmCommands/-"
   value:
-      apt-get update && apt-get install -y bridge-utils keepalived ipset ipvsadm
+      # Please note the a list of string get appended.It is better to
+      # add one item at a time using op: add
       systemctl enable --now keepalived
+- op: add
+  path: "/spec/kubeadmConfigSpec/preKubeadmCommands/-"
+  value:
+      systemctl restart keepalived
