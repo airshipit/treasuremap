@@ -36,3 +36,4 @@ replacements:
     objref:
       kind: ConfigMap
       name: vino-daemonset-template
+    fieldrefs: ["data.template%quay.io/airshipit/libvirt%"]
