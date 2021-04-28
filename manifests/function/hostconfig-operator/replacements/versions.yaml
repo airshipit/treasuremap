@@ -10,9 +10,9 @@ replacements:
 # Container versions for the airship-host-config Deployment
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.airship-host-config.airship-host-config.image}"
+    fieldref: "{.spec.images.hostconfig-operator.airship-host-config.airship-host-config.image}"
   target:
     objref:
       kind: Deployment

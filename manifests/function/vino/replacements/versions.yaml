@@ -9,9 +9,9 @@ metadata:
 replacements:
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.vino.manager}"
+    fieldref: "{.spec.images.vino.vino.manager.image}"
   target:
     objref:
       kind: Deployment
@@ -19,9 +19,9 @@ replacements:
     fieldrefs: ["{.spec.template.spec.containers[?(.name == 'manager')].image}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.vino.kube-rbac-proxy}"
+    fieldref: "{.spec.images.vino.vino.kube-rbac-proxy.image}"
   target:
     objref:
       kind: Deployment
@@ -29,9 +29,9 @@ replacements:
     fieldrefs: ["{.spec.template.spec.containers[?(.name == 'kube-rbac-proxy')].image}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.vino.libvirt}"
+    fieldref: "{.spec.images.vino.vino.libvirt.image}"
   target:
     objref:
       kind: ConfigMap

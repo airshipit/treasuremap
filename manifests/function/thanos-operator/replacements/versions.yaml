@@ -9,7 +9,7 @@ metadata:
 replacements:
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.helm_repositories.thanos}"
   target:
@@ -20,7 +20,7 @@ replacements:
 
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.thanos.chart}"
   target:
@@ -30,7 +30,7 @@ replacements:
     fieldrefs: ["{.spec.chart.spec.chart}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.charts.thanos.version}"
   target:
@@ -41,9 +41,9 @@ replacements:
 
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.thanos}"
+    fieldref: "{.spec.image_components.thanos.thanos-operator}"
   target:
     objref:
       kind: HelmRelease

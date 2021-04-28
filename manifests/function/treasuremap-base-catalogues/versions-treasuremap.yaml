@@ -1,5 +1,5 @@
 apiVersion: airshipit.org/v1alpha1
-kind: VariableCatalogue
+kind: VersionsCatalogue
 metadata:
   name: versions-treasuremap
   labels:
@@ -19,6 +19,10 @@ spec:
       url: https://kubernetes-charts.banzaicloud.com
     ingress-nginx:
       url: https://kubernetes.github.io/ingress-nginx
+    rook-operator:
+      url: https://charts.rook.io/release
+    dex-aio:
+      url: http://helm-chart-collator.collator.svc:8080
 
   charts:
     grafana:
@@ -42,14 +46,62 @@ spec:
     ingress-nginx:
       chart: ingress-nginx
       version: 3.5.1
+    rook-operator:
+      chart: rook-ceph
+      version: 0.0.1
+    dex-aio:
+      chart: dex-aio
+      version: 0.1.0
 
   images:
-    grafana:
-      repository: grafana/grafana
-      tag: 7.4.5
-    airship-host-config:
+  # images are organized by
+  #   <function>:
+  #     <component>:
+  #       <container>:
+    kube_prometheus_stack:
+      prometheus_operator:
+        # NOTE: For prometheus and alertmanager instances managed by the operator
+        # https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L1487
+        alertmanagerDefaultBaseImage:
+          image: quay.io/prometheus/alertmanager
+        prometheusDefaultBaseImage:
+          image: quay.io/prometheus/prometheus
+      thanos:
+        thanos:
+          image: quay.io/thanos/thanos:v0.17.2
+    sip:
+      sip:
+        kube-rbac-proxy:
+          image: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
+        manager:
+          image: quay.io/airshipit/sip:51e7ff85d617c0e94fa98920fdbacce3ad9e6bc0
+    vino:
+      vino:
+        kube-rbac-proxy:
+          image: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
+        libvirt:
+          image: quay.io/airshipit/libvirt
+        manager:
+          image: quay.io/airshipit/vino:6480ddc3ba98fba21fd692b8489adb0177abb8b5
+    synclabeller:
+      synclabeller:
+        kube-rbac-proxy:
+          image: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
+        manager:
+          image: quay.io/airshipit/synclabeller:72766d8519e064ffeacb44ddb9afa85c994907ee
+    hostconfig-operator:
       airship-host-config:
-        image: quay.io/airshipit/hostconfig-operator:latest
+        airship-host-config:
+          image: quay.io/airshipit/hostconfig-operator:latest
+
+  image_components:
+  # image_components are organized by
+  #   <function>:
+  #     <container>:
+    grafana:
+      grafana:
+        repository: grafana/grafana
+        tag: 7.4.5
     kube_prometheus_stack:
       admission_webhooks:
         repository: jettech/kube-webhook-certgen
@@ -64,21 +116,12 @@ spec:
         repository: quay.io/prometheus-operator/prometheus-config-reloader
         tag: v0.46.0
       prometheus_operator:
-        # NOTE: For prometheus and alertmanager instances managed by the operator
-        # https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L1487
-        alertmanagerDefaultBaseImage: quay.io/prometheus/alertmanager
-        prometheusDefaultBaseImage: quay.io/prometheus/prometheus
-
-        # Prometheus operator image
-        image:
-          repository: quay.io/prometheus-operator/prometheus-operator
-          tag: v0.46.0
-      thanos:
-        image: quay.io/thanos/thanos:v0.17.2
-        version: v0.17.2
+        repository: quay.io/prometheus-operator/prometheus-operator
+        tag: v0.46.0
     logging_operator:
-      repository: ghcr.io/banzaicloud/logging-operator
-      tag: 3.9.1
+      logging_operator:
+        repository: ghcr.io/banzaicloud/logging-operator
+        tag: 3.9.1
     logging_operator_logging:
       config_reloader:
         repository: jimmidyson/configmap-reload
@@ -99,23 +142,38 @@ spec:
       mc:
         repository: minio/mc
         tag: RELEASE.2020-10-03T02-54-56Z
-    sip:
-      kube-rbac-proxy: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
-      manager: quay.io/airshipit/sip:51e7ff85d617c0e94fa98920fdbacce3ad9e6bc0
     thanos:
-      repository: banzaicloud/thanos-operator
-      tag: latest
+      thanos-operator:
+        repository: banzaicloud/thanos-operator
+        tag: latest
     ingress-nginx:
       controller:
         repository: k8s.gcr.io/ingress-nginx/controller
         tag: v0.44.0
       defaultBackend:
         repository: k8s.gcr.io/defaultbackend-amd64
-        tag: 1.5
-    vino:
-      kube-rbac-proxy: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
-      libvirt: quay.io/airshipit/libvirt
-      manager: quay.io/airshipit/vino:6480ddc3ba98fba21fd692b8489adb0177abb8b5
-    synclabeller:
-      kube-rbac-proxy: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
-      manager: quay.io/airshipit/synclabeller:72766d8519e064ffeacb44ddb9afa85c994907ee
+        tag: "1.5"
+    rook-operator:
+      rook-operator:
+        repository: rook/ceph
+        tag: v1.5.8
+    dex-aio:
+    # NOTE: The dex-aio chart uses a different format for declaring images, so
+    # the 'name' property is required. 'repository' should contain only the name
+    # of the repo, while 'name' should be used for the image name.
+      dex:
+        tag: v2.20.0
+        name: dexidp/dex
+        repository: quay.io
+      nginx:
+        tag: 1.17.10-alpine
+        name: nginx
+        repository: docker.io
+      authenticator:
+        tag: 1.2.0
+        name: mintel/dex-k8s-authenticator
+        repository: docker.io
+      tls_init:
+        tag: latest
+        name: metal3-io/ironic
+        repository: quay.io

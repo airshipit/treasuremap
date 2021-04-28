@@ -9,9 +9,9 @@ metadata:
 replacements:
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.synclabeller.manager}"
+    fieldref: "{.spec.images.synclabeller.synclabeller.manager.image}"
   target:
     objref:
       kind: Deployment
@@ -19,9 +19,9 @@ replacements:
     fieldrefs: ["{.spec.template.spec.containers[?(.name == 'manager')].image}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.synclabeller.kube-rbac-proxy}"
+    fieldref: "{.spec.images.synclabeller.synclabeller.kube-rbac-proxy.image}"
   target:
     objref:
       kind: Deployment

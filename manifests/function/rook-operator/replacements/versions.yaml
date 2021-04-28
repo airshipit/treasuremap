@@ -1,62 +1,49 @@
 apiVersion: airshipit.org/v1alpha1
 kind: ReplacementTransformer
 metadata:
-  name: minio-versions-replacements
+  name: rook-operator-versions-replacements
   annotations:
     config.kubernetes.io/function: |-
       container:
-        image: quay.io/airshipit/replacement-transformer:v2
+        image: quay.io/airshipit/replacement-transformer:latest
 replacements:
 - source:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.minio}"
+    fieldref: "{.spec.helm_repositories.rook-operator}"
   target:
     objref:
       kind: HelmRepository
-      name: minio
+      name: rook-release
     fieldrefs: ["{.spec}"]
-
 - source:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.charts.minio.chart}"
+    fieldref: "{.spec.charts.rook-operator.chart}"
   target:
     objref:
       kind: HelmRelease
-      name: minio
+      name: rook-ceph-operator
     fieldrefs: ["{.spec.chart.spec.chart}"]
 - source:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.charts.minio.version}"
+    fieldref: "{.spec.charts.rook-operator.version}"
   target:
     objref:
       kind: HelmRelease
-      name: minio
+      name: rook-ceph-operator
     fieldrefs: ["{.spec.chart.version}"]
-
 - source:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.image_components.minio.minio}"
+    fieldref: "{.spec.image_components.rook-operator.rook-operator}"
   target:
     objref:
       kind: HelmRelease
-      name: minio
+      name: rook-ceph-operator
     fieldrefs: ["{.spec.values.image}"]
-
-- source:
-    objref:
-      kind: VersionsCatalogue
-      name: versions-treasuremap
-    fieldref: "{.spec.image_components.minio.mc}"
-  target:
-    objref:
-      kind: HelmRelease
-      name: minio
-    fieldrefs: ["{.spec.values.mcImage}"]

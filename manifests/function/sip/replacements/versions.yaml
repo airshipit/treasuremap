@@ -9,9 +9,9 @@ metadata:
 replacements:
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.sip.manager}"
+    fieldref: "{.spec.images.sip.sip.manager.image}"
   target:
     objref:
       kind: Deployment
@@ -19,9 +19,9 @@ replacements:
     fieldrefs: ["{.spec.template.spec.containers[?(.name == 'manager')].image}"]
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.sip.kube-rbac-proxy}"
+    fieldref: "{.spec.images.sip.sip.kube-rbac-proxy.image}"
   target:
     objref:
       kind: Deployment
