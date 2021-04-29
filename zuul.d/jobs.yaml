@@ -11,15 +11,6 @@
 # limitations under the License.
 
 - job:
-    name: airship-treasuremap-update-github-issues
-    description: Updates and/or closes related issues on Github on merge
-    run: playbooks/airship-treasuremap-update-github-issues.yaml
-    nodeset: airship-treasuremap-single-node
-    secrets:
-      - name: github_credentials
-        secret: airship_treasuremap_airshipit_github_token
-
-- job:
     name: airship-treasuremap-validate-site-docs
     timeout: 5400
     required-projects:
