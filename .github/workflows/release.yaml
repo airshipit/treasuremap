@@ -1,0 +1,53 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: release
+
+# Runs on non-pre-release v2 semver tags i.e. v2.y.z
+on:
+  push:
+    tags:
+      - 'v2.[0-9]+.[0-9]+'
+
+jobs:
+  release-github:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download release notes utility
+        run: |
+          sudo npm install github-release-notes@0.17.1 -g
+      - name: Generate release notes
+        run: |
+          TAG_NAME=${TAG##*/}
+          gren changelog --override --generate \
+            --username airshipit --repo treasuremap \
+            --changelog-filename release-notes.md \
+            --token "$GITHUB_TOKEN" \
+            --tags "$TAG_NAME" \
+            --data-source milestones \
+            --milestone-match '{{tag_name}}' \
+            --debug
+          cat release-notes.md
+        env:
+          TAG: ${{ github.ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          draft: true
+          # TODO: Calculate pre-release from semver tag
+          prerelease: false
+          artifactContentType: "text/plain"
+          bodyFile: release-notes.md
+          token: ${{ secrets.GITHUB_TOKEN }}
