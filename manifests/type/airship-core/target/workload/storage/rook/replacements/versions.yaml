@@ -22,7 +22,7 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref:  "{.spec.images.storage-rook.ceph.ceph.ceph-version.image}"
+    fieldref:  "{.spec.images.storage-rook.ceph.ceph-version.image}"
   target:
     objref:
       kind: CephCluster
