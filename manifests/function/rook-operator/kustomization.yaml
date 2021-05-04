@@ -1,2 +1,4 @@
 resources:
 - upstream
+patchesStrategicMerge:
+- rook-operator-patch-tolerations.yaml
