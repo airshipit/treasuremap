@@ -1,3 +1,4 @@
 resources:
   - ../../../../airshipctl/manifests/function/airshipctl-cleanup/
-  # place here more treasuremap specific catalogue kinds 
+  # place here more treasuremap specific catalogue kinds
+  - patch.yaml

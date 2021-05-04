@@ -2,7 +2,7 @@
 # ephemeral cluster, on top of the target cluster networking definition.
 # These values can be overridden at the site, type, etc levels as appropriate.
 apiVersion: airshipit.org/v1alpha1
-kind: VariableCatalogue
+kind: StorageCatalogue
 metadata:
   name: storage
   labels:
