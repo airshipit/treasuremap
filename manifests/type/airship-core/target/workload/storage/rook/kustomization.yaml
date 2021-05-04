@@ -13,6 +13,7 @@ resources:
   - ../../../../../../function/rook-cluster/pools
   - ../../../../../../function/rook-cluster/cephfs
   - ../../../../../../function/rook-cluster/dashboard/http
+  - ../../../../../../function/rook-cluster/storageclasses
 patchesJSON6902:
 - target:
     kind: CephCluster
