@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - host-list.yaml
+  - ../../../catalogues
+  - ../../../../../../function/hostendpoint-generator
+
+transformers:
+  - ../../../../../../function/hostendpoint-generator/replacements
+  - ../../../../../../function/treasuremap-cleanup

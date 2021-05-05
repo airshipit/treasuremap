@@ -1,0 +1,41 @@
+# These rules inject host information from the `host-generation-catalogue`
+# into the hostendpoint-generator function's Template plugin config.
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: host-endpoints
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: host-generation-catalogue
+    fieldref: "{.hosts.m3}"
+  target:
+    objref:
+      kind: Templater
+      name: host-endpoint-worker-template
+    fieldrefs: ["{.values.hep}"]
+- source:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldref: "{.spec.commonHostNetworking.networks[?(.id == 'oam-ipv4')].link}"
+  target:
+    objref:
+      kind: Templater
+      name: host-endpoint-worker-template
+    fieldrefs: ["{.values.interfaces[?(.name == 'oam')].link}"]
+- source:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldref: "{.spec.commonHostNetworking.networks[?(.id == 'calico-ipv4')].link}"
+  target:
+    objref:
+      kind: Templater
+      name: host-endpoint-worker-template
+    fieldrefs: ["{.values.interfaces[?(.name == 'ksn')].link}"]

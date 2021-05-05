@@ -1,0 +1,21 @@
+apiVersion: airshipit.org/v1alpha1
+kind: VariableCatalogue
+metadata:
+  name: host-generation-catalogue
+hosts:
+  m3:
+    # Note: this list should be kept up to date with
+    # the full list of hosts in the cluster
+    ## NEWSITE_CHANGEME: list of all the hosts
+    - name: stl3r01s01
+      type: control
+    - name: stl3r01s03
+      type: control
+    - name: stl3r01s04
+      type: control
+    - name: stl3r01s05
+      type: control
+    - name: stl3r01s02
+      type: compute
+    - name: stl3r01s06
+      type: compute

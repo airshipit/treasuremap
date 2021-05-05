@@ -1,0 +1,34 @@
+apiVersion: airshipit.org/v1alpha1
+kind: Templater
+metadata:
+  name: host-endpoint-worker-template
+  annotations:
+    config.kubernetes.io/function: |
+      container:
+        image: quay.io/airshipit/templater:v2
+values:
+  hep:
+  interfaces:
+  - name: vib
+    link: vm-infra-bridge
+  - name: oam
+    link: bond0.61
+  - name: ksn
+    link: bond0.64
+template: |
+  {{ range $host:= .hep }}
+  {{- $hostname := $host.name }}
+  {{ range $interface := $.interfaces }}
+  ---
+  apiVersion: projectcalico.org/v3
+  kind: HostEndpoint
+  metadata:
+    name: {{ $hostname }}-{{ $interface.name }}
+    labels:
+      host: {{ $host.type  }}
+      intf-alias: {{ $interface.name }}
+  spec:
+    interfaceName: {{ $interface.link }}
+    node: {{ $hostname }}
+  {{ end }}
+  {{ end }}

@@ -1,0 +1,26 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: subcluster-ingress-rule
+spec:
+  order: 1
+  selector: host in { 'control', 'compute' } && intf-alias == 'vib'
+  ingress:
+  - action: Allow
+    protocol: TCP
+    source:
+      nets:
+      - 192.168.112.0/20
+    destination:
+      nets:
+      - 192.168.96.0/20
+      ports:
+      - "11020:11039"
+  - action: Allow
+    protocol: ICMP
+    icmp:
+      type: 0
+      code: 0
+  doNotTrack: false
+  preDNAT: false
+  applyOnForward: true
