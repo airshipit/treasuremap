@@ -5,6 +5,7 @@ resources:
   - ../../../../type/airship-core/shared/catalogues
   - hosts.yaml
   - ../generator/results
+  - storage.yaml
 
 patchesStrategicMerge:
   - versions-airshipctl.yaml
