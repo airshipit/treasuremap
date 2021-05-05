@@ -16,7 +16,7 @@ replacements:
     objref:
       kind: GlobalNetworkPolicy
       name: hosts-ingress-rule
-    fieldrefs: ["{.spec.source.nets[0]}"]
+    fieldrefs: [".spec.ingress[action=Allow].source.nets[0]"]
 - source:
     objref:
       kind: VariableCatalogue
@@ -26,4 +26,4 @@ replacements:
     objref:
       kind: GlobalNetworkPolicy
       name: hosts-ingress-rule
-    fieldrefs: ["{.spec.destination.ports}"]
+    fieldrefs: [".spec.ingress[action=Allow].destination.ports"]

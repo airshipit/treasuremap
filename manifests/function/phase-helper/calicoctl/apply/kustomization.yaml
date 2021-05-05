@@ -1,0 +1,6 @@
+configMapGenerator:
+- name: calicoctl-apply
+  options:
+    disableNameSuffixHash: true
+  files:
+  - script=calicoctl-apply.sh

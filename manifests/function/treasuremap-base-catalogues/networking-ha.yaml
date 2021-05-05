@@ -13,7 +13,7 @@ vrrp:
   ingress:
     interface: bond.51
     virtual_ipaddress: 10.23.25.102
-    oam_cidr: 10.23.25.151
+    oam_cidr: 10.23.25.151/32
     destination:
       ports:
       - 2378

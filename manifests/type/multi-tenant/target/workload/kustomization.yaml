@@ -3,4 +3,3 @@ resources:
   - ../../../../function/sip
   - ../../../../function/synclabeller
   - ../../../../function/vino
-  #- network-policy

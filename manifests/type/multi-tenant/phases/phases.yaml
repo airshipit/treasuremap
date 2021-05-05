@@ -1,0 +1,23 @@
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: deliver-network-policy
+  clusterName: target-cluster
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: GenericContainer
+    name: calicoctl-apply
+  documentEntryPoint: target/workload/network-policy
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: delete-network-policy
+  clusterName: target-cluster
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: GenericContainer
+    name: calicoctl-delete
+  documentEntryPoint: target/workload/network-policy
