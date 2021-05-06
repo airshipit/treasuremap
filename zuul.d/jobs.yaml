@@ -20,6 +20,9 @@
     pre-run:
       - playbooks/airship-treasuremap-ensure-checkout.yaml
       - playbooks/airship-treasuremap-deploy-docker.yaml
+    irrelevant-files: &noncodefiles
+      - ^.*\.md$
+      - ^\.github/.*$
     run: playbooks/airship-treasuremap-gate-runner.yaml
     nodeset: airship-treasuremap-single-node
     vars:
@@ -55,6 +58,14 @@
       - playbooks/airship-treasuremap-build-gate.yaml
     post-run: playbooks/airship-collect-logs.yaml
     run: playbooks/airship-treasuremap-gate-runner.yaml
+    files:
+      - ^manifests/site/test-site/*$
+      - ^manifests/type/airship-core/*$
+      - ^manifests/function/*$
+      - ^manifests/composite/*$
+      - ^playbooks/*$
+      - ^roles/*$
+      - ^tools/deployment/*$
     nodeset: airship-treasuremap-single-32GB-bionic-node
     vars:
       site_name: test-site
@@ -82,3 +93,8 @@
     parent: airship-treasuremap-deploy-test-site
     vars:
       site_name: virtual-network-cloud
+    files:
+      - ^manifests/site/virtual-network-cloud/*$
+      - ^manifests/type/multi-tenant/*$
+      - ^manifests/function/*$
+      - ^manifests/composite/*$
