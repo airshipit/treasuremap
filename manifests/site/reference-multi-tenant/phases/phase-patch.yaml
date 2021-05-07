@@ -1,0 +1,12 @@
+apiVersion: airshipit.org/v1alpha1
+kind: BaremetalManager
+metadata:
+  name: RemoteDirectEphemeral
+spec:
+  hostSelector:
+    ## NEWSITE_CHANGEME: ephemeral node
+    name: stl3r01s02
+  operationOptions:
+    remoteDirect:
+      ## NEWSITE_CHANGEME: URL to the ephemeral node iso 
+      isoURL: http://10.254.195.209/ephemeral.iso

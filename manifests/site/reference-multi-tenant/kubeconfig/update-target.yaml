@@ -1,0 +1,69 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: k8scontrol-cluster-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2.0.2
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: generated-secrets
+    fieldref: "{.targetKubeconfig.certificate-authority-data}"
+  target:
+    objref:
+      kind: KubeConfig
+      name: default
+    fieldrefs: [".config.clusters.[name=target-cluster].cluster.certificate-authority-data"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: generated-secrets
+    fieldref: "{.targetKubeconfig.client-certificate-data}"
+  target:
+    objref:
+      kind: KubeConfig
+      name: default
+    fieldrefs: [".config.users.[name=target-cluster-admin].user.client-certificate-data"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: generated-secrets
+    fieldref: "{.targetKubeconfig.client-key-data}"
+  target:
+    objref:
+      kind: KubeConfig
+      name: default
+    fieldrefs: [".config.users.[name=target-cluster-admin].user.client-key-data"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: generated-secrets
+    fieldref: "{.ephemeralKubeconfig.certificate-authority-data}"
+  target:
+    objref:
+      kind: KubeConfig
+      name: default
+    fieldrefs: [".config.clusters.[name=ephemeral-cluster].cluster.certificate-authority-data"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: generated-secrets
+    fieldref: "{.ephemeralKubeconfig.client-certificate-data}"
+  target:
+    objref:
+      kind: KubeConfig
+      name: default
+    fieldrefs: [".config.users.[name=ephemeral-cluster-admin].user.client-certificate-data"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: generated-secrets
+    fieldref: "{.ephemeralKubeconfig.client-key-data}"
+  target:
+    objref:
+      kind: KubeConfig
+      name: default
+    fieldrefs: [".config.users.[name=ephemeral-cluster-admin].user.client-key-data"]

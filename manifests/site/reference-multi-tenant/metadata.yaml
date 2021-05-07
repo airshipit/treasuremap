@@ -1,0 +1,6 @@
+phase:
+  docEntryPointPrefix: manifests/site/reference-multi-tenant
+  path: manifests/site/reference-multi-tenant/phases
+
+inventory:
+  path: manifests/site/reference-multi-tenant/host-inventory

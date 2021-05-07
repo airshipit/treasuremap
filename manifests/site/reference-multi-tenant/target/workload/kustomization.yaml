@@ -1,0 +1,8 @@
+resources:
+  - ../../../../type/multi-tenant/target/workload
+  - ../catalogues
+transformers:
+  - ../../../../function/ingress/replacements
+  - ../../../../function/sip/replacements
+  - ../../../../function/synclabeller/replacements
+  - ../../../../function/vino/replacements
