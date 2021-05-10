@@ -1,0 +1,4 @@
+generators:
+- ../../../../../type/airship-core/target/generator/
+transformers:
+- ../../../../../type/airship-core/target/generator/fileplacement/

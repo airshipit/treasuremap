@@ -40,7 +40,7 @@ spec:
       - id: enp134s0f0
         name: enp134s0f0
         type: phy
-        mtu: 9100
+        mtu: "9100"
       - id: bond0
         name: bond0
         type: bond
@@ -49,14 +49,14 @@ spec:
         bond_mode: 802.3ad
         bond_xmit_hash_policy: layer3+4
         bond_miimon: 100
-        mtu: 9100
+        mtu: "9100"
       # NEWSITE_CHANGEME: OAM network
       - id: bond0.61
         name: bond0.61
         type: vlan
         vlan_link: bond0
         vlan_id: 61
-        mtu: 9100
+        mtu: "9100"
         vlan_mac_address: null
       # NEWSITE_CHANGEME: Storage network
       - id: bond0.62
@@ -64,7 +64,7 @@ spec:
         type: vlan
         vlan_link: bond0
         vlan_id: 62
-        mtu: 9100
+        mtu: "9100"
         vlan_mac_address: null
       # NEWSITE_CHANGEME: Calico network
       - id: bond0.64
@@ -72,7 +72,7 @@ spec:
         type: vlan
         vlan_link: bond0
         vlan_id: 64
-        mtu: 9100
+        mtu: "9100"
         vlan_mac_address: null
       # unused for now
       - id: bond0.65
@@ -80,7 +80,7 @@ spec:
         type: vlan
         vlan_link: bond0
         vlan_id: 65
-        mtu: 9100
+        mtu: "9100"
         vlan_mac_address: null
     networks:
       # NEWSITE_CHANGEME: OAM network

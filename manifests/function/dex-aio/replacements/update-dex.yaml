@@ -1,0 +1,29 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: k8scontrol-cluster-dex-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2.0.2
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: generated-secrets
+    fieldref: "{.dex.oidc.clientSecret}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.params.oidc.client_secret}"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: imported-secrets
+    fieldref: "{.dex.ldap.bind_password}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.params.ldap.bind_password}"]

@@ -1,0 +1,8 @@
+resources:
+  - generated/
+  - imported/
+
+transformers:
+  - ../../../../../type/airship-core/target/decrypt-secrets/
+  - ../../../../../type/airship-core/target/generator/fileplacement/
+  - ../../../../../type/airship-core/target/importer/fileplacement/

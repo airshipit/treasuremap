@@ -37,7 +37,7 @@ hosts:
         pxe-ipv4: 172.63.0.12
         storage-ipv4: 172.62.0.12
         calico-ipv4: 172.64.0.12
-      hardwareProfile: example # defined in the hardwareprofile-example function
+      hardwareProfile: default
     stl3r01s03:
       bootMode: legacy
       #macAddress: E4:43:4B:EE:D7:B8

@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ../../../../type/airship-core/shared/catalogues
   - hosts.yaml
-  - ../generator/results
+  - ../encrypted/results
   - storage.yaml
 
 patchesStrategicMerge:

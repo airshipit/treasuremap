@@ -15,6 +15,7 @@ hosts:
       bmcAddress: redfish+http://10.23.25.1:8000/redfish/v1/Systems/air-target-1
       bmcUsername: root
       bmcPassword: r00tme
+      disableCertificateVerification: false
       ipAddresses:
         oam-ipv4: 10.23.25.102
         pxe-ipv4: 10.23.24.102
@@ -28,6 +29,7 @@ hosts:
       bmcAddress: redfish+http://10.23.25.2:8000/redfish/v1/Systems/air-target-2
       bmcUsername: username
       bmcPassword: password
+      disableCertificateVerification: false
       ipAddresses:
         oam-ipv4: 10.23.25.101
         pxe-ipv4: 10.23.24.101
@@ -41,6 +43,7 @@ hosts:
       bmcAddress: redfish+http://10.23.25.1:8000/redfish/v1/Systems/air-worker-1
       bmcUsername: username
       bmcPassword: password
+      disableCertificateVerification: false
       ipAddresses:
         oam-ipv4: 10.23.25.103
         pxe-ipv4: 10.23.24.103

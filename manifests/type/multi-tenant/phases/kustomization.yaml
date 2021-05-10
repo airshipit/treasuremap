@@ -6,5 +6,8 @@ resources:
   - phases.yaml
   - executors.yaml
   - ../../../function/phase-helper
+  - validation-config.yaml
 patchesStrategicMerge:
   - cluster_map_patch.yaml
+transformers:
+  - ../../../../../airshipctl/manifests/function/validator

@@ -12,7 +12,7 @@
 
 - job:
     name: airship-treasuremap-validate-site-docs
-    timeout: 10500
+    timeout: 10800
     required-projects:
       - airship/airshipctl
     roles:

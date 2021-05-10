@@ -1,0 +1,8 @@
+resources:
+  - generated/
+  - imported/
+
+transformers:
+  - ../../../../../type/multi-tenant/target/decrypt-secrets/
+  - ../../../../../type/multi-tenant/target/generator/fileplacement/
+  - ../../../../../type/multi-tenant/target/importer/fileplacement/

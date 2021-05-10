@@ -1,0 +1,4 @@
+generators:
+- ../../../../../type/multi-tenant/target/generator/
+transformers:
+- ../../../../../type/multi-tenant/target/generator/fileplacement/
