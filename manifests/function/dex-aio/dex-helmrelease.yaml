@@ -36,7 +36,7 @@ spec:
       endpoints:
         hostname: dex.function.local
         port:
-          https: 32556
+          https: 30556
           http: 32554
           k8s: 6443
         tls:

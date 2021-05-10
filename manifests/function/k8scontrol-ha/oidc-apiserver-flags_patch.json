@@ -8,7 +8,7 @@
           "oidc-ca-file": "/etc/kubernetes/certs/dex-cert",
           "oidc-client-id": "function-kubernetes",
           "oidc-groups-claim": "group",
-          "oidc-issuer-url": "https://dex.function.local:32556/dex",
+          "oidc-issuer-url": "https://dex.function.local:30556/dex",
           "oidc-username-claim": "email"
         },
         "extraVolumes":

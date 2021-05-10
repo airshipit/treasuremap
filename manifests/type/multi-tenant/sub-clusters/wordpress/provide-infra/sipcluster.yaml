@@ -2,7 +2,6 @@ apiVersion: airship.airshipit.org/v1
 kind: SIPCluster
 metadata:
   name: wordpress
-  namespace: sipcluster-system
   finalizers:
     - sip.airship.airshipit.org/finalizer
 spec:
