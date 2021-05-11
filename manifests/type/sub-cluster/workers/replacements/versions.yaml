@@ -1,0 +1,20 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: subcluster-workers-versions-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2
+replacements:
+# Replace the controlplane disk image in the Metal3MachineTemplate
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.files.k8scontrol.subcluster_controlplane_image}"
+  target:
+    objref:
+      kind: Metal3MachineTemplate
+      name: worker-1
+    fieldrefs: ["{.spec.template.spec.image}"]

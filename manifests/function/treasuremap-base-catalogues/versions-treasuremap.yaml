@@ -5,6 +5,12 @@ metadata:
   labels:
     airshipit.org/deploy-k8s: "false"
 spec:
+  files:
+    k8scontrol:
+      subcluster_controlplane_image:
+        url: https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img
+        checksum: 4a6909d1480ac30d676accd7b37ec711
+
   helm_repositories:
     grafana:
       url: https://grafana.github.io/helm-charts
@@ -71,10 +77,16 @@ spec:
           image: quay.io/thanos/thanos:v0.17.2
     sip:
       sip:
+        auth:
+          image: quay.io/dexidp/dex:v2.20.0
         kube-rbac-proxy:
           image: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
         manager:
           image: quay.io/airshipit/sip:51e7ff85d617c0e94fa98920fdbacce3ad9e6bc0
+        jump_host:
+          image: quay.io/airshipit/jump-host:latest
+        load_balancer:
+          image: haproxy:2.3.2
     vino:
       vino:
         kube-rbac-proxy:

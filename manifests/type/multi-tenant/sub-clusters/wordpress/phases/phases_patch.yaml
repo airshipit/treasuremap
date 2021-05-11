@@ -1,3 +1,26 @@
+# NOTE: The contents of these phases are delivered to the target cluster.
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: provide-infra
+config:
+  documentEntryPoint: sub-clusters/wordpress/provide-infra
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: controlplane
+config:
+  documentEntryPoint: sub-clusters/wordpress/controlplane
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: workers
+config:
+  documentEntryPoint: sub-clusters/wordpress/workers
+
 ---
 apiVersion: airshipit.org/v1alpha1
 kind: Phase

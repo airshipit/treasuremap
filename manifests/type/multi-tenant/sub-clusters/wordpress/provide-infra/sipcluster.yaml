@@ -1,0 +1,92 @@
+apiVersion: airship.airshipit.org/v1
+kind: SIPCluster
+metadata:
+  name: wordpress
+  namespace: sipcluster-system
+  finalizers:
+    - sip.airship.airshipit.org/finalizer
+spec:
+  nodes:
+    ControlPlane:
+        labelSelector:
+          vino.airshipit.org/flavor: control-plane
+        spreadTopology: PerRack
+        count:
+            active: 1
+            standby: 1
+    Worker:
+        labelSelector:
+          vino.airshipit.org/flavor: worker
+        spreadTopology: PerHost
+        count:
+            active: 2
+            standby: 1 # Slew for upgrades
+  services:
+    auth:
+      - image: quay.io/dexidp/dex
+        nodeInterfaceId: oam-ipv4
+        nodePort: 30556
+        TLSCrt: |
+          -----BEGIN CERTIFICATE-----
+          MIIDBjCCAe6gAwIBAgIBATANBgkqhkiG9w0BAQsFADAVMRMwEQYDVQQDEwptaW5p
+          a3ViZUNBMB4XDTIxMDMxNzExNDYzMFoXDTMxMDMxNjExNDYzMFowFTETMBEGA1UE
+          AxMKbWluaWt1YmVDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKs1
+          ujCXS/HDS9dSOJWfotlrQj46V4oL8q5dOmLXSvqfISINzdXK9XrBo/1INQ2RmFL/
+          oXbCwvT1PhRkm/KS/LN3dgsbPjb6/meKsrLOpKPtTAm29+c7h87ZkwHi2LPZO+3w
+          bVp49ERCg89VjfIStvGefJvKaz1Rq3WTZN96216dSY2sShON07ELv4pZPJGjEHg6
+          U6c4UgMdnye3FUUxaayqjZbLKcN/mNkI7kMzy4e0RZ4Y3WTlr0nxDVuYiz8v9usa
+          rHO5Pu9w40FAudlmMrSB9Qj8ED/VtooW4qewm4oUdHrmzJ86vamWLll2keHt4MAY
+          5mG0vglWqm2zEL8jJWUCAwEAAaNhMF8wDgYDVR0PAQH/BAQDAgKkMB0GA1UdJQQW
+          MBQGCCsGAQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQW
+          BBQs35Wcd1nnNOP1YuzwousJxfATmDANBgkqhkiG9w0BAQsFAAOCAQEAbspb0RE5
+          vOeObqLY7JEMlNvnxbnHceIpltZpnq5ZGbDHEBUEyBUnDnO7UZrxw2qmDgvpUPot
+          jNxgWzDcxb7kuli6Ehc1Nbtm8HKFf3xx5d1dTBuPj8i6njB/3kVbYZOHGcFxku62
+          ac8KQT8EdaQdTtwoQLhfGl3P++afg7kfvcm962PKYWDGcbXbbJxEf1YDuy2dY2/Z
+          u5rOyAIhRSOm68edMhy/0Bdq3NBmT5icptMawEBrJXW7tNOnbSLu6qtQqSX8w58u
+          2ZnZouCSXMfLYKNuDWVuhe/WfCv9ZKr/Izcz1raBquo8yDt4qsxDPfix/QSqUxRc
+          kDR2hHk/Mfv+rg==
+          -----END CERTIFICATE-----
+        TLSKey: |
+          -----BEGIN RSA PRIVATE KEY-----
+          MIIEowIBAAKCAQEAqzW6MJdL8cNL11I4lZ+i2WtCPjpXigvyrl06YtdK+p8hIg3N
+          1cr1esGj/Ug1DZGYUv+hdsLC9PU+FGSb8pL8s3d2Cxs+Nvr+Z4qyss6ko+1MCbb3
+          5zuHztmTAeLYs9k77fBtWnj0REKDz1WN8hK28Z58m8prPVGrdZNk33rbXp1JjaxK
+          E43TsQu/ilk8kaMQeDpTpzhSAx2fJ7cVRTFprKqNlsspw3+Y2QjuQzPLh7RFnhjd
+          ZOWvSfENW5iLPy/26xqsc7k+73DjQUC52WYytIH1CPwQP9W2ihbip7CbihR0eubM
+          nzq9qZYuWXaR4e3gwBjmYbS+CVaqbbMQvyMlZQIDAQABAoIBAC3cZ3JqpKIvERqt
+          YJDbwRCCRa1LjXVh+/Cu8lvVlbUKeSKZFgDlq9nlEttewy9OR8I7zXF1fCmHo8hs
+          psVUkDI2lr0k4AZ0Nz9fDL0O01VB1DNp+n/LF3bWGyXPMQMD9qSm2XP5oFzEgHBC
+          V5J3Zt/T90b38r/rJ4WIJOYkD60I/mQ2oB9I6QsUDSxeH9a/L1BEHvGcBtfbqWlA
+          b7BBRBjRCdtbV67pFpspSnWmIwDBF3GNbjjPyWiRCicLQeZ+Eysc4GbeT89A76xN
+          q76uPH/+vo5fafm86AURN59QA6/qaCvrlE02gt9FbFW/cN0Bs7y3OSl2e8/si6tz
+          n4Nwq8ECgYEA4F4oAitnCfAKhHr501qaJk4uj5YuzQktANjPp9Bo5x/FThF497gN
+          KvumUlq4Z3H7ivXk0WEYb5v2erXtgXoj6o/uAL+5FQyRBpUDa5FpeAi64e0Vzhtk
+          UUd5RXoC0eITdF8zaXHJsYTNv6jDA33Flqkk7bioTWi0VrTFlwp5mRUCgYEAw1kB
+          HmuV1LSqmwXf/6NIO2mmSBLNWC4JY/qAV9HlCxKhv9fXhl99m0lQRPs2TZIYrkCY
+          Q0entaYY+2EQn1HBm7sdGnoy5tOYb9Lg89zzP23MJDLAQ+eXRTyl25W3qQVnrRzx
+          o00EFX6QhySbuBditiu75wjN1Q2IY+jE81MozxECgYBU6s3xpEOnOzZ/1ZtgJtZY
+          0RZGOe0UpPhnbaeKOBK8BwZB+dLyzrINJplYagWJAVbWzSIBLOJ2u2yaHOj7LCMT
+          z82gcu+1y7/H4fYdbDeiuosgnv61tyBMsuRvKzKOBSaf0LhAnFRd34mPlGvakmuK
+          DhJv9oecZJh8iIaQF+LV0QKBgFDDQHIqOqTZGNvEvwo6oIdns4aCt4Dob5t1GpC0
+          R4SfbF4bR5DXc9+6nMQYNCg36ZpJPGo8errf894iEDQ+IdRXtL2YnejOvGwm/Df2
+          Nl8X7tlcXh705ZaLb2rsaCUqBeYNXF2OXszgKbKl0Pd4O6hjRmlLO4YE9UmRF7Qd
+          wnZxAoGBAKN9LgEmOq3GTDbWvnKRDG8q1MjMOOLRuqryQWXF3KP/+oPB2XUrw7Eg
+          Sw9yBi8GZ6PseG1W5LnwT2vAeDaLRrAr8QrDmd+Aj+og7CVD82Gy/k8Uh0TyCUlF
+          DOY0q5Hu9iPlqk3ZQqGJKcms+97jD7JPGsPOH0+LcK9sEI6fJOna
+          -----END RSA PRIVATE KEY-----
+        CertManagerNS: cert-manager
+    jumpHost:
+      - image: quay.io/airshipit/jump-host
+        nodePort: 30001
+        nodeInterfaceId: oam-ipv4
+        bmc:
+          proxy: false
+        sshAuthorizedKeys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCyaozS8kZRw2a1d0O4YXhxtJlDPThqIZilGCsXLbukIFOyMUmMTwQAtwWp5epwU1+5ponC2uBENB6xCCj3cl5Rd43d2/B6HxyAPQGKo6/zKYGAKW2nzYDxSWMl6NUSsiJAyXUA7ZlNZQe0m8PmaferlkQyLLZo3NJpizz6U6ZCtxvj43vEl7NYWnLUEIzGP9zMqltIGnD4vYrU9keVKKXSsp+DkApnbrDapeigeGATCammy2xRrUQDuOvGHsfnQbXr2j0onpTIh0PiLrXLQAPDg8UJRgVB+ThX+neI3rQ320djzRABckNeE6e4Kkwzn+QdZsmA2SDvM9IU7boK1jVQlgUPp7zF5q3hbb8Rx7AadyTarBayUkCgNlrMqth+tmTMWttMqCPxJRGnhhvesAHIl55a28Kzz/2Oqa3J9zwzbyDIwlEXho0eAq3YXEPeBhl34k+7gOt/5Zdbh+yacFoxDh0LrshQgboAijcVVaXPeN0LsHEiVvYIzugwIvCkoFMPWoPj/kEGzPY6FCkVneDA7VoLTCoG8dlrN08Lf05/BGC7Wllm66pTNZC/cKXP+cjpQn1iEuiuPxnPldlMHx9sx2y/BRoft6oT/GzqkNy1NTY/xI+MfmxXnF5kwSbcTbzZQ9fZ8xjh/vmpPBgDNrxOEAT4N6OG7GQIhb9HEhXQCQ== example-key
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCwpOyZjZ4gB0OTvmofH3llh6cBCWaEiEmHZWSkDXr8Bih6HcXVOtYMcFi/ZnUVGUBPw3ATNQBZUaVCYKeF+nDfKTJ9hmnlsyHxV2LeMsVg1o15Pb6f+QJuavEqtE6HI7mHyId4Z1quVTJXDWDW8OZEG7M3VktauqAn/e9UJvlL0bGmTFD1XkNcbRsWMRWkQgt2ozqlgrpPtvrg2/+bNucxX++VUjnsn+fGgAT07kbnrZwppGnAfjbYthxhv7GeSD0+Z0Lf1kiKy/bhUqXsZIuexOfF0YrRyUH1KBl8GCX2OLBYvXHyusByqsrOPiROqRdjX5PsK6HSAS0lk0niTt1p example-key-2
+        nodeSSHPrivateKeys: ssh-private-keys
+    loadBalancer:
+      - image: haproxy
+        nodePort: 30000
+        nodeInterfaceId: oam-ipv4
+

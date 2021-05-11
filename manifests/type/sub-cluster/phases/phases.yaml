@@ -1,3 +1,41 @@
+# NOTE: The contents of these phases are delivered to the target cluster.
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: provide-infra
+  clusterName: target
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: KubernetesApply
+    name: kubernetes-apply
+  documentEntryPoint: sub-clusters/sub-cluster/provide-infra
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: controlplane
+  clusterName: target
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: KubernetesApply
+    name: kubernetes-apply
+  documentEntryPoint: sub-clusters/sub-cluster/controlplane
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: workers
+  clusterName: target
+config:
+  executorRef:
+    apiVersion: airshipit.org/v1alpha1
+    kind: KubernetesApply
+    name: kubernetes-apply
+  documentEntryPoint: sub-clusters/sub-cluster/workers
+
 ---
 apiVersion: airshipit.org/v1alpha1
 kind: Phase

@@ -1,0 +1,40 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: subcluster-provide-infra-versions-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2
+replacements:
+# Replace SIPCluster CR images
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.sip.sip.auth.image}"
+  target:
+    objref:
+      kind: SIPCluster
+      name: lma
+    fieldrefs: ["{.spec.services.auth[*].image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.sip.sip.jump_host.image}"
+  target:
+    objref:
+      kind: SIPCluster
+      name: lma
+    fieldrefs: ["{.spec.services.jumpHost[*].image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.sip.sip.load_balancer.image}"
+  target:
+    objref:
+      kind: SIPCluster
+      name: lma
+    fieldrefs: ["{.spec.services.loadBalancer[*].image}"]
