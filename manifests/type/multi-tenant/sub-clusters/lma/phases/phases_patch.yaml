@@ -1,0 +1,47 @@
+# NOTE: The contents of these phases are delivered to the target cluster.
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: provide-infra
+config:
+  documentEntryPoint: sub-clusters/lma/provide-infra
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: controlplane
+config:
+  documentEntryPoint: sub-clusters/lma/controlplane
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: workers
+config:
+  documentEntryPoint: sub-clusters/lma/workers
+
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: initinfra
+  clusterName: lma
+config:
+  documentEntryPoint: sub-clusters/lma/initinfra
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: initinfra-networking
+  clusterName: lma
+config:
+  documentEntryPoint: sub-clusters/lma/initinfra-networking
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: workload
+  clusterName: lma
+config:
+  documentEntryPoint: sub-clusters/lma/workload

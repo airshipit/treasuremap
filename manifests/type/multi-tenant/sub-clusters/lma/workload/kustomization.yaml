@@ -1,0 +1,9 @@
+resources:
+  - ../../../../sub-cluster/workload
+  - ../../../../../composite/monitoring-stack
+  - ../../../../../function/minio
+
+namespace: lma-infra
+
+patches:
+  - path: patches/minio.yaml

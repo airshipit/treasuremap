@@ -21,3 +21,17 @@ map:
         filesystem:
           path: ~/.airship/kubeconfig
           contextName: wordpress
+  lma:
+    parent: target-cluster
+    kubeconfigSources:
+      - type: "clusterAPI"
+        clusterAPI:
+          clusterNamespacedName:
+            name: lma
+            namespace: lma
+      # NOTE: This context does not exist unless added on disk manually. This
+      # entry is here for backup.
+      - type: "filesystem"
+        filesystem:
+          path: ~/.airship/kubeconfig
+          contextName: lma

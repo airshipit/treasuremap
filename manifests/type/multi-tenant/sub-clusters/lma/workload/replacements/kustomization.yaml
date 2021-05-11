@@ -1,0 +1,3 @@
+resources:
+  - ../../../../../../composite/monitoring-stack/replacements
+  - ../../../../../../function/minio/replacements

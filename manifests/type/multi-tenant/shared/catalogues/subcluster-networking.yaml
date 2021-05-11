@@ -13,7 +13,8 @@ metadata:
 
 spec:
   lma:
-  # This stanza is replaced directly into lma's networking catalogue
+    # This stanza is replaced directly into the LMA sub-cluster's networking
+    # catalogue at the site level.
     kubernetes:
       serviceCidr: "10.0.80.0/20"
       podCidr: "192.168.0.0/18"
@@ -24,26 +25,17 @@ spec:
     # Ideally, improve this in the future.
       apiserverCertSANs: "[10.23.25.201, 10.23.24.201]"
 
-  # TODO: might spin this differently if SIP needs ranges instead of individual ports.
-  #  But really, it makes sense to put all this info in the same place in any case
-
-  # The non-overlapping port range allocated to the lma subcluster
-  # One of these ports (11000? 11001?) will be automaticaly used by SIP
-  # to build a loadbalancer for the k8s API
-    port_range: [11020, 11039]
-
-  # This is consumed by two different targets:
-  # 1. SIP in the undercloud, to set up lma's load balancers
-  # 2. NodePorts in the subcluster
     exposed_services:
-    - name: lma  # Service metadata.name
-      selector:          # Service spec.selector
-        app: lma
-      ports:             # Service spec.ports
-      - port: 11022
-        targetPort: 80
-        protocol: TCP
-        name: http
+      - name: auth
+        nodePort: 30556
+      - name: jumpHost
+        nodePort: 30001
+      - name: loadBalancerControlPlane
+        nodePort: 30002
+      # TODO: Uncomment when SIP supports a Worker load balancer.
+      # Potential ports that can be used by sub-cluster services.
+      # - name: loadBalancerWorkers
+      #   nodePort: ["30003:30020"]
 
   wordpress:
     # This stanza is replaced directly into the Wordpress sub-cluster's

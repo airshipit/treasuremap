@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonLabels:
+  sub-cluster: lma
+
+nameSuffix: "-lma"
+
+resources:
+  - ../../../../sub-cluster/phases
+  - lma_phases.yaml
+
+patchesStrategicMerge:
+  - phases_patch.yaml
