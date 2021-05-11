@@ -72,7 +72,6 @@
         - ./tools/deployment/33_cluster_move_target_node.sh
         - ./tools/deployment/35_deploy_worker_node.sh
         - ./tools/deployment/36_deploy_workload.sh
-        - ./tools/deployment/37_verify_hwcc_profiles.sh
       serve_dir: /srv/images
       serve_port: 8099
     voting: false
