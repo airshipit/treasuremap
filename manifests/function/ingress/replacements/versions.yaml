@@ -5,7 +5,7 @@ metadata:
   annotations:
     config.kubernetes.io/function: |-
       container:
-        image: quay.io/airshipit/replacement-transformer:v2
+        image: localhost/replacement-transformer
 replacements:
 - source:
     objref:

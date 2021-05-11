@@ -5,7 +5,7 @@ metadata:
   labels:
     airshipit.org/deploy-k8s: "false"
 spec:
-  image: quay.io/airshipit/toolbox:latest
+  image: localhost/toolbox
   hostNetwork: true
 configRef:
   kind: ConfigMap
@@ -19,7 +19,7 @@ metadata:
   labels:
     airshipit.org/deploy-k8s: "false"
 spec:
-  image: quay.io/airshipit/toolbox:latest
+  image: localhost/toolbox
   hostNetwork: true
 configRef:
   kind: ConfigMap
