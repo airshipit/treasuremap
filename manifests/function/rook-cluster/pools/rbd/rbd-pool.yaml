@@ -8,6 +8,5 @@ spec:
     replicated:
       size: 3
     quotas:
-      maxSize: "0" # valid suffixes include K, M, G, T, P, Ki, Mi, Gi, Ti, Pi, eg: "10Gi"
-                   # "0" means no quotas. Since rook 1.5.9 you must use string as a value's type
+      maxSize: "0" # e.g. "10Gi" - valid suffixes include k, M, G, T, P, E, Ki, Mi, Gi, Ti, Pi, Ei
       maxObjects: 0 # 1000000000 = billion objects, 0 means no quotas

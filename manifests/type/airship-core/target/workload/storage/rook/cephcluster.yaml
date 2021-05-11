@@ -6,12 +6,16 @@ metadata:
 spec:
   dataDirHostPath: /var/lib/rook
   cephVersion:
-    #see: https://tracker.ceph.com/issues/48797
-    image: ceph/ceph:v15.2.10
+    image: ceph/ceph:v15.2.11
     #allowUnsupported: true
   mon:
     count: 3
     allowMultiplePerNode: false
+  mgr:
+    count: 1
+    modules:
+      - name: pg_autoscaler
+        enabled: true
   dashboard:
     enabled: true
     # If you are going to use the dashboard together with ingress-controller,
@@ -57,4 +61,17 @@ spec:
     #     deviceFilter: "^/dev/sd[c-h]"
     # Also you can configure each device and/or each node. Please refer to the official rook
     # documentation for the branch 1.5.x
+  # The section for configuring management of daemon disruptions during upgrade or fencing.
+  disruptionManagement:
+    # If true, the operator will create and manage PodDisruptionBudgets for OSD, Mon, RGW, and MDS daemons. OSD PDBs are managed dynamically
+    # via the strategy outlined in the [design](https://github.com/rook/rook/blob/master/design/ceph/ceph-managed-disruptionbudgets.md). The operator will
+    # block eviction of OSDs by default and unblock them safely when drains are detected.
+    managePodBudgets: true
+    # A duration in minutes that determines how long an entire failureDomain like `region/zone/host` will be held in `noout` (in addition to the
+    # default DOWN/OUT interval) when it is draining. This is only relevant when  `managePodBudgets` is `true`. The default value is `30` minutes.
+    osdMaintenanceTimeout: 30
+    # A duration in minutes that the operator will wait for the placement groups to become healthy (active+clean) after a drain was completed and OSDs came back up.
+    # Operator will continue with the next drain if the timeout exceeds. It only works if `managePodBudgets` is `true`.
+    # No values or 0 means that the operator will wait until the placement groups are healthy before unblocking the next drain.
+    pgHealthCheckTimeout: 0
 ---

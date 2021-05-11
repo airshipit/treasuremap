@@ -16,6 +16,7 @@ data:
     mon_warn_on_pool_no_redundancy = true
     # # You can add other default configuration sections
     # # to create fully customized ceph.conf
-    # [mon]
+    [mon]
+    auth_allow_insecure_global_id_reclaim = false
     # [osd]
     # [rgw]
