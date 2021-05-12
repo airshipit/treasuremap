@@ -1,0 +1,5 @@
+resources:
+  - ../../../../type/multi-tenant/ephemeral/initinfra
+  - ../catalogues
+transformers:
+  - ../../../../type/multi-tenant/ephemeral/initinfra/replacements

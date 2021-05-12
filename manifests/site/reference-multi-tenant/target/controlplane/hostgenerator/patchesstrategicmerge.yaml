@@ -1,0 +1,41 @@
+apiVersion: builtin
+kind: PatchStrategicMergeTransformer
+metadata:
+  name: smp
+patches: |-
+  ---
+  apiVersion: airshipit.org/v1alpha1
+  kind: VariableCatalogue
+  metadata:
+    name: hardwareprofile-example
+  $patch: delete
+  ---
+  apiVersion: airshipit.org/v1alpha1
+  kind: VariableCatalogue
+  metadata:
+    name: host-catalogue
+  $patch: delete
+  ---
+  apiVersion: airshipit.org/v1alpha1
+  kind: VariableCatalogue
+  metadata:
+    name: host-generation-catalogue
+  $patch: delete
+  ---
+  apiVersion: airshipit.org/v1alpha1
+  kind: VariableCatalogue
+  metadata:
+    name: networking
+  $patch: delete
+  ---
+  apiVersion: airshipit.org/v1alpha1
+  kind: VariableCatalogue
+  metadata:
+    name: env-vars-catalogue
+  $patch: delete
+  ---
+  apiVersion: airshipit.org/v1alpha1
+  kind: VariableCatalogue
+  metadata:
+    name: versions-airshipctl
+  $patch: delete

@@ -1,0 +1,16 @@
+apiVersion: airshipit.org/v1alpha1
+kind: VariableCatalogue
+metadata:
+  name: storage
+  labels:
+    airshipit.org/deploy-k8s: "false"
+spec:
+  storage:
+    useAllNodes: false   # We define per node/per device configuration below
+    useAllDevices: false # We define per node/per device configuration below
+    nodes:
+      - name: stl3r01s05
+        deviceFilter: "^/dev/sd[bc]"
+      - name: stl3r01s06
+        deviceFilter: "^/dev/sd[bc]"
+---

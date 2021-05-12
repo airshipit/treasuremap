@@ -1,0 +1,16 @@
+# Override default controlplane image location
+
+## NEWSITE_CHANGEME: update the file with the ephemeral node pxe ip
+apiVersion: airshipit.org/v1alpha1
+kind: VersionsCatalogue
+metadata:
+  name: versions-airshipctl
+
+spec:
+  files:
+    k8scontrol:
+      # Host the image in a locally served location for CI
+      # NEWSITE_CHANGEME: update the url with the ephemeral node pxe ip
+      cluster_controlplane_image:
+        url: http://172.63.0.12/images/control-plane.qcow2
+        checksum: http://172.63.0.12/images/control-plane.qcow2.md5sum

@@ -1,0 +1,96 @@
+# Site-level host catalogue.  This info feeds the Templater
+# kustomize plugin config in the hostgenerator-m3 function.
+
+## NEWSITE_CHANGEME: update the whole file with the site specific host details
+apiVersion: airshipit.org/v1alpha1
+kind: VariableCatalogue
+metadata:
+  name: host-catalogue
+  labels:
+    airshipit.org/deploy-k8s: "false"
+
+hosts:
+  # NEWSITE_CHANGEME: update with the site specific host details for all hosts
+  m3:
+    stl3r01s01:
+      bootMode: legacy
+      macAddress: E4:43:4B:EE:F4:CB
+      bmcAddress: redfish+https://10.253.200.35/redfish/v1/Systems/System.Embedded.1
+      bmcUsername: root
+      bmcPassword: WWTwwt1!
+      disableCertificateVerification: true
+      ipAddresses:
+        oam-ipv4: 10.254.125.230
+        pxe-ipv4: 172.63.0.11
+        storage-ipv4: 172.62.0.11
+        calico-ipv4: 172.64.0.11
+      hardwareProfile: default # defined in the hostgenerator-m3 function
+    stl3r01s02:
+      bootMode: legacy
+      macAddress: E4:43:4B:EE:B0:43
+      bmcAddress: redfish+https://10.253.200.36/redfish/v1/Systems/System.Embedded.1
+      bmcUsername: root
+      bmcPassword: WWTwwt1!
+      disableCertificateVerification: true
+      ipAddresses:
+        oam-ipv4: 10.254.125.231
+        pxe-ipv4: 172.63.0.12
+        storage-ipv4: 172.62.0.12
+        calico-ipv4: 172.64.0.12
+      hardwareProfile: example # defined in the hardwareprofile-example function
+    stl3r01s03:
+      bootMode: legacy
+      #macAddress: E4:43:4B:EE:D7:B8
+      macAddress: E4:43:4B:EE:D7:D9
+      bmcAddress: redfish+https://10.253.200.37/redfish/v1/Systems/System.Embedded.1
+      bmcUsername: root
+      bmcPassword: WWTwwt1!
+      disableCertificateVerification: true
+      ipAddresses:
+        oam-ipv4: 10.254.125.232
+        pxe-ipv4: 172.63.0.13
+        storage-ipv4: 172.62.0.13
+        calico-ipv4: 172.64.0.13
+      hardwareProfile: default # defined in the hardwareprofile-example function
+    stl3r01s04:
+      bootMode: legacy
+      #macAddress: E4:43:4B:EE:D7:B8
+      macAddress: E4:43:4B:EE:DD:0F
+      bmcAddress: redfish+https://10.253.200.38/redfish/v1/Systems/System.Embedded.1
+      bmcUsername: root
+      bmcPassword: WWTwwt1!
+      disableCertificateVerification: true
+      ipAddresses:
+        oam-ipv4: 10.254.125.233
+        pxe-ipv4: 172.63.0.14
+        storage-ipv4: 172.62.0.14
+        calico-ipv4: 172.64.0.14
+      hardwareProfile: default # defined in the hardwareprofile-example function
+    stl3r01s05:
+      bootMode: legacy
+      #macAddress: E4:43:4B:EE:D7:B8
+      macAddress: E4:43:4B:EE:D7:2F
+      bmcAddress: redfish+https://10.253.200.39/redfish/v1/Systems/System.Embedded.1
+      bmcUsername: root
+      bmcPassword: WWTwwt1!
+      disableCertificateVerification: true
+      ipAddresses:
+        oam-ipv4: 10.254.125.234
+        pxe-ipv4: 172.63.0.15
+        storage-ipv4: 172.62.0.15
+        calico-ipv4: 172.64.0.15
+      hardwareProfile: default # defined in the hardwareprofile-example function
+    stl3r01s06:
+      bootMode: legacy
+      #macAddress: E4:43:4B:EE:D7:B8
+      macAddress: E4:43:4B:EE:F3:B7
+      bmcAddress: redfish+https://10.253.200.40/redfish/v1/Systems/System.Embedded.1
+      bmcUsername: root
+      bmcPassword: WWTwwt1!
+      disableCertificateVerification: true
+      ipAddresses:
+        oam-ipv4: 10.254.125.235
+        pxe-ipv4: 172.63.0.16
+        storage-ipv4: 172.62.0.16
+        calico-ipv4: 172.64.0.16
+      hardwareProfile: default # defined in the hardwareprofile-example function

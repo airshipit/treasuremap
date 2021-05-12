@@ -1,0 +1,120 @@
+# This makes a couple small networking tweaks that are specific to the
+# ephemeral cluster, on top of the target cluster networking definition.
+# These values can be overridden at the site, type, etc levels as appropriate.
+
+apiVersion: airshipit.org/v1alpha1
+kind: NetworkCatalogue
+metadata:
+  name: networking
+
+spec:
+  # The catalogue should be overridden as appropriate for different kubernetes
+  # clusters, e.g. ephemeral vs target vs tenant
+  kubernetes:
+    serviceCidr: "10.96.0.0/12"
+    podCidr: "192.168.0.0/18"
+    controlPlaneEndpoint:
+      # NEWSITE_CHANGEME: below is the vrrp kubernetes virtual ip
+      host: "10.254.125.239"
+      port: 6443
+    # NEWSITE_CHANGEME: first controller node calico ip and pxe ip
+    apiserverCertSANs: "[172.64.0.11, 172.63.0.11]"
+  ironic:
+    # NEWSITE_CHANGEME: update the first controller node PXE network information
+    provisioningInterface: "eno4"
+    provisioningIp: "172.63.0.11"
+    dhcpRange: "172.63.0.31,172.63.0.126"
+  commonHostNetworking:
+    links:
+      # NEWSITE_CHANGEME: PXE network, untagged
+      - id: eno4
+        name: eno4
+        type: phy
+        mtu: "1500"
+      # NEWSITE_CHANGEME: 25G Intel XXV710DA2 NIC 1 port 2; the first NIC in the bonded interface
+      - id: enp94s0f1
+        name: enp94s0f1
+        type: phy
+        mtu: "9100"
+      # NEWSITE_CHANGEME: 25G Intel XXV710DA2 NIC 2 port 1; the second NIC in the bonded interface
+      - id: enp134s0f0
+        name: enp134s0f0
+        type: phy
+        mtu: 9100
+      - id: bond0
+        name: bond0
+        type: bond
+        # NEWSITE_CHANGEME: update the bond link interface name
+        bond_links: ["enp94s0f1", "enp134s0f0"]
+        bond_mode: 802.3ad
+        bond_xmit_hash_policy: layer3+4
+        bond_miimon: 100
+        mtu: 9100
+      # NEWSITE_CHANGEME: OAM network
+      - id: bond0.61
+        name: bond0.61
+        type: vlan
+        vlan_link: bond0
+        vlan_id: 61
+        mtu: 9100
+        vlan_mac_address: null
+      # NEWSITE_CHANGEME: Storage network
+      - id: bond0.62
+        name: bond0.62
+        type: vlan
+        vlan_link: bond0
+        vlan_id: 62
+        mtu: 9100
+        vlan_mac_address: null
+      # NEWSITE_CHANGEME: Calico network
+      - id: bond0.64
+        name: bond0.64
+        type: vlan
+        vlan_link: bond0
+        vlan_id: 64
+        mtu: 9100
+        vlan_mac_address: null
+      # unused for now
+      - id: bond0.65
+        name: bond0.65
+        type: vlan
+        vlan_link: bond0
+        vlan_id: 65
+        mtu: 9100
+        vlan_mac_address: null
+    networks:
+      # NEWSITE_CHANGEME: OAM network
+      - id: oam-ipv4
+        type: ipv4
+        link: bond0.61
+        # ip_address: <from host-catalogue>
+        netmask: 255.255.255.224
+        routes:
+          - network: 0.0.0.0
+            netmask: 0.0.0.0
+            gateway: 10.254.125.225
+      # NEWSITE_CHANGEME: PXE network
+      - id: pxe-ipv4
+        type: ipv4
+        link: eno4
+        # ip_address: <from host-catalogue>
+        netmask: 255.255.255.128
+      # NEWSITE_CHANGEME: Storage network
+      - id: storage-ipv4
+        type: ipv4
+        link: bond0.62
+        # ip_address:
+        netmask: 255.255.255.128
+      # NEWSITE_CHANGEME: Calico network
+      - id: calico-ipv4
+        type: ipv4
+        link: bond0.64
+        # ip_address:
+        netmask: 255.255.255.128
+    services:
+      # NEWSITE_CHANGEME: DNS servers
+      - address: 8.8.8.8
+        type: dns
+      - address: 8.8.4.4
+        type: dns
+

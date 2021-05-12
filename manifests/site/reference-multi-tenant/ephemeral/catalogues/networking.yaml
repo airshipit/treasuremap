@@ -1,0 +1,24 @@
+# This makes a couple small networking tweaks that are specific to the
+# ephemeral cluster, on top of the target cluster networking definition.
+# These values can be overridden at the site, type, etc levels as appropriate.
+
+## NEWSITE_CHANGEME: update file with ephemeral node ips
+apiVersion: airshipit.org/v1alpha1
+kind: NetworkCatalogue
+metadata:
+  name: networking
+spec:
+  kubernetes:
+    serviceCidr: "10.96.0.0/12"
+    podCidr: "192.168.0.0/18"
+    controlPlaneEndpoint:
+      # NEWSITE_CHANGEME: Ephemeral node oam ip
+      host: "10.254.125.231"
+      port: 6443
+    # NEWSITE_CHANGEME: ephemeral node calico ip and pxe ip
+    apiserverCertSANs: "[172.64.0.12, 172.63.0.12]"
+  ironic:
+    # NEWSITE_CHANGEME: Ephemeral node PXE network
+    provisioningInterface: "eno4"
+    provisioningIp: "172.63.0.12"
+    dhcpRange: "172.63.0.31,172.63.0.126"
