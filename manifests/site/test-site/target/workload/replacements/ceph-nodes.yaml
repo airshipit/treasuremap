@@ -19,3 +19,13 @@ replacements:
       kind: CephCluster
       name: ceph
     fieldrefs: ["{.spec.storage}"]
+- source:
+    objref:
+      kind: StorageCatalogue
+      name: storage
+    fieldref: "{.spec.mon.count}"
+  target:
+    objref:
+      kind: CephCluster
+      name: ceph
+    fieldrefs: ["{.spec.mon.count}"]

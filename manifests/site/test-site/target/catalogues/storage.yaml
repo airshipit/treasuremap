@@ -32,4 +32,6 @@ spec:
         devicePathFilter: "^/dev/disk/by-path/pci-0000:18:00.0-scsi-0:2:[3-8]:0"
         # Or you can use device filter
         # deviceFilter: "^/dev/sd[d-k]"
+  mon:
+    count: 1
 ---
