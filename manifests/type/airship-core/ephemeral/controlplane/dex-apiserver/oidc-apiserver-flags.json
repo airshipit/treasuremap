@@ -7,10 +7,9 @@
       {
         "oidc-ca-file": "/etc/kubernetes/certs/dex-cert",
         "oidc-client-id": "function-kubernetes",
-        "oidc-groups-claim": "groups",
-        "oidc-issuer-url": "https://dex.function.local:30556/dex",
-        "oidc-username-claim": "email",
-        "oidc-username-prefix": "oidc:"
+        "oidc-groups-claim": "group",
+        "oidc-issuer-url": "https://dex.function.local:32556/dex",
+        "oidc-username-claim": "email"
       },
       "extraVolumes":
       [
@@ -20,6 +19,11 @@
           "name": "dex-cert",
           "readOnly": true
         }
+      ],
+      "certSANs":
+      [
+        "dex.function.local",
+        "dex.baremetal.local"
       ]
     }
   },
@@ -37,5 +41,15 @@
       "path": "/etc/kubernetes/certs/dex-cert",
       "permissions": "0644"
     }
+  },
+  {
+    "op": "add",
+    "path": "/spec/kubeadmConfigSpec/preKubeadmCommands/-",
+    "value": "echo '10.23.25.102 dex.baremetal.local' | tee -a /etc/hosts"
+  },
+  {
+    "op": "add",
+    "path": "/spec/kubeadmConfigSpec/preKubeadmCommands/-",
+    "value": "echo '10.23.25.102 dex.function.local' | tee -a /etc/hosts"
   }
 ]

@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - ../../../../../function/k8scontrol-ha/replacements
   - ../../../../../../../airshipctl/manifests/function/k8scontrol/replacements
+  - update-dex.yaml

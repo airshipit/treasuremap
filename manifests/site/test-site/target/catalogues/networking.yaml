@@ -16,4 +16,11 @@ spec:
   ironic:
     provisioningIp: "10.23.24.102"
     dhcpRange: "10.23.24.200,10.23.24.250"
-
+  # Update the attribute "address" for both entries
+  # with your DNS IPs below if you are behind a proxy
+  commonHostNetworking:
+    services:
+      - address: 8.8.8.8
+        type: dns
+      - address: 8.8.4.4
+        type: dns

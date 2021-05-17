@@ -1,0 +1,19 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: k8scontrol-cluster-dex-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2.0.2
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: generated-secrets
+    fieldref: "{.targetClusterCa}"
+  target:
+    objref:
+      kind: Secret
+      name: dex-apiserver-secret
+    fieldrefs: ["{.data}"]

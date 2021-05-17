@@ -29,7 +29,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: dex-aio
-  namespace: dex
+  namespace: default
 spec:
   releaseName: dex-aio
   targetNamespace: dex
@@ -50,18 +50,47 @@ spec:
   values:
     params:
       site:
-        name: Dex-Function
+        name: dex-test-site
       endpoints:
-        hostname: dex.fuction.local
+        hostname: dex.function.local
         port:
-          https: 30556
-          http: 30554
-          k8s: 8443
+          https: 32556
+          http: 32554
+          k8s: 6443
+        tls:
+          cert_manager: true
+          issuer:
+            name: workload-cluster-ca-issuer
+            kind: Issuer
       oidc:
         client_id: function-kubernetes
         client_secret: pUBnBOY80SnXgjibTYM9ZWNzY2xreNGQok
-      tls:
-        cert_manager: true
-        issuer:
-          name: dex-ca-issuer
-          kind: ClusterIssuer
+      ldap:
+        bind_password: "your LDAP bind password"
+        name: "LDAP TEST SERVICES"
+        config:
+          host: "your LDAP FQDN"
+          port: 636
+          bind_dn: "your LDAP bind username"
+          bind_pw_env: LDAP_BIND_PW
+          username_prompt: SSO Username
+          user_search:
+            base_dn: dc=testservices,dc=test,dc=com
+            filter: "(objectClass=person)"
+            username: cn
+            idAttr: cn
+            emailAttr: name
+            nameAttr: name
+          group_search:
+            base_dn: ou=groups,dc=testservices,dc=test,dc=com
+            filter: "(objectClass=group)"
+            userMatchers:
+              userAttr: name
+              groupAttr: member
+            nameAttr: name
+
+    over_rides:
+      service:
+        dex:
+          spec:
+            type: NodePort
