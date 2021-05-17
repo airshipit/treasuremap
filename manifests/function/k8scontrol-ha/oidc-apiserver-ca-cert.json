@@ -1,0 +1,34 @@
+[
+  {
+    "op": "add",
+    "path": "/spec/kubeadmConfigSpec/clusterConfiguration/apiServer/extraVolumes",
+    "value":       [
+        {
+          "hostPath": "/etc/kubernetes/certs/dex-cert",
+          "mountPath": "/etc/kubernetes/certs/dex-cert",
+          "name": "dex-cert",
+          "readOnly": true
+        }
+      ]
+  },
+  {
+    "op": "add",
+    "path": "/spec/kubeadmConfigSpec/files/-",
+    "value": {
+      "contentFrom": {
+        "secret": {
+          "key": "tls.crt",
+          "name": "dex-apiserver-secret"
+        }
+      },
+      "owner": "root:root",
+      "path": "/etc/kubernetes/certs/dex-cert",
+      "permissions": "0644"
+    }
+  },
+  {
+    "op": "add",
+    "path": "/spec/kubeadmConfigSpec/preKubeadmCommands/-",
+    "value": "echo '10.23.25.102 dex.utility.local' | tee -a /etc/hosts"
+  }
+]

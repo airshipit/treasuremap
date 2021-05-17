@@ -27,3 +27,144 @@ replacements:
       kind: HelmRelease
       name: dex-aio
     fieldrefs: ["{.spec.values.params.ldap.bind_password}"]
+
+### DEX - API SERVER/OIDC INTEGRATION ###
+# Dex sitename, e.g., dex-test-site
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: utility-treasuremap
+    fieldref: "{.spec.dex.site}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.params.site.name}"]
+# Dex hostname, e.g., dex.function.local
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: utility-treasuremap
+    fieldref: "{.spec.dex.hostname}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.params.endpoints.hostname}"]
+# Dex NodePort port number, e.g., 32556. MUST be between [30000 - 32767]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: utility-treasuremap
+    fieldref: "{.spec.dex.nodeport}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.params.endpoints.port.https}"]
+# Dex client id, e.g., function-kubernetes
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: utility-treasuremap
+    fieldref: "{.spec.dex.client-id}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.params.oidc.client_id}"]
+
+### DEX-AIO IMAGES ###
+# Dex image
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.dex-aio.dex.tag}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.images.applications.dex.tag}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.dex-aio.dex.name}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.images.applications.dex.name}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.dex-aio.dex.repository}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.images.applications.dex.repo}"]
+# NGINX image
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.dex-aio.nginx.tag}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.images.applications.nginx.tag}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.dex-aio.nginx.name}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.images.applications.nginx.name}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.dex-aio.nginx.repository}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.images.applications.nginx.repo}"]
+# Authenticator image
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.dex-aio.authenticator.tag}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.images.applications.authenticator.tag}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.dex-aio.authenticator.name}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.images.applications.authenticator.name}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.dex-aio.authenticator.repository}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: dex-aio
+    fieldrefs: ["{.spec.values.images.applications.authenticator.repo}"]

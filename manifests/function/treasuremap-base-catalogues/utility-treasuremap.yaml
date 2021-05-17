@@ -1,0 +1,13 @@
+apiVersion: airshipit.org/v1alpha1
+kind: VariableCatalogue
+metadata:
+  labels:
+    airshipit.org/deploy-k8s: "false"
+  name: utility-treasuremap
+spec:
+  dex:
+    oidc_issuer: https://dex.utility.local:30556/dex
+    hostname: dex.utility.local
+    nodeport: 30556
+    client-id: utility-kubernetes
+    site: dex-utility-site
