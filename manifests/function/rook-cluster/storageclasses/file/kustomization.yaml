@@ -1,0 +1,5 @@
+resources:
+- file-storageclass.yaml
+namePrefix: cephfs-
+patchesStrategicMerge:
+- patches/rook-ceph-cephfs.yaml

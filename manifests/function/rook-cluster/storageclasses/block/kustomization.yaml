@@ -1,0 +1,5 @@
+resources:
+- block-storageclass.yaml
+namePrefix: block-
+patchesStrategicMerge:
+- patches/rook-ceph-block.yaml
