@@ -1,0 +1,12 @@
+apiVersion: airshipit.org/v1alpha1
+kind: VariableCatalogue
+metadata:
+  name: vm-networking
+  labels:
+    airshipit.org/deploy-k8s: "false"
+spec:
+  vm_infra_bridge:
+     host_oam_interface:  bond0.41
+     vm_interface: bond0.45
+     vm_network: 192.168.0.0
+     vm_network_subnet_mask: 255.255.240.0

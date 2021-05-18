@@ -2,7 +2,7 @@
 apiVersion: airshipit.org/v1alpha1
 kind: ReplacementTransformer
 metadata:
-  name: workers-generated-secret-replacements
+  name: metal3machientemplate-replacements
   annotations:
     config.kubernetes.io/function: |-
       container:
@@ -10,11 +10,12 @@ metadata:
 replacements:
 - source:
     objref:
-      name: generated-secrets
-    fieldref: "{.sshKeys.publicKey}"
+      name: networking
+    fieldref: spec.ironic.provisioningIp
   target:
     objref:
-      kind: KubeadmConfigTemplate
+      kind: Metal3MachineTemplate
       name: worker-1
     fieldrefs:
-      - "spec.template.spec.users[name=deployer].sshAuthorizedKeys[0]%REPLACE_HOST_SSH_KEY%"
+      - "spec.template.spec.image.url%REPLACEMENT_PROVISIONING_IP%"
+      - "spec.template.spec.image.checksum%REPLACEMENT_PROVISIONING_IP%"

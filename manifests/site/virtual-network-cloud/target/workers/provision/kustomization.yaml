@@ -1,10 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ../../../../../../../airshipctl/manifests/function/airshipctl-base-catalogues
-  - kubeadmconfigtemplate.yaml
-  - metal3machinetemplate.yaml
-  - machinedeployment.yaml
+  - ../../catalogues
+  - ../../../../../function/vm-infra-bridge/dataplane
 
 transformers:
-  - ../replacements
+  - ../../../../../function/vm-infra-bridge/dataplane/replacements
+  - ../../../../../function/workers-capm3/replacements
