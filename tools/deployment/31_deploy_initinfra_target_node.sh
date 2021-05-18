@@ -26,12 +26,6 @@ TARGET_NODE=${TARGET_NODE:-"$(airshipctl phase render controlplane-ephemeral \
 
 cd ${AIRSHIPCTL_PROJECT}
 
-kubectl \
-  --kubeconfig $KUBECONFIG \
-  --context $KUBECONFIG_TARGET_CONTEXT \
-  --request-timeout 10s \
-  label --overwrite nodes $TARGET_NODE node-type=controlplane
-
 ./tools/deployment/31_deploy_initinfra_target_node.sh
 
 hosts=$(kubectl \
@@ -46,12 +40,4 @@ do
       --kubeconfig $KUBECONFIG \
       --context $KUBECONFIG_TARGET_CONTEXT \
       --request-timeout 10s annotate --overwrite ${hosts[i]} secret=hco-ssh-auth
-    kubectl \
-      --kubeconfig $KUBECONFIG \
-      --context $KUBECONFIG_TARGET_CONTEXT \
-      --request-timeout 10s label --overwrite ${hosts[i]} node-type=controlplane
-    kubectl \
-      --kubeconfig $KUBECONFIG \
-      --context $KUBECONFIG_TARGET_CONTEXT \
-      --request-timeout 10s label --overwrite ${hosts[i]} kubernetes.io/role=master
 done
