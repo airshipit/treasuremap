@@ -1,0 +1,1 @@
+../common/26_deploy_capi_ephemeral_node.sh

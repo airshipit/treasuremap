@@ -1,0 +1,1 @@
+../common/22_test_configs.sh

@@ -1,0 +1,1 @@
+../common/24_build_images.sh

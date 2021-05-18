@@ -1,0 +1,1 @@
+../common/37_verify_hwcc_profiles.sh

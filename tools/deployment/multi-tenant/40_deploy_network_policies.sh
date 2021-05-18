@@ -1,0 +1,1 @@
+../common/40_deploy_network_policies.sh

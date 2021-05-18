@@ -1,0 +1,1 @@
+../common/32_cluster_init_target_node.sh

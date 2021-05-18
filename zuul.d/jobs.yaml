@@ -27,10 +27,10 @@
     nodeset: airship-treasuremap-single-node
     vars:
       gate_scripts:
-        - ./tools/deployment/01_install_essentials.sh
-        - ./tools/deployment/21_systemwide_executable.sh
-        - ./tools/deployment/22_test_configs.sh
-        - ./tools/deployment/23_pull_documents.sh
+        - ./tools/deployment/common/01_install_essentials.sh
+        - ./tools/deployment/common/21_systemwide_executable.sh
+        - ./tools/deployment/common/22_test_configs.sh
+        - ./tools/deployment/common/23_pull_documents.sh
         - ./tools/validate_docs
 
 - job:
@@ -70,19 +70,19 @@
     vars:
       site_name: test-site
       gate_scripts:
-        - ./tools/deployment/01_install_essentials.sh
-        - ./tools/deployment/22_test_configs.sh
-        - ./tools/deployment/23_pull_documents.sh
-        - ./tools/deployment/23_generate_secrets.sh
-        - ./tools/deployment/24_build_images.sh
-        - ./tools/deployment/25_deploy_ephemeral_node.sh
-        - ./tools/deployment/26_deploy_capi_ephemeral_node.sh
-        - ./tools/deployment/30_deploy_controlplane.sh
-        - ./tools/deployment/31_deploy_initinfra_target_node.sh
-        - ./tools/deployment/32_cluster_init_target_node.sh
-        - ./tools/deployment/33_cluster_move_target_node.sh
-        - ./tools/deployment/35_deploy_worker_node.sh
-        - ./tools/deployment/36_deploy_workload.sh
+        - ./tools/deployment/airship-core/01_install_essentials.sh
+        - ./tools/deployment/airship-core/22_test_configs.sh
+        - ./tools/deployment/airship-core/23_pull_documents.sh
+        - ./tools/deployment/airship-core/23_generate_secrets.sh
+        - ./tools/deployment/airship-core/24_build_images.sh
+        - ./tools/deployment/airship-core/25_deploy_ephemeral_node.sh
+        - ./tools/deployment/airship-core/26_deploy_capi_ephemeral_node.sh
+        - ./tools/deployment/airship-core/30_deploy_controlplane.sh
+        - ./tools/deployment/airship-core/31_deploy_initinfra_target_node.sh
+        - ./tools/deployment/airship-core/32_cluster_init_target_node.sh
+        - ./tools/deployment/airship-core/33_cluster_move_target_node.sh
+        - ./tools/deployment/airship-core/35_deploy_worker_node.sh
+        - ./tools/deployment/airship-core/36_deploy_workload.sh
       serve_dir: /srv/images
       serve_port: 8099
     voting: true
@@ -92,6 +92,20 @@
     parent: airship-treasuremap-deploy-test-site
     vars:
       site_name: virtual-network-cloud
+      gate_scripts:
+        - ./tools/deployment/multi-tenant/01_install_essentials.sh
+        - ./tools/deployment/multi-tenant/22_test_configs.sh
+        - ./tools/deployment/multi-tenant/23_pull_documents.sh
+        - ./tools/deployment/multi-tenant/23_generate_secrets.sh
+        - ./tools/deployment/multi-tenant/24_build_images.sh
+        - ./tools/deployment/multi-tenant/25_deploy_ephemeral_node.sh
+        - ./tools/deployment/multi-tenant/26_deploy_capi_ephemeral_node.sh
+        - ./tools/deployment/multi-tenant/30_deploy_controlplane.sh
+        - ./tools/deployment/multi-tenant/31_deploy_initinfra_target_node.sh
+        - ./tools/deployment/multi-tenant/32_cluster_init_target_node.sh
+        - ./tools/deployment/multi-tenant/33_cluster_move_target_node.sh
+        - ./tools/deployment/multi-tenant/35_deploy_worker_node.sh
+        - ./tools/deployment/multi-tenant/36_deploy_workload.sh
     files:
       - ^manifests/site/virtual-network-cloud/.*$
       - ^manifests/type/multi-tenant/.*$

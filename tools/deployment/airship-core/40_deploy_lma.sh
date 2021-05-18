@@ -18,4 +18,3 @@ echo "Deploying LMA stack"
 airshipctl phase run --debug lma-infra
 airshipctl phase run --debug lma-stack
 airshipctl phase run --debug lma-configs
-
