@@ -5,7 +5,7 @@ metadata:
 upstream:
   type: git
   git:
-    commit: eac22786d83f1a4f524f9f32ea36bb57b164ea1b
+    commit: f9226befbd49e4eba8909aa430ce7407551bba62
     repo: https://opendev.org/airship/sip
     directory: config/default
-    ref: eac22786d83f1a4f524f9f32ea36bb57b164ea1b
+    ref: f9226befbd49e4eba8909aa430ce7407551bba62

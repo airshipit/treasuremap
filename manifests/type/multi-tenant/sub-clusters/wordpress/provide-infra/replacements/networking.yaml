@@ -7,18 +7,17 @@ metadata:
       container:
         image: quay.io/airshipit/replacement-transformer:v2
 replacements:
-  - source:
-      objref:
-        kind: VariableCatalogue
-        name: subcluster-networking
-      fieldref: "{.spec.wordpress.exposed_services[?(.name == 'auth')].nodePort}"
-    target:
-      objref:
-        kind: SIPCluster
-        name: wordpress
-      # NOTE: The SIPCluster CR accepts multiple infra service definitions,
-      # but we only deploy one instance of each.
-      fieldrefs: ["{.spec.services.auth[0].nodePort}"]
+  # TODO: Uncomment once subcluster Dex is implemented.
+  # - source:
+  #     objref:
+  #       kind: VariableCatalogue
+  #       name: subcluster-networking
+  #     fieldref: "{.spec.lma.exposed_services[?(.name == 'auth')].nodePort}"
+  #   target:
+  #     objref:
+  #       kind: HelmRelease
+  #       name: dex-aio
+  #     fieldrefs: ["{.values.params.endpoints.port.https}"]
   - source:
       objref:
         kind: VariableCatalogue
@@ -31,20 +30,32 @@ replacements:
       # NOTE: The SIPCluster CR accepts multiple infra service definitions,
       # but we only deploy one instance of each.
       fieldrefs: ["{.spec.services.jumpHost[0].nodePort}"]
-  # NOTE: newer versions of SIP will have an additional load balancer for the
-  # worker nodes.
   - source:
       objref:
         kind: VariableCatalogue
         name: subcluster-networking
-      fieldref: "{.spec.wordpress.exposed_services[?(.name == 'loadBalancerControlPlane')].nodePort}"
+      fieldref: "{.spec.wordpress.exposed_services[?(.name == 'loadBalancerWorker')].nodePortRange}"
     target:
       objref:
         kind: SIPCluster
         name: wordpress
       # NOTE: The SIPCluster CR accepts multiple infra service definitions,
       # but we only deploy one instance of each.
-      fieldrefs: ["{.spec.services.loadBalancer[0].nodePort}"]
+      fieldrefs: ["{.spec.services.loadBalancerWorker[0].nodePortRange}"]
+  # TODO: The nodePort field is ignored, but still required. Remove this replacement rule once the
+  # field is removed, see https://github.com/airshipit/sip/issues/21.
+  - source:
+      objref:
+        kind: VariableCatalogue
+        name: subcluster-networking
+      fieldref: "{.spec.wordpress.exposed_services[?(.name == 'loadBalancerWorker')].nodePortRange.start}"
+    target:
+      objref:
+        kind: SIPCluster
+        name: wordpress
+      # NOTE: The SIPCluster CR accepts multiple infra service definitions,
+      # but we only deploy one instance of each.
+      fieldrefs: ["{.spec.services.loadBalancerWorker[0].nodePort}"]
   - source:
       objref:
         kind: VariableCatalogue

@@ -5,19 +5,19 @@ dependencies:
   git:
     repo: "https://opendev.org/airship/sip"
     directory: "config/crd"
-    ref: "194346b22e1df3e922a8fd32dd2fb785856731a9"
+    ref: "f9226befbd49e4eba8909aa430ce7407551bba62"
 - name: upstream/default
   git:
     repo: "https://opendev.org/airship/sip"
     directory: "config/default"
-    ref: "eac22786d83f1a4f524f9f32ea36bb57b164ea1b"
+    ref: "f9226befbd49e4eba8909aa430ce7407551bba62"
 - name: upstream/manager
   git:
     repo: "https://opendev.org/airship/sip"
     directory: "config/manager"
-    ref: "eac22786d83f1a4f524f9f32ea36bb57b164ea1b"
+    ref: "f9226befbd49e4eba8909aa430ce7407551bba62"
 - name: upstream/rbac
   git:
     repo: "https://opendev.org/airship/sip"
     directory: "config/rbac"
-    ref: "eac22786d83f1a4f524f9f32ea36bb57b164ea1b"
+    ref: "f9226befbd49e4eba8909aa430ce7407551bba62"

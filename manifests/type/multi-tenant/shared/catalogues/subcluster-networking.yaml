@@ -32,10 +32,11 @@ spec:
         nodePort: 30001
       - name: loadBalancerControlPlane
         nodePort: 30002
-      # TODO: Uncomment when SIP supports a Worker load balancer.
       # Potential ports that can be used by sub-cluster services.
-      # - name: loadBalancerWorkers
-      #   nodePort: ["30003:30020"]
+      - name: loadBalancerWorker
+        nodePortRange:
+          start: 30003
+          end: 30020
 
   wordpress:
     # This stanza is replaced directly into the Wordpress sub-cluster's
@@ -55,7 +56,8 @@ spec:
         nodePort: 30001
       - name: loadBalancerControlPlane
         nodePort: 30002
-      # TODO: Uncomment when SIP supports a Worker load balancer.
       # Potential ports that can be used by sub-cluster services.
-      # - name: loadBalancerWorkers
-      #   nodePort: ["30003:30020"]
+      - name: loadBalancerWorker
+        nodePortRange:
+          start: 30003
+          end: 30020

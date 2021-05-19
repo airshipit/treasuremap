@@ -12,16 +12,6 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.sip.sip.auth.image}"
-  target:
-    objref:
-      kind: SIPCluster
-      name: lma
-    fieldrefs: ["{.spec.services.auth[*].image}"]
-- source:
-    objref:
-      kind: VersionsCatalogue
-      name: versions-treasuremap
     fieldref: "{.spec.images.sip.sip.jump_host.image}"
   target:
     objref:
@@ -32,9 +22,19 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.images.sip.sip.load_balancer.image}"
+    fieldref: "{.spec.images.sip.sip.load_balancer_control_plane.image}"
   target:
     objref:
       kind: SIPCluster
       name: lma
-    fieldrefs: ["{.spec.services.loadBalancer[*].image}"]
+    fieldrefs: ["{.spec.services.loadBalancerControlPlane[*].image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.sip.sip.load_balancer_worker.image}"
+  target:
+    objref:
+      kind: SIPCluster
+      name: lma
+    fieldrefs: ["{.spec.services.loadBalancerWorker[*].image}"]
