@@ -74,7 +74,7 @@
         - ./tools/deployment/36_deploy_workload.sh
       serve_dir: /srv/images
       serve_port: 8099
-    voting: false
+    voting: true
 
 - job:
     name: airship-treasuremap-deploy-virtual-network-cloud
