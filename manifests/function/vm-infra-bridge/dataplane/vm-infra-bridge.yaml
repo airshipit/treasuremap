@@ -44,10 +44,10 @@
       # is to ensure that the octet is within the range of the OAM last octet.
       # TODO : Need to make the modulo value configurable for future release.
       mgmtoctet=$(($octet % 44))
-      vm_ip_address=$(awk -F"." '{print $1"."$2"."$3"."}'<<<"REPLACEMENT_VM_NETWORK")${mgmtoctet}
-      echo "Going to use ${vm_ip_address}"
+      vm_infra_ip_address=$(awk -F"." '{print $1"."$2"."$3"."}'<<<"REPLACEMENT_VM_NETWORK")${mgmtoctet}
+      echo "Going to use ${vm_infra_ip_address}"
       # convert the subnet information to CIDR format
-      vm_ip_cidr=$(awk -F. '{
+      vm_infra_ip_cidr=$(awk -F. '{
                   split($0, octets)
                   for (i in octets) {
                     mask += 8 - log(2**8 - octets[i])/log(2);
@@ -58,9 +58,9 @@
       if ! brctl show | grep -q vm-infra-bridge; then
            brctl addbr vm-infra-bridge
            ip link set vm-infra-bridge up
-           ip addr add  ${vm_ip_address}${vm_ip_cidr} dev vm-infra-bridge
+           ip addr add  ${vm_infra_ip_address}${vm_infra_ip_cidr} dev vm-infra-bridge
            brctl addif vm-infra-bridge REPLACEMENT_VM_INFRA_INTF
       fi;
       # add iptables postrouting nat
-      iptables -t nat -A POSTROUTING -s REPLACEMENT_VM_NETWORK${vm_ip_cidr} -o REPLACEMENT_VM_INFRA_INTF -j MASQUERADE
+      iptables -t nat -A POSTROUTING -s REPLACEMENT_VM_NETWORK${vm_infra_ip_cidr} -o REPLACEMENT_MGMT_INTF -j MASQUERADE
       exit 0
