@@ -52,9 +52,6 @@ spec:
     ingress-nginx:
       chart: ingress-nginx
       version: 3.5.1
-    rook-operator:
-      chart: rook-ceph
-      version: 0.0.1
     dex-aio:
       chart: dex-aio
       version: 0.1.0
