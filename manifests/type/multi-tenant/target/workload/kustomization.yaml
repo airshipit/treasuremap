@@ -1,4 +1,5 @@
 resources:
+  - ../../../../composite/storage-cluster
   - ../../../../function/ingress
   - ../../../../function/sip
   - ../../../../function/synclabeller
