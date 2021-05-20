@@ -1,4 +1,4 @@
 generators:
-- ../../../../../type/airship-core/target/generator/
+- ../../../../../type/multi-tenant/target/generator/
 transformers:
-- ../../../../../type/airship-core/target/generator/fileplacement/
+- ../../../../../type/multi-tenant/target/generator/fileplacement/
