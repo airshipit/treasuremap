@@ -6,7 +6,7 @@ metadata:
     airshipit.org/deploy-k8s: "false"
 spec:
   vm_infra_bridge:
-     host_oam_interface:  bond0.41
-     vm_interface: bond0.45
+     host_oam_interface:  bond0.61
+     vm_interface: bond0.66
      vm_network: 192.168.0.0
      vm_network_subnet_mask: 255.255.240.0
