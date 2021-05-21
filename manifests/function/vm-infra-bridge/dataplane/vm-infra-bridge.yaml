@@ -61,6 +61,8 @@
            ip addr add  ${vm_infra_ip_address}${vm_infra_ip_cidr} dev vm-infra-bridge
            brctl addif vm-infra-bridge REPLACEMENT_VM_INFRA_INTF
       fi;
+      # add forwarding rule for vm-infra-bridge
+      iptables -A FORWARD -i vm-infra-bridge -j ACCEPT
       # add iptables postrouting nat
       iptables -t nat -A POSTROUTING -s REPLACEMENT_VM_NETWORK${vm_infra_ip_cidr} -o REPLACEMENT_MGMT_INTF -j MASQUERADE
       exit 0
