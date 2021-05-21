@@ -1,0 +1,17 @@
+libvirtNetworks:
+- name: management
+  libvirtTemplate: |
+    <network>
+      <name>management</name>
+      <forward mode='route'/>
+      <bridge name='management' stp='off' delay='0'/>
+      <ip address='{{ networks[0].routes[0].gateway }}' netmask='255.255.240.0'>
+        <!-- <tftp root='/srv/tftp'/> -->
+        <dhcp>
+          <range start='{{ networks[0].allocationStart }}' end='{{ networks[0].allocationStop }}'/>
+          <bootp file=''/>
+        </dhcp>
+      </ip>
+    </network>
+  #  - name: mobility-gn
+  #    libvirtTemplate:

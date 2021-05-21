@@ -1,0 +1,9 @@
+flavors:
+  master:
+    vcpus: 1
+    memory: 4
+    rootSize: 30
+  worker:
+    vcpus: 1
+    memory: 2
+    rootSize: 10
