@@ -1,8 +1,7 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Issuer
 metadata:
-  name: workload-cluster-ca-issuer
-  namespace: default
+  name: dex
 spec:
   ca:
-    secret: dex-apiserver-secret
+    secretName: dex-apiserver-secret
