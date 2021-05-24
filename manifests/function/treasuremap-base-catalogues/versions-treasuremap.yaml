@@ -14,15 +14,13 @@ spec:
   helm_repositories:
     grafana:
       url: https://grafana.github.io/helm-charts
-    kube_prometheus_stack:
+    prometheus_community:
       url: https://prometheus-community.github.io/helm-charts
     # NOTE: logging-operator and logging-operator-logging charts share this repository
-    logging_operator:
+    banzai_cloud:
       url: https://kubernetes-charts.banzaicloud.com
     minio:
       url: https://helm.min.io
-    thanos:
-      url: https://kubernetes-charts.banzaicloud.com
     ingress-nginx:
       url: https://kubernetes.github.io/ingress-nginx
     rook-operator:
@@ -33,22 +31,22 @@ spec:
   charts:
     grafana:
       chart: grafana
-      version: 6.1.0
+      version: 6.9.1
     kube_prometheus_stack:
       chart: kube-prometheus-stack
-      version: 12.8.0
+      version: 16.0.1
     logging_operator:
       chart: logging-operator
-      version: 3.8.3
+      version: 3.9.5
     logging_operator_logging:
       chart: logging-operator-logging
-      version: 3.8.3
+      version: 3.9.5
     minio:
       chart: minio
-      version: 8.0.9
-    thanos:
+      version: 8.0.10
+    thanos_operator:
       chart: thanos-operator
-      version: 0.1.0
+      version: 0.2.1
     ingress-nginx:
       chart: ingress-nginx
       version: 3.5.1
@@ -74,7 +72,7 @@ spec:
           image: quay.io/prometheus/prometheus
       thanos:
         thanos:
-          image: quay.io/thanos/thanos:v0.17.2
+          image: quay.io/thanos/thanos:v0.19.0
     sip:
       sip:
         auth:
@@ -138,17 +136,17 @@ spec:
     grafana:
       grafana:
         repository: grafana/grafana
-        tag: 7.4.5
+        tag: 7.5.5
     kube_prometheus_stack:
       admission_webhooks:
         repository: jettech/kube-webhook-certgen
-        tag: v1.5.0
+        tag: v1.5.2
       alertmanager:
         repository: quay.io/prometheus/alertmanager
         tag: v0.21.0
       prometheus:
         repository: quay.io/prometheus/prometheus
-        tag: v2.24.0
+        tag: v2.27.1
       prometheus_config_reloader:
         repository: quay.io/prometheus-operator/prometheus-config-reloader
         tag: v0.46.0
@@ -158,31 +156,31 @@ spec:
     logging_operator:
       logging_operator:
         repository: ghcr.io/banzaicloud/logging-operator
-        tag: 3.9.1
+        tag: 3.9.5
     logging_operator_logging:
       config_reloader:
         repository: jimmidyson/configmap-reload
-        tag: v0.2.2
+        tag: v0.4.0
       fluentbit:
         repository: fluent/fluent-bit
-        tag: 1.6.10
+        tag: 1.7.4
       fluentd:
         repository: ghcr.io/banzaicloud/fluentd
-        tag: v1.11.5-alpine-9
+        tag: v1.11.5-alpine-21
       volume_mod:
         repository: busybox
         tag: latest
     minio:
       minio:
         repository: minio/minio
-        tag: RELEASE.2020-11-06T23-17-07Z
+        tag: RELEASE.2021-02-14T04-01-33Z
       mc:
         repository: minio/mc
         tag: RELEASE.2020-10-03T02-54-56Z
     thanos:
       thanos-operator:
         repository: banzaicloud/thanos-operator
-        tag: latest
+        tag: 0.2.0
     ingress-nginx:
       controller:
         repository: k8s.gcr.io/ingress-nginx/controller

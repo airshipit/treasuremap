@@ -11,18 +11,18 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.thanos}"
+    fieldref: "{.spec.helm_repositories.banzai_cloud.url}"
   target:
     objref:
       kind: HelmRepository
       name: thanos
-    fieldrefs: ["{.spec}"]
+    fieldrefs: ["{.spec.url}"]
 
 - source:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.charts.thanos.chart}"
+    fieldref: "{.spec.charts.thanos_operator.chart}"
   target:
     objref:
       kind: HelmRelease
@@ -32,7 +32,7 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.charts.thanos.version}"
+    fieldref: "{.spec.charts.thanos_operator.version}"
   target:
     objref:
       kind: HelmRelease
