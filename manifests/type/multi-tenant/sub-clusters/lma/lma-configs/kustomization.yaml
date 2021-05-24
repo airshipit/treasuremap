@@ -1,4 +1,4 @@
 resources:
   - ../../../../../function/lma-configs
 
-namespace: lma-infra
+namespace: lma

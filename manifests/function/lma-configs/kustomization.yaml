@@ -3,4 +3,4 @@ resources:
   - monitoring
   - alerting
 
-namespace: lma-infra
+namespace: lma

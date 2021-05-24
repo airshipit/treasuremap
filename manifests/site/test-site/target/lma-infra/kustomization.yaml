@@ -6,4 +6,4 @@ resources:
 transformers:
   - ../../../../composite/lma-infra/replacements
 
-namespace: lma-infra
+namespace: lma

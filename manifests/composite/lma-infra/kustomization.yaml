@@ -3,7 +3,7 @@ resources:
   - ../../function/logging-operator
   - ../../function/kube-prometheus-stack
 
-namespace: lma-infra
+namespace: lma
 
 patches:
   - path: patches/kube-prometheus-stack.yaml

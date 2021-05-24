@@ -9,7 +9,7 @@ spec:
   # Reference values at
   # https://github.com/banzaicloud/logging-operator/blob/master/charts/logging-operator-logging/values.yaml
   values:
-    controlNamespace: lma-infra
+    controlNamespace: lma
     loggingRef: lma-infra-logging
     nameOverride: lma-infra-logging
     fullnameOverride: lma-infra-logging

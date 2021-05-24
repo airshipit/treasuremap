@@ -2,7 +2,7 @@ resources:
   - ../../function/grafana
   - ../../function/thanos-operator
 
-namespace: lma-infra
+namespace: lma
 
 patches:
   - path: patches/grafana.yaml

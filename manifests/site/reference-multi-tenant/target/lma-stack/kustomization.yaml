@@ -8,7 +8,7 @@ transformers:
   - ../../../../composite/monitoring-stack/replacements
   - ../../../../function/minio/replacements
 
-namespace: lma-infra
+namespace: lma
 
 patches:
   - path: patches/minio.yaml
