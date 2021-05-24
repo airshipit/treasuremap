@@ -1,2 +1,4 @@
 resources:
+  - ../../../../../function/dex-aio
   - sipcluster.yaml
+namespace: wordpress-infra
