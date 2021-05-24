@@ -12,12 +12,12 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.kube_prometheus_stack}"
+    fieldref: "{.spec.helm_repositories.prometheus_community.url}"
   target:
     objref:
       kind: HelmRepository
       name: prometheus-community
-    fieldrefs: ["{.spec}"]
+    fieldrefs: ["{.spec.url}"]
 
 # Chart
 - source:

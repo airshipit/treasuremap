@@ -11,12 +11,12 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.minio}"
+    fieldref: "{.spec.helm_repositories.minio.url}"
   target:
     objref:
       kind: HelmRepository
       name: minio
-    fieldrefs: ["{.spec}"]
+    fieldrefs: ["{.spec.url}"]
 
 - source:
     objref:

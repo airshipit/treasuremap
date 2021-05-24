@@ -12,12 +12,12 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.logging_operator}"
+    fieldref: "{.spec.helm_repositories.banzai_cloud.url}"
   target:
     objref:
       kind: HelmRepository
       name: banzaicloud
-    fieldrefs: ["{.spec}"]
+    fieldrefs: ["{.spec.url}"]
 
 # Logging-operator Chart
 - source:
