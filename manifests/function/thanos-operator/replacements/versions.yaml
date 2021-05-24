@@ -37,7 +37,7 @@ replacements:
     objref:
       kind: HelmRelease
       name: thanos-operator
-    fieldrefs: ["{.spec.chart.version}"]
+    fieldrefs: ["{.spec.chart.spec.version}"]
 
 - source:
     objref:

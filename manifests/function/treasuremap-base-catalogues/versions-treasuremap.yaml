@@ -52,6 +52,9 @@ spec:
     minio:
       chart: minio
       version: 8.0.10
+    prometheus_elasticsearch_exporter:
+      chart: prometheus-elasticsearch-exporter
+      version: 4.4.0
     thanos_operator:
       chart: thanos-operator
       version: 0.2.1
@@ -193,6 +196,10 @@ spec:
       mc:
         repository: minio/mc
         tag: RELEASE.2020-10-03T02-54-56Z
+    prometheus_elasticsearch_exporter:
+      prometheus_elasticsearch_exporter:
+        repository: justwatch/elasticsearch_exporter
+        tag: 1.1.0
     thanos:
       thanos-operator:
         repository: banzaicloud/thanos-operator

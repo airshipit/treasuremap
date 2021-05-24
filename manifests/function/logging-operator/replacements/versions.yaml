@@ -39,7 +39,7 @@ replacements:
     objref:
       kind: HelmRelease
       name: logging-operator
-    fieldrefs: ["{.spec.chart.version}"]
+    fieldrefs: ["{.spec.chart.spec.version}"]
 
 # Logging-operator-logging Chart
 - source:
@@ -61,7 +61,7 @@ replacements:
     objref:
       kind: HelmRelease
       name: logging-operator-logging
-    fieldrefs: ["{.spec.chart.version}"]
+    fieldrefs: ["{.spec.chart.spec.version}"]
 
 # Logging-operator Chart Image
 - source:
