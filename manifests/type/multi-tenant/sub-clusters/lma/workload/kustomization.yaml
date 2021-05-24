@@ -3,7 +3,7 @@ resources:
   - ../../../../../composite/monitoring-stack
   - ../../../../../function/minio
 
-namespace: lma-infra
+namespace: lma
 
 patches:
   - path: patches/minio.yaml

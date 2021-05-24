@@ -10,7 +10,7 @@ stringData:
     type: s3
     config:
       insecure: true
-      endpoint: minio.lma-infra.svc.cluster.local:9000
+      endpoint: minio.lma.svc.cluster.local:9000
       bucket: metrics
       region: lma-infra
       access_key: admin
