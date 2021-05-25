@@ -1,2 +1,3 @@
 resources:
-- ../../../../../composite/storage-cluster/replacements
+  - ../../../../../composite/storage-cluster/replacements
+  - ../../../../../function/ingress/replacements
