@@ -1,9 +1,28 @@
 resources:
 - manager.yaml
-
 configMapGenerator:
 - name: daemonset-template
   options:
     disableNameSuffixHash: true
   files:
   - template=daemonset-template.yaml
+- name: flavors
+  options:
+    disableNameSuffixHash: true
+  files:
+  - flavors.yaml
+- name: flavor-templates
+  options:
+    disableNameSuffixHash: true
+  files:
+  - flavor-templates.yaml
+- name: network-templates
+  options:
+    disableNameSuffixHash: true
+  files:
+  - network-templates.yaml
+- name: storage-templates
+  options:
+    disableNameSuffixHash: true
+  files:
+  - storage-templates.yaml

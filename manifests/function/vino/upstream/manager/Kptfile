@@ -5,15 +5,15 @@ metadata:
 upstream:
   type: git
   git:
-    commit: 3dc0698a85f618a24c40bd7862d1dd807fc73ae3
-    repo: https://github.com/airshipit/vino
+    commit: 6ad6bb6d8c9b162540b689c9e8b9385e847c922a
+    repo: https://opendev.org/airship/vino
     directory: config/manager
-    ref: 3dc0698a85f618a24c40bd7862d1dd807fc73ae3
+    ref: 6ad6bb6d8c9b162540b689c9e8b9385e847c922a
 openAPI:
   definitions:
     io.k8s.cli.setters.replicas:
       x-k8s-cli:
         setter:
+          isSet: true
           name: replicas
           value: "3"
-          isSet: true

@@ -1,0 +1,14 @@
+libvirtStorage:
+- name: vino-default
+  libvirtTemplate: |-
+    <pool type='dir'>
+      <name>vino-default</name>
+      <target>
+        <path>/var/lib/libvirt/vino-pool</path>
+        <permissions>
+          <mode>0711</mode>
+          <owner>0</owner>
+          <group>0</group>
+        </permissions>
+      </target>
+    </pool>
