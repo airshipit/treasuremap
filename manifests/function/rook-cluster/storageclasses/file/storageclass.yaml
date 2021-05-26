@@ -1,24 +1,18 @@
-##################################################
-# Create storaclass for pv/pvc creation
-# make sure pool is getting create prior to this
-
-# kubectl create -f storageclass.yaml
-##################################################
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: storage-sc
+  name: rook-cephfs
 provisioner: rook-ceph.cephfs.csi.ceph.com # driver:namespace:operator
 parameters:
   # clusterID is the namespace where operator is deployed.
   clusterID: rook-ceph # namespace:cluster
 
   # CephFS filesystem name into which the volume shall be created
-  fsName: cephfs
+  fsName: myfs
 
   # Ceph pool into which the volume shall be created
   # Required for provisionVolume: "true"
-  pool: cephfs-data0
+  pool: myfs-data0
 
   # The secrets contain Ceph admin credentials. These are generated automatically by the operator
   # in the same namespace as the cluster.

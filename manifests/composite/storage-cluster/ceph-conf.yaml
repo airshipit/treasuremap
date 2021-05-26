@@ -1,9 +1,9 @@
 # Use the config section below to create your custom
 # ceph.conf file
 # Refer to the documentation at:
-# https://rook.io/docs/rook/v1.5/ceph-advanced-configuration.html#custom-cephconf-settings
-# Be aware - the rook operator doesn't perform any validations and syntax check against
-# the configuration below. Even a typo in this file can cause the entire cluster failure.
+# https://rook.io/docs/rook/v1.6/ceph-advanced-configuration.html#custom-cephconf-settings
+# Be aware - the rook operator doesn't perform any validations or syntax check against
+# the configuration below. Even a typo in this file can cause an entire cluster failure.
 kind: ConfigMap
 apiVersion: v1
 metadata:
