@@ -1,0 +1,20 @@
+apiVersion: logging.banzaicloud.io/v1beta1
+kind: ClusterFlow
+metadata:
+  name: all-pods
+spec:
+  match:
+    - select: {}
+  filters:
+    - enhanceK8s: {}
+    - tag_normaliser:
+        format: ${namespace_name}.${pod_name}.${container_name}
+    - parser:
+        reserve_data: true
+        parse:
+          type: multi-format
+          patterns:
+            - format: nginx
+            - format: json
+            - format: multiline
+  globalOutputRefs: elasticsearch

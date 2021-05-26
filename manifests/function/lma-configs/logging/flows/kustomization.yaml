@@ -1,2 +1,2 @@
 resources:
-  - minio.yaml
+  - cluster-flow-all.yaml

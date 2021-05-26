@@ -1,2 +1,1 @@
-resources:
-  - lma-infra-thanos-minio.yaml
+resources: []
