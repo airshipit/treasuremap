@@ -76,4 +76,3 @@ hosts:
       labels:
         airshipit.org/rack: r01
         airshipit.org/server: node04
-

@@ -2,4 +2,4 @@
 .tox/
 build/
 
-manifests/site/virtual-network-cloud/ephemeral/controlplane/before.yaml
+manifests/site/virtual-multi-tenant/ephemeral/controlplane/before.yaml

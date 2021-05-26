@@ -29,7 +29,7 @@
 #        - airship-treasuremap-functional-existing-k8s TODO: Enable this when functional tests exist, and a cluster is up
     experimental:
       jobs:
-        - airship-treasuremap-deploy-virtual-network-cloud:
+        - airship-treasuremap-deploy-virtual-multi-tenant:
             voting: false
 
     post:

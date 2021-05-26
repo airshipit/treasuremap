@@ -4,13 +4,12 @@ resources:
   # This pulls in general site catalog information which is valid across clusters
   # It also pulls in undercloud-specific values, which will be replaced below
   - ../../../target/catalogues/
-  - ../../../../../type/multi-tenant/sub-clusters/lma/catalogues/
+  - ../../../../../type/multi-tenant/sub-clusters/wordpress/catalogues/
 
 patchesStrategicMerge:
   - patches/versions-treasuremap.yaml
 
 transformers:
-  # This replaces lma-specific network data from the lma stanza
+  # This replaces wordpress-specific network data from the wordpress stanza
   # of the subcluster-networking catalogue into the standard networking catalogue
-  - ../../../../../type/multi-tenant/sub-clusters/lma/catalogue-replacements
-
+  - ../../../../../type/multi-tenant/sub-clusters/wordpress/catalogue-replacements

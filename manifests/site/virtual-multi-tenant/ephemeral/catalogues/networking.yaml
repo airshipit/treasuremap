@@ -14,8 +14,7 @@ spec:
     controlPlaneEndpoint:
       host: "10.23.25.101"
     apiserverCertSANs: "[10.23.25.101, 10.23.24.101]"
-  
+
   ironic:
     provisioningIp: "10.23.24.101"
     dhcpRange: "10.23.24.200,10.23.24.250"
-

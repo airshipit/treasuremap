@@ -81,10 +81,10 @@
     voting: true
 
 - job:
-    name: airship-treasuremap-deploy-virtual-network-cloud
+    name: airship-treasuremap-deploy-virtual-multi-tenant
     parent: airship-treasuremap-deploy-virtual-airship-core
     vars:
-      site_name: virtual-network-cloud
+      site_name: virtual-multi-tenant
       gate_scripts:
         - ./tools/deployment/multi-tenant/01_install_essentials.sh
         - ./tools/deployment/multi-tenant/22_test_configs.sh
@@ -101,7 +101,7 @@
         - ./tools/deployment/multi-tenant/360_deploy_workload.sh
         - ./tools/deployment/multi-tenant/361_deploy_workload_config.sh
     files:
-      - ^manifests/site/virtual-network-cloud/.*$
+      - ^manifests/site/virtual-multi-tenant/.*$
       - ^manifests/type/multi-tenant/.*$
       - ^manifests/function/.*$
       - ^manifests/composite/.*$
