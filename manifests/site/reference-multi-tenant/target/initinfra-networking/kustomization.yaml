@@ -1,2 +1,7 @@
 resources:
   - ../../../../type/multi-tenant/target/initinfra-networking
+
+commonLabels:
+  airshipit.org/stage: initinfra
+patchesStrategicMerge:
+  - patch_calico.yaml
