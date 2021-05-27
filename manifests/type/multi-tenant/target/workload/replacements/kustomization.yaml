@@ -4,3 +4,4 @@ resources:
   - ../../../../../function/sip/replacements
   - ../../../../../function/synclabeller/replacements
   - ../../../../../function/vino/replacements
+  - ../../../../../function/helm-chart-repository/replacements
