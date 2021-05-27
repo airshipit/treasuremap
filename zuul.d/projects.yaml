@@ -21,13 +21,14 @@
         - airship-treasuremap-validate-site-docs
 #        - airship-treasuremap-functional-existing-k8s TODO: Enable this when functional tests exist, and a cluster is up
         - airship-treasuremap-deploy-test-site
-        - airship-treasuremap-deploy-virtual-network-cloud
+        - airship-treasuremap-deploy-virtual-network-cloud:
+            voting: false
     gate:
       jobs:
         - noop
         - airship-treasuremap-validate-site-docs
         - airship-treasuremap-deploy-test-site
-        - airship-treasuremap-deploy-virtual-network-cloud
+#        - airship-treasuremap-deploy-virtual-network-cloud
 #        - airship-treasuremap-functional-existing-k8s TODO: Enable this when functional tests exist, and a cluster is up
     post:
       jobs:
