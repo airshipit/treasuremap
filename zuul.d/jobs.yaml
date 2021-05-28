@@ -47,7 +47,7 @@
 - job:
     name: airship-treasuremap-deploy-test-site
     attempts: 1
-    timeout: 9500
+    timeout: 10800
     required-projects:
       - airship/airshipctl
     roles:

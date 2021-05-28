@@ -5,4 +5,4 @@ generators:
   - ../hostgenerator
 
 commonLabels:
-  airshipit.org/k8s-role: controlplane-host
+  airshipit.org/k8s-role: worker
