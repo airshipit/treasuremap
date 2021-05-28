@@ -105,7 +105,8 @@
         - ./tools/deployment/multi-tenant/32_cluster_init_target_node.sh
         - ./tools/deployment/multi-tenant/33_cluster_move_target_node.sh
         - ./tools/deployment/multi-tenant/35_deploy_worker_node.sh
-        - ./tools/deployment/multi-tenant/36_deploy_workload.sh
+        - ./tools/deployment/multi-tenant/360_deploy_workload.sh
+        - ./tools/deployment/multi-tenant/361_deploy_workload_config.sh
     files:
       - ^manifests/site/virtual-network-cloud/.*$
       - ^manifests/type/multi-tenant/.*$
