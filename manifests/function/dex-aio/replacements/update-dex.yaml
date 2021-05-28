@@ -21,7 +21,7 @@ replacements:
     objref:
       kind: VariableCatalogue
       name: imported-secrets
-    fieldref: "{.dex.ldap.bind_password}"
+    fieldref: "{.dex.ldap.target-cluster.bind_password}"
   target:
     objref:
       kind: HelmRelease
