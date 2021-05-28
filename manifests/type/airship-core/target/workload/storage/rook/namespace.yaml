@@ -1,9 +1,0 @@
-# TO BE DELETED
-# The namespace rook-ceph should be installed together
-# with rook-ceph-operator. However, we will keep this file
-# in current PS for the debug purposes.
-
-# apiVersion: v1
-# kind: Namespace
-# metadata:
-#   name: rook-ceph
