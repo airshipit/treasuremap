@@ -1,7 +1,7 @@
 apiVersion: airshipit.org/v1alpha1
 kind: ReplacementTransformer
 metadata:
-  name: elasticsearch-data-versions-replacements
+  name: prometheus-elasticsearch-exporter-versions-replacements
   annotations:
     config.kubernetes.io/function: |-
       container:
@@ -11,49 +11,39 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.elastic.url}"
+    fieldref: "{.spec.helm_repositories.prometheus_community.url}"
   target:
     objref:
       kind: HelmRepository
-      name: elasticsearch-data
+      name: prometheus-elasticsearch-exporter
     fieldrefs: ["{.spec.url}"]
 - source:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.charts.elasticsearch.chart}"
+    fieldref: "{.spec.charts.prometheus_elasticsearch_exporter.chart}"
   target:
     objref:
       kind: HelmRelease
-      name: elasticsearch-data
+      name: prometheus-elasticsearch-exporter
     fieldrefs: ["{.spec.chart.spec.chart}"]
 - source:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.charts.elasticsearch.version}"
+    fieldref: "{.spec.charts.prometheus_elasticsearch_exporter.version}"
   target:
     objref:
       kind: HelmRelease
-      name: elasticsearch-data
+      name: prometheus-elasticsearch-exporter
     fieldrefs: ["{.spec.chart.spec.version}"]
 - source:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.image_components.elasticsearch.elasticsearch.repository}"
+    fieldref: "{.spec.image_components.prometheus_elasticsearch_exporter.prometheus_elasticsearch_exporter}"
   target:
     objref:
       kind: HelmRelease
-      name: elasticsearch-data
+      name: prometheus-elasticsearch-exporter
     fieldrefs: ["{.spec.values.image}"]
-- source:
-    objref:
-      kind: VersionsCatalogue
-      name: versions-treasuremap
-    fieldref: "{.spec.image_components.elasticsearch.elasticsearch.tag}"
-  target:
-    objref:
-      kind: HelmRelease
-      name: elasticsearch-data
-    fieldrefs: ["{.spec.values.imageTag}"]

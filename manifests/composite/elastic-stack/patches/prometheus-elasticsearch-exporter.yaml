@@ -1,0 +1,14 @@
+apiVersion: "helm.toolkit.fluxcd.io/v2beta1"
+kind: HelmRelease
+metadata:
+  name: prometheus-elasticsearch-exporter
+spec:
+  values:
+    es:
+      uri: http://elasticsearch-ingest.lma.svc.cluster.local:9200
+    serviceMonitor:
+      enabled: true
+    prometheusRule:
+      enabled: false
+    serviceAccount:
+      create: true

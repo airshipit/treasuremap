@@ -39,7 +39,7 @@ replacements:
     objref:
       kind: HelmRelease
       name: kube-prometheus-stack
-    fieldrefs: ["{.spec.chart.version}"]
+    fieldrefs: ["{.spec.chart.spec.version}"]
 
 # Images
 - source:

@@ -2,8 +2,10 @@ resources:
   - elasticsearch-ingest
   - elasticsearch-data
   - ../../function/kibana
+  - ../../function/prometheus-elasticsearch-exporter
 
 namespace: lma
 
 patches:
   - path: patches/kibana.yaml
+  - path: patches/prometheus-elasticsearch-exporter.yaml
