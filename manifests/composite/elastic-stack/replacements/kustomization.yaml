@@ -1,0 +1,4 @@
+resources:
+  - ../elasticsearch-ingest/replacements
+  - ../elasticsearch-data/replacements
+  - ../../../function/kibana/replacements

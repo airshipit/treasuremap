@@ -1,0 +1,59 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: kibana-versions-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2
+replacements:
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.helm_repositories.elastic.url}"
+  target:
+    objref:
+      kind: HelmRepository
+      name: kibana
+    fieldrefs: ["{.spec.url}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.kibana.chart}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kibana
+    fieldrefs: ["{.spec.chart.spec.chart}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.charts.kibana.version}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kibana
+    fieldrefs: ["{.spec.chart.version}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.kibana.kibana.repository}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kibana
+    fieldrefs: ["{.spec.values.image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.kibana.kibana.tag}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kibana
+    fieldrefs: ["{.spec.values.imageTag}"]

@@ -1,0 +1,27 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: elasticsearch-data
+spec:
+  releaseName: elasticsearch-data
+  chart:
+    spec:
+      sourceRef:
+        name: elasticsearch-data
+  values:
+    nodeGroup: "data"
+    masterService: elasticsearch-ingest
+    roles:
+      master: "false"
+      ingest: "false"
+      data: "true"
+    replicas: 1
+    resources:
+      requests:
+        cpu: "1m"
+        memory: "0.5Gi"
+      limits:
+        cpu: "1000m"
+        memory: "2Gi"
+    persistence:
+      enabled: false

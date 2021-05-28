@@ -1,0 +1,6 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: kibana
+spec:
+  interval: 10m
