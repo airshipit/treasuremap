@@ -1,2 +1,2 @@
 resources:
-  - minio.yaml
+  - cluster-output-elasticsearch.yaml

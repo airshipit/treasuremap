@@ -1,4 +1,3 @@
 resources:
   - lma-infra-thanos.yaml
   - storeendpoints
-  - objectstores

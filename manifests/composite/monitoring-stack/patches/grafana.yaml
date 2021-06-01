@@ -13,7 +13,7 @@ spec:
         datasources:
         - name: lma-infra-thanos
           type: prometheus
-          url: lma-infra-thanos-query.lma-infra.svc.cluster.local:10902
+          url: lma-infra-thanos-query.lma.svc.cluster.local:10902
     dashboardProviders:
       dashboardproviders.yaml:
         apiVersion: 1
