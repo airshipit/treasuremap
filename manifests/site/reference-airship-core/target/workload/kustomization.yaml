@@ -2,4 +2,4 @@ resources:
   - ../../../../type/airship-core/target/workload
   - ../catalogues
 transformers:
-  - ../../../../function/ingress/replacements
+  - ../../../../type/airship-core/target/workload/replacements
