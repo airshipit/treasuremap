@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- ../../workers-capm3
+- ../../../../../airshipctl/manifests/function/workers-capm3
 
 patchesJson6902:
 - target:
