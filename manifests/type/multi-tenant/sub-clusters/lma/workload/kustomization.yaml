@@ -1,9 +1,20 @@
 resources:
-  - ../../../../sub-cluster/workload
+  - ../../../../../composite/lma-infra
+  - ../../../../../composite/elastic-stack
   - ../../../../../composite/monitoring-stack
-  - ../../../../../function/minio
 
 namespace: lma
 
 patches:
-  - path: patches/minio.yaml
+  - path: patches/elasticsearch-ingest.yaml
+    target:
+      kind: HelmRelease
+      name: elasticsearch-ingest
+  - path: patches/elasticsearch-data.yaml
+    target:
+      kind: HelmRelease
+      name: elasticsearch-data
+  - path: patches/kibana.yaml
+    target:
+      kind: HelmRelease
+      name: kibana

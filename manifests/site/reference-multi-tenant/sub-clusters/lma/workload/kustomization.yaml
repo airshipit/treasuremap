@@ -1,0 +1,6 @@
+resources:
+  - ../../../../../type/multi-tenant/sub-clusters/lma/workload
+  - ../catalogues
+
+transformers:
+  - ../../../../../type/multi-tenant/sub-clusters/lma/workload/replacements

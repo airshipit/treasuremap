@@ -1,0 +1,6 @@
+resources:
+  - ../../../../../type/multi-tenant/sub-clusters/lma/controlplane
+  - ../catalogues
+
+transformers:
+  - ../../../../../type/multi-tenant/sub-clusters/lma/controlplane/replacements

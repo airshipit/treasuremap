@@ -1,0 +1,3 @@
+resources:
+  - ../../../../../type/multi-tenant/sub-clusters/lma/workload-config
+  - ../catalogues

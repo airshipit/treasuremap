@@ -1,0 +1,29 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: lma-service-ports
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: quay.io/airshipit/replacement-transformer:v2
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: subcluster-networking
+    fieldref: "{.spec.lma.exposed_services[(@.name == 'elasticsearch-ingest')].nodePort}"
+  target:
+    objref:
+      kind: HelmRepository
+      name: elasticsearch-ingest
+    fieldrefs: ["{.spec.values.service.nodePort}"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: subcluster-networking
+    fieldref: "{.spec.lma.exposed_services[(@.name == 'kibana')].nodePort}"
+  target:
+    objref:
+      kind: HelmRepository
+      name: kibana
+    fieldrefs: ["{.spec.values.service.nodePort}"]
