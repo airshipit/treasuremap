@@ -4,3 +4,6 @@ resources:
   - ../../../../../function/dex-aio/replacements
   - ../../../../../function/helm-chart-repository/replacements
   - ../../../../../function/local-storage/replacements
+  - ../../../../../composite/lma-infra/replacements
+  - ../../../../../composite/elastic-stack/replacements
+  - ../../../../../composite/monitoring-stack/replacements

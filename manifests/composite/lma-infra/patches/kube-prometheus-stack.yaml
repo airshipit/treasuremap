@@ -17,10 +17,6 @@ spec:
         podMetadata:
           labels:
             storeAPI: enabled
-        thanos:
-          objectStorageConfig:
-            name: lma-infra-object-store
-            key: thanos-config.yaml
 
     prometheusOperator:
       admissionWebhooks:

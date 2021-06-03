@@ -1,0 +1,5 @@
+resources:
+  - ../../../../type/airship-core/target/workload-config
+  - ../catalogues
+transformers:
+  - ../../../../type/airship-core/target/workload-config/replacements

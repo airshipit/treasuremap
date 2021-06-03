@@ -3,6 +3,9 @@ kind: HelmRelease
 metadata:
   name: kibana
 spec:
+  dependsOn:
+    - name: elasticsearch-ingest
+    - name: elasticsearch-data
   values:
     elasticsearchHosts: "http://elasticsearch-ingest.lma.svc.cluster.local:9200"
     replicas: 1
