@@ -3,3 +3,10 @@ resources:
   - ../catalogues
 transformers:
   - ../../../../type/multi-tenant/target/workload/replacements
+# Removing rook-ceph storage cluster from test-site as the
+# zuul gates seems to be failing often with timeout issues
+# Comment the below patch files if you want to deploy
+# storage cluster as part of test-site workload
+patches:
+  - patch-delete-storage-cluster.yaml
+  - patch-deploy-false-storage-cluster.yaml
