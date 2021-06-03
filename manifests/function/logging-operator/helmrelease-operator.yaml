@@ -10,7 +10,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: banzaicloud
-    interval: 1m
+      interval: 1m
   timeout: 5m
   # Reference values at
   # https://github.com/banzaicloud/logging-operator/blob/master/charts/logging-operator/values.yaml

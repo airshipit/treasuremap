@@ -10,8 +10,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: minio
-    interval: 1m
-  wait: false
+      interval: 1m
   timeout: 5m
   # Reference values at
   # https://github.com/minio/charts/blob/master/minio/values.yaml
