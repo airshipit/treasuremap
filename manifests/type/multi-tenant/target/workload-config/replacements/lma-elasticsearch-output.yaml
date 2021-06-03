@@ -1,0 +1,29 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: lma-elasticsearch-output-address
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: localhost/replacement-transformer
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: subcluster-networking
+    fieldref: "{.spec.lma.kubernetes.controlPlaneEndpoint.host}"
+  target:
+    objref:
+      kind: ClusterOutput
+      name: elasticsearch
+    fieldrefs: ["{.spec.elasticsearch.host}%LOADBALANCER%"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: subcluster-networking
+    fieldref: "{.spec.lma.exposed_services[(@.name == 'elasticsearch-ingest')].nodePort}"
+  target:
+    objref:
+      kind: ClusterOutput
+      name: elasticsearch
+    fieldrefs: ["{.spec.elasticsearch.host}%NODEPORT%"]
