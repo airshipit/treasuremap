@@ -10,8 +10,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: thanos
-    interval: 1m
-  wait: false
+      interval: 1m
   timeout: 5m
   # Reference values at
   # https://github.com/banzaicloud/thanos-operator/blob/master/charts/thanos-operator/values.yaml

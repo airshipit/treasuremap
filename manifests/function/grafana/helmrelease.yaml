@@ -7,12 +7,10 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: grafana
       sourceRef:
         kind: HelmRepository
         name: grafana
-    version: 6.1.0
-    interval: 1m
+      interval: 1m
   timeout: 5m
   # Reference values at
   # https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml

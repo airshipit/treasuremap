@@ -10,7 +10,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: elasticsearch
-    interval: 1m
-  wait: false
+      interval: 1m
   timeout: 5m
   values: {}

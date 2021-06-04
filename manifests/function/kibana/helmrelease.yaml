@@ -10,7 +10,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: kibana
-    interval: 1m
-  wait: false
+      interval: 1m
   timeout: 5m
   values: {}
