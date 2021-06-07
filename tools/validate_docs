@@ -17,9 +17,21 @@
 set -xe
 
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
-: ${MANIFEST_ROOT:="$(dirname "${PWD}")"}
-: ${SITE_ROOTS:="$(basename "${PWD}")/manifests/site"}
-: ${MANIFEST_REPO_URL:="https://review.opendev.org/airship/treasuremap"}
+: ${CURRENT_MANIFEST:="$(airshipctl config get-contexts --current 2> /dev/null | \
+        yq '.contexts."ephemeral-cluster".manifest' | \
+        sed 's/"//g')"}
+: ${PRIMARY_REPO:="$(airshipctl config get-manifest $CURRENT_MANIFEST 2> /dev/null | \
+	yq .${CURRENT_MANIFEST}.phaseRepositoryName | \
+	sed 's/"//g')"}
+: ${MANIFEST_REPO_URL:="$(airshipctl config get-manifest $CURRENT_MANIFEST 2> /dev/null | \
+        yq .${CURRENT_MANIFEST}.repositories.${PRIMARY_REPO}.url | \
+        sed 's/"//g')"}
+: ${MANIFEST_ROOT:="$(airshipctl config get-manifest $CURRENT_MANIFEST 2> /dev/null | \
+        yq .${CURRENT_MANIFEST}.targetPath | \
+        sed 's/"//g')"}
+: ${PROJECT:="treasuremap"}
+: ${SITE_ROOTS:="${PROJECT}/manifests/site"}
+
 export MANIFEST_ROOT=$MANIFEST_ROOT
 export SITE_ROOTS=$SITE_ROOTS
 export MANIFEST_REPO_URL=$MANIFEST_REPO_URL
