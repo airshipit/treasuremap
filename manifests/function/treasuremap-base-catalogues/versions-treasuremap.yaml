@@ -114,7 +114,7 @@ spec:
     rook-operator:
       rook-ceph-operator:
         rook-ceph-operator:
-          image: rook/ceph:v1.6.2
+          image: rook/ceph:v1.6.3
       rook-ceph-operator-config:
         ceph_daemon:
           image: ceph/ceph:v15.2.11
@@ -135,7 +135,7 @@ spec:
         ceph-version:
           image: ceph/ceph:v15.2.11
         rook-ceph-tools:
-          image: rook/ceph:v1.6.2
+          image: rook/ceph:v1.6.3
 
   image_components:
   # image_components are organized by
