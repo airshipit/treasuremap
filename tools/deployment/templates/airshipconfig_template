@@ -1,0 +1,30 @@
+apiVersion: airshipit.org/v1alpha1
+managementConfiguration:
+  dummy_management_config:
+    type: ${REMOTE_TYPE}
+    insecure: ${REMOTE_INSECURE}
+    useproxy: ${REMOTE_PROXY}
+    systemActionRetries: ${SYSTEM_ACTION_RETRIES}
+    systemRebootDelay: ${SYSTEM_REBOOT_DELAY}
+contexts:
+  ephemeral-cluster:
+    manifest: dummy_manifest
+    managementConfiguration: dummy_management_config
+  target-cluster:
+    manifest: dummy_manifest
+    managementConfiguration: dummy_management_config
+currentContext: ephemeral-cluster
+kind: Config
+manifests:
+  dummy_manifest:
+    phaseRepositoryName: primary
+    repositories:
+      primary:
+        checkout:
+          branch: ${AIRSHIP_CONFIG_PHASE_REPO_BRANCH}
+          force: false
+          remoteRef: ""
+          tag: ""
+        url: ${AIRSHIP_CONFIG_PHASE_REPO_URL}
+    metadataPath: ${AIRSHIP_CONFIG_METADATA_PATH}
+    targetPath: ${AIRSHIP_CONFIG_MANIFEST_DIRECTORY}
