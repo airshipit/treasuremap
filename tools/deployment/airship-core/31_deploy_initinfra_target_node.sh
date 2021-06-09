@@ -1,1 +1,0 @@
-../common/31_deploy_initinfra_target_node.sh

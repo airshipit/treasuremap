@@ -1,1 +1,0 @@
-../common/30_deploy_controlplane.sh

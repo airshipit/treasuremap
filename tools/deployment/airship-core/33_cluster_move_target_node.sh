@@ -1,1 +1,0 @@
-../common/33_cluster_move_target_node.sh

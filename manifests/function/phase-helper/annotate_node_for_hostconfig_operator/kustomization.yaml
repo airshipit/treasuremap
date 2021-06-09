@@ -1,0 +1,6 @@
+configMapGenerator:
+- name: kubectl-annotate-node-for-hostconfig-operator
+  options:
+    disableNameSuffixHash: true
+  files:
+  - script=kubectl_annotate_node.sh
