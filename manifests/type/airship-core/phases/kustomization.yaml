@@ -1,11 +1,9 @@
 resources:
   - ../../../../../airshipctl/manifests/phases/
   - lma-infra-target.yaml
-  - validation-config.yaml
   - ../../../function/phase-helper/
   - executors.yaml
   - phases.yaml
-transformers:
-  - ../../../../../airshipctl/manifests/function/validator
+
 patchesStrategicMerge:
-  - plan-patch.yaml
+   - plan-patch.yaml

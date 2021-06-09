@@ -25,5 +25,12 @@ export SITE_ROOTS=$SITE_ROOTS
 export MANIFEST_REPO_URL=$MANIFEST_REPO_URL
 
 cd ${AIRSHIPCTL_PROJECT}
-./tools/validate_docs
+
+# Validate only specific site if set
+if [ ! -z "$1" ]; then
+  ./tools/validate_docs $1
+else
+  ./tools/validate_docs
+fi
+
 

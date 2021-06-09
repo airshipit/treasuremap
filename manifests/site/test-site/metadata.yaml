@@ -1,6 +1,11 @@
-phase:
-  docEntryPointPrefix: manifests/site/test-site
-  path: manifests/site/test-site/phases
+apiVersion: airshipit.org/v1alpha1
+kind: ManifestMetadata
+metadata:
+  name: manifest-metadata
+spec:
+  phase:
+    docEntryPointPrefix: manifests/site/test-site
+    path: manifests/site/test-site/phases
 
-inventory:
-  path: manifests/site/test-site/host-inventory
+  inventory:
+    path: manifests/site/test-site/host-inventory

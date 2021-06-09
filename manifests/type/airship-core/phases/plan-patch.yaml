@@ -147,3 +147,20 @@ phases:
   # - name: lma-stack
   # - name: lma-configs
   # - name: deliver-network-policy
+validation:
+ kindsToSkip:
+   - Clusterctl
+   - VariableCatalogue
+   - StorageCatalogue
+ crdList:
+   - airshipctl/manifests/function/airshipctl-schemas
+---
+apiVersion: airshipit.org/v1alpha1
+kind: PhasePlan
+metadata:
+  name: iso
+validation:
+  kindsToSkip:
+    - RemoteDirectConfiguration
+    - VariableCatalogue
+    - StorageCatalogue
