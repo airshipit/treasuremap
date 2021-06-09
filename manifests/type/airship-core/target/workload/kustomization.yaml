@@ -1,3 +1,4 @@
 resources:
   - ../../../../composite/storage-cluster
   - ../../../../function/ingress
+  - ../../../../function/helm-chart-repository/
