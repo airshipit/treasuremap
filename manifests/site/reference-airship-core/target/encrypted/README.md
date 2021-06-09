@@ -29,4 +29,4 @@ This container encrypt the secrets and write it to directory specified in `kusto
 To decrypt previously encrypted secrets we use [decrypt-secrets.yaml](results/decrypt-secrets.yaml).
 It will run the decrypt sops function when we run
 `KUSTOMIZE_PLUGIN_HOME=$(pwd)/manifests SOPS_IMPORT_PGP=$(cat key.asc) kustomize build --enable_alpha_plugins
-manifests/site/test-site/target/catalogues/`
+manifests/site/virtual-airship-core/target/catalogues/`

@@ -1,0 +1,11 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ManifestMetadata
+metadata:
+  name: manifest-metadata
+spec:
+  phase:
+    docEntryPointPrefix: manifests/site/virtual-airship-core
+    path: manifests/site/virtual-airship-core/phases
+
+  inventory:
+    path: manifests/site/virtual-airship-core/host-inventory
