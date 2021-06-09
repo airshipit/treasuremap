@@ -21,13 +21,3 @@ replacements:
       kind: NetworkCatalogue
       name: networking
     fieldrefs: ["{.spec.kubernetes}"]
-- source:
-    objref:
-      kind: VariableCatalogue
-      name: subcluster-networking
-    fieldref: "{.spec.lma.port_range}"
-  target:
-    objref:
-      kind: NetworkCatalogue
-      name: networking
-    fieldrefs: ["{.spec.port_range}"]
