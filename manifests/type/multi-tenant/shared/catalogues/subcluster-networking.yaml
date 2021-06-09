@@ -27,7 +27,7 @@ spec:
 
     exposed_services:
       - name: auth
-        nodePort: 30556
+        nodePort: 30566
       - name: jumpHost
         nodePort: 30001
       - name: loadBalancerControlPlane
@@ -59,11 +59,11 @@ spec:
       controlPlaneEndpoint:
         host: "10.23.25.102"
         port: 6443
-      apiserverCertSANs: [10.23.25.201, 10.23.24.201]
+      apiserverCertSANs: "[10.23.25.201, 10.23.24.201]"
 
     exposed_services:
       - name: auth
-        nodePort: 30556
+        nodePort: 30576
       - name: jumpHost
         nodePort: 30001
       - name: loadBalancerControlPlane

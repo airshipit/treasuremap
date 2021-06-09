@@ -1,7 +1,7 @@
 apiVersion: airshipit.org/v1alpha1
 kind: ReplacementTransformer
 metadata:
-  name: k8scontrol-cluster-dex-replacements
+  name: k8scontrol-dex-replacements
   annotations:
     config.kubernetes.io/function: |-
       container:

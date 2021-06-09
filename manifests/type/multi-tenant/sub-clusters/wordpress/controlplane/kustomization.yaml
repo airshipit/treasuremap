@@ -4,4 +4,15 @@ resources:
 nameSuffix: -wordpress
 
 patchesStrategicMerge:
-  - patches/metal3machinetemplate.yaml
+- patches/metal3machinetemplate.yaml
+- dex-aio-helm-patch.yaml
+- subcluster-issuer-patch.yaml
+
+patches:
+  - target:
+      group: controlplane.cluster.x-k8s.io
+      version: v1alpha3
+      kind: KubeadmControlPlane
+    path: oidc-apiserver-ca-cert.json
+
+namespace: wordpress-infra

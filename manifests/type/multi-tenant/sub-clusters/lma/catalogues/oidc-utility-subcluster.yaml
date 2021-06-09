@@ -1,0 +1,7 @@
+apiVersion: airshipit.org/v1alpha1
+kind: VariableCatalogue
+metadata:
+  name: utility-subcluster-lma
+spec:
+  dex:
+    oidc_issuer: https://dex.utility.local:PORT/dex

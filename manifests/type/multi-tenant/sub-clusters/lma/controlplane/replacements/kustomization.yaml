@@ -1,6 +1,8 @@
 resources:
   - ../../../../../sub-cluster/controlplane/replacements
   - networking.yaml
+  - dex-update.yaml
+
 patchesJson6902:
   - target:
       group: airshipit.org
@@ -8,3 +10,9 @@ patchesJson6902:
       kind: ReplacementTransformer
       name: k8scontrol-cluster-replacements
     path: patches/cluster.json
+  - target:
+      group: airshipit.org
+      version: v1alpha1
+      kind: ReplacementTransformer
+      name: k8scontrol-dex-replacements
+    path: patches/subcluster-dex.json

@@ -1,0 +1,17 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: dex-aio
+spec:
+  values:
+    params:
+      ldap:
+        name: "LDAP TEST IT SERVICES"
+        config:
+          host: "your LDAP FQDN"
+          bind_dn: "your LDAP bind username"
+          username_prompt: SSO Username
+          user_search:
+            base_dn: dc=testservices,dc=test,dc=com
+          group_search:
+            base_dn: ou=groups,dc=testservices,dc=test,dc=com

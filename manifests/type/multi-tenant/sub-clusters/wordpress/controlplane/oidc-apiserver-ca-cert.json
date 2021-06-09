@@ -1,0 +1,14 @@
+[
+  {
+    "op": "replace",
+    "path": "/spec/kubeadmConfigSpec/files/1/contentFrom",
+    "value": {
+        "secret": {
+          "key": "tls.crt",
+          "name": "target-cluster-ca-wordpress"
+        }
+      },
+      "owner": "root:root",
+      "permissions": "0644"
+  }
+]

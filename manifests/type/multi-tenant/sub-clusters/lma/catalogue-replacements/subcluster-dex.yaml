@@ -1,0 +1,29 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: dex-subcluster-networking
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: localhost/replacement-transformer
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: subcluster-networking
+    fieldref: "{.spec.lma.exposed_services[?(.name == 'auth')].nodePort}"
+  target:
+    objref:
+      kind: VariableCatalogue
+      name: utility-subcluster-lma
+    fieldrefs: [".spec.dex.oidc_issuer%PORT%"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: utility-subcluster-lma
+    fieldref: "{.spec.dex.oidc_issuer}"
+  target:
+    objref:
+      kind: VariableCatalogue
+      name: utility-treasuremap
+    fieldrefs: ["{.spec.dex.oidc_issuer}"]

@@ -2,13 +2,11 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: dex-aio
-  namespace: default
 spec:
   values:
     params:
       ldap:
-        bind_password: "your LDAP bind password"
-        name: "LDAP TEST SERVICES"
+        name: "LDAP TEST IT SERVICES"
         config:
           host: "your LDAP FQDN"
           bind_dn: "your LDAP bind username"

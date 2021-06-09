@@ -1,0 +1,92 @@
+[
+    {
+      "op": "replace",
+      "path": "/replacements/0/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/1/source/fieldref",
+      "value": "{.dex.ldap.subcluster-wordpress.bind_password}"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/1/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/2/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/3/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/4/source/objref/name",
+      "value": "subcluster-networking"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/4/source/fieldref",
+      "value": "{.spec.wordpress.exposed_services[?(.name == 'auth')].nodePort}"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/4/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/5/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/6/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/7/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/8/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/9/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/10/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/11/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/12/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/13/target/objref/name",
+      "value": "dex-aio-wordpress"
+    },
+    {
+      "op": "replace",
+      "path": "/replacements/14/target/objref/name",
+      "value": "dex-aio-wordpress"
+    }
+]

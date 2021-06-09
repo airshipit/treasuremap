@@ -1,9 +1,2 @@
 # NOTE: This directory should not be inherited; it should be redefined within the
 # type that defines the actual sub-cluster.
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - .../../../function/dex-aio
-
-patchesStrategicMerge:
-- patches/dex-aio-helm-patch.yaml
