@@ -1,0 +1,9 @@
+# Helm Charts from Helm Repository (Helm Collator)
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: collator
+  namespace: helm-chart-collator
+spec:
+  interval: 5m
+  url: http://helm-chart-collator.helm-chart-collator.svc:8080

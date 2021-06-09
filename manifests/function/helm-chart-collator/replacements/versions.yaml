@@ -1,0 +1,19 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: helm-chart-collator-versions-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: localhost/replacement-transformer
+replacements:
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.helm_chart_collator.helm_chart_collator.helm_chart_collator.image}"
+  target:
+    objref:
+      kind: Deployment
+      name: helm-chart-collator
+    fieldrefs: ["{.spec.template.spec.containers[?(.name == 'helm-chart-collator')].image}"]

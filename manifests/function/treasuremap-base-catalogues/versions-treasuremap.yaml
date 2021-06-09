@@ -29,6 +29,8 @@ spec:
       url: https://charts.rook.io/release
     dex-aio:
       url: http://helm-chart-collator.collator.svc:8080
+    helm_chart_collator:
+      url: http://helm-chart-collator.helm-chart-collator.svc:8080
 
   charts:
     elasticsearch:
@@ -70,6 +72,10 @@ spec:
   #   <function>:
   #     <component>:
   #       <container>:
+    helm_chart_collator:
+      helm_chart_collator:
+        helm_chart_collator:
+          image: quay.io/airshipit/helm-chart-collator:latest
     kube_prometheus_stack:
       prometheus_operator:
         # NOTE: For prometheus and alertmanager instances managed by the operator
