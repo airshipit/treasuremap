@@ -1,0 +1,4 @@
+- op: replace
+  path: /spec/template/spec/hostSelector/matchLabels
+  value:
+    sip.airshipit.org/node-type: ControlPlane

@@ -1,2 +1,5 @@
 resources:
   - ../../../../sub-cluster/controlplane
+
+patchesStrategicMerge:
+  - patches/metal3machinetemplate.yaml

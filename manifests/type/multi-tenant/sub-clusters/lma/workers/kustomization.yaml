@@ -6,3 +6,4 @@ commonLabels:
 
 patchesStrategicMerge:
   - patches/machinedeployment.yaml
+  - patches/metal3machinetemplate.yaml
