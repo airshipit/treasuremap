@@ -1,7 +1,7 @@
 apiVersion: ceph.rook.io/v1
 kind: CephBlockPool
 metadata:
-  name: "pool"
+  name: pool
   namespace: rook-ceph # namespace:cluster
 spec:
     failureDomain: host

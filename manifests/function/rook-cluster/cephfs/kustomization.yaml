@@ -1,5 +1,5 @@
 resources:
 - ./base
 patchesStrategicMerge:
-- cephfs-pool.yaml
 - cephfs-mds.yaml
+- cephfs-pool.yaml

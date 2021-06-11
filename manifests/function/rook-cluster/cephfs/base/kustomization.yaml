@@ -1,2 +1,10 @@
 resources:
 - filesystem.yaml
+patchesJSON6902:
+- target:
+    kind: CephFilesystem
+    name: myfs
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: cephfs

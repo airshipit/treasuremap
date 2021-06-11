@@ -1,5 +1,13 @@
 resources:
-- block-storageclass.yaml
-namePrefix: block-
+- storageclass.yaml
+patchesJSON6902:
+- target:
+    kind: StorageClass
+    name: rook-ceph-block
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: block-storage-sc
 patchesStrategicMerge:
+- patches/delete-pool.yaml
 - patches/rook-ceph-block.yaml

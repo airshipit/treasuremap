@@ -1,5 +1,18 @@
 resources:
-- file-storageclass.yaml
-namePrefix: cephfs-
+- storageclass.yaml
+patchesJSON6902:
+- target:
+    kind: StorageClass
+    name: rook-cephfs
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: cephfs-storage-sc
+    - op: replace
+      path: /parameters/fsName
+      value: cephfs
+    - op: replace
+      path: /parameters/pool
+      value: cephfs-data0
 patchesStrategicMerge:
 - patches/rook-ceph-cephfs.yaml

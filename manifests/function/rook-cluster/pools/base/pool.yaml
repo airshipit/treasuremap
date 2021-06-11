@@ -7,11 +7,10 @@
 apiVersion: ceph.rook.io/v1
 kind: CephBlockPool
 metadata:
-  name: "pool"
+  name: replicapool
   namespace: rook-ceph # namespace:cluster
 spec:
   # The failure domain will spread the replicas of the data across different failure zones
-  # Default value is host. Could be osd or rack, depending on your crushmap
   failureDomain: host
   # For a pool based on raw copies, specify the number of copies. A size of 1 indicates no redundancy.
   replicated:

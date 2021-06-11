@@ -1,2 +1,10 @@
 resources:
-- external-dashboard.yaml
+- dashboard-external-http.yaml
+patchesJSON6902:
+- target:
+    kind: Service
+    name: rook-ceph-mgr-dashboard-external-http
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: rook-ceph-mgr-dashboard
