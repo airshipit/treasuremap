@@ -1,5 +1,5 @@
 resources:
-- storageclass.yaml
+- upstream/storageclass.yaml
 patchesJSON6902:
 - target:
     kind: StorageClass
@@ -8,6 +8,6 @@ patchesJSON6902:
     - op: replace
       path: /metadata/name
       value: block-storage-sc
-patchesStrategicMerge:
+patches:
 - patches/delete-pool.yaml
 - patches/rook-ceph-block.yaml

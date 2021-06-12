@@ -1,0 +1,9 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+dependencies:
+- name: upstream
+  git:
+    repo: https://github.com/rook/rook
+    directory: cluster/examples/kubernetes/ceph
+    ref: v1.6.3
+  updateStrategy: force-delete-replace

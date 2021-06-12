@@ -1,5 +1,5 @@
 resources:
-- storageclass.yaml
+- upstream/storageclass.yaml
 patchesJSON6902:
 - target:
     kind: StorageClass
@@ -14,5 +14,5 @@ patchesJSON6902:
     - op: replace
       path: /parameters/pool
       value: cephfs-data0
-patchesStrategicMerge:
+patches:
 - patches/rook-ceph-cephfs.yaml

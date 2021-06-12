@@ -1,6 +1,6 @@
 resources:
-- pool.yaml
-patchesJSON6902:
+- upstream/pool.yaml
+patches:
 - target:
     kind: CephBlockPool
     name: replicapool
@@ -8,5 +8,3 @@ patchesJSON6902:
     - op: replace
       path: /metadata/name
       value: pool
-    - op: remove
-      path: /spec/annotations

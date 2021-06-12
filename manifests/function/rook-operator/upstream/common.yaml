@@ -9,6 +9,14 @@
 #
 # Most of the sections are prefixed with a 'OLM' keyword which is used to build our CSV for an OLM (Operator Life Cycle manager)
 ###################################################################################################################
+
+# Namespace where the operator and other rook resources are created
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rook-ceph # namespace:cluster
+# OLM: BEGIN OBJECTBUCKET ROLEBINDING
+---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:

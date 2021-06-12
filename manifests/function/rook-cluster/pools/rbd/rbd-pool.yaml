@@ -4,9 +4,9 @@ metadata:
   name: pool
   namespace: rook-ceph # namespace:cluster
 spec:
-    failureDomain: host
-    replicated:
-      size: 3
-    quotas:
-      maxSize: "0" # e.g. "10Gi" - valid suffixes include k, M, G, T, P, E, Ki, Mi, Gi, Ti, Pi, Ei
-      maxObjects: 0 # 1000000000 = billion objects, 0 means no quotas
+  failureDomain: host
+  replicated:
+    size: 3
+  quotas:
+    maxSize: "0" # e.g. "10Gi" - valid suffixes include k, M, G, T, P, E, Ki, Mi, Gi, Ti, Pi, Ei
+    maxObjects: 0 # 1000000000 = billion objects, 0 means no quotas

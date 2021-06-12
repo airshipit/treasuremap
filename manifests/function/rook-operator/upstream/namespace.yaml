@@ -1,7 +1,0 @@
-# Namespace where the operator and other rook resources are created
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: rook-ceph # namespace:cluster
-# OLM: BEGIN OBJECTBUCKET ROLEBINDING
----
