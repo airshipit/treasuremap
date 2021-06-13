@@ -104,9 +104,17 @@ spec:
         kube-rbac-proxy:
           image: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
         libvirt:
-          image: quay.io/airshipit/libvirt
+          image: quay.io/airshipit/libvirt:latest-ubuntu_bionic
+        gnu-tls:
+          image: quay.io/airshipit/gnu-tls:latest-minideb
+        sushy-tools:
+          image: quay.io/metal3-io/sushy-tools:latest
         manager:
           image: quay.io/airshipit/vino:6480ddc3ba98fba21fd692b8489adb0177abb8b5
+        vino-builder:
+          image: quay.io/airshipit/vino-builder:6480ddc3ba98fba21fd692b8489adb0177abb8b5
+        nodelabeler:
+          image: quay.io/airshipit/nodelabeler:latest
     synclabeller:
       synclabeller:
         kube-rbac-proxy:

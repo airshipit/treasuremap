@@ -36,4 +36,49 @@ replacements:
     objref:
       kind: ConfigMap
       name: vino-daemonset-template
-    fieldrefs: ["data.template%quay.io/airshipit/libvirt%"]
+    # Start using replacement variable on vino side
+    fieldrefs: ["data.template%quay.io/airshipit/libvirt:latest-ubuntu_bionic%"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.vino.vino.vino-builder.image}"
+  target:
+    objref:
+      kind: ConfigMap
+      name: vino-daemonset-template
+    # Start using replacement variable on vino side
+    fieldrefs: ["data.template%quay.io/airshipit/vino-builder%"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.vino.vino.gnu-tls.image}"
+  target:
+    objref:
+      kind: ConfigMap
+      name: vino-daemonset-template
+    # Start using replacement variable on vino side
+    fieldrefs: ["data.template%quay.io/airshipit/gnu-tls:latest-minideb%"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.vino.vino.sushy-tools.image}"
+  target:
+    objref:
+      kind: ConfigMap
+      name: vino-daemonset-template
+    # Start using replacement variable on vino side
+    fieldrefs: ["data.template%quay.io/metal3-io/sushy-tools%"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.vino.vino.nodelabeler.image}"
+  target:
+    objref:
+      kind: ConfigMap
+      name: vino-daemonset-template
+    # Start using replacement variable on vino side
+    fieldrefs: ["data.template%quay.io/airshipit/nodelabeler%"]
