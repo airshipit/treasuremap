@@ -5,7 +5,7 @@ metadata:
 upstream:
   type: git
   git:
-    commit: 6ad6bb6d8c9b162540b689c9e8b9385e847c922a
+    commit: 0e709c0d27b2052a5198f8d27d39bd25ed122dae
     repo: https://opendev.org/airship/vino
     directory: config/default
-    ref: 6ad6bb6d8c9b162540b689c9e8b9385e847c922a
+    ref: 0e709c0d27b2052a5198f8d27d39bd25ed122dae

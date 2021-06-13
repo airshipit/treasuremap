@@ -1,18 +1,16 @@
 flavorTemplates:
   master:
     domainTemplate: |
-      {% set nodename = 'master-' + item|string %}
-      {% if domains[nodename] is defined %}
-      {% set domain = domains[nodename] %}
+      {% if domain is defined %}
       <domain type="kvm">
-        <name>{{ nodename }}</name>
-        <uuid>{{ nodename | hash('md5') }}</uuid>
+        <name>{{ domain.name }}</name>
+        <uuid>{{ domain.name | hash('md5') }}</uuid>
         <metadata>
           <vino:flavor>master</vino:flavor>
           <vino:creationTime>{{ ansible_date_time.date }}</vino:creationTime>
         </metadata>
         <memory unit="GiB">{{ flavors.master.memory }}</memory>
-        {% if flavors.worker.hugepages is defined and flavors.worker.hugepages == true %}
+        {% if flavors.master.hugepages is defined and flavors.master.hugepages == true %}
         <memoryBacking>
           <hugepages>
             <page size='1' unit='GiB' />
@@ -20,14 +18,14 @@ flavorTemplates:
         </memoryBacking>
         {% endif %}
         <vcpu placement="static">{{ flavors.master.vcpus }}</vcpu>
-        {% if node_core_map[nodename] is defined %}
+        {% if domain.name in node_core_map %}
         # function to produce list of cpus, in same numa (controled by bool), state will need to be tracked via file on hypervisor host. gotpl psudo:
         <cputune>
           <shares>8192</shares>
-          {% for core in node_core_map[nodename] %}
+          {% for core in node_core_map[domain.name] %}
           <vcpupin vcpu="{{ loop.index0 }}" cpuset="{{ core }}"/>
           {% endfor %}
-          <emulatorpin cpuset="{{ node_core_map[nodename]|join(',') }}"/>
+          <emulatorpin cpuset="{{ node_core_map[domain.name]|join(',') }}"/>
         </cputune>
         {% endif %}
         <resource>
@@ -56,7 +54,7 @@ flavorTemplates:
           # for each disk requested
           <disk type='volume' device='disk'>
             <driver name="qemu" type="qcow2" cache="none" discard="unmap"/>
-            <source pool='vino-default' volume='{{ nodename }}'/>
+            <source pool='vino-default' volume='{{ domain.name }}'/>
             <target dev='vde' bus='virtio'/>
           </disk>
 
@@ -71,26 +69,26 @@ flavorTemplates:
           </controller>
 
           # for each interface defined in vino, e.g.
-          {% for if_name, if_values in domain.interfaces.items() %}
-          <interface type='bridge'>
-            <mac address='{{ if_values.macAddress }}'/>
-            <source bridge='{{ if_name }}'/>
+          {% for interface in domain.interfaces %}
+          <interface type='{{ interface.type }}'>
+            <mac address='{{ interface.macAddress }}'/>
+            <source {{ interface.type }}='{{ interface.network }}'/>
             <model type='virtio'/>
           </interface>
           {% endfor %}
 
           <serial type='file'>
-            <source path='/var/lib/libvirt/{{ nodename }}-console.log'/>
+            <source path='/var/lib/libvirt/{{ domain.name }}-console.log'/>
           </serial>
           <serial type='pty'/>
 
           <console type='file'>
-            <source path='/var/lib/libvirt/{{ nodename }}-console.log'/>
+            <source path='/var/lib/libvirt/{{ domain.name }}-console.log'/>
             <target type='serial'/>
           </console>
 
-          {% if domain.enable_vnc | default(false) %}
-          <graphics type='vnc' autoport='yes' listen='0.0.0.0'>
+          {% if domain.enableVNC | default(false) %}
+          <graphics type='vnc' autoport='yes' passwd='{{ domain.vncPassword }}' listen='0.0.0.0'>
             <listen type='address' address='0.0.0.0'/>
           </graphics>
           {% endif %}
@@ -107,9 +105,8 @@ flavorTemplates:
       </domain>
       {% endif %}
     volumeTemplate: |
-      {% set nodename = 'master-' + item|string %}
       <volume>
-        <name>{{ nodename }}</name>
+        <name>{{ domain.name }}</name>
         <allocation>0</allocation>
         <capacity unit='G'>{{ flavors.master.rootSize }}</capacity>
         <target>
@@ -118,12 +115,10 @@ flavorTemplates:
       </volume>
   worker:
     domainTemplate: |
-      {% set nodename = 'worker-' + item|string %}
-      {% if domains[nodename] is defined %}
-      {% set domain = domains[nodename] %}
+      {% if domain is defined %}
       <domain type="kvm">
-        <name>{{ nodename }}</name>
-        <uuid>{{ nodename | hash('md5') }}</uuid>
+        <name>{{ domain.name }}</name>
+        <uuid>{{ domain.name | hash('md5') }}</uuid>
         <metadata>
           <vino:flavor>worker</vino:flavor>
           <vino:creationTime>{{ ansible_date_time.date }}</vino:creationTime>
@@ -137,14 +132,14 @@ flavorTemplates:
         </memoryBacking>
         {% endif %}
         <vcpu placement="static">{{ flavors.worker.vcpus }}</vcpu>
-        {% if node_core_map[nodename] is defined %}
+        {% if domain.name in node_core_map %}
         # function to produce list of cpus, in same numa (controled by bool), state will need to be tracked via file on hypervisor host. gotpl psudo:
         <cputune>
           <shares>8192</shares>
-          {% for core in node_core_map[nodename] %}
+          {% for core in node_core_map[domain.name] %}
           <vcpupin vcpu="{{ loop.index0 }}" cpuset="{{ core }}"/>
           {% endfor %}
-          <emulatorpin cpuset="{{ node_core_map[nodename]|join(',') }}"/>
+          <emulatorpin cpuset="{{ node_core_map[domain.name]|join(',') }}"/>
         </cputune>
         {% endif %}
         <resource>
@@ -173,7 +168,7 @@ flavorTemplates:
           # for each disk requested
           <disk type='volume' device='disk'>
             <driver name="qemu" type="qcow2" cache="none" discard="unmap"/>
-            <source pool='vino-default' volume='{{ nodename }}'/>
+            <source pool='vino-default' volume='{{ domain.name }}'/>
             <target dev='vde' bus='virtio'/>
           </disk>
 
@@ -187,25 +182,31 @@ flavorTemplates:
             <alias name="ide"/>
           </controller>
 
-          {% for if_name, if_values in domain.interfaces.items() %}
+          <interface type='network'>
+            <source network='pxe'/>
+            <model type='virtio'/>
+          </interface>
+
+          # for each interface defined in vino, e.g.
+          {% for interface in domain.interfaces %}
           <interface type='bridge'>
-            <mac address='{{ if_values.macAddress }}'/>
-            <source bridge='{{ if_name }}'/>
+            <mac address='{{ interface.macAddress }}'/>
+            <source bridge='{{ interface.network }}'/>
             <model type='virtio'/>
           </interface>
           {% endfor %}
 
           <serial type='file'>
-            <source path='/var/lib/libvirt/{{ nodename }}-console.log'/>
+            <source path='/var/lib/libvirt/{{ domain.name }}-console.log'/>
           </serial>
           <serial type='pty'/>
 
           <console type='file'>
-            <source path='/var/lib/libvirt/{{ nodename }}-console.log'/>
+            <source path='/var/lib/libvirt/{{ domain.name }}-console.log'/>
             <target type='serial'/>
           </console>
 
-          {% if domain.enable_vnc | default(false) %}
+          {% if domain.enableVNC | default(false) %}
           <graphics type='vnc' autoport='yes' listen='0.0.0.0'>
             <listen type='address' address='0.0.0.0'/>
           </graphics>
@@ -223,9 +224,8 @@ flavorTemplates:
       </domain>
       {% endif %}
     volumeTemplate: |
-      {% set nodename = 'worker-' + item|string %}
       <volume>
-        <name>{{ nodename }}</name>
+        <name>{{ domain.name }}</name>
         <allocation>0</allocation>
         <capacity unit='G'>{{ flavors.worker.rootSize }}</capacity>
         <target>

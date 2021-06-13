@@ -15,199 +15,224 @@ spec:
       hostNetwork: true
       hostPID: true
       hostIPC: true
+      initContainers:
+        - name: create-libvirt-vnc-certs
+          image: quay.io/airshipit/gnu-tls:latest-minideb
+          imagePullPolicy: IfNotPresent
+          command: ["/usr/local/bin/create_tls_cert.sh"]
+          args: [ "/etc/pki/libvirt-vnc"]
+          volumeMounts:
+            - name: etc-pki-libvirt-vnc
+              mountPath: "/etc/pki/libvirt-vnc"
+            - name: usr-local-bin
+              mountPath: "/usr/local/bin"
+
       containers:
-      - name: libvirt
-        command:
-        - /tmp/libvirt.sh
-        image: quay.io/airshipit/libvirt:latest-ubuntu_bionic
-        securityContext:
-          privileged: true
-          runAsUser: 0
-          readOnlyRootFilesystem: false
-        volumeMounts:
-        - mountPath: /lib/modules
-          name: libmodules
-          readOnly: true
-        - name: var-lib-libvirt
-          mountPath: /var/lib/libvirt
-          mountPropagation: Bidirectional
-        - name: run
-          mountPath: /run
-        - name: dev
-          mountPath: /dev
-        - name: cgroup
-          mountPath: /sys/fs/cgroup
-        - name: logs
-          mountPath: /var/log/libvirt
-        - mountPath: /var/lib/libvirt/vino-pool
-          name: var-lib-vino-pool
-        - mountPath: /etc/libvirt/qemu
-          name: etc-qemu
-        - mountPath: /etc/libvirt/nwfilter
-          name: etc-nwfilter
-        - mountPath: /etc/libvirt/hooks
-          name: etc-hooks
-        - mountPath: /etc/libvirt/storage
-          name: etc-storage
-        - mountPath: /var/lib/vino
-          name: var-lib-vino
-      - name: sushy
-        image: quay.io/metal3-io/sushy-tools
-        imagePullPolicy: IfNotPresent
-        command: ["/usr/local/bin/sushy-emulator", "-i", "::", "--debug", "--port",
-          "8000"]
-        volumeMounts:
-        - name: var-run-libvirt
-          mountPath: /var/run/libvirt
-        - mountPath: /var/lib/libvirt
-          name: var-lib-libvirt
-        livenessProbe:
-          httpGet:
-            host: 127.0.0.1
-            path: /redfish/v1/Systems
-            port: 8000
-          initialDelaySeconds: 10
-          periodSeconds: 20
-        readinessProbe:
-          httpGet:
-            host: 127.0.0.1
-            path: /redfish/v1/Systems
-            port: 8000
-          initialDelaySeconds: 5
-          periodSeconds: 10
-      # - name: vino-reverse-proxy
-      #   image: quay.io/airshipit/vino-reverse-proxy
-      #   ports:
-      #     - containerPort: 8000
-      #       hostPort: 8000
-      #   readinessProbe:
-      #     tcpSocket:
-      #       port: 8000
-      #       host: 127.0.0.1
-      #     initialDelaySeconds: 10
-      #     periodSeconds: 5
-      #   livenessProbe:
-      #     tcpSocket:
-      #       port: 8000
-      #       host: 127.0.0.1
-      #     initialDelaySeconds: 30
-      #     periodSeconds: 30
-      - name: labeler
-        image: quay.io/airshipit/nodelabeler
-        imagePullPolicy: IfNotPresent
-        env:
-        - name: NODE
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
-      - image: quay.io/airshipit/vino-builder
-        imagePullPolicy: IfNotPresent
-        name: vino-builder
-        ports:
-        - containerPort: 8001
-          hostPort: 8001
-        readinessProbe:
-          exec:
-            command:
-            - cat
-            - /tmp/healthy
-          initialDelaySeconds: 20
-          periodSeconds: 5
-        securityContext:
-          privileged: true
-          readOnlyRootFilesystem: false
-          runAsUser: 0
-        volumeMounts:
-        - mountPath: /var/lib/vino-builder/flavors
-          name: flavors
-        - mountPath: /var/lib/vino-builder/flavor-templates
-          name: flavor-templates
-        - mountPath: /var/lib/vino-builder/network-templates
-          name: network-templates
-        - mountPath: /var/lib/vino-builder/storage-templates
-          name: storage-templates
-        - mountPath: /tmp
-          name: pod-tmp
-        - mountPath: /lib/modules
-          name: libmodules
-          readOnly: true
-        - mountPath: /var/lib/libvirt
-          name: var-lib-libvirt
-        - mountPath: /var/run/libvirt
-          name: var-run-libvirt
-        - mountPath: /var/lib/libvirt/vino-pool
-          name: var-lib-vino-pool
-        - mountPath: /run
-          name: run
-        - mountPath: /dev
-          name: dev
-        - mountPath: /sys/fs/cgroup
-          name: cgroup
-        - mountPath: /var/log/libvirt
-          name: logs
+        - name: libvirt
+          command:
+            - /tmp/libvirt.sh
+          image: quay.io/airshipit/libvirt:latest-ubuntu_bionic
+          securityContext:
+            privileged: true
+            runAsUser: 0
+            readOnlyRootFilesystem: false
+          volumeMounts:
+            - mountPath: /lib/modules
+              name: libmodules
+              readOnly: true
+            - name: var-lib-libvirt
+              mountPath: /var/lib/libvirt
+              mountPropagation: Bidirectional
+            - name: run
+              mountPath: /run
+            - name: dev
+              mountPath: /dev
+            - name: cgroup
+              mountPath: /sys/fs/cgroup
+            - name: logs
+              mountPath: /var/log/libvirt
+            - name: var-lib-vino-pool
+              mountPath: /var/lib/libvirt/vino-pool
+            - name: etc-qemu
+              mountPath: /etc/libvirt/qemu
+            - name: etc-nwfilter
+              mountPath: /etc/libvirt/nwfilter
+            - name: etc-hooks
+              mountPath: /etc/libvirt/hooks
+            - name: etc-storage
+              mountPath: /etc/libvirt/storage
+            - name: var-lib-vino
+              mountPath: /var/lib/vino
+            - name: etc-libvirt
+              mountPath: /etc/libvirt
+            - name: etc-pki-libvirt-vnc
+              mountPath: /etc/pki/libvirt-vnc
+
+        - name: sushy
+          image: quay.io/metal3-io/sushy-tools
+          imagePullPolicy: IfNotPresent
+          command: ["/usr/local/bin/sushy-emulator", "-i", "::", "--debug", "--port", "8000"]
+          volumeMounts:
+            - name: var-run-libvirt
+              mountPath: /var/run/libvirt
+            - name: var-lib-libvirt
+              mountPath: /var/lib/libvirt
+          readinessProbe:
+              httpGet:
+                path: /redfish/v1/Systems
+                host: 127.0.0.1
+                port: 8000
+              initialDelaySeconds: 5
+              periodSeconds: 10
+          livenessProbe:
+              httpGet:
+                path: /redfish/v1/Systems
+                host: 127.0.0.1
+                port: 8000
+              initialDelaySeconds: 10
+              periodSeconds: 20
+        # - name: vino-reverse-proxy
+        #   image: quay.io/airshipit/vino-reverse-proxy
+        #   ports:
+        #     - containerPort: 8000
+        #       hostPort: 8000
+        #   readinessProbe:
+        #     tcpSocket:
+        #       port: 8000
+        #       host: 127.0.0.1
+        #     initialDelaySeconds: 10
+        #     periodSeconds: 5
+        #   livenessProbe:
+        #     tcpSocket:
+        #       port: 8000
+        #       host: 127.0.0.1
+        #     initialDelaySeconds: 30
+        #     periodSeconds: 30
+        - name: labeler
+          image: quay.io/airshipit/nodelabeler
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+        - name: vino-builder
+          readinessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+          securityContext:
+            privileged: true
+            runAsUser: 0
+            readOnlyRootFilesystem: false
+          ports:
+            - containerPort: 8001
+              hostPort: 8001
+          image: quay.io/airshipit/vino-builder
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: flavors
+              mountPath: /var/lib/vino-builder/flavors
+            - name: flavor-templates
+              mountPath: /var/lib/vino-builder/flavor-templates
+            - name: network-templates
+              mountPath: /var/lib/vino-builder/network-templates
+            - name: storage-templates
+              mountPath: /var/lib/vino-builder/storage-templates
+            - name: pod-tmp
+              mountPath: /tmp
+            - mountPath: /lib/modules
+              name: libmodules
+              readOnly: true
+            - name: var-lib-libvirt
+              mountPath: /var/lib/libvirt
+            - name: var-run-libvirt
+              mountPath: /var/run/libvirt
+            - name: var-lib-vino-pool
+              mountPath: /var/lib/libvirt/vino-pool
+            - name: run
+              mountPath: /run
+            - name: dev
+              mountPath: /dev
+            - name: cgroup
+              mountPath: /sys/fs/cgroup
+            - name: logs
+              mountPath: /var/log/libvirt
       volumes:
-      - name: libmodules
-        hostPath:
-          path: /lib/modules
-      - name: var-lib-libvirt
-        hostPath:
-          path: /var/lib/libvirt
-      - hostPath: {}
-        name: var-lib-libvirt-images
-      - name: run
-        hostPath:
-          path: /run
-      - name: dev
-        hostPath:
-          path: /dev
-      - name: logs
-        hostPath:
-          path: /var/log/libvirt
-      - name: cgroup
-        hostPath:
-          path: /sys/fs/cgroup
-      - name: var-run-libvirt
-        hostPath:
-          path: /var/run/libvirt
-      - configMap:
-          defaultMode: 0555
-          name: vino-flavors
-        name: flavors
-      - configMap:
-          defaultMode: 0555
-          name: vino-flavor-templates
-        name: flavor-templates
-      - configMap:
-          defaultMode: 0555
-          name: vino-network-templates
-        name: network-templates
-      - configMap:
-          defaultMode: 0555
-          name: vino-storage-templates
-        name: storage-templates
-      - emptyDir: {}
-        name: pod-tmp
-      - hostPath:
-          path: /var/lib/vino-pool
-          type: DirectoryOrCreate
-        name: var-lib-vino-pool
-      - hostPath:
-          path: /etc/vino-qemu
-          type: DirectoryOrCreate
-        name: etc-qemu
-      - hostPath:
-          path: /etc/vino-storage
-          type: DirectoryOrCreate
-        name: etc-storage
-      - hostPath:
-          path: /etc/vino-nwfilter
-          type: DirectoryOrCreate
-        name: etc-nwfilter
-      - hostPath:
-          path: /etc/vino-hooks
-          type: DirectoryOrCreate
-        name: etc-hooks
-      - hostPath:
-          path: /var/lib/vino
-          type: DirectoryOrCreate
-        name: var-lib-vino
+        - name: libmodules
+          hostPath:
+            path: /lib/modules
+        - name: var-lib-libvirt
+          hostPath:
+            path: /var/lib/libvirt
+        - name: run
+          hostPath:
+            path: /run
+        - name: dev
+          hostPath:
+            path: /dev
+        - name: logs
+          hostPath:
+            path: /var/log/libvirt
+        - name: cgroup
+          hostPath:
+            path: /sys/fs/cgroup
+        - name: var-run-libvirt
+          hostPath:
+            path: /var/run/libvirt
+        - name: flavors
+          configMap:
+            name: vino-flavors
+            defaultMode: 0555
+        - name: flavor-templates
+          configMap:
+            name: vino-flavor-templates
+            defaultMode: 0555
+        - name: network-templates
+          configMap:
+            name: vino-network-templates
+            defaultMode: 0555
+        - name: storage-templates
+          configMap:
+            name: vino-storage-templates
+            defaultMode: 0555
+        - name: pod-tmp
+          emptyDir: {}
+        - name: var-lib-vino-pool
+          hostPath:
+            path: /var/lib/vino-pool
+            type: DirectoryOrCreate
+        - name: etc-qemu
+          hostPath:
+            path: /etc/vino-qemu
+            type: DirectoryOrCreate
+        - name: etc-storage
+          hostPath:
+            path: /etc/vino-storage
+            type: DirectoryOrCreate
+        - name: etc-nwfilter
+          hostPath:
+            path: /etc/vino-nwfilter
+            type: DirectoryOrCreate
+        - name: etc-hooks
+          hostPath:
+            path: /etc/vino-hooks
+            type: DirectoryOrCreate
+        - name: var-lib-vino
+          hostPath:
+            path: /var/lib/vino
+            type: DirectoryOrCreate
+        - name: etc-libvirt
+          configMap:
+            name: vino-libvirt-qemu-conf
+            defaultMode: 0555
+        - name: etc-pki-libvirt-vnc
+          hostPath:
+            path: /etc/pki/libvirt-vnc
+        - name: usr-local-bin
+          configMap:
+            name: vino-create-libvirt-vnc-cert
+            defaultMode: 0777

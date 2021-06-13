@@ -1,17 +1,15 @@
 libvirtNetworks:
-- name: management
-  libvirtTemplate: |
-    <network>
-      <name>management</name>
-      <forward mode='route'/>
-      <bridge name='management' stp='off' delay='0'/>
-      <ip address='{{ networks[0].routes[0].gateway }}' netmask='255.255.240.0'>
-        <!-- <tftp root='/srv/tftp'/> -->
-        <dhcp>
-          <range start='{{ networks[0].allocationStart }}' end='{{ networks[0].allocationStop }}'/>
-          <bootp file=''/>
-        </dhcp>
-      </ip>
-    </network>
-  #  - name: mobility-gn
-  #    libvirtTemplate:
+  management:
+    libvirtTemplate: |
+      <network>
+        <name>{{ network.name }}</name>
+        <forward mode='route'/>
+        <bridge name='vm-infra-bridge' stp='off' delay='0' {% if network.physicalInterface is defined %} dev='{{ network.physicalInterface }}' {% endif %}/>
+        <ip address='{{ ipam.bridge_ip | default(omit) }}' netmask='{{ ipam.bridge_subnet_netmask }}'>
+          <!-- <tftp root='/srv/tftp'/> -->
+          <dhcp>
+            <range start='{{ ipam.instance_ips[0] }}' end='{{ ipam.instance_ips[-1] }}'/>
+            <bootp file='http://{{ pxeBootImageHost | default(ansible_default_ipv4.address) }}:{{ pxeBootImageHostPort | default(80) }}/dualboot.ipxe'/>
+          </dhcp>
+        </ip>
+      </network>

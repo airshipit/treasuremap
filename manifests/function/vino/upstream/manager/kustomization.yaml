@@ -1,5 +1,6 @@
 resources:
 - manager.yaml
+
 configMapGenerator:
 - name: daemonset-template
   options:
@@ -10,19 +11,29 @@ configMapGenerator:
   options:
     disableNameSuffixHash: true
   files:
-  - flavors.yaml
+    - flavors.yaml
 - name: flavor-templates
   options:
     disableNameSuffixHash: true
   files:
-  - flavor-templates.yaml
+    - flavor-templates.yaml
 - name: network-templates
   options:
     disableNameSuffixHash: true
   files:
-  - network-templates.yaml
+    - network-templates.yaml
 - name: storage-templates
   options:
     disableNameSuffixHash: true
   files:
-  - storage-templates.yaml
+    - storage-templates.yaml
+- name: libvirt-qemu-conf
+  options:
+    disableNameSuffixHash: true
+  files:
+    - qemu.conf
+- name: create-libvirt-vnc-cert
+  options:
+    disableNameSuffixHash: true
+  files:
+    - create_tls_cert.sh
