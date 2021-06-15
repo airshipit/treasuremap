@@ -1,1 +1,0 @@
-../common/36_deploy_workload.sh

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,8 +14,16 @@
 
 set -xe
 
-: ${AIRSHIPCTL_PROJECT:="../airshipctl"}
+hosts=$(kubectl \
+  --context $KCTL_CONTEXT \
+  --request-timeout 10s get nodes -o name)
 
-cd ${AIRSHIPCTL_PROJECT}
-./tools/deployment/25_deploy_ephemeral_node.sh
-
+# Annotate node for hostconfig-operator
+for host in $hosts
+do
+    kubectl \
+      --context $KCTL_CONTEXT \
+      --request-timeout 10s \
+      annotate --overwrite $host \
+      secret=hco-ssh-auth
+done

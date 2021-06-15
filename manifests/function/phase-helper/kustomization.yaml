@@ -1,2 +1,3 @@
 resources:
 - calicoctl
+- annotate_node_for_hostconfig_operator

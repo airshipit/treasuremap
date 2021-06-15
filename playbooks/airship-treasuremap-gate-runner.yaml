@@ -25,14 +25,7 @@
           - ./tools/deployment/airship-core/23_pull_documents.sh
           - ./tools/deployment/airship-core/23_generate_secrets.sh
           - ./tools/deployment/airship-core/24_build_images.sh
-          - ./tools/deployment/airship-core/25_deploy_ephemeral_node.sh
-          - ./tools/deployment/airship-core/26_deploy_capi_ephemeral_node.sh
-          - ./tools/deployment/airship-core/30_deploy_controlplane.sh
-          - ./tools/deployment/airship-core/31_deploy_initinfra_target_node.sh
-          - ./tools/deployment/airship-core/32_cluster_init_target_node.sh
-          - ./tools/deployment/airship-core/33_cluster_move_target_node.sh
-          - ./tools/deployment/airship-core/35_deploy_worker_node.sh
-          - ./tools/deployment/airship-core/36_deploy_workload.sh
+          - ./tools/deployment/airship-core/25_deploy_gating.sh
 
     - name: "Run gate scripts"
       include_role:

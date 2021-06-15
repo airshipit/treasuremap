@@ -14,7 +14,4 @@
 
 set -xe
 
-echo "Deploying LMA stack"
-airshipctl phase run --debug lma-infra
-airshipctl phase run --debug lma-stack
-airshipctl phase run --debug lma-configs
+airshipctl plan run deploy-aiship-core-gating --debug
