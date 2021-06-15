@@ -1,0 +1,39 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: iptables-setup-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: localhost/replacement-transformer
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: vm-networking
+    fieldref: spec.vm_infra.host_oam_interface
+  target:
+    objref:
+      kind: KubeadmControlPlane
+    fieldrefs:
+      -  "spec.kubeadmConfigSpec.files[path=/usr/bin/iptables-setup.sh].content%REPLACEMENT_MGMT_INTF%"
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: vm-networking
+    fieldref: spec.vm_infra.vm_interface
+  target:
+    objref:
+      kind: KubeadmControlPlane
+    fieldrefs:
+      -  "spec.kubeadmConfigSpec.files[path=/usr/bin/iptables-setup.sh].content%REPLACEMENT_VM_INFRA_INTF%"
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: vm-networking
+    fieldref: spec.vm_infra.vm_subnet_cidr
+  target:
+    objref:
+      kind: KubeadmControlPlane
+    fieldrefs:
+      -  "spec.kubeadmConfigSpec.files[path=/usr/bin/iptables-setup.sh].content%REPLACEMENT_VM_SUBNET_CIDR%"

@@ -10,4 +10,4 @@ patchesJson6902:
     version: v1alpha3
     kind: KubeadmControlPlane
     name: cluster-controlplane
-  path:  vm-infra-bridge.yaml
+  path:  iptables-setup.yaml
