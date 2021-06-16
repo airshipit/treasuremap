@@ -10,7 +10,7 @@ replacements:
 # Replace the controlplane disk image in the Metal3MachineTemplate
 - source:
     objref:
-      kind: VariableCatalogue
+      kind: VersionsCatalogue
       name: versions-treasuremap
     fieldref: "{.spec.files.k8scontrol.subcluster_controlplane_image}"
   target:
