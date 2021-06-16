@@ -1,2 +1,10 @@
 resources:
   - ../../../../sub-cluster/workers
+
+patchesJson6902:
+- target:
+    group: infrastructure.cluster.x-k8s.io
+    version: v1alpha3
+    kind: Metal3MachineTemplate
+    name: worker-1
+  path: patches/metal3machinetemplate.yaml

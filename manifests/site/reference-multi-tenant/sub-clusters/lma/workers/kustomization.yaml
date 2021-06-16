@@ -1,7 +1,6 @@
 resources:
   - ../../../../../type/multi-tenant/sub-clusters/lma/workers
   - ../catalogues
-  - metal3machinetemplate.yaml
 
 transformers:
   - ../../../../../type/multi-tenant/sub-clusters/lma/workers/replacements
