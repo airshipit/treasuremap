@@ -7,7 +7,6 @@ nameSuffix: "-lma"
 
 resources:
   - ../../../../sub-cluster/phases
-  - lma_phases.yaml
 
 patchesStrategicMerge:
   - phases_patch.yaml

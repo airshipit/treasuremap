@@ -45,3 +45,11 @@ metadata:
   clusterName: lma
 config:
   documentEntryPoint: sub-clusters/lma/workload
+---
+apiVersion: airshipit.org/v1alpha1
+kind: Phase
+metadata:
+  name: workload-config
+  clusterName: lma
+config:
+  documentEntryPoint: sub-clusters/lma/workload-config

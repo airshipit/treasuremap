@@ -32,6 +32,10 @@ spec:
         nodePort: 30001
       - name: loadBalancerControlPlane
         nodePort: 30002
+      - name: elasticsearch-ingest
+        nodePort: 30003
+      - name: kibana
+        nodePort: 30004
       # Potential ports that can be used by sub-cluster services.
       - name: loadBalancerWorker
         nodePortRange:

@@ -1,0 +1,23 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: elasticsearch-ingest
+spec:
+  values:
+    persistence:
+      enabled: true
+    replicas: 3
+    resources:
+      requests:
+        cpu: "4000m"
+        memory: "16Gi"
+      limits:
+        cpu: "8000m"
+        memory: "24Gi"
+    volumeClaimTemplate:
+      resouces:
+        requests:
+          storage: 10Gi
+      storageclass: block-storage-sc
+    service:
+      type: NodePort
