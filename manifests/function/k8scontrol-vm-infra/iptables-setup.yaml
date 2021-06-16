@@ -1,0 +1,38 @@
+- op: add
+  path: "/spec/kubeadmConfigSpec/preKubeadmCommands/-"
+  value:
+     systemctl enable --now iptables-setup.service
+- op: add
+  path: "/spec/kubeadmConfigSpec/files/-"
+  value:
+    path: /etc/systemd/system/iptables-setup.service
+    permissions: "0644"
+    owner: root:root
+    content: |
+      [Unit]
+      Description=Service to setup iptables
+      Wants=network-online.target
+      After=network.target network-online.target
+
+      [Service]
+      User=root
+      WorkingDirectory=/usr/bin
+      ExecStart=/usr/bin/iptables-setup.sh
+
+      [Install]
+      WantedBy=multi-user.target
+- op: add
+  path: "/spec/kubeadmConfigSpec/files/-"
+  value:
+    path: /usr/bin/iptables-setup.sh
+    permissions: "0744"
+    owner: root:root
+    content: |
+      #!/bin/bash
+      export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+
+      # activate ip_forwarding
+      echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
+      iptables -A FORWARD -i REPLACEMENT_VM_INFRA_INTF -j ACCEPT
+      iptables -t nat -A POSTROUTING -s REPLACEMENT_VM_SUBNET_CIDR -o REPLACEMENT_MGMT_INTF -j MASQUERADE
+      exit 0

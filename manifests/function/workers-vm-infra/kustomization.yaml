@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- ../../../../../airshipctl/manifests/function/workers-capm3
+- ../../../../airshipctl/manifests/function/workers-capm3
 
 patchesJson6902:
 - target:
@@ -10,4 +10,4 @@ patchesJson6902:
     version: v1alpha3
     kind: KubeadmConfigTemplate
     name: worker-1
-  path: vm-infra-bridge.yaml
+  path: iptables-setup.yaml
