@@ -108,14 +108,14 @@ spec:
         #       host: 127.0.0.1
         #     initialDelaySeconds: 30
         #     periodSeconds: 30
-        - name: labeler
-          image: quay.io/airshipit/nodelabeler
-          imagePullPolicy: IfNotPresent
-          env:
-            - name: NODE
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
+        # - name: labeler
+        #   image: quay.io/airshipit/nodelabeler
+        #   imagePullPolicy: IfNotPresent
+        #   env:
+        #     - name: NODE
+        #       valueFrom:
+        #         fieldRef:
+        #           fieldPath: spec.nodeName
         - name: vino-builder
           readinessProbe:
             initialDelaySeconds: 20

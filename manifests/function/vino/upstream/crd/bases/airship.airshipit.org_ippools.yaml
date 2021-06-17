@@ -55,6 +55,21 @@ spec:
                   - mac
                   type: object
                 type: array
+              allocatedRanges:
+                items:
+                  properties:
+                    allocatedTo:
+                      type: string
+                    start:
+                      type: string
+                    stop:
+                      type: string
+                  required:
+                  - allocatedTo
+                  - start
+                  - stop
+                  type: object
+                type: array
               macPrefix:
                 description: MACPrefix defines the MAC prefix to use for VM mac addresses
                 type: string

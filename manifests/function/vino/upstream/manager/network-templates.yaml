@@ -4,11 +4,11 @@ libvirtNetworks:
       <network>
         <name>{{ network.name }}</name>
         <forward mode='route'/>
-        <bridge name='vm-infra-bridge' stp='off' delay='0' {% if network.physicalInterface is defined %} dev='{{ network.physicalInterface }}' {% endif %}/>
-        <ip address='{{ ipam.bridge_ip | default(omit) }}' netmask='{{ ipam.bridge_subnet_netmask }}'>
+        <bridge name='{{ network.bridgeName | default('vm-infra-bridge') }}' stp='off' delay='0'/>
+        <ip address='{{ network.bridgeIP | default(omit) }}' netmask='{{ network.subnet | ansible.netcommon.ipaddr('netmask') }}'>
           <!-- <tftp root='/srv/tftp'/> -->
           <dhcp>
-            <range start='{{ ipam.instance_ips[0] }}' end='{{ ipam.instance_ips[-1] }}'/>
+            <range start='{{ network.range.start }}' end='{{ network.range.stop }}'/>
             <bootp file='http://{{ pxeBootImageHost | default(ansible_default_ipv4.address) }}:{{ pxeBootImageHostPort | default(80) }}/dualboot.ipxe'/>
           </dhcp>
         </ip>

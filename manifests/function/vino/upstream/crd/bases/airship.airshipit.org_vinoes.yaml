@@ -82,16 +82,24 @@ spec:
                 items:
                   description: Network defines libvirt networks
                   properties:
-                    allocationStart:
+                    bridgeName:
+                      description: BridgeName is the name of the bridge to be created
+                        as libvirt network. works if AllocateNodeIP is sepcified
                       type: string
-                    allocationStop:
+                    dhcpAllocationStart:
+                      description: DHCPAllocationStart must be inside the SubNet range
+                      type: string
+                    dhcpAllocationStop:
+                      description: DHCPAllocationStop must be inside the SubNet range
                       type: string
                     dns_servers:
                       items:
                         type: string
                       type: array
-                    instanceSubnet:
-                      type: string
+                    instanceSubnetBitStep:
+                      description: InstanceSubnetBitStep indicates how many bites
+                        to allocate for each node DHCP range
+                      type: integer
                     libvirtTemplate:
                       description: LibvirtTemplate identifies which libvirt template
                         to be used to create a network
@@ -122,6 +130,10 @@ spec:
                             type: string
                         type: object
                       type: array
+                    staticAllocationStart:
+                      type: string
+                    staticAllocationStop:
+                      type: string
                     subnet:
                       type: string
                     type:
@@ -239,13 +251,8 @@ spec:
                 description: PXEBootImageHostPort will be used to download the PXE
                   boot image
                 type: integer
-              vmBridge:
-                description: VMBridge defines the single interface name to be used
-                  as a bridge for VMs
-                type: string
             required:
             - bmcCredentials
-            - vmBridge
             type: object
           status:
             description: VinoStatus defines the observed state of Vino

@@ -1,62 +1,53 @@
 apiVersion: airship.airshipit.org/v1
 kind: Vino
 metadata:
-  name: vino-test-cr
-  #  labels: ...
+  name: vino-subclusters
 spec:
+  # Need to add replacement for this, this is ironic host/ip
+  pxeBootImageHost: 192.168.51.11
+  pxeBootImageHostPort: 80
+  nodeLabelKeysToCopy:
+    - "airshipit.org/server"
+    - "airshipit.org/rack"
   nodeSelector:
     matchLabels:
-      beta.kubernetes.io/os: linux
+      node-type: worker
   configuration:
-      cpuExclude: 0-4,54-60
-      redfishCredentialSecret:
-        name: redfishSecret
+    cpuExclude: 0-1
   networks:
     - name: management
-      subnet: 192.168.2.0/20
-      type: ipv4
-      allocationStart: 192.168.2.10
-      allocationStop: 192.168.2.14 # docs should specify that the range should = number of vms (to permit future expansion over multiple vino crs etc)
+      libvirtTemplate: management
+      subnet: 192.168.0.0/20
+      dhcpAllocationStart: 192.168.4.0
+      dhcpAllocationStop: 192.168.7.255
       routes:
-        - network: 10.0.0.0
-          netmask: 255.255.255.0
-          gateway: $vino.nodebridgegw # vino will need to populate this from the nodelabel value `airshipit.org/vino.nodebridgegw`
-      dns_servers: ["135.188.34.124"]
-    - name: external
-      subnet: 169.0.0.0/24
-      type: ipv4
-      routes:
-        - network: 0.0.0.0
+        - gateway: $vinobridge
+          network: 0.0.0.0
           netmask: 0.0.0.0
-          gateway: 169.0.0.1
-      allocationStart: 169.0.0.10
-      allocationStop: 169.0.0.254
-
-  vmBridge: lo
+      instanceSubnetBitStep: 4
+      type: bridge
+      staticAllocationStart: 192.168.2.10
+      staticAllocationStop: 192.168.2.255
+      # This needs to come from networking catalog
+      dns_servers: ["135.188.34.124"]
+      macPrefix: "52:54:00:06:00:00"
+      # Need to add replacement for this
+      physicalInterface: bond0.1516
   nodes:
-    - name: "worker"
-      count: 3
+    - name: master
+      enableVNC: true
+      count: 2
+      bmhLabels:
+        vino.airshipit.org/flavor: large
       networkDataTemplate:
-        name: "test-template"
+        name: "vino-network-template"
         namespace: "default"
+      bootInterfaceName: management
       networkInterfaces:
         - name: management
-          type: bridge
+          type: network
           network: management
           mtu: 1500
-          options:
-            bridgeName: vminfra-bridge
-        - name: external
-          type: sriov-bond
-          network: external
-          mtu: 9100
-          options:
-            # this is an 'open-ended' set of k/v pairs, validation is perfomed by vino rather than crd schema.
-            pf: "[enp29s0f0,enp219s1f1]"
-            vlan: "100"
-            bond_mode: 802.3ad
-            bond_xmit_hash_policy: layer3+4
-            bond_miimon: "100"
   bmcCredentials:
-    username: "admin"
-    password: "passw0rd"
+    username: admin
+    password: passw0rd

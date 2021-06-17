@@ -5,19 +5,19 @@ dependencies:
   git:
     repo: "https://opendev.org/airship/vino"
     directory: "config/crd"
-    ref: "0e709c0d27b2052a5198f8d27d39bd25ed122dae"
+    ref: "7602aa53240517c94127ee0c1db1cecfd7e80f87"
 - name: upstream/default
   git:
     repo: "https://opendev.org/airship/vino"
     directory: "config/default"
-    ref: "0e709c0d27b2052a5198f8d27d39bd25ed122dae"
+    ref: "7602aa53240517c94127ee0c1db1cecfd7e80f87"
 - name: upstream/manager
   git:
     repo: "https://opendev.org/airship/vino"
     directory: "config/manager"
-    ref: "0e709c0d27b2052a5198f8d27d39bd25ed122dae"
+    ref: "7602aa53240517c94127ee0c1db1cecfd7e80f87"
 - name: upstream/rbac
   git:
     repo: "https://opendev.org/airship/vino"
     directory: "config/rbac"
-    ref: "0e709c0d27b2052a5198f8d27d39bd25ed122dae"
+    ref: "7602aa53240517c94127ee0c1db1cecfd7e80f87"
