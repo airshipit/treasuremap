@@ -5,13 +5,16 @@ resources:
   - ../../../../airshipctl/manifests/function/k8scontrol
   - dex-ca-cert-secret.yaml
 
+patchesStrategicMerge:
+- oidc-apiserver-extra-args.yaml
+
 patchesJson6902:
   - target:
       group: controlplane.cluster.x-k8s.io
       version: v1alpha3
       kind: KubeadmControlPlane
       name: "cluster-controlplane"
-    path: oidc-apiserver-flags_patch.json
+    path: oidc-apiserver-ca-cert.json
   - target:
       group: controlplane.cluster.x-k8s.io
       version: v1alpha3

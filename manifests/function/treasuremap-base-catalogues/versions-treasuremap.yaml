@@ -75,7 +75,7 @@ spec:
     helm_chart_collator:
       helm_chart_collator:
         helm_chart_collator:
-          image: quay.io/airshipit/helm-chart-collator:cf7c83b58804032461f4264cb859cf28f1d3dc87
+          image: quay.io/airshipit/helm-chart-collator:95036e4d6dae5f7fc8a5c7d2da7f430775d457c5
     kube_prometheus_stack:
       prometheus_operator:
         # NOTE: For prometheus and alertmanager instances managed by the operator
@@ -227,7 +227,7 @@ spec:
     # the 'name' property is required. 'repository' should contain only the name
     # of the repo, while 'name' should be used for the image name.
       dex:
-        tag: v2.20.0
+        tag: v2.28.1
         name: dexidp/dex
         repository: quay.io
       nginx:
@@ -238,7 +238,3 @@ spec:
         tag: 1.2.0
         name: mintel/dex-k8s-authenticator
         repository: docker.io
-      tls_init:
-        tag: latest
-        name: metal3-io/ironic
-        repository: quay.io

@@ -7,6 +7,7 @@ metadata:
       container:
         image: localhost/replacement-transformer
 replacements:
+# Updating dex-apiserver-secret with target-cluster-ca's CA certificate
 - source:
     objref:
       kind: VariableCatalogue
@@ -17,3 +18,37 @@ replacements:
       kind: Secret
       name: dex-apiserver-secret
     fieldrefs: ["{.data}"]
+
+# Dex OIDC Issuer URL, e.g., https://dex.function.local:31556/dex
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: utility-treasuremap
+    fieldref: "{.spec.dex.oidc_issuer}"
+  target:
+    objref:
+      kind: KubeadmControlPlane
+      name: cluster-controlplane
+    fieldrefs: ["{.spec.kubeadmConfigSpec.clusterConfiguration.apiServer.extraArgs.oidc-issuer-url}"]
+# Dex client id, e.g., function-kubernetes
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: utility-treasuremap
+    fieldref: "{.spec.dex.client-id}"
+  target:
+    objref:
+      kind: KubeadmControlPlane
+      name: cluster-controlplane
+    fieldrefs: ["{.spec.kubeadmConfigSpec.clusterConfiguration.apiServer.extraArgs.oidc-client-id}"]
+# Dex hostname, e.g., dex.function.local
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: utility-treasuremap
+    fieldref: "{.spec.dex.hostname}"
+  target:
+    objref:
+      kind: KubeadmControlPlane
+      name: cluster-controlplane
+    fieldrefs: [".spec.kubeadmConfigSpec.clusterConfiguration.apiServer.certSANs[0]"]

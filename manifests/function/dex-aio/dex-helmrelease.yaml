@@ -1,3 +1,4 @@
+# ---
 # Dex Helm Charts from Git Repository
 # apiVersion: source.toolkit.fluxcd.io/v1beta1
 # kind: GitRepository
@@ -30,6 +31,24 @@ spec:
       #   name: dex-git-repo
       #   namespace: collator
   values:
+    images:
+      applications:
+        dex:
+          tag: v2.28.1
+          name: dexidp/dex
+          repo: quay.io
+        nginx:
+          tag: 1.17.10-alpine
+          name: nginx
+          repo: docker.io
+        authenticator:
+          tag: 1.2.0
+          name: mintel/dex-k8s-authenticator
+          repo: docker.io
+    node_labels:
+      dex:
+        key: node-role.kubernetes.io/worker
+        value: ""
     params:
       site:
         name: dex-test-site
@@ -37,12 +56,12 @@ spec:
         hostname: dex.function.local
         port:
           https: 30556
-          http: 32554
+          http: 30554
           k8s: 6443
         tls:
           cert_manager: true
           issuer:
-            name: dex
+            name: workload-cluster-ca-issuer
             kind: Issuer
       oidc:
         client_id: function-kubernetes
@@ -67,12 +86,6 @@ spec:
             base_dn: ou=groups,dc=testservices,dc=test,dc=com
             filter: "(objectClass=group)"
             userMatchers:
-              userAttr: name
+              userAttr: DN
               groupAttr: member
-            nameAttr: name
-
-    over_rides:
-      service:
-        dex:
-          spec:
-            type: NodePort
+            nameAttr: cn
