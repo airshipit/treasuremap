@@ -26,7 +26,7 @@ spec:
     jumpHost:
       - image: quay.io/airshipit/jump-host
         nodePort: 30001
-        nodeInterfaceId: oam-ipv4
+        nodeInterfaceId: management
         bmc:
           proxy: false
         sshAuthorizedKeys:
@@ -36,11 +36,11 @@ spec:
     loadBalancerControlPlane:
       - image: haproxy
         nodePort: 30002
-        nodeInterfaceId: oam-ipv4
+        nodeInterfaceId: management
     loadBalancerWorker:
       - image: haproxy
         nodePort: 30003
         nodePortRange:
           start: 30003
           end: 30020
-        nodeInterfaceId: oam-ipv4
+        nodeInterfaceId: management
