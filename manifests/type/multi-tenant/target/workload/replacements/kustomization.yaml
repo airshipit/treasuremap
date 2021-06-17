@@ -1,6 +1,7 @@
 resources:
   - ../../../../../composite/storage-cluster/replacements
   - ../../../../../function/ingress/replacements
+  - ../../../../../function/dex-aio/replacements
   - ../../../../../function/sip/replacements
   - ../../../../../function/synclabeller/replacements
   - ../../../../../function/vino/replacements
