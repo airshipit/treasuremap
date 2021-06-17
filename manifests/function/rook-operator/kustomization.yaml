@@ -1,4 +1,20 @@
 resources:
-- upstream
-patchesStrategicMerge:
+- upstream/common.yaml
+- upstream/crds.yaml
+- upstream/operator.yaml
+patches:
 - rook-operator-patch-tolerations.yaml
+- |-
+  kind: ConfigMap
+  apiVersion: v1
+  metadata:
+    name: rook-ceph-operator-config
+    namespace: rook-ceph
+  data:
+    CSI_ENABLE_HOST_NETWORK: "true"
+    ROOK_CSI_CEPH_IMAGE: "quay.io/cephcsi/cephcsi:v3.3.1"
+    ROOK_CSI_REGISTRAR_IMAGE: "k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.0.1"
+    ROOK_CSI_RESIZER_IMAGE: "k8s.gcr.io/sig-storage/csi-resizer:v1.0.1"
+    ROOK_CSI_PROVISIONER_IMAGE: "k8s.gcr.io/sig-storage/csi-provisioner:v2.0.4"
+    ROOK_CSI_SNAPSHOTTER_IMAGE: "k8s.gcr.io/sig-storage/csi-snapshotter:v4.0.0"
+    ROOK_CSI_ATTACHER_IMAGE: "k8s.gcr.io/sig-storage/csi-attacher:v3.0.2"

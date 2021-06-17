@@ -1,6 +1,6 @@
-# Rook Ceph CephCluster
+# Rook Ceph Operator
 
-Kubernetes manifests for deploying a Rook CephCluster Custom Resource.
+Kubernetes manifests for deploying the Rook Ceph Operator.
 
 ## Update Manifests
 

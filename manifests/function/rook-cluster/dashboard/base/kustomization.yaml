@@ -1,5 +1,5 @@
 resources:
-- dashboard-external-http.yaml
+- upstream/dashboard-external-http.yaml
 patchesJSON6902:
 - target:
     kind: Service

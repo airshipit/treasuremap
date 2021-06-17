@@ -1,31 +1,23 @@
-In-place edits to the local copies of upstream Rook Custom Resource
-examples are not recommended. The upstream examples can be considered
-an immutable starting point.
+# Rook Ceph Custom Resources
 
-Changes to the upstream examples should be made via Kustomize.
+Kubernetes manifests for deploying select Rook Ceph Custom Resources.
 
-Rook Custom Resource Examples:
+## Update Manifests
 
-Upstream: https://github.com/rook/rook/blob/master/cluster/examples/kubernetes/ceph/filesystem.yaml
-Local: cephfs/base/filesystem.yaml
-Tag: v1.6.3
+To update the upstream manifests in this function:
 
-Upstream: https://github.com/rook/rook/blob/master/cluster/examples/kubernetes/ceph/dashboard-external-http.yaml
-Local: dashboard/base/dashboard-external-http.yaml
-Tag: v1.6.3
+1. Update the git references in `Kptfile`
 
-Upstream: https://github.com/rook/rook/blob/master/cluster/examples/kubernetes/ceph/pool.yaml
-Local: pools/base/pool.yaml
-Tag: v1.6.3
+2. Run `kpt pkg sync .` from this directory.
 
-Upstream: https://github.com/rook/rook/blob/master/cluster/examples/kubernetes/ceph/csi/rbd/storageclass.yaml
-Local: storageclasses/block/storageclass.yaml
-Tag: v1.6.3
+3. Update any `Rook` container image references defined in version catalogs.
 
-Upstream: https://github.com/rook/rook/blob/master/cluster/examples/kubernetes/ceph/csi/cephfs/storageclass.yaml
-Local: storageclasses/file/storageclass.yaml
-Tag: v1.6.3
+4. If you plan on committing your changes restore the .gitignore file(s)
 
-Kustomize Doc:
-
-https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization
+```
+# git restore cephfs/base/upstream/.gitignore
+# git restore dashboard/base/upstream/.gitignore
+# git restore pools/base/upstream/.gitignore
+# git restore storageclasses/block/upstream/.gitignore
+# git restore storageclasses/file/upstream/.gitignore
+```

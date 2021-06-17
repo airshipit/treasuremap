@@ -3,8 +3,8 @@ kind: Kustomization
 namespace: rook-ceph
 resources:
   - ceph-conf.yaml
-  - cluster.yaml
-  - toolbox.yaml
+  - upstream/cluster.yaml
+  - upstream/toolbox.yaml
   # Below is the functions section. You are free to comment out or in oppsite to remove comments
   # enabling or disabling any function in the list.
   # All functions are independent, and can be deployed simultaneously at any moment.
@@ -26,7 +26,7 @@ patchesJSON6902:
     - op: replace
       path: /spec/dashboard/ssl
       value: true
-# If you enabling ssl for the dashboard, do not forget
+# If you enable ssl for the dashboard, don't forget
 # to enable the patch below
 - target:
     kind: Service
@@ -39,7 +39,7 @@ patchesJSON6902:
           port: 8443
           protocol: TCP
           targetPort: 8443
-patchesStrategicMerge:
+patches:
 - |-
   apiVersion: ceph.rook.io/v1
   kind: CephCluster

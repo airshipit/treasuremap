@@ -1,5 +1,5 @@
 resources:
-- filesystem.yaml
+- upstream/filesystem.yaml
 patchesJSON6902:
 - target:
     kind: CephFilesystem
