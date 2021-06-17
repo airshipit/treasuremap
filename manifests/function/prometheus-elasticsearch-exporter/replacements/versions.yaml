@@ -11,16 +11,6 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.prometheus_community.url}"
-  target:
-    objref:
-      kind: HelmRepository
-      name: prometheus-elasticsearch-exporter
-    fieldrefs: ["{.spec.url}"]
-- source:
-    objref:
-      kind: VersionsCatalogue
-      name: versions-treasuremap
     fieldref: "{.spec.charts.prometheus_elasticsearch_exporter.chart}"
   target:
     objref:

@@ -11,16 +11,6 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.grafana.url}"
-  target:
-    objref:
-      kind: HelmRepository
-      name: grafana
-    fieldrefs: ["{.spec.url}"]
-- source:
-    objref:
-      kind: VersionsCatalogue
-      name: versions-treasuremap
     fieldref: "{.spec.charts.grafana.chart}"
   target:
     objref:

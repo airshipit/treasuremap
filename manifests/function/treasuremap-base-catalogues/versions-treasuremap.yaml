@@ -15,23 +15,6 @@ spec:
         checksum: 4a6909d1480ac30d676accd7b37ec711
 
   helm_repositories:
-    elastic:
-      url: https://helm.elastic.co
-    grafana:
-      url: https://grafana.github.io/helm-charts
-    prometheus_community:
-      url: https://prometheus-community.github.io/helm-charts
-    # NOTE: logging-operator and logging-operator-logging charts share this repository
-    banzai_cloud:
-      url: https://kubernetes-charts.banzaicloud.com
-    minio:
-      url: https://helm.min.io
-    ingress-nginx:
-      url: https://kubernetes.github.io/ingress-nginx
-    rook-operator:
-      url: https://charts.rook.io/release
-    dex-aio:
-      url: http://helm-chart-collator.collator.svc:8080
     helm_chart_collator:
       url: http://helm-chart-collator.helm-chart-collator.svc:8080
 
@@ -68,11 +51,10 @@ spec:
       version: 3.5.1
     dex-aio:
       chart: dex-aio
-      version: 0.1.0
+      version: 0.1.0+source.f0cea38c0ecd319d6996b85d7aab27982704bacd0c843fbecb
     provisioner:
       chart: provisioner
-      version: ""
-
+      version: 2.4.0+source.f7110d65dcdeecd6e7d81b460d72ef7a000457dc5b4e08b152
   images:
   # images are organized by
   #   <function>:
@@ -85,7 +67,7 @@ spec:
     helm_chart_collator:
       helm_chart_collator:
         helm_chart_collator:
-          image: quay.io/airshipit/helm-chart-collator:95036e4d6dae5f7fc8a5c7d2da7f430775d457c5
+          image: quay.io/airshipit/helm-chart-collator:62fee9ee1db9a3f9c21f9c83737080032eeeae8a
     kube_prometheus_stack:
       prometheus_operator:
         # NOTE: For prometheus and alertmanager instances managed by the operator

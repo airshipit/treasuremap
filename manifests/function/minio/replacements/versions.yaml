@@ -11,17 +11,6 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.minio.url}"
-  target:
-    objref:
-      kind: HelmRepository
-      name: minio
-    fieldrefs: ["{.spec.url}"]
-
-- source:
-    objref:
-      kind: VersionsCatalogue
-      name: versions-treasuremap
     fieldref: "{.spec.charts.minio.chart}"
   target:
     objref:
@@ -37,8 +26,7 @@ replacements:
     objref:
       kind: HelmRelease
       name: minio
-    fieldrefs: ["{.spec.chart.version}"]
-
+    fieldrefs: ["{.spec.chart.spec.version}"]
 - source:
     objref:
       kind: VersionsCatalogue
@@ -49,7 +37,6 @@ replacements:
       kind: HelmRelease
       name: minio
     fieldrefs: ["{.spec.values.image}"]
-
 - source:
     objref:
       kind: VersionsCatalogue

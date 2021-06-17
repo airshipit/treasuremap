@@ -11,16 +11,6 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.elastic.url}"
-  target:
-    objref:
-      kind: HelmRepository
-      name: elasticsearch-data
-    fieldrefs: ["{.spec.url}"]
-- source:
-    objref:
-      kind: VersionsCatalogue
-      name: versions-treasuremap
     fieldref: "{.spec.charts.elasticsearch.chart}"
   target:
     objref:

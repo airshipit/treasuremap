@@ -4,10 +4,6 @@ metadata:
   name: elasticsearch-data
 spec:
   releaseName: elasticsearch-data
-  chart:
-    spec:
-      sourceRef:
-        name: elasticsearch-data
   values:
     nodeGroup: "data"
     masterService: elasticsearch-ingest

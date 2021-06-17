@@ -7,18 +7,6 @@ metadata:
       container:
         image: localhost/replacement-transformer
 replacements:
-# Helm Repo (logging-operator and logging-operator-logging charts)
-- source:
-    objref:
-      kind: VersionsCatalogue
-      name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.banzai_cloud.url}"
-  target:
-    objref:
-      kind: HelmRepository
-      name: banzaicloud
-    fieldrefs: ["{.spec.url}"]
-
 # Logging-operator Chart
 - source:
     objref:
@@ -40,7 +28,6 @@ replacements:
       kind: HelmRelease
       name: logging-operator
     fieldrefs: ["{.spec.chart.spec.version}"]
-
 # Logging-operator-logging Chart
 - source:
     objref:
@@ -62,7 +49,6 @@ replacements:
       kind: HelmRelease
       name: logging-operator-logging
     fieldrefs: ["{.spec.chart.spec.version}"]
-
 # Logging-operator Chart Image
 - source:
     objref:
@@ -74,7 +60,6 @@ replacements:
       kind: HelmRelease
       name: logging-operator
     fieldrefs: ["{.spec.values.image}"]
-
 # Logging-operator-logging Chart Images
 - source:
     objref:

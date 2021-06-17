@@ -1,6 +1,0 @@
-apiVersion: source.toolkit.fluxcd.io/v1beta1
-kind: HelmRepository
-metadata:
-  name: banzaicloud
-spec:
-  interval: 10m
