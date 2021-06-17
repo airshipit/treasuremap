@@ -1,17 +1,18 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: rook-ceph
+# Rook CephCluster Custom Resource along with recommended additions.
 resources:
   - ceph-conf.yaml
   - upstream/cluster.yaml
   - upstream/toolbox.yaml
-  # Below is the functions section. You are free to comment out or in oppsite to remove comments
-  # enabling or disabling any function in the list.
-  # All functions are independent, and can be deployed simultaneously at any moment.
+  # Functions for select Rook Ceph Resources. These resources are
+  # independent and can be commented out on an individual basis.
   - ../../function/rook-cluster/pools
   - ../../function/rook-cluster/cephfs
   - ../../function/rook-cluster/dashboard/http
   - ../../function/rook-cluster/storageclasses
+# Resource customizations
 patchesJSON6902:
 - target:
     kind: CephCluster

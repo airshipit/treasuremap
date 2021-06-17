@@ -1,6 +1,6 @@
 resources:
 - upstream/pool.yaml
-patches:
+patchesJSON6902:
 - target:
     kind: CephBlockPool
     name: replicapool
