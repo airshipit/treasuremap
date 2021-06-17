@@ -5,6 +5,7 @@ resources:
   - ../../../function/phase-helper/
   - executors.yaml
   - phases.yaml
-  - plan.yaml
 transformers:
   - ../../../../../airshipctl/manifests/function/validator
+patchesStrategicMerge:
+  - plan-patch.yaml

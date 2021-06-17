@@ -1,7 +1,7 @@
 apiVersion: airshipit.org/v1alpha1
 kind: PhasePlan
 metadata:
-  name: deploy-aiship-core-gating
+  name: deploy-gating
 description: "Phase plan for airship-core deployment on gating"
 phases:
   # Deploy ephemeral node using redfish with iso

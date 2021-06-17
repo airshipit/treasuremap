@@ -14,4 +14,4 @@
 
 set -xe
 
-airshipctl plan run deploy-aiship-core-gating --debug
+airshipctl plan run deploy-gating --debug
