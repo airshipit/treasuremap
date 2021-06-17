@@ -4,7 +4,7 @@ apiVersion: airshipit.org/v1alpha1
 kind: Phase
 metadata:
   name: provide-infra
-  clusterName: target
+  clusterName: target-cluster
 config:
   executorRef:
     apiVersion: airshipit.org/v1alpha1
@@ -16,7 +16,7 @@ apiVersion: airshipit.org/v1alpha1
 kind: Phase
 metadata:
   name: controlplane
-  clusterName: target
+  clusterName: target-cluster
 config:
   executorRef:
     apiVersion: airshipit.org/v1alpha1
@@ -28,7 +28,7 @@ apiVersion: airshipit.org/v1alpha1
 kind: Phase
 metadata:
   name: workers
-  clusterName: target
+  clusterName: target-cluster
 config:
   executorRef:
     apiVersion: airshipit.org/v1alpha1
