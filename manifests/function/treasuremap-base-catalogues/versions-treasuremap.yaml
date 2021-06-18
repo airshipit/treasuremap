@@ -72,6 +72,10 @@ spec:
   #   <function>:
   #     <component>:
   #       <container>:
+    baremetal_operator:
+      ironic: # ironic Deployment
+        qcow_bundle_subcluster:
+          image: quay.io/airshipit/qcow-bundle-subcluster:latest-ubuntu_focal
     helm_chart_collator:
       helm_chart_collator:
         helm_chart_collator:

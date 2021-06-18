@@ -1,0 +1,13 @@
+- op: add
+  path: "/spec/template/spec/initContainers/-"
+  value:
+    name: qcow-bundle-subcluster
+    command:
+      - sh
+      - -c
+      - "mkdir -p /shared/html/images/subcluster; cp /qcows/*.qcow2 /qcows/*.qcow2.md5sum /shared/html/images/subcluster"
+    image: "quay.io/airshipit/qcow-bundle-subcluster:latest-ubuntu_focal"
+    imagePullPolicy: Always
+    volumeMounts:
+      - mountPath: "/shared"
+        name: ironic-storage

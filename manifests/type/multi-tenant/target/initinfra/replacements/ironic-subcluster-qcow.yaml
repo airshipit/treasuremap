@@ -1,0 +1,19 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: ironic-subcluster-qcow-replacement
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: localhost/replacement-transformer
+replacements:
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.images.baremetal_operator.ironic.qcow_bundle_subcluster.image}"
+  target:
+    objref:
+      kind: Deployment
+      name: ironic
+    fieldrefs: ["{.spec.template.spec.initContainers[?(.name == 'qcow-bundle-subcluster')].image}"]

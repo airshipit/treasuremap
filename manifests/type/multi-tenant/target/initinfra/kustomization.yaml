@@ -7,3 +7,9 @@ resources:
 
 commonLabels:
   airshipit.org/stage: initinfra
+
+patchesJson6902:
+- target:
+    kind: Deployment
+    name: ironic
+  path: ironic-subcluster-qcow-patch.yaml
