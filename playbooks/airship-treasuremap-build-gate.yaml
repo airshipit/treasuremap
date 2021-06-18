@@ -89,12 +89,12 @@
             ephemeral_vm_cfg: "{{ ephemeral_vm_cfg }}"
             ephemeral_vm_memory_mb: 6144
             ephemeral_vm_vcpus: 4
-            target_disk_size: 25G
+            target_disk_size: 30G
             target_vm_cfg: "{{ target_vm_cfg }}"
             target_vm_memory_mb: 7168
             target_vm_vcpus: 2
             target_vms_count: 1
-            worker_disk_size: 30G
+            worker_disk_size: 35G
             worker_vm_cfg: "{{ worker_vm_cfg }}"
             worker_vm_memory_mb: 7168
             worker_vm_vcpus: 2
