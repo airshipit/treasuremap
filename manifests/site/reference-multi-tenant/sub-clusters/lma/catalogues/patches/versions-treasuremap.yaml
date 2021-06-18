@@ -1,0 +1,13 @@
+apiVersion: airshipit.org/v1alpha1
+kind: VersionsCatalogue
+metadata:
+  name: versions-treasuremap
+spec:
+  files:
+    k8scontrol:
+      subcluster_controlplane_image:
+        url: http://172.63.0.12:80/images/control-plane.qcow2
+        checksum: http://172.63.0.12:80/images/control-plane.qcow2.md5sum
+      subcluster_dataplane_image:
+        url: http://172.63.0.12:80/images/data-plane.qcow2
+        checksum: http://172.63.0.12:80/images/data-plane.qcow2.md5sum

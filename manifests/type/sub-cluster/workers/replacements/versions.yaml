@@ -12,7 +12,7 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.files.k8scontrol.subcluster_controlplane_image}"
+    fieldref: "{.spec.files.k8scontrol.subcluster_dataplane_image}"
   target:
     objref:
       kind: Metal3MachineTemplate

@@ -1,0 +1,92 @@
+# These rules inject networking info into the k8scontrol function.
+# Note! They are applied to Cluster object(s) regardless of name, so
+# that they can be defined/used generically.  If more than one Cluster
+# needs to be submitted to a management cluster, these tranformation
+# rules should be applied to each Cluster in isolation, and then
+# the results "mixed together" via kustomize.
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: k8scontrol-networking-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: localhost/replacement-transformer
+replacements:
+# Replace the pod & service networks
+- source:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldref: spec.kubernetes.serviceCidr
+  target:
+    objref:
+      kind: Cluster
+    fieldrefs: ["spec.clusterNetwork.services.cidrBlocks.0"]
+- source:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldref: spec.kubernetes.podCidr
+  target:
+    objref:
+      kind: Cluster
+    fieldrefs: ["spec.clusterNetwork.pods.cidrBlocks.0"]
+
+# Replace the k8s controlplane host endpoint
+- source:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldref: spec.kubernetes.controlPlaneEndpoint
+  target:
+    objref:
+      kind: Metal3Cluster
+    fieldrefs: ["spec.controlPlaneEndpoint"]
+
+# Replace the k8s controlplane NTP servers
+- source:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldref: spec.ntp
+  target:
+    objref:
+      kind: KubeadmControlPlane
+    fieldrefs: ["spec.kubeadmConfigSpec.ntp"]
+- source:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldref: spec.ntp.servers[0]
+  target:
+    objref:
+      kind: KubeadmControlPlane
+    fieldrefs: ["spec.kubeadmConfigSpec.files[*].content%REPLACEMENT_NTP_SERVER1%"]
+- source:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldref: spec.ntp.servers[1]
+  target:
+    objref:
+      kind: KubeadmControlPlane
+    fieldrefs: ["spec.kubeadmConfigSpec.files[*].content%REPLACEMENT_NTP_SERVER2%"]
+- source:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldref: spec.ntp.servers[2]
+  target:
+    objref:
+      kind: KubeadmControlPlane
+    fieldrefs: ["spec.kubeadmConfigSpec.files[*].content%REPLACEMENT_NTP_SERVER3%"]
+- source:
+    objref:
+      kind: NetworkCatalogue
+      name: networking
+    fieldref: spec.ntp.servers[3]
+  target:
+    objref:
+      kind: KubeadmControlPlane
+    fieldrefs: ["spec.kubeadmConfigSpec.files[*].content%REPLACEMENT_NTP_SERVER4%"]

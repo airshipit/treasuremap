@@ -5,9 +5,10 @@ metadata:
 spec:
   template:
     spec:
-      image:
-        url: http://10.23.24.102:80/images/data-plane.qcow2
-        checksum: http://10.23.24.102:80/images/data-plane.qcow2.md5sum
+      # Replaced from Versions catalogue
+      # image:
+      #   url: https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img
+      #   checksum: 4a6909d1480ac30d676accd7b37ec711
       hostSelector:
         matchLabels:
           sip.airshipit.org/node-type: Worker

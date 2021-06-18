@@ -1,0 +1,44 @@
+# These rules inject env vars into the k8scontrol function.
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: k8scontrol-env-vars-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: localhost/replacement-transformer
+replacements:
+# Replace the proxy vars
+- source:
+    objref:
+      name: env-vars-catalogue
+    fieldref: env.HTTP_PROXY
+  target:
+    objref:
+      kind: KubeadmControlPlane
+      name: cluster-controlplane
+    fieldrefs:
+      - "spec.kubeadmConfigSpec.preKubeadmCommands%REPLACEMENT_HTTP_PROXY%"
+      - "{.spec.kubeadmConfigSpec.files[:].content}%REPLACEMENT_HTTP_PROXY%"
+- source:
+    objref:
+      name: env-vars-catalogue
+    fieldref: env.HTTPS_PROXY
+  target:
+    objref:
+      kind: KubeadmControlPlane
+      name: cluster-controlplane
+    fieldrefs:
+      - "spec.kubeadmConfigSpec.preKubeadmCommands%REPLACEMENT_HTTPS_PROXY%"
+      - "{.spec.kubeadmConfigSpec.files[:].content}%REPLACEMENT_HTTPS_PROXY%"
+- source:
+    objref:
+      name: env-vars-catalogue
+    fieldref: env.NO_PROXY
+  target:
+    objref:
+      kind: KubeadmControlPlane
+      name: cluster-controlplane
+    fieldrefs:
+      - "spec.kubeadmConfigSpec.preKubeadmCommands%REPLACEMENT_NO_PROXY%"
+      - "{.spec.kubeadmConfigSpec.files[:].content}%REPLACEMENT_NO_PROXY%"

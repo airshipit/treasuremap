@@ -1,4 +1,9 @@
+# Redefine airshipctl function/k8s-control replacement rules for sub-clusters
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ../../../../function/k8scontrol-ha/replacements
+  - versions.yaml
+  - k8s-control-env-vars.yaml
+  - generated-secrets.yaml
+  - networking.yaml
+  - cluster.yaml
