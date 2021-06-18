@@ -1,3 +1,2 @@
-# NOTE: This directory should not be inherited; it should be redefined within the
-# type that defines the actual sub-cluster.
-resources: []
+resources:
+- ../../../function/helm-chart-repository

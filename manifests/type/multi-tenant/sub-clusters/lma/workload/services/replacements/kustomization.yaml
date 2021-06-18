@@ -1,0 +1,5 @@
+resources:
+  - ../../../../../../../composite/lma-infra/replacements
+  - ../../../../../../../composite/elastic-stack/replacements
+  - ../../../../../../../composite/monitoring-stack/replacements
+  - lma-service-ports.yaml
