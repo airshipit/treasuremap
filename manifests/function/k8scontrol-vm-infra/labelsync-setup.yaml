@@ -1,0 +1,5 @@
+# This configures Metal3Cluster resources for label syncing
+- op: add
+  path: "/metadata/annotations"
+  value:
+     metal3.io/metal3-label-sync-prefixes: "airshipit.org"

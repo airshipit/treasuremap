@@ -25,6 +25,9 @@ hosts:
         storage-ipv4: 172.62.0.11
         calico-ipv4: 172.64.0.11
       hardwareProfile: default # defined in the hostgenerator-m3 function
+      labels:
+        airshipit.org/rack: r01
+        airshipit.org/server: stl3r01s01
     stl3r01s02:
       bootMode: legacy
       macAddress: E4:43:4B:EE:B0:43
@@ -38,6 +41,9 @@ hosts:
         storage-ipv4: 172.62.0.12
         calico-ipv4: 172.64.0.12
       hardwareProfile: default
+      labels:
+        airshipit.org/rack: r01
+        airshipit.org/server: stl3r01s02
     stl3r01s03:
       bootMode: legacy
       #macAddress: E4:43:4B:EE:D7:B8
@@ -52,6 +58,9 @@ hosts:
         storage-ipv4: 172.62.0.13
         calico-ipv4: 172.64.0.13
       hardwareProfile: default # defined in the hardwareprofile-example function
+      labels:
+        airshipit.org/rack: r01
+        airshipit.org/server: stl3r01s03
     stl3r01s04:
       bootMode: legacy
       #macAddress: E4:43:4B:EE:D7:B8
@@ -66,6 +75,9 @@ hosts:
         storage-ipv4: 172.62.0.14
         calico-ipv4: 172.64.0.14
       hardwareProfile: default # defined in the hardwareprofile-example function
+      labels:
+        airshipit.org/rack: r01
+        airshipit.org/server: stl3r01s04
     stl3r01s05:
       bootMode: legacy
       #macAddress: E4:43:4B:EE:D7:B8
@@ -80,6 +92,9 @@ hosts:
         storage-ipv4: 172.62.0.15
         calico-ipv4: 172.64.0.15
       hardwareProfile: default # defined in the hardwareprofile-example function
+      labels:
+        airshipit.org/rack: r01
+        airshipit.org/server: stl3r01s05
     stl3r01s06:
       bootMode: legacy
       #macAddress: E4:43:4B:EE:D7:B8
@@ -94,3 +109,7 @@ hosts:
         storage-ipv4: 172.62.0.16
         calico-ipv4: 172.64.0.16
       hardwareProfile: default # defined in the hardwareprofile-example function
+      labels:
+        airshipit.org/rack: r01
+        airshipit.org/server: stl3r01s06
+

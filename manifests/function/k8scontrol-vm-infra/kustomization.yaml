@@ -11,3 +11,11 @@ patchesJson6902:
     kind: KubeadmControlPlane
     name: cluster-controlplane
   path:  iptables-setup.yaml
+
+patchesJson6902:
+- target:
+    group: infrastructure.cluster.x-k8s.io
+    version: v1alpha4
+    kind: Metal3Cluster
+    name: target-cluster
+  path:  labelsync-setup.yaml

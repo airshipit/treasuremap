@@ -9,16 +9,16 @@ spec:
     ControlPlane:
         labelSelector:
           matchLabels:
-            vino.airshipit.org/flavor: control-plane
-        topologyKey: vino.airshipit.org/rack
+            airshipit.org/flavor: control-plane
+        topologyKey: airshipit.org/rack
         count:
             active: 1
             standby: 1
     Worker:
         labelSelector:
           matchLabels:
-            vino.airshipit.org/flavor: worker
-        topologyKey: vino.airshipit.org/host
+            airshipit.org/flavor: worker
+        topologyKey: airshipit.org/server
         count:
             active: 2
             standby: 1 # Slew for upgrades
