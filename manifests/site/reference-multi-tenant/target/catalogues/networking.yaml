@@ -82,6 +82,14 @@ spec:
         vlan_id: 65
         mtu: "9100"
         vlan_mac_address: null
+      # vm-infra interface
+      - id: bond0.66
+        name: bond0.66
+        type: vlan
+        vlan_link: bond0
+        vlan_id: 66
+        mtu: "9100"
+        vlan_mac_address: null
     networks:
       # NEWSITE_CHANGEME: OAM network
       - id: oam-ipv4
@@ -111,6 +119,12 @@ spec:
         link: bond0.64
         # ip_address:
         netmask: 255.255.255.128
+      # NEWSITE_CHANGEME: vm-infra network
+      - id: vm-infra-ipv4
+        type: ipv4
+        link: bond0.66
+        # ip_address:
+        netmask: 255.255.252.0
     services:
       # NEWSITE_CHANGEME: DNS servers
       - address: 8.8.8.8
