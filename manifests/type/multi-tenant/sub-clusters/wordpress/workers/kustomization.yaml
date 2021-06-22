@@ -1,6 +1,8 @@
 resources:
   - ../../../../sub-cluster/workers
 
+nameSuffix: -wordpress
+
 patchesStrategicMerge:
   - patches/machinedeployment.yaml
   - patches/metal3machinetemplate.yaml

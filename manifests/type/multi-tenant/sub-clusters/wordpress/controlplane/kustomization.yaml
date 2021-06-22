@@ -1,5 +1,7 @@
 resources:
   - ../../../../sub-cluster/controlplane
 
+nameSuffix: -wordpress
+
 patchesStrategicMerge:
   - patches/metal3machinetemplate.yaml

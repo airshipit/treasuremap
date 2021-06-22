@@ -28,7 +28,6 @@ replacements:
   target:
     objref:
       kind: KubeadmControlPlane
-      name: cluster-controlplane
     fieldrefs: ["{.spec.kubeadmConfigSpec.clusterConfiguration.apiServer.extraArgs.oidc-issuer-url}"]
 # Dex client id, e.g., function-kubernetes
 - source:
@@ -39,7 +38,6 @@ replacements:
   target:
     objref:
       kind: KubeadmControlPlane
-      name: cluster-controlplane
     fieldrefs: ["{.spec.kubeadmConfigSpec.clusterConfiguration.apiServer.extraArgs.oidc-client-id}"]
 # Dex hostname, e.g., dex.function.local
 - source:
@@ -50,5 +48,4 @@ replacements:
   target:
     objref:
       kind: KubeadmControlPlane
-      name: cluster-controlplane
     fieldrefs: [".spec.kubeadmConfigSpec.clusterConfiguration.apiServer.certSANs[0]"]

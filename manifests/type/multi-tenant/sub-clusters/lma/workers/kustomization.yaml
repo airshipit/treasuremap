@@ -4,6 +4,8 @@ resources:
 commonLabels:
   cluster.x-k8s.io/cluster-name: lma
 
+nameSuffix: -lma
+
 patchesStrategicMerge:
   - patches/machinedeployment.yaml
   - patches/metal3machinetemplate.yaml

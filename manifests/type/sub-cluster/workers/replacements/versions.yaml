@@ -16,5 +16,4 @@ replacements:
   target:
     objref:
       kind: Metal3MachineTemplate
-      name: worker-1
     fieldrefs: ["{.spec.template.spec.image}"]

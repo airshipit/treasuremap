@@ -16,7 +16,6 @@ replacements:
   target:
     objref:
       kind: KubeadmControlPlane
-      name: cluster-controlplane
     fieldrefs:
       - "spec.kubeadmConfigSpec.preKubeadmCommands%REPLACEMENT_HTTP_PROXY%"
       - "{.spec.kubeadmConfigSpec.files[:].content}%REPLACEMENT_HTTP_PROXY%"
@@ -27,7 +26,6 @@ replacements:
   target:
     objref:
       kind: KubeadmControlPlane
-      name: cluster-controlplane
     fieldrefs:
       - "spec.kubeadmConfigSpec.preKubeadmCommands%REPLACEMENT_HTTPS_PROXY%"
       - "{.spec.kubeadmConfigSpec.files[:].content}%REPLACEMENT_HTTPS_PROXY%"
@@ -38,7 +36,6 @@ replacements:
   target:
     objref:
       kind: KubeadmControlPlane
-      name: cluster-controlplane
     fieldrefs:
       - "spec.kubeadmConfigSpec.preKubeadmCommands%REPLACEMENT_NO_PROXY%"
       - "{.spec.kubeadmConfigSpec.files[:].content}%REPLACEMENT_NO_PROXY%"

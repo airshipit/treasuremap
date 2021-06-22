@@ -1,2 +1,9 @@
 resources:
   - ../../../../../sub-cluster/controlplane/replacements
+patchesJson6902:
+  - target:
+      group: airshipit.org
+      version: v1alpha1
+      kind: ReplacementTransformer
+      name: k8scontrol-cluster-replacements
+    path: patches/cluster.json

@@ -17,7 +17,6 @@ replacements:
   target:
     objref:
       kind: KubeadmControlPlane
-      name: cluster-controlplane
     fieldrefs: ["{.spec.version}"]
 # Replace the controlplane disk image in the Metal3MachineTemplate
 - source:
@@ -28,5 +27,4 @@ replacements:
   target:
     objref:
       kind: Metal3MachineTemplate
-      name: cluster-controlplane
     fieldrefs: ["{.spec.template.spec.image}"]
