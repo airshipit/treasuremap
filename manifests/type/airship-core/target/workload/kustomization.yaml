@@ -2,4 +2,5 @@ resources:
   - ../../../../composite/storage-cluster
   - ../../../../function/ingress
   - ../../../../function/helm-chart-repository
+  - ../../../../function/local-storage
   - dex-aio
