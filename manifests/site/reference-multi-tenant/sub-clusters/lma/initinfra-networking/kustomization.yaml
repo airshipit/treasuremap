@@ -1,2 +1,4 @@
 resources:
   - ../../../../../type/multi-tenant/sub-clusters/lma/initinfra-networking
+transformers:
+  - ../../../../../type/multi-tenant/sub-clusters/lma/initinfra-networking/replacements

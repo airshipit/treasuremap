@@ -1,2 +1,4 @@
 resources:
   - ../../../../type/multi-tenant/target/initinfra-networking
+transformers:
+  - ../../../../type/multi-tenant/target/initinfra-networking

@@ -1,2 +1,4 @@
 resources:
   - ../../../../type/airship-core/ephemeral/initinfra-networking
+transformers:
+  - ../../../../type/airship-core/ephemeral/initinfra-networking/replacements
