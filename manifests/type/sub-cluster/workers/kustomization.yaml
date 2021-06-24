@@ -4,3 +4,6 @@ resources:
   - kubeadmconfigtemplate.yaml
   - machinedeployment.yaml
   - metal3machinetemplate.yaml
+
+# NOTE: CAPI objects must be in the same namespace in which ViNO applies BMHs.
+namespace: vino-system
