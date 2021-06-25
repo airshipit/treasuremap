@@ -12,7 +12,7 @@ replacements:
   #     objref:
   #       kind: VariableCatalogue
   #       name: subcluster-networking
-  #     fieldref: "{.spec.lma.exposed_services[?(.name == 'auth')].nodePort}"
+  #     fieldref: "{.spec.wordpress.exposed_services[?(.name == 'auth')].nodePort}"
   #   target:
   #     objref:
   #       kind: HelmRelease

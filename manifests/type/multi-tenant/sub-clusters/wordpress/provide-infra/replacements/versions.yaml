@@ -16,7 +16,7 @@ replacements:
   target:
     objref:
       kind: SIPCluster
-      name: lma
+      name: wordpress
     fieldrefs: ["{.spec.services.auth[*].image}"]
 - source:
     objref:
@@ -26,7 +26,7 @@ replacements:
   target:
     objref:
       kind: SIPCluster
-      name: lma
+      name: wordpress
     fieldrefs: ["{.spec.services.jumpHost[*].image}"]
 - source:
     objref:
@@ -36,5 +36,5 @@ replacements:
   target:
     objref:
       kind: SIPCluster
-      name: lma
+      name: wordpress
     fieldrefs: ["{.spec.services.loadBalancer[*].image}"]
