@@ -1,2 +1,6 @@
 resources:
   - ../../../../type/multi-tenant/target/workload-config
+  - ../catalogues
+
+transformers:
+  - ../../../../type/multi-tenant/target/workload-config/replacements
