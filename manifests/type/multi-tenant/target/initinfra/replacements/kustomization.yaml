@@ -3,3 +3,4 @@ resources:
   - ../../../../../function/helm-chart-collator/replacements
   - ../../../../../function/hostconfig-operator/replacements
   - ../../../../../function/rook-operator/replacements
+  - ironic-subcluster-qcow.yaml
