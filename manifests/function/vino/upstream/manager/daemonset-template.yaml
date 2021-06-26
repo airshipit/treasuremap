@@ -51,8 +51,6 @@ spec:
               mountPath: /sys/fs/cgroup
             - name: logs
               mountPath: /var/log/libvirt
-            - name: var-lib-vino-pool
-              mountPath: /var/lib/libvirt/vino-pool
             - name: etc-qemu
               mountPath: /etc/libvirt/qemu
             - name: etc-nwfilter
@@ -151,8 +149,6 @@ spec:
               mountPath: /var/lib/libvirt
             - name: var-run-libvirt
               mountPath: /var/run/libvirt
-            - name: var-lib-vino-pool
-              mountPath: /var/lib/libvirt/vino-pool
             - name: run
               mountPath: /run
             - name: dev
@@ -201,10 +197,6 @@ spec:
             defaultMode: 0555
         - name: pod-tmp
           emptyDir: {}
-        - name: var-lib-vino-pool
-          hostPath:
-            path: /var/lib/vino-pool
-            type: DirectoryOrCreate
         - name: etc-qemu
           hostPath:
             path: /etc/vino-qemu

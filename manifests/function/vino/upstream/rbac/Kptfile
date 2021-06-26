@@ -5,7 +5,7 @@ metadata:
 upstream:
   type: git
   git:
-    commit: 7602aa53240517c94127ee0c1db1cecfd7e80f87
+    commit: 124c8362a4b5e53e336e9c8fa6d4cb8953536321
     repo: https://opendev.org/airship/vino
     directory: config/rbac
-    ref: 7602aa53240517c94127ee0c1db1cecfd7e80f87
+    ref: 124c8362a4b5e53e336e9c8fa6d4cb8953536321

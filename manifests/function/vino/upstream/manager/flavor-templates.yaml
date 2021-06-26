@@ -182,16 +182,11 @@ flavorTemplates:
             <alias name="ide"/>
           </controller>
 
-          <interface type='network'>
-            <source network='pxe'/>
-            <model type='virtio'/>
-          </interface>
-
           # for each interface defined in vino, e.g.
           {% for interface in domain.interfaces %}
-          <interface type='bridge'>
+          <interface type='{{ interface.type }}'>
             <mac address='{{ interface.macAddress }}'/>
-            <source bridge='{{ interface.network }}'/>
+            <source {{ interface.type }}='{{ interface.network }}'/>
             <model type='virtio'/>
           </interface>
           {% endfor %}
