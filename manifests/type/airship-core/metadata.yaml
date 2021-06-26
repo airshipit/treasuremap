@@ -1,3 +1,10 @@
-phase:
-  docEntryPointPrefix: manifests/type/airship-core
-  path: manifests/type/airship-core/phases
+apiVersion: airshipit.org/v1alpha1
+kind: ManifestMetadata
+metadata:
+  name: manifest-metadata
+spec:
+  phase:
+    docEntryPointPrefix: manifests/type/airship-core
+    path: manifests/type/airship-core/phases
+  inventory:
+    path: ""

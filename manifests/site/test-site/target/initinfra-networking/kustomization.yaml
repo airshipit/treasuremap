@@ -1,2 +1,7 @@
 resources:
+  - ../catalogues
   - ../../../../type/airship-core/target/initinfra-networking
+  - namespace.yaml
+
+transformers:
+  - ../../../../type/airship-core/target/initinfra-networking/replacements

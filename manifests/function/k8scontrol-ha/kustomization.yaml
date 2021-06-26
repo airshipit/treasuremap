@@ -8,6 +8,8 @@ resources:
 patchesStrategicMerge:
 - oidc-apiserver-extra-args.yaml
 
+namespace: target-infra
+
 patchesJson6902:
   - target:
       group: controlplane.cluster.x-k8s.io

@@ -4,5 +4,8 @@ resources:
   - ../../../../type/airship-core/target/workers
   - ../catalogues
   - nodes
+
+namespace: target-infra
+
 transformers:
   - ../../../../type/airship-core/target/workers/replacements

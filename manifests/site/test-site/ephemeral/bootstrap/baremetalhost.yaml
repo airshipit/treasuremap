@@ -18,3 +18,9 @@ status:
 # when we have more flexible labeling system in place, we will not
 # deliver this document to ephemeral cluster
     state: externally provisioned
+    ID: ""
+  operationHistory: {}
+  errorMessage: ""
+  hardwareProfile: ""
+  operationalStatus: ""
+  poweredOn: false
