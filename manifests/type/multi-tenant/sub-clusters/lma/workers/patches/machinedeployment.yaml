@@ -1,18 +1,21 @@
-apiVersion: cluster.x-k8s.io/v1alpha3
 kind: MachineDeployment
 metadata:
-  name: worker-1
   labels:
-    cluster.x-k8s.io/cluster-name: target-cluster
+    cluster.x-k8s.io/cluster-name: target-cluster-lma
+  name: worker-1
 spec:
-  clusterName: lma
-  replicas: 1
+  clusterName: target-cluster-lma
   selector:
     matchLabels:
-      cluster.x-k8s.io/cluster-name: lma
+      cluster.x-k8s.io/cluster-name: target-cluster-lma
   template:
     metadata:
       labels:
-        cluster.x-k8s.io/cluster-name: lma
+        cluster.x-k8s.io/cluster-name: target-cluster-lma
     spec:
-      clusterName: lma
+      bootstrap:
+        configRef:
+          name: worker-1-lma
+      clusterName: target-cluster-lma
+      infrastructureRef:
+        name: worker-1-lma

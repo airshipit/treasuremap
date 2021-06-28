@@ -5,3 +5,5 @@ nameSuffix: -lma
 
 patchesStrategicMerge:
   - patches/metal3machinetemplate.yaml
+  - patches/controlplane.yaml
+  - patches/cluster.yaml

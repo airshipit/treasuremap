@@ -2,10 +2,14 @@ resources:
   - ../../../../sub-cluster/workers
 
 commonLabels:
-  cluster.x-k8s.io/cluster-name: lma
+  cluster.x-k8s.io/cluster-name: target-cluster-lma
 
 nameSuffix: -lma
 
-patchesStrategicMerge:
-  - patches/machinedeployment.yaml
-  - patches/metal3machinetemplate.yaml
+patches:
+  - target:
+      kind: MachineDeployment
+    path: patches/machinedeployment.yaml
+  - target:
+      kind: Metal3MachineTemplate
+    path: patches/metal3machinetemplate.yaml
