@@ -5,25 +5,25 @@ metadata:
   annotations:
     config.kubernetes.io/function: |-
       container:
-        image: quay.io/airshipit/replacement-transformer:v2
+        image: localhost/replacement-transformer
 replacements:
 - source:
     objref:
       kind: VariableCatalogue
       name: subcluster-networking
-    fieldref: "{.spec.lma.exposed_services[(@.name == 'elasticsearch-ingest')].nodePort}"
+    fieldref: "{.spec.lma.exposed_services[?(.name == 'elasticsearch-ingest')].nodePort}"
   target:
     objref:
-      kind: HelmRepository
+      kind: HelmRelease
       name: elasticsearch-ingest
     fieldrefs: ["{.spec.values.service.nodePort}"]
 - source:
     objref:
       kind: VariableCatalogue
       name: subcluster-networking
-    fieldref: "{.spec.lma.exposed_services[(@.name == 'kibana')].nodePort}"
+    fieldref: "{.spec.lma.exposed_services[?(.name == 'kibana')].nodePort}"
   target:
     objref:
-      kind: HelmRepository
+      kind: HelmRelease
       name: kibana
     fieldrefs: ["{.spec.values.service.nodePort}"]
