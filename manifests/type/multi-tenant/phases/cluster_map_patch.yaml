@@ -28,7 +28,7 @@ map:
         clusterAPI:
           clusterNamespacedName:
             name: lma
-            namespace: lma
+            namespace: vino-system # All CAPI objects reside in the vino-system namespace
       # NOTE: This context does not exist unless added on disk manually. This
       # entry is here for backup.
       - type: "filesystem"

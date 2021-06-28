@@ -10,3 +10,6 @@ patchesJson6902:
     kind: Metal3MachineTemplate
     name: cluster-controlplane
   path: patches/metal3machinetemplate.yaml
+
+# NOTE: CAPI objects must be in the same namespace in which ViNO applies BMHs.
+namespace: vino-system
