@@ -1,0 +1,19 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: subcluster-provide-infra-networking-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: localhost/replacement-transformer
+replacements:
+  - source:
+      objref:
+        kind: VariableCatalogue
+        name: subcluster-networking
+      fieldref: "{.spec.wordpress.exposed_services[?(.name == 'loadBalancerControlPlane')].nodePort}"
+    target:
+      objref:
+        kind: Metal3Cluster
+        name: target-cluster-wordpress
+      fieldrefs: ["{.spec.controlPlaneEndpoint.port}"]
