@@ -7,6 +7,6 @@ resources:
   - ../encrypted/results
 
 patchesStrategicMerge:
-  - versions-airshipctl.yaml
-  - versions-treasuremap.yaml
+  - patches/versions-airshipctl.yaml
+  - patches/versions-treasuremap.yaml
   - networking.yaml

@@ -1,0 +1,32 @@
+# These rules inject versioned artifacts into the k8scontrol function.
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: k8scontrol-versions-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: localhost/replacement-transformer
+replacements:
+# Replace the Kubernetes version in the KubeadmControlPlane
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-airshipctl
+    fieldref: "{.spec.kubernetes}"
+  target:
+    objref:
+      kind: KubeadmControlPlane
+      name: cluster-controlplane
+    fieldrefs: ["{.spec.version}"]
+# Replace the controlplane disk image in the Metal3MachineTemplate
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.files.k8scontrol.subcluster_controlplane_image}"
+  target:
+    objref:
+      kind: Metal3MachineTemplate
+      name: cluster-controlplane
+    fieldrefs: ["{.spec.template.spec.image}"]

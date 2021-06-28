@@ -1,0 +1,19 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: k8scontrol-cluster-replacements
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: localhost/replacement-transformer
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: generated-secrets
+    fieldref: "{.targetClusterCa}"
+  target:
+    objref:
+      kind: Secret
+      name: target-cluster-ca
+    fieldrefs: ["{.data}"]
