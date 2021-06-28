@@ -34,4 +34,10 @@
       # activate ip_forwarding
       echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
       iptables -t nat -A POSTROUTING -s REPLACEMENT_VM_SUBNET_CIDR -o REPLACEMENT_MGMT_INTF -j MASQUERADE
+      ebtables -A FORWARD -i REPLACEMENT_VM_INFRA_INTF -d ff:ff:ff:ff:ff:ff/ff:ff:ff:ff:ff:ff -p IPv4 --ip-prot udp --ip-dport 67:68 --log-level info --log-ip --log-prefix EBFWbc -j DROP
+      ebtables -A FORWARD -o REPLACEMENT_VM_INFRA_INTF -d ff:ff:ff:ff:ff:ff/ff:ff:ff:ff:ff:ff -p IPv4 --ip-prot udp --ip-dport 67:68 --log-level info --log-ip --log-prefix EBFWbc -j DROP
+      ebtables -A FORWARD -i REPLACEMENT_VM_INFRA_INTF -p ipv4 --ip-proto tcp --ip-destination-port 67:68 --log-level info --log-ip --log-prefix EBFWtcp -j DROP
+      ebtables -A FORWARD -o REPLACEMENT_VM_INFRA_INTF -p ipv4 --ip-proto tcp --ip-destination-port 67:68 --log-level info --log-ip --log-prefix EBFWtcp -j DROP
+      ebtables -A FORWARD -i REPLACEMENT_VM_INFRA_INTF -p ipv4 --ip-proto udp --ip-destination-port 67:68 --log-level info --log-ip --log-prefix EBFWudp -j DROP
+      ebtables -A FORWARD -o REPLACEMENT_VM_INFRA_INTF -p ipv4 --ip-proto udp --ip-destination-port 67:68 --log-level info --log-ip --log-prefix EBFWudp -j DROP
       exit 0
