@@ -68,13 +68,13 @@ replacements:
       # NOTE: The SIPCluster CR accepts multiple infra service definitions,
       # but we only deploy one instance of each.
       fieldrefs: ["{.spec.services.loadBalancerWorker[0].nodePort}"]
-  - source:
-      objref:
-        kind: VariableCatalogue
-        name: subcluster-networking
-      fieldref: "{.spec.lma.exposed_services[?(.name == 'auth')].nodePort}"
-    target:
-      objref:
-        kind: HelmRelease
-        name: dex-aio
-      fieldrefs: ["{.values.params.endpoints.port.https}"]
+      #  - source:
+      #      objref:
+      #        kind: VariableCatalogue
+      #        name: subcluster-networking
+      #      fieldref: "{.spec.lma.exposed_services[?(.name == 'auth')].nodePort}"
+      #    target:
+      #      objref:
+      #        kind: HelmRelease
+      #        name: dex-aio
+      #      fieldrefs: ["{.values.params.endpoints.port.https}"]

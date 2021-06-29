@@ -1,5 +1,5 @@
 resources:
-  - ../../../../../function/dex-aio
+    #  - ../../../../../function/dex-aio
   - sipcluster.yaml
   - namespace.yaml
 namespace: lma-infra
