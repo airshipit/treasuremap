@@ -1,5 +1,7 @@
 resources:
   - ../../../../type/airship-core/target/initinfra-networking
+transformers:
+  - ../../../../type/airship-core/target/initinfra-networking/replacements
 
 commonLabels:
   airshipit.org/stage: initinfra

@@ -1,2 +1,4 @@
 resources:
   - ../../../../type/multi-tenant/ephemeral/initinfra-networking
+transformers:
+  - ../../../../type/multi-tenant/ephemeral/initinfra-networking
