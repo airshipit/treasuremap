@@ -9,3 +9,4 @@ spec:
         matchLabels:
           sip.airshipit.org/cluster-namespace: wordpress-infra
           sip.airshipit.org/cluster-name: wordpress
+          sip.airshipit.org/node-type: Worker

@@ -10,3 +10,4 @@ spec:
         matchLabels:
           sip.airshipit.org/cluster-namespace: lma-infra
           sip.airshipit.org/cluster-name: lma
+          sip.airshipit.org/node-type: Worker

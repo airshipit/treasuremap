@@ -3,5 +3,10 @@ kind: Kustomization
 resources:
   - ../../../../../airshipctl/manifests/function/workers-capm3
 
+patches:
+- target:
+    kind: Metal3MachineTemplate
+  path: m3mt-delete-labels.yaml
+
 # NOTE: CAPI objects must be in the same namespace in which ViNO applies BMHs.
 namespace: vino-system
