@@ -1,0 +1,8 @@
+resources:
+  - ../../../../function/lma-configs
+
+patches:
+  - path: patches/cluster-flow.yaml
+    target:
+      kind: ClusterFlow
+      name: all-pods

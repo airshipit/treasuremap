@@ -1,9 +1,9 @@
 resources:
   - ../../../../../airshipctl/manifests/phases/
-  - lma-infra-target.yaml
   - ../../../function/phase-helper/
   - executors.yaml
   - phases.yaml
+  - workload-config.yaml
 
 patchesStrategicMerge:
    - plan-patch.yaml

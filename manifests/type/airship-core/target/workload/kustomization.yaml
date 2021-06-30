@@ -1,6 +1,19 @@
 resources:
   - ../../../../composite/storage-cluster
+  - ../../../../composite/lma-infra
+  - ../../../../composite/elastic-stack
+  - ../../../../composite/monitoring-stack
   - ../../../../function/ingress
   - ../../../../function/helm-chart-repository
   - ../../../../function/local-storage
   - dex-aio
+
+patches:
+  - patch: |-
+      - op: add
+        path: /spec/dependsOn
+        value:
+          - name: kube-prometheus-stack
+    target:
+      kind: HelmRelease
+      name: prometheus-elasticsearch-exporter

@@ -17,4 +17,5 @@ spec:
             - format: nginx
             - format: json
             - format: multiline
-  globalOutputRefs: elasticsearch
+  globalOutputRefs:
+    - elasticsearch
