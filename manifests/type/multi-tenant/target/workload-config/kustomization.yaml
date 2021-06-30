@@ -1,2 +1,13 @@
 resources:
   - ../../../../function/workload-config
+  - ../../../../function/lma-configs
+
+patches:
+  - path: patches/cluster-flow.yaml
+    target:
+      kind: ClusterFlow
+      name: all-pods
+  - path: patches/cluster-output.yaml
+    target:
+      kind: ClusterOutpt
+      name: elasticsearch

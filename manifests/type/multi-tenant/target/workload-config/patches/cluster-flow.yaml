@@ -1,0 +1,6 @@
+- op: add
+  path: /spec/filters/-
+  value:
+    record_modifier:
+      records:
+        - airship-cluster: target

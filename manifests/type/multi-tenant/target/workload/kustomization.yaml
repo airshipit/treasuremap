@@ -6,3 +6,4 @@ resources:
   - ../../../../function/vino
   - ../../../../function/helm-chart-repository/
   - ../../../../function/local-storage
+  - ../../../../composite/lma-infra
