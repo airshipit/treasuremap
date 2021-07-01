@@ -9,5 +9,5 @@ patches:
       name: all-pods
   - path: patches/cluster-output.yaml
     target:
-      kind: ClusterOutpt
+      kind: ClusterOutput
       name: elasticsearch
