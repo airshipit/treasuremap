@@ -14,7 +14,7 @@
     vars:
       # NOTE(drewwalters96): Set AIRSHIPCTL_REF to a commit SHA in order to pin
       # the cloned version of airshipctl to a known/compatible reference.
-      AIRSHIPCTL_REF: "1e8f31a160016a71c454507e529620e837efea78"
+      AIRSHIPCTL_REF: "52c5aedc6331c0c02927a56fc887503145e67849"
       sphinx_build_dir: docs/build
     check:
       jobs:
