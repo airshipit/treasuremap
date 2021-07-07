@@ -47,7 +47,7 @@ spec:
       version: 7.11.2
     kube_prometheus_stack:
       chart: kube-prometheus-stack
-      version: 16.0.1
+      version: 16.12.1
     logging_operator:
       chart: logging-operator
       version: 3.10.0
@@ -62,7 +62,7 @@ spec:
       version: 4.4.0
     thanos_operator:
       chart: thanos-operator
-      version: 0.2.1
+      version: 0.3.0
     ingress-nginx:
       chart: ingress-nginx
       version: 3.5.1
@@ -96,7 +96,7 @@ spec:
           image: quay.io/prometheus/prometheus
       thanos:
         thanos:
-          image: quay.io/thanos/thanos:v0.19.0
+          image: quay.io/thanos/thanos:v0.19.0-rc.0
     sip:
       sip:
         kube-rbac-proxy:
@@ -176,7 +176,10 @@ spec:
     grafana:
       grafana:
         repository: grafana/grafana
-        tag: 7.5.5
+        tag: 8.0.3
+      curl:
+        repository: curlimages/curl
+        tag: 7.73.0
     kibana:
       kibana:
         repository: docker.elastic.co/kibana/kibana
@@ -187,16 +190,22 @@ spec:
         tag: v1.5.2
       alertmanager:
         repository: quay.io/prometheus/alertmanager
-        tag: v0.21.0
+        tag: v0.22.2
+      kube_state_metrics:
+        repository: k8s.gcr.io/kube-state-metrics/kube-state-metrics
+        tag: v2.0.0
       prometheus:
         repository: quay.io/prometheus/prometheus
         tag: v2.27.1
       prometheus_config_reloader:
         repository: quay.io/prometheus-operator/prometheus-config-reloader
-        tag: v0.46.0
+        tag: v0.48.1
+      prometheus_node_exporter:
+        repository: quay.io/prometheus/node-exporter
+        tag: v1.1.2
       prometheus_operator:
         repository: quay.io/prometheus-operator/prometheus-operator
-        tag: v0.46.0
+        tag: v0.48.1
     logging_operator:
       logging_operator:
         repository: ghcr.io/banzaicloud/logging-operator
@@ -204,13 +213,13 @@ spec:
     logging_operator_logging:
       config_reloader:
         repository: jimmidyson/configmap-reload
-        tag: v0.5.0
+        tag: v0.4.0
       fluentbit:
         repository: fluent/fluent-bit
-        tag: 1.7.9
+        tag: 1.7.4
       fluentd:
         repository: ghcr.io/banzaicloud/fluentd
-        tag: v1.11.5-alpine-24
+        tag: v1.11.5-alpine-21
       volume_mod:
         repository: busybox
         tag: latest
@@ -225,10 +234,14 @@ spec:
       prometheus_elasticsearch_exporter:
         repository: justwatch/elasticsearch_exporter
         tag: 1.1.0
+    prometheus_node_exporter:
+      prometheus_node_exporter:
+        repository: quay.io/prometheus/node-exporter
+        tag: v1.1.2
     thanos:
       thanos-operator:
         repository: banzaicloud/thanos-operator
-        tag: 0.2.0
+        tag: 0.3.0
     ingress-nginx:
       controller:
         repository: k8s.gcr.io/ingress-nginx/controller

@@ -15,9 +15,9 @@ spec:
         cpu: "8000m"
         memory: "24Gi"
     volumeClaimTemplate:
-      resouces:
+      resources:
         requests:
           storage: 10Gi
-      storageclass: block-storage-sc
+      storageClassName: block-storage-sc
     service:
       type: NodePort
