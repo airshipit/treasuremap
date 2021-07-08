@@ -21,7 +21,7 @@ replacements:
     objref:
       kind: VariableCatalogue
       name: subcluster-networking
-    fieldref: "{.spec.lma.exposed_services[(@.name == 'elasticsearch-ingest')].nodePort}"
+    fieldref: "{.spec.lma.exposed_services[?(.name == 'elasticsearch-ingest')].nodePort}"
   target:
     objref:
       kind: ClusterOutput

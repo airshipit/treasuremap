@@ -1,2 +1,3 @@
 resources:
   - lma-elasticsearch-output.yaml
+  - ../../../../../function/workload-config/replacements

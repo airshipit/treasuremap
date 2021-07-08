@@ -49,5 +49,5 @@ spec:
           network: management
           mtu: 1500
   bmcCredentials:
-    username: admin
-    password: passw0rd
+    username: "REPLACE_BMC_USERNAME"
+    password: "REPLACE_BMC_PASSWORD"
