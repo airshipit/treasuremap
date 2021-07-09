@@ -33,10 +33,10 @@ spec:
         resources:
           limits:
             cpu: 100m
-            memory: 30Mi
+            memory: 70Mi
           requests:
             cpu: 100m
-            memory: 20Mi
+            memory: 30Mi
         env:
           - name: RUNTIME_NAMESPACE
             valueFrom:
