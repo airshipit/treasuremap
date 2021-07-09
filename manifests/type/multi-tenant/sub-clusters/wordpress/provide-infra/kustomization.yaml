@@ -1,5 +1,6 @@
 resources:
-    #  - ../../../../../function/dex-aio
+  #  - ../../../../../function/dex-aio
+  - ssh-private-keys-secret.yaml
   - sipcluster.yaml
   - namespace.yaml
 namespace: wordpress-infra

@@ -1,3 +1,4 @@
 resources:
   - networking.yaml
   - versions.yaml
+  - secrets.yaml
