@@ -1,0 +1,22 @@
+resources:
+  - ../../../../../../composite/lma-infra
+  - ../../../../../../composite/elastic-stack
+  - ../../../../../../composite/monitoring-stack
+
+# This kustomization exists be able to set the namespace here without
+# affecting the namespaces of anything else in the parent directory
+namespace: lma
+
+patches:
+  - path: patches/elasticsearch-ingest.yaml
+    target:
+      kind: HelmRelease
+      name: elasticsearch-ingest
+  - path: patches/elasticsearch-data.yaml
+    target:
+      kind: HelmRelease
+      name: elasticsearch-data
+  - path: patches/kibana.yaml
+    target:
+      kind: HelmRelease
+      name: kibana

@@ -1,2 +1,3 @@
 resources:
   - ../../../../../airshipctl/manifests/composite/flux-helm/
+  - ../../../function/helm-chart-collator/
