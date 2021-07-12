@@ -4,4 +4,4 @@ metadata:
   name: thanos-operator
 data:
   values:
-    nameOverride: lma-infra-thanos
+    nameOverride: monitoring-thanos

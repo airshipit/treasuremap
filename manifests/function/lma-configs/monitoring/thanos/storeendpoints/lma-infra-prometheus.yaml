@@ -3,7 +3,7 @@ kind: StoreEndpoint
 metadata:
   name: lma-infra-prometheus
 spec:
-  thanos: lma-infra-thanos
+  thanos: monitoring-thanos
   selector:
     labels:
       app: prometheus

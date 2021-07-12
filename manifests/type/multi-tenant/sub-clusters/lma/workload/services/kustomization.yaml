@@ -3,10 +3,6 @@ resources:
   - ../../../../../../composite/elastic-stack
   - ../../../../../../composite/monitoring-stack
 
-# This kustomization exists be able to set the namespace here without
-# affecting the namespaces of anything else in the parent directory
-namespace: lma
-
 patches:
   - path: patches/elasticsearch-ingest.yaml
     target:
@@ -20,3 +16,19 @@ patches:
     target:
       kind: HelmRelease
       name: kibana
+  - path: patches/grafana.yaml
+    target:
+      kind: HelmRelease
+      name: grafana
+  - path: patches/kube-prometheus-stack.yaml
+    target:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+  - patch: |-
+      - op: add
+        path: /spec/dependsOn
+        value:
+          - name: kube-prometheus-stack
+    target:
+      kind: HelmRelease
+      name: prometheus-elasticsearch-exporter
