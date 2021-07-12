@@ -202,7 +202,7 @@ Process Flows
    :hidden:
    :maxdepth: 2
 
-   Airship-in-a-Bottle <https://opendev.org/airship/treasuremap/src/branch/master/tools/deployment/aiab>
+   Airship-in-a-Bottle <https://opendev.org/airship/treasuremap/src/branch/v1.9/tools/deployment/aiab>
    airskiff
    airsloop
    seaworthy

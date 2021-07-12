@@ -10,7 +10,7 @@ It is recommended to get familiar with the `Site Authoring and Deployment Guide`
 documentation before deploying Airsloop in the lab. Most steps and concepts
 including setting up the Genesis node are the same.
 
-.. _Site Authoring and Deployment Guide: https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html
+.. _Site Authoring and Deployment Guide: https://docs.airshipit.org/treasuremap/authoring_and_deployment.html
 
 
 .. image:: diagrams/airsloop-architecture.png
@@ -34,7 +34,7 @@ Various resiliency and security features are tuned down via configuration.
 
 
 Airsloop site manifests are available at
-`site/airsloop <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop>`__.
+`site/airsloop <https://opendev.org/airship/treasuremap/src/branch/v1.9/site/airsloop>`__.
 
 
 Hardware
@@ -48,7 +48,7 @@ Increasing the number of compute nodes will require site overrides
 to align parts of the system such as Ceph OSDs, etcd, etc.
 
 See host profiles for the servers
-`here <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop/profiles/host>`__.
+`here <https://opendev.org/airship/treasuremap/src/branch/v1.9/site/airsloop/profiles/host>`__.
 
 +------------+-------------------------+
 | Node       | Hostnames               |
@@ -63,7 +63,7 @@ Network
 -------
 
 Physical (underlay) networks are described in Drydock site configuration
-`here <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop/networks/physical/networks.yaml>`__.
+`here <https://opendev.org/airship/treasuremap/src/branch/v1.9/site/airsloop/networks/physical/networks.yaml>`__.
 
 It defines OOB (iLO/IPMI), untagged PXE, and multiple tagged general use networks.
 Also no bonded interfaces are used in Airsloop deployment.
@@ -98,7 +98,7 @@ Storage
 Because Airsloop is a minimalistic deployment the required number of disks is just
 one per node. That disk is not only used by the OS but also by Ceph Journals and OSDs.
 The way that this is achieved is by using directories and not extra
-disks for Ceph storage. Ceph OSD configuration can be changed in a `Ceph chart override <https://opendev.org/airship/treasuremap/src/branch/master/type/sloop/charts/ucp/ceph/ceph-osd.yaml>`__.
+disks for Ceph storage. Ceph OSD configuration can be changed in a `Ceph chart override <https://opendev.org/airship/treasuremap/src/branch/v1.9/type/sloop/charts/ucp/ceph/ceph-osd.yaml>`__.
 
 The following Ceph chart configuration is used:
 
@@ -128,10 +128,10 @@ SCSI addresses objectively.
 
 Let's give an example by following the host profile of Airsloop site.
 
-In this `Host Profile <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop/profiles/host/compute.yaml>`__
+In this `Host Profile <https://opendev.org/airship/treasuremap/src/branch/v1.9/site/airsloop/profiles/host/compute.yaml>`__
 is defined that the slave interface that will be used for the pxe
 boot will be the pxe_nic01. That means a corresponding entry should
-exist in this `Hardware Profile <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop/profiles/hardware/dell_r720xd.yaml>`__
+exist in this `Hardware Profile <https://opendev.org/airship/treasuremap/src/branch/v1.9/site/airsloop/profiles/hardware/dell_r720xd.yaml>`__
 which it does. So when drydock and maas try to deploy the node it will
 identify the interface by the PCI address that is written in the
 Hardware profile.
@@ -147,20 +147,20 @@ This section describes what changes need to be made to the existing
 manifests of Airsloop for the addition of an extra compute node to the
 cluster.
 
-First and foremost the user should go to the `nodes.yaml <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop/baremetal/nodes.yaml>`__
+First and foremost the user should go to the `nodes.yaml <https://opendev.org/airship/treasuremap/src/branch/v1.9/site/airsloop/baremetal/nodes.yaml>`__
 file and add an extra section for the new compute node.
 
 The next step is to add a similar section as the existing
-airsloop-compute-1 section to the `pki-catalog.yaml <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop/pki/pki-catalog.yaml>`__.
+airsloop-compute-1 section to the `pki-catalog.yaml <https://opendev.org/airship/treasuremap/src/branch/v1.9/site/airsloop/pki/pki-catalog.yaml>`__.
 This is essential for the correct generation of certificates and the
 correct communication between the nodes in the cluster.
 
 Also every time the user adds an extra compute node to the cluster then the
-number of OSDs that are managed by this manifest `Ceph-client <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop/software/charts/osh/ceph/ceph-client.yaml>`__
+number of OSDs that are managed by this manifest `Ceph-client <https://opendev.org/airship/treasuremap/src/branch/v1.9/site/airsloop/software/charts/osh/ceph/ceph-client.yaml>`__
 should be increased by one.
 
 Last step is to regenerate the certificates which correspond to this
-`certificates.yaml <https://opendev.org/airship/treasuremap/src/branch/master/site/airsloop/secrets/certificates/certificates.yaml>`__
+`certificates.yaml <https://opendev.org/airship/treasuremap/src/branch/v1.9/site/airsloop/secrets/certificates/certificates.yaml>`__
 file so the changes in the pki-catalog.yaml file takes place.
 This can be done through the promenade CLI.
 
@@ -191,14 +191,14 @@ See more details at `Site Authoring and Deployment Guide`_.
 
 See more details at `Building Site documents`_, use site ``airsloop``.
 
-.. _Building Site documents: https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html#building-site-documents
+.. _Building Site documents: https://docs.airshipit.org/treasuremap/authoring_and_deployment.html#building-site-documents
 
 
 2. Deploy Genesis
 
 Deploy the Genesis node, see more details at `Genesis node`_.
 
-.. _Genesis node: https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html#genesis-node
+.. _Genesis node: https://docs.airshipit.org/treasuremap/authoring_and_deployment.html#genesis-node
 
 Genesis is the first node in the cluster and serves as a control node.
 In Airsloop configuration Genesis is the only control node (airsloop-control-1).
@@ -263,7 +263,7 @@ Execute Genesis bootstrap script on the Genesis server.
 
 See more details at `Deploy Site with Shipyard`_.
 
-.. _Deploy Site with Shipyard: https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html#deploy-site-with-shipyard
+.. _Deploy Site with Shipyard: https://docs.airshipit.org/treasuremap/authoring_and_deployment.html#deploy-site-with-shipyard
 
 
 Deploying Behind a Proxy

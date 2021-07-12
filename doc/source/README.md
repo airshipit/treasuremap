@@ -38,7 +38,7 @@ If this ps is not merged please checkout this ps https://review.opendev.org/#/c/
 
 To deploy airship-in-a-bottle with porthole utility containers included, please change the value of `data.armada.manifests` from `full-site-aiab` to `full-site-utilities` in the deployment-configuration.yaml file.
 
-https://opendev.org/airship/treasuremap/src/branch/master/site/aiab/deployment/deployment-configuration.yaml#L38
+https://opendev.org/airship/treasuremap/src/branch/v1.9/site/aiab/deployment/deployment-configuration.yaml#L38
 
 cd /root/deploy/treasuremap/tools/deployment/aiab
 ./airship-in-a-bottle.sh
