@@ -1,6 +1,6 @@
 resources:
   - ../../../../function/workload-config
-  - ../../../../function/lma-configs
+  - ../../../../function/lma-configs/logging/
 
 patches:
   - path: patches/cluster-flow.yaml

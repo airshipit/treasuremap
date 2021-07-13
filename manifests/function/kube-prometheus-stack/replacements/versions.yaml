@@ -66,12 +66,22 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
+    fieldref: "{.spec.image_components.kube_prometheus_stack.kube_state_metrics}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.values.kube-state-metrics.image}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
     fieldref: "{.spec.image_components.kube_prometheus_stack.prometheus}"
   target:
     objref:
       kind: HelmRelease
       name: kube-prometheus-stack
-    fieldrefs: ["{.spec.values.prometheusOperator.prometheusSpec.image}"]
+    fieldrefs: ["{.spec.values.prometheus.prometheusSpec.image}"]
 - source:
     objref:
       kind: VersionsCatalogue
@@ -82,6 +92,16 @@ replacements:
       kind: HelmRelease
       name: kube-prometheus-stack
     fieldrefs: ["{.spec.values.prometheusOperator.prometheusConfigReloaderImage}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.kube_prometheus_stack.prometheus_node_exporter}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.values.prometheus-node-exporter.image}"]
 - source:
     objref:
       kind: VersionsCatalogue
