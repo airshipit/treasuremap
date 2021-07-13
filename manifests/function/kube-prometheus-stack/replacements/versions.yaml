@@ -7,18 +7,6 @@ metadata:
       container:
         image: localhost/replacement-transformer
 replacements:
-# Helm Repo
-- source:
-    objref:
-      kind: VersionsCatalogue
-      name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.prometheus_community.url}"
-  target:
-    objref:
-      kind: HelmRepository
-      name: prometheus-community
-    fieldrefs: ["{.spec.url}"]
-
 # Chart
 - source:
     objref:
@@ -40,7 +28,6 @@ replacements:
       kind: HelmRelease
       name: kube-prometheus-stack
     fieldrefs: ["{.spec.chart.spec.version}"]
-
 # Images
 - source:
     objref:

@@ -20,16 +20,10 @@ spec:
   chart:
     spec:
       chart: dex-aio
-      # Referencing Dex Helm charts from Helm Collator repo
       sourceRef:
         kind: HelmRepository
-        name: collator
         namespace: helm-chart-collator
-      # Referencing Dex Helm charts from Git repo
-      # sourceRef:
-      #   kind: GitRepository
-      #   name: dex-git-repo
-      #   namespace: collator
+        name: collator
   values:
     images:
       applications:

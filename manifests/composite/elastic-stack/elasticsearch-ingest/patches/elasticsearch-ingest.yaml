@@ -4,10 +4,6 @@ metadata:
   name: elasticsearch-ingest
 spec:
   releaseName: elasticsearch-ingest
-  chart:
-    spec:
-      sourceRef:
-        name: elasticsearch-ingest
   values:
     nodeGroup: "ingest"
     roles:

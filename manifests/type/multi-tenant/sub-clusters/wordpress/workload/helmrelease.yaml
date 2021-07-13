@@ -22,6 +22,6 @@ spec:
       chart: wordpress
       sourceRef:
         kind: HelmRepository
-        name: wordpress-helm-repo
-        namespace: wordpress
+        namespace: helm-chart-collator
+        name: collator
   values: {}

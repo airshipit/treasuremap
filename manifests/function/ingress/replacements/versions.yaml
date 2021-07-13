@@ -11,16 +11,6 @@ replacements:
     objref:
       kind: VersionsCatalogue
       name: versions-treasuremap
-    fieldref: "{.spec.helm_repositories.ingress-nginx.url}"
-  target:
-    objref:
-      kind: HelmRepository
-      name: ingress-nginx
-    fieldrefs: ["{.spec.url}"]
-- source:
-    objref:
-      kind: VersionsCatalogue
-      name: versions-treasuremap
     fieldref: "{.spec.charts.ingress-nginx.chart}"
   target:
     objref:

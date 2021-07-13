@@ -9,7 +9,8 @@ spec:
     spec:
       sourceRef:
         kind: HelmRepository
-        name: banzaicloud
+        namespace: helm-chart-collator
+        name: collator
       interval: 1m
   timeout: 5m
   # Reference values at
