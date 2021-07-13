@@ -2,6 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../../../../airshipctl/manifests/function/k8scontrol
+  # Switch to this once we want to add Dex back in
+  #- ../../../function/k8scontrol-oidc
 
 patchesJson6902:
 - target:
