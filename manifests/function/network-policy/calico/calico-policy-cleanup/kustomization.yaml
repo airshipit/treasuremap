@@ -1,0 +1,4 @@
+# Prevent policies from being deployed into downstream
+
+resources:
+  - cleanup-calico-policy.yaml

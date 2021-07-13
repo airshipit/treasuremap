@@ -1,0 +1,12 @@
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: delete-treasuremap-policy.yaml
+target:
+ kind: GlobalNetworkPolicy
+patch: |
+  apiVersion: not-important
+  kind: not-important
+  metadata:
+    name: hosts-ingress-rule
+  $patch: delete
