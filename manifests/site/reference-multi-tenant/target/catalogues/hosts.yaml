@@ -65,6 +65,7 @@ hosts:
         pxe-ipv4: 172.63.0.14
         storage-ipv4: 172.62.0.14
         calico-ipv4: 172.64.0.14
+        vm-infra-ipv4: 192.168.4.1
       hardwareProfile: default # defined in the hardwareprofile-example function
     stl3r01s05:
       bootMode: legacy
@@ -79,6 +80,7 @@ hosts:
         pxe-ipv4: 172.63.0.15
         storage-ipv4: 172.62.0.15
         calico-ipv4: 172.64.0.15
+        vm-infra-ipv4: 192.168.4.2
       hardwareProfile: default # defined in the hardwareprofile-example function
     stl3r01s06:
       bootMode: legacy
