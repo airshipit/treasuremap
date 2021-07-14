@@ -10,9 +10,8 @@ spec:
   # https://github.com/banzaicloud/logging-operator/blob/master/charts/logging-operator-logging/values.yaml
   values:
     controlNamespace: lma
-    loggingRef: lma-infra-logging
-    nameOverride: lma-infra-logging
-    fullnameOverride: lma-infra-logging
+    nameOverride: logging
+    fullnameOverride: logging
     fluentbit:
       tolerations:
         - key: node-role.kubernetes.io/master

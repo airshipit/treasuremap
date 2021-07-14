@@ -47,3 +47,23 @@ replacements:
       kind: HelmRelease
       name: kibana
     fieldrefs: ["{.spec.values.imageTag}"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.kibana.kibana.repository}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kibana
+    fieldrefs: ["{.spec.values.extraContainers[?(@.name == 'index-patterns')].image}%IMAGE%"]
+- source:
+    objref:
+      kind: VersionsCatalogue
+      name: versions-treasuremap
+    fieldref: "{.spec.image_components.kibana.kibana.tag}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kibana
+    fieldrefs: ["{.spec.values.extraContainers[?(@.name == 'index-patterns')].image}%TAG%"]

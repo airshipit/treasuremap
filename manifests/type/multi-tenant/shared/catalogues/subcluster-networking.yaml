@@ -36,6 +36,14 @@ spec:
         nodePort: 30003
       - name: kibana
         nodePort: 30004
+      - name: grafana
+        nodePort: 30005
+      - name: prometheus
+        nodePort: 30006
+      - name: alertmanager
+        nodePort: 30007
+      - name: thanos-query
+        nodePort: 30008
       # Potential ports that can be used by sub-cluster services.
       - name: loadBalancerWorker
         nodePortRange:

@@ -13,4 +13,31 @@ spec:
         name: collator
       interval: 1m
   timeout: 5m
-  values: {}
+  values:
+    extraContainers:
+      - name: index-patterns
+        image: IMAGE:TAG
+        command:
+          - bash
+          - -c
+          - |
+            #!/bin/bash
+            set -ex
+            KIBANA_URL=http://localhost:5601
+
+            while [[ "$(curl -s -o /dev/null -w '%{http_code}\n' $KIBANA_URL/app/kibana)" != "200" ]]; do
+              echo "Waiting for API"
+              sleep 1;
+            done
+
+            curl -XPOST $KIBANA_URL/api/index_patterns/index_pattern \
+              -H 'kbn-xsrf: true' \
+              -H 'Content-Type: application/json' \
+              -d '{ "index_pattern": { "title": "logstash-*", "timeFieldName":"@timestamp" }}'
+
+            curl -XPOST $KIBANA_URL/api/kibana/settings/defaultIndex \
+              -H 'Content-Type: application/json' \
+              -H 'kbn-xsrf: true' \
+              -d '{"value" : "logstash-*"}'
+
+            tail -f /dev/null

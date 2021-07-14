@@ -1,0 +1,11 @@
+apiVersion: monitoring.banzaicloud.io/v1alpha1
+kind: Thanos
+metadata:
+  name: monitoring-thanos
+spec:
+  query:
+    serviceOverrides:
+      type: NodePort
+      ports:
+        - name: http
+          port: 10902

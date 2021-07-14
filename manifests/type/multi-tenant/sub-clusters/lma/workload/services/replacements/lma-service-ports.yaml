@@ -27,3 +27,33 @@ replacements:
       kind: HelmRelease
       name: kibana
     fieldrefs: ["{.spec.values.service.nodePort}"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: subcluster-networking
+    fieldref: "{.spec.lma.exposed_services[?(.name == 'grafana')].nodePort}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: grafana
+    fieldrefs: ["{.spec.values.service.nodePort}"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: subcluster-networking
+    fieldref: "{.spec.lma.exposed_services[?(.name == 'prometheus')].nodePort}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.values.prometheus.service.nodePort}"]
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: subcluster-networking
+    fieldref: "{.spec.lma.exposed_services[?(.name == 'alertmanager')].nodePort}"
+  target:
+    objref:
+      kind: HelmRelease
+      name: kube-prometheus-stack
+    fieldrefs: ["{.spec.values.alertmanager.service.nodePort}"]

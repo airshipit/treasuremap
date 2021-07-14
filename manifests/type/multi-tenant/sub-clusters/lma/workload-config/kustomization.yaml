@@ -6,3 +6,7 @@ patches:
     target:
       kind: ClusterFlow
       name: all-pods
+  - path: patches/thanos-query.yaml
+    target:
+      kind: Thanos
+      name: monitoring-thanos

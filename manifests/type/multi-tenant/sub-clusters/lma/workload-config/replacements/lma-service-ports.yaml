@@ -1,0 +1,19 @@
+apiVersion: airshipit.org/v1alpha1
+kind: ReplacementTransformer
+metadata:
+  name: lma-service-ports
+  annotations:
+    config.kubernetes.io/function: |-
+      container:
+        image: localhost/replacement-transformer
+replacements:
+- source:
+    objref:
+      kind: VariableCatalogue
+      name: subcluster-networking
+    fieldref: "{.spec.lma.exposed_services[?(.name == 'thanos-query')].nodePort}"
+  target:
+    objref:
+      kind: Thanos
+      name: monitoring-thanos
+    fieldrefs: ["{.spec.query.serviceOverrides.ports[?(.name == 'http')].nodePort}"]

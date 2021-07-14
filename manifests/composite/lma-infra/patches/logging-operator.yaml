@@ -6,7 +6,7 @@ spec:
   dependsOn:
     - name: kube-prometheus-stack
   values:
-    fullnameOverride: lma-infra-logging-operator
+    fullnameOverride: logging-operator
     monitoring:
       serviceMonitor:
         enabled: true

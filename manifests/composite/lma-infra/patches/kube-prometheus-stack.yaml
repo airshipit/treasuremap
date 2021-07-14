@@ -3,9 +3,9 @@ kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
 spec:
-  releaseName: lma-infra-monitoring
+  releaseName: monitoring
   values:
-    fullnameOverride: lma-infra-monitoring
+    fullnameOverride: monitoring
     grafana:
       enabled: false
     prometheus:
