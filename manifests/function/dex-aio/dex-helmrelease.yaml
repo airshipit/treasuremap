@@ -45,7 +45,7 @@ spec:
         value: ""
     params:
       site:
-        name: dex-test-site
+        name: dex-virtual-airship-core
       endpoints:
         hostname: dex.function.local
         port:

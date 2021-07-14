@@ -45,7 +45,7 @@
         pass-to-parent: true
 
 - job:
-    name: airship-treasuremap-deploy-test-site
+    name: airship-treasuremap-deploy-virtual-airship-core
     attempts: 1
     timeout: 10800
     required-projects:
@@ -59,7 +59,7 @@
     post-run: playbooks/airship-collect-logs.yaml
     run: playbooks/airship-treasuremap-gate-runner.yaml
     files:
-      - ^manifests/site/test-site/.*$
+      - ^manifests/site/virtual-airship-core/.*$
       - ^manifests/type/airship-core/.*$
       - ^manifests/function/.*$
       - ^manifests/composite/.*$
@@ -68,7 +68,7 @@
       - ^tools/deployment/.*$
     nodeset: airship-treasuremap-single-32GB-bionic-node
     vars:
-      site_name: test-site
+      site_name: virtual-airship-core
       gate_scripts:
         - ./tools/deployment/airship-core/01_install_essentials.sh
         - ./tools/deployment/airship-core/22_test_configs.sh
@@ -82,7 +82,7 @@
 
 - job:
     name: airship-treasuremap-deploy-virtual-network-cloud
-    parent: airship-treasuremap-deploy-test-site
+    parent: airship-treasuremap-deploy-virtual-airship-core
     vars:
       site_name: virtual-network-cloud
       gate_scripts:

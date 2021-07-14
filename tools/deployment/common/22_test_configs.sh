@@ -17,7 +17,7 @@ set -xe
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 : ${TREASUREMAP_PROJECT:="$(pwd)"}
 
-export SITE=${SITE:-"test-site"}
+export SITE=${SITE:-"virtual-airship-core"}
 export AIRSHIP_CONFIG_METADATA_PATH=${AIRSHIP_CONFIG_METADATA_PATH:-"manifests/site/$SITE/metadata.yaml"}
 export AIRSHIP_CONFIG_MANIFEST_DIRECTORY=${AIRSHIP_CONFIG_MANIFEST_DIRECTORY:-"/tmp/treasuremap"}
 

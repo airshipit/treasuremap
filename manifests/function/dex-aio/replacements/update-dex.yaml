@@ -29,7 +29,7 @@ replacements:
     fieldrefs: ["{.spec.values.params.ldap.bind_password}"]
 
 ### DEX - API SERVER/OIDC INTEGRATION ###
-# Dex sitename, e.g., dex-test-site
+# Dex sitename, e.g., dex-virtual-airship-core
 - source:
     objref:
       kind: VariableCatalogue
