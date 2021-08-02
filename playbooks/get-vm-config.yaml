@@ -16,7 +16,7 @@
 - name: get BareMetalHost objects
   shell: |
     set -e
-    kustomize build --enable_alpha_plugins \
+    kustomize build --enable-alpha-plugins \
       {{ airship_config_manifest_directory }}/{{ airship_config_site_path }}/{{ path }} 2>/dev/null |
     kustomize cfg grep  "kind=BareMetalHost"
   register: bmh_command
@@ -32,7 +32,7 @@
 - name: get network configuration for BareMetalHost objects
   shell: |
     set -e
-    kustomize build --enable_alpha_plugins \
+    kustomize build --enable-alpha-plugins \
       {{ airship_config_manifest_directory }}/{{ airship_config_site_path }}/{{ path }} 2>/dev/null |
     kustomize cfg grep  "metadata.name={{ item.spec.networkData.name }}"
   register: netdata_command
