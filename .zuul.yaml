@@ -39,8 +39,9 @@
         - treasuremap-upload-git-mirror
     promote:
       jobs:
-        - promote-airship-project-docs
-
+        - promote-airship-project-docs:
+            files:
+              - ^doc/.*$
 
 - nodeset:
     name: treasuremap-single-node

@@ -85,9 +85,9 @@ Airship reference manifests are delivered monthly as release tags in the
 `Treasuremap <https://github.com/airshipit/treasuremap/releases>`__.
 
 The releases are verified by `Seaworthy
-<https://airship-treasuremap.readthedocs.io/en/latest/seaworthy.html>`__,
+<https://docs.airshipit.org/treasuremap/seaworthy.html>`__,
 `Airsloop
-<https://airship-treasuremap.readthedocs.io/en/latest/airsloop.html>`__,
+<https://docs.airshipit.org/treasuremap/airsloop.html>`__,
 and `Airship-in-a-Bottle
 <https://github.com/airshipit/treasuremap/blob/master/tools/deployment/aiab/README.rst>`__
 pipelines before delivery and are recommended for deployments instead of using
@@ -127,7 +127,7 @@ Airship hardware requirements are flexible, and the system can be deployed
 with very minimal requirements if needed (e.g., single disk, single network).
 
 For simplified non-bonded, and single disk examples, see
-`Airsloop <https://airship-treasuremap.readthedocs.io/en/latest/airsloop.html>`__.
+`Airsloop <https://docs.airshipit.org/treasuremap/airsloop.html>`__.
 
 BIOS and IPMI
 ~~~~~~~~~~~~~
