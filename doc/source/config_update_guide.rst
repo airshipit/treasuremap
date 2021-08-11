@@ -3,7 +3,7 @@ Configuration Update Guide
 
 The guide contains the instructions for updating the configuration of
 a deployed Airship environment. Please refer to
-`Site Authoring and Deployment Guide <https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html>`__
+`Site Authoring and Deployment Guide <https://docs.airshipit.org/treasuremap/authoring_and_deployment.html>`__
 if you do not have an Airship environment already deployed.
 
 Update of an Airship environment consists of the following stages:
@@ -21,7 +21,7 @@ Update of an Airship environment consists of the following stages:
     `Airship Pegleg <https://airship-pegleg.readthedocs.io/en/latest/>`__ and
     `Airship Shipyard <https://airship-shipyard.readthedocs.io/en/latest/>`__
     tools installed and configured; please refer to
-    `Site Authoring and Deployment Guide <https://airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html>`__
+    `Site Authoring and Deployment Guide <https://docs.airshipit.org/treasuremap/authoring_and_deployment.html>`__
     for the details.
 
 Configuring Airship CLI
@@ -42,7 +42,7 @@ Clone the Airship Treasuremap repository and switch to correct version.
 
 Configure environment variables with the name of your site, and specify a path
 to the directory where site configuration is stored; for this example, we use
-`Airship Seaworthy <https://airship-treasuremap.readthedocs.io/en/latest/seaworthy.html>`__
+`Airship Seaworthy <https://docs.airshipit.org/treasuremap/seaworthy.html>`__
 site:
 
 ::

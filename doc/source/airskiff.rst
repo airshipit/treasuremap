@@ -303,4 +303,4 @@ client is configured for authentication:
 .. _IRC: irc://chat.freenode.net:6697/airshipit
 
 .. _site authoring and deployment guide: https://
-    airship-treasuremap.readthedocs.io/en/latest/authoring_and_deployment.html
+    docs.airshipit.org/treasuremap/authoring_and_deployment.html
