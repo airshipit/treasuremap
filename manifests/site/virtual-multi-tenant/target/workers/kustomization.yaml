@@ -3,5 +3,6 @@ kind: Kustomization
 resources:
   - nodes
   - ../../../../type/multi-tenant/target/workers
+  - ../catalogues
 transformers:
   - ../../../../type/multi-tenant/target/workers/replacements

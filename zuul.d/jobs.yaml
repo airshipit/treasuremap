@@ -26,6 +26,10 @@
     run: playbooks/airship-treasuremap-gate-runner.yaml
     nodeset: airship-treasuremap-single-node
     vars:
+      job_environment:
+        # Override AIRSHIPCTL default 'test-site' validation so gate jobs will run
+        # on all the sites present in  TREASUREMAP repo
+        SITE: ""
       gate_scripts:
         - ./tools/deployment/common/01_install_essentials.sh
         - ./tools/deployment/common/21_systemwide_executable.sh

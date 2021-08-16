@@ -1,4 +1,5 @@
 resources:
+  - ../catalogues
   - ../../../../type/multi-tenant/target/initinfra-networking
 
 commonLabels:

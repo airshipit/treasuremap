@@ -1,4 +1,5 @@
 resources:
+  - ../catalogues
   - ../../../../type/airship-core/target/initinfra-networking
 transformers:
   - ../../../../type/airship-core/target/initinfra-networking/replacements
