@@ -9,6 +9,7 @@ metadata:
   storagePolicy: cleartext
 data:
   description: Kubernetes components
+  sequenced: true
   chart_group:
     - kubernetes-apiserver
     - kubernetes-controller-manager

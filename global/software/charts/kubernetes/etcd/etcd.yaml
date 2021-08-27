@@ -98,6 +98,14 @@ data:
             release_group: clcp-kubernetes-etcd
   values:
     pod:
+      mandatory_access_control:
+        type: apparmor
+        etcd-anchor:
+          etcdctl: runtime/default
+        etcd:
+          etcd-test: runtime/default
+        etcd-backup:
+          etcd-backup: runtime/default
       lifecycle:
         upgrades:
           daemonsets:

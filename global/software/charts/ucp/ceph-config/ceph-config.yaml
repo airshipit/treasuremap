@@ -7,6 +7,8 @@ metadata:
     abstract: false
     layer: global
   storagePolicy: cleartext
+  labels:
+    name: ucp-ceph-config
   substitutions:
     # Chart source
     - src:
@@ -75,6 +77,15 @@ data:
   test:
     enabled: true
   values:
+    pod:
+      mandatory_access_control:
+        type: apparmor
+        clcp-ucp-ceph-config-ceph-ns-key-generator:
+          ceph-storage-keys-generator: runtime/default
+          init: runtime/default
+        clcp-ucp-ceph-config-test:
+          ceph-provisioner-helm-test: runtime/default
+          init: runtime/default
     labels:
       job:
         node_selector_key: ucp-control-plane

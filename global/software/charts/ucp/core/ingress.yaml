@@ -53,6 +53,14 @@ data:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
     pod:
+      mandatory_access_control:
+        type: apparmor
+        ingress-error-pages:
+          init: runtime/default
+          ingress-error-pages: runtime/default
+        ingress-server:
+          init: runtime/default
+          ingress: runtime/default
       affinity:
         anti:
           type:
@@ -65,5 +73,8 @@ data:
         annotations:
           nginx.ingress.kubernetes.io/proxy-body-size: 20m
           nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            more_set_headers "X-XSS-Protection: 1; mode=block";
+            more_set_headers "X-Frame-Options: deny";
   dependencies:
     - ucp-ingress-htk

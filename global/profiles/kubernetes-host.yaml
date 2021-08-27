@@ -216,12 +216,12 @@ metadata:
         pattern: PAUSE_IMAGE
 
     # CRI tool
-#    - src:
-#        schema: pegleg/SoftwareVersions/v1
-#        name: software-versions
-#        path: .files.crictl
-#      dest:
-#        path: .files[9].tar_url
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .files.crictl
+      dest:
+        path: .files[9].tar_url
 data:
   # see (and update if needed)
   # type/cruiser/profiles/kubernetes-host.yaml (data.files)
@@ -336,12 +336,17 @@ data:
       mode: 0400
       content: |-
         version = 2
-        disabled_plugins = ["restart"]
 
-        [plugins.cri]
-          systemd_cgroup = true
+        [debug]
+          level = "warn"
+
+        [plugins."io.containerd.grpc.v1.cri"]
           sandbox_image = "PAUSE_IMAGE"
 
+        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+          runtime_type = "io.containerd.runc.v2"
+          [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+             SystemdCgroup = true
     # .files[9]
     - path: /usr/bin/crictl
       tar_path: crictl

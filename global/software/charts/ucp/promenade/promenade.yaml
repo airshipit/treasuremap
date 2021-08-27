@@ -34,13 +34,6 @@ metadata:
       dest:
         path: .values.images.tags.monitoring_image
 
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .images.kubernetes.hyperkube
-      dest:
-        path: .values.images.tags.hyperkube
-
     # Endpoints
 
     - src:
@@ -118,6 +111,14 @@ data:
         anti:
           type:
             default: requiredDuringSchedulingIgnoredDuringExecution
+      mandatory_access_control:
+        type: apparmor
+        promenade-api:
+          promenade-util: runtime/default
+          promenade-api: runtime/default
+        promenade:
+          init: runtime/default
+          promenade-api-test: runtime/default
       replicas:
         api: 1
       security_context:

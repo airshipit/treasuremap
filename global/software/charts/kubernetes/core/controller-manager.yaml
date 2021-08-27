@@ -120,6 +120,12 @@ data:
     network:
       kubernetes_netloc: 127.0.0.1:6553
     pod:
+      mandatory_access_control:
+        type: apparmor
+        kubernetes-controller-manager-anchor:
+          anchor: runtime/default
+        controller-manager:
+          controller-manager: runtime/default
       lifecycle:
         upgrades:
           daemonsets:

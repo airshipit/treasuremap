@@ -144,6 +144,21 @@ data:
     # TODO(sh8121): Refactor chart to support stricter security
     # but still support libvirt+ssh for virtual testing
     pod:
+      mandatory_access_control:
+        type: apparmor
+        drydock-api:
+          init: runtime/default
+          drydock-api: runtime/default
+        drydock-db-init:
+          init: runtime/default
+          drydock-db-init: runtime/default
+        drydock-db-sync:
+          init: runtime/default
+          drydock-db-sync: runtime/default
+        drydock-api-test:
+          drydock-api-test: runtime/default
+        drydock-auth-test:
+          drydock-auth-test: runtime/default
       security_context:
         drydock:
           pod:
@@ -156,8 +171,9 @@ data:
         ingress:
           annotations:
             nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-          classes:
-            cluster: "maas-ingress"
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              more_set_headers "X-XSS-Protection: 1; mode=block";
+              more_set_headers "X-Frame-Options: deny";
       drydock:
         node_port:
           enabled: false
@@ -166,6 +182,8 @@ data:
         threads: 1
         workers: 1
       drydock:
+        DEFAULT:
+          poll_interval: 30
         database:
           pool_size: 200
         plugins:

@@ -39,6 +39,7 @@ metadata:
         path: .ucp.prometheus_mysql_exporter
       dest:
         path: .values.endpoints.prometheus_mysql_exporter
+
     # Accounts
     - src:
         schema: pegleg/AccountCatalogue/v1
@@ -103,6 +104,15 @@ metadata:
         name: ucp_oslo_db_exporter_password
         path: .
 
+    # Forming the container name for database backups to go into
+    - dest:
+        - path: .values.conf.backup.remote_backup.container_name
+          pattern: DOMAIN
+      src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .dns.ingress_domain
+
 data:
   chart_name: ucp-mariadb
   release: ucp-mariadb
@@ -129,6 +139,15 @@ data:
       size: 30Gi
       backup:
         size: 50Gi
+    conf:
+      backup:
+        enabled: true
+        days_to_keep: 3
+        remote_backup:
+          enabled: true
+          container_name: DOMAIN
+          days_to_keep: 14
+          storage_policy: ncbackup_pt
     monitoring:
       prometheus:
         enabled: true
@@ -146,6 +165,36 @@ data:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
     pod:
+      security_context:
+        server:
+          container:
+            mariadb:
+              allowPrivilegeEscalation: false
+      mandatory_access_control:
+        type: apparmor
+        mariadb-ingress-error-pages:
+          init: runtime/default
+          ingress-error-pages: runtime/default
+        mariadb-ingress:
+          init: runtime/default
+          ingress: runtime/default
+        mariadb-server:
+          init: runtime/default
+          mariadb-perms: runtime/default
+          mariadb: runtime/default
+        mariadb-backup:
+          init: runtime/default
+          backup-perms: runtime/default
+          mariadb-backup: runtime/default
+        mariadb-test:
+          init: runtime/default
+          mariadb-test: runtime/default
+        prometheus-mysql-exporter:
+          init: runtime/default
+          mysql-exporter: runtime/default
+        create-sql-user:
+          init: runtime/default
+          exporter-create-sql-user: runtime/default
       affinity:
         anti:
           type:
@@ -154,8 +203,14 @@ data:
         server: 1
         ingress: 1
     manifests:
+      # Enable automated backups
       cron_job_mariadb_backup: true
+      # Not needing to create a keystone user - it should already be created on CH
+      job_ks_user: false
+      # Backing up to local PVC in addition to CH backups
       pvc_backup: true
+      # Enable backup/restore secrets
+      secret_backup_restore: true
   dependencies:
     - mariadb-htk
 ...

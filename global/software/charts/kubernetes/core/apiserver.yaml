@@ -168,6 +168,15 @@ data:
             release_group: clcp-kubernetes-apiserver
   values:
     pod:
+      mandatory_access_control:
+        type: apparmor
+        kubernetes_apiserver_anchor:
+          anchor: runtime/default
+        kube-apiserver:
+          init: runtime/default
+          apiserver-key-rotate: runtime/default
+        apiserver:
+          apiserver: runtime/default
       lifecycle:
         upgrades:
           daemonsets:

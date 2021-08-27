@@ -15,6 +15,10 @@ metadata:
       - method: merge
         path: .
 data:
+  platform:
+    kernel_params:
+      # isolcpus for ovs dpdk pmd use
+      isolcpus: 4-7,48-51
   metadata:
     owner_data:
       openstack-ranger-agent: enabled

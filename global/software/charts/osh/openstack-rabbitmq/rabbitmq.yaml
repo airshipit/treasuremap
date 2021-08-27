@@ -101,6 +101,23 @@ data:
         anti:
           type:
             server: requiredDuringSchedulingIgnoredDuringExecution
+      resources:
+        enabled: true
+        server:
+          requests:
+            memory: "8192Mi"
+            cpu: "12000m"
+          limits:
+            memory: "8192Mi"
+            cpu: "12000m"
+    network:
+      management:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              more_set_headers "X-XSS-Protection: 1; mode=block";
+              more_set_headers "X-Frame-Options: deny";
     labels:
       server:
         node_selector_key: openstack-control-plane

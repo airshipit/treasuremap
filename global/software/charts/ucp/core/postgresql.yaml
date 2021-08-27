@@ -26,14 +26,6 @@ metadata:
       dest:
         path: .values.images.tags
 
-    # PostgreSQL log level
-    - src:
-        schema: nc/CorridorConfig/v1
-        name: corridor-config
-        path: .airship.log_level
-      dest:
-        path: .values.conf.postgresql.logging.log_level
-
     # Endpoints
     - src:
         schema: pegleg/EndpointCatalogue/v1
@@ -64,12 +56,6 @@ metadata:
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: ucp_service_accounts
-        path: .ucp.postgres.replica
-      dest:
-        path: .values.endpoints.postgresql.auth.replica
-    - src:
-        schema: pegleg/AccountCatalogue/v1
-        name: ucp_service_accounts
         path: .ucp.prometheus_postgresql_exporter.user
       dest:
         path: .values.endpoints.postgresql.auth.exporter
@@ -79,12 +65,6 @@ metadata:
         path: .ucp.prometheus_postgresql_exporter.user
       dest:
         path: .values.endpoints.prometheus_postgresql_exporter.auth.user
-    - src:
-        schema: pegleg/AccountCatalogue/v1
-        name: ucp_service_accounts
-        path: .ucp.postgres.replica.username
-      dest:
-        path: .values.secrets.pki.replication.hosts.names[0]
     - src:
         schema: pegleg/AccountCatalogue/v1
         name: ucp_service_accounts
@@ -98,12 +78,6 @@ metadata:
       src:
         schema: deckhand/Passphrase/v1
         name: ucp_postgres_admin_password
-        path: .
-    - dest:
-        path: .values.endpoints.postgresql.auth.replica.password
-      src:
-        schema: deckhand/Passphrase/v1
-        name: ucp_postgres_replica_password
         path: .
     - dest:
         path: .values.endpoints.postgresql.auth.exporter.password
@@ -123,20 +97,6 @@ metadata:
         schema: deckhand/Passphrase/v1
         name: ucp_postgres_audit_password
         path: .
-    - dest:
-        - path: .values.secrets.pki.replication.ca.crt
-        - path: .values.secrets.pki.server.ca.crt
-      src:
-        schema: deckhand/CertificateAuthority/v1
-        name: patroni-replication
-        path: .
-    - dest:
-        - path: .values.secrets.pki.replication.ca.key
-        - path: .values.secrets.pki.server.ca.key
-      src:
-        schema: deckhand/CertificateAuthorityKey/v1
-        name: patroni-replication
-        path: .
 
     # POD IPs
     - src:
@@ -145,6 +105,15 @@ metadata:
         path: .kubernetes.pod_cidr
       dest:
         path: .values.secrets.pki.pod_cidr
+
+    # Forming the container name for database backups to go into
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .dns.ingress_domain
+      dest:
+        - path: .values.conf.backup.remote_backup.container_name
+          pattern: DOMAIN
 
 data:
   chart_name: ucp-postgresql
@@ -167,11 +136,30 @@ data:
         - type: job
           labels:
             release_group: clcp-ucp-postgresql
+        - type: cronjob
+          labels:
+            release_group: clcp-ucp-postgresql
       create: []
     post:
       create: []
   values:
     pod:
+      mandatory_access_control:
+        type: apparmor
+        postgresql:
+          postgresql: runtime/default
+          set-volume-perms: runtime/default
+          init: runtime/default
+        postgresql-backup:
+          postgresql-backup: runtime/default
+          backup-perms: runtime/default
+          init: runtime/default
+        prometheus-postgresql-exporter:
+          postgresql-exporter: runtime/default
+          init: runtime/default
+        prometheus-postgresql-exporter-create-user:
+          prometheus-postgresql-exporter-create-user: runtime/default
+          init: runtime/default
       affinity:
         anti:
           type:
@@ -188,8 +176,44 @@ data:
       postgresql:
         max_connections: 1000
         shared_buffers: 2GB
+        log_connections: 'off'
+        log_disconnections: 'off'
+        # disable archiving
+        archive_mode: 'off'
+        # disable wal senders (required with wal_level minimal)
+        max_wal_senders: 0
+        # to avoid filling up pgdata/pg_xlog, limit to 32 wal files (16 MB each), i.e. 512MB
+        max_wal_size: 32
+        # to avoid filling up pgdata/pg_commit_ts, don't track commit timestamps
+        track_commit_timestamp: 'off'
+        # don't explicitly force a minimum # of wal files to keep
+        wal_keep_segments: 0
+        # retain enough data to recover from a crash or immediate shutdown
+        wal_level: minimal
+        # don't force writes for hint bit modifications
+        wal_log_hints: 'off'
+      pg_hba: |
+        host all all 127.0.0.1/32 trust
+        host all postgresql-admin 0.0.0.0/0 md5
+        host all postgres 0.0.0.0/0 md5
+        host all psql_exporter 0.0.0.0/0 md5
+        host postgres postgresql_exporter 0.0.0.0/0 md5
+        host deckhand deckhand 0.0.0.0/0 md5
+        host maasdb maas 0.0.0.0/0 md5
+        host airflow airflow 0.0.0.0/0 md5
+        host shipyard shipyard 0.0.0.0/0 md5
+        host drydock drydock 0.0.0.0/0 md5
+        local all all trust
+        host all all 0.0.0.0/0 reject
       backup:
-        pg_dumpall_options: --inserts
+        pg_dumpall_options: '--inserts --clean'
+        enabled: true
+        days_to_keep: 3
+        remote_backup:
+          enabled: true
+          container_name: DOMAIN
+          days_to_keep: 14
+          storage_policy: ncbackup_pt
     development:
       enabled: false
     labels:
@@ -206,8 +230,14 @@ data:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
     manifests:
+      # Enable automated backups
       cron_job_postgresql_backup: true
+      # Not needing to create a keystone user - it should already be created on CH
+      job_ks_user: false
+      # Still backing up to local PVC in addition to CH backups
       pvc_backup: true
+      # Enable backup/restore secrets
+      secret_backup_restore: true
     secrets:
       pki:
         server:

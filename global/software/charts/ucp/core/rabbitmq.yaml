@@ -86,12 +86,44 @@ data:
     volume:
       size: 5Gi
     pod:
+      mandatory_access_control:
+        type: apparmor
+        rabbitmq-cluster-wait:
+          init: runtime/default
+          rabbitmq-cookie: runtime/default
+          rabbitmq-rabbitmq-cluster-wait: runtime/default
+        rabbitmq:
+          init: runtime/default
+          rabbitmq-password: runtime/default
+          rabbitmq-cookie: runtime/default
+          rabbitmq-perms: runtime/default
+          rabbitmq: runtime/default
+        prometheus-rabbitmq-exporter:
+          init: runtime/default
+          rabbitmq-exporter: runtime/default
+        rabbitmq-rabbitmq-test:
+          rabbitmq-rabbitmq-test: runtime/default
+          init: runtime/default
       affinity:
         anti:
           type:
             default: requiredDuringSchedulingIgnoredDuringExecution
       replicas:
         server: 1
+      resources:
+        enabled: true
+        server:
+          requests:
+            memory: "8192Mi"
+            cpu: "12000m"
+          limits:
+            memory: "8192Mi"
+            cpu: "12000m"
+      security_context:
+        server:
+          container:
+            rabbitmq:
+              allowPrivilegeEscalation: false
     labels:
       server:
         node_selector_key: ucp-control-plane

@@ -63,6 +63,15 @@ data:
               enabled: true
               min_ready_seconds: 0
               max_unavailable: '50%'
+      mandatory_access_control:
+        type: apparmor
+        haproxy-anchor:
+          haproxy-perms: runtime/default
+          anchor: runtime/default
+        kubernetes:
+          haproxy-haproxy-test: runtime/default
+        haproxy:
+          haproxy: runtime/default
       security_context:
         haproxy:
           pod:

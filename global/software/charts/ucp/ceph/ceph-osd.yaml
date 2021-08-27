@@ -49,7 +49,7 @@ metadata:
 
     # Secrets
     - dest:
-       path: .values.conf.ceph.global.fsid
+        path: .values.conf.ceph.global.fsid
       src:
         schema: deckhand/Passphrase/v1
         name: ceph_fsid
@@ -62,11 +62,10 @@ data:
   protected:
     continue_processing: false
   wait:
-    timeout: 7200
+    timeout: 900
     labels:
       release_group: clcp-ucp-ceph-osd
-    resources:
-      - type: daemonset
+    resources: []
     native:
       enabled: false
   install:
@@ -79,18 +78,37 @@ data:
           labels:
             release_group: clcp-ucp-ceph-osd
             component: test
+        - type: job
+          labels:
+            release_group: clcp-ucp-ceph-osd
+            component: post-apply
   test:
-    enabled: true
+    enabled: false
   values:
+# Custom Apparmor Profile needs to be fixed in NC 2.2
     pod:
       mandatory_access_control:
         type: apparmor
         ceph-osd-default:
           ceph-osd-default: unconfined
+          ceph-init-dirs: unconfined
+          ceph-log-ownership: unconfined
+          osd-init: unconfined
+        ceph-osd-test:
+          init: unconfined
+          ceph-cluster-helm-test: unconfined
+        ceph-osd-post-apply:
+          ceph-osd-post-apply: runtime/default
+          init: runtime/default
+      lifecycle:
+        upgrades:
+          daemonsets:
+            pod_replacement_strategy: OnDelete
     deploy:
       tool: "ceph-volume"
     manifests:
       cronjob_defragosds: false
+      job_post_apply: false
     labels:
       osd:
         node_selector_key: ceph-osd
@@ -120,9 +138,10 @@ data:
         osd_crush_chooseleaf_type: 0
       ceph:
         osd:
-          osd_op_num_threads_per_hdd: 2
-          osd_op_num_threads_per_ssd: 4
+          osd_op_num_threads_per_shard_hdd: 1
+          osd_op_num_threads_per_shard_ssd: 2
           osd_max_backfills: 10
+          osd_scrub_auto_repair: true
   dependencies:
     - ceph-htk
 ...

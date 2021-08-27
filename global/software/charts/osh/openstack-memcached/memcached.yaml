@@ -70,6 +70,14 @@ data:
         node_selector_key: openstack-control-plane
         node_selector_value: enabled
     pod:
+      mandatory_access_control:
+        type: apparmor
+        prometheus_memcached_exporter:
+          init: runtime/default
+          memcached-exporter: runtime/default
+        memcached:
+          init: runtime/default
+          memcached: runtime/default
       lifecycle:
         upgrades:
           deployments:

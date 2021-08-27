@@ -125,6 +125,12 @@ data:
       # and Deployment-managed pods as we transition to DaemonSet.
       replicas:
         coredns: 2
+      mandatory_access_control:
+        type: apparmor
+        coredns:
+          coredns: runtime/default
+          coredns-health: runtime/default
+          coredns-test: runtime/default
     labels:
       coredns:
         # NOTE(mb874d): This is the label specified in the IPDD

@@ -56,7 +56,7 @@ metadata:
 
     # Secrets
     - dest:
-       path: .values.conf.ceph.global.fsid
+        path: .values.conf.ceph.global.fsid
       src:
         schema: deckhand/Passphrase/v1
         name: ceph_fsid
@@ -112,27 +112,27 @@ data:
         namespace: ceph
     deployment:
       ceph: true
-    bootstrap:
-      # Placed here to run after main ceph compoents laid down/updated
-      enabled: true
-      script: |
-        set -x
-        DESIRED_VERSION="nautilus"
-        ADDITIONAL_VERSIONS=1
-        while [ $ADDITIONAL_VERSIONS -gt 0 ]; do
-            sleep 5
-            ADDITIONAL_VERSIONS=$(ceph tell osd.* version --format json | awk -F 'osd.[0-9]*: ' '/^osd/ { print $2}' | jq -r '.version' | awk '{ print $(NF-1) }' | uniq | grep -v ${DESIRED_VERSION} | wc -l )
-        done
-        while [[ `ceph pg ls | tail -n +2 | grep -v "active+\|NOTE"` ]]
-        do
-          sleep 5
-        done
     ceph_mgr_enabled_modules:
       - restful
       - status
       - prometheus
       - balancer
       - iostat
+    bootstrap:
+      # Placed here to run after main ceph compoents laid down/updated
+      enabled: true
+      script: |
+        set -x
+        DESIRED_VERSION="octopus"
+        ADDITIONAL_VERSIONS=1
+        while [ $ADDITIONAL_VERSIONS -gt 0 ]; do
+            sleep 5
+            ADDITIONAL_VERSIONS=$(ceph tell osd.* version --format json | awk -F 'osd.[0-9]*: ' '/^osd/ { print $2}' | jq -r '.release' | uniq | grep -v ${DESIRED_VERSION} | wc -l )
+        done
+        while [[ `ceph pg stat -f json | jq -r ".pg_summary.num_pgs"` -eq 0 ]] || [[ `ceph pg ls -f json | jq -r '.pg_stats[].state' | grep -v "active"` ]]
+        do
+          sleep 5
+        done
     jobs:
       pool_checkPGs:
         # Run once a month at midnight of the first day of the month
@@ -146,7 +146,29 @@ data:
           # Skip new job if previous job still active
           execPolicy: Forbid
         startingDeadlineSecs: 60
+      rbd_pool:
+        restartPolicy: Never
     pod:
+      mandatory_access_control:
+        type: apparmor
+        ceph-checkdns:
+          ceph-checkdns: runtime/default
+          init: runtime/default
+        ceph-mds:
+          ceph-mds: runtime/default
+          ceph-init-dirs: runtime/default
+        ceph-mgr:
+          ceph-mgr: runtime/default
+          ceph-init-dirs: runtime/default
+        ceph-rbd-pool:
+          ceph-rbd-pool: runtime/default
+          init: runtime/default
+        ceph-client-bootstrap:
+          ceph-client-bootstrap: runtime/default
+          init: runtime/default
+        ceph-client-test:
+          ceph-cluster-helm-test: runtime/default
+          init: runtime/default
       affinity:
         anti:
           type:
@@ -154,12 +176,79 @@ data:
       replicas:
         mds: 3
         mgr: 3
+      lifecycle:
+        upgrades:
+          deployments:
+            pod_replacement_strategy: RollingUpdate
+            rolling_update:
+              max_unavailable: 50%
+      resources:
+        enabled: true
+        mds:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        mgr:
+          requests:
+            memory: "2Gi"
+            cpu: "2000m"
+          limits:
+            memory: "8Gi"
+            cpu: "4000m"
+        checkdns:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        jobs:
+          bootstrap:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          image_repo_sync:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          rbd_pool:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          tests:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
 
     conf:
       features:
-        pg_autoscaler: false
+        # NOTE(st053q): If autoscaler is disabled, then
+        # mon_pg_warn_max_object_skew should not be 0 in ceph.conf
+        pg_autoscaler: true
+        cluster_flags:
+          unset: "noup"
       pool:
         spec:
+          # Health metrics pool
+          - name: device_health_metrics
+            application: mgr_devicehealth
+            replication: 3
+            percent_total_data: 5
           # RBD pool
           - name: rbd
             application: rbd
@@ -225,10 +314,15 @@ data:
         target:
           osd: 1
           pg_per_osd: 100
+          pg_num_min: 1
           protected: true
-          # Quota at 10000 to ensure that all pools have quotas greater
-          # than the cluster's capacity. 1000 would get some to about 85%
-          quota: 10000
+          # NOTE: 'quota' represents a scaler for effective capacity of cluster
+          # as a percent value. Setting it to anything more than 100 will mean
+          # that if all pools completely use their quotas, total data stored is
+          # more than capacity. For example quota at 10000 would ensure that
+          # EVERY pool can exceed cluster capacity. Set to 85 in order to maintain
+          # healthy state and allow data move in case of failures.
+          quota: 85
 
         default:
           # NOTE(alanmeadows): This is required ATM for bootstrapping a Ceph
@@ -242,6 +336,8 @@ data:
         # cluster with only one OSD.  Depending on OSD targeting & site
         # configuration this can be changed.
           osd_pool_default_size: 1
+          mon_pg_warn_min_per_osd: 0
+          mon_pg_warn_max_object_skew: 0
   dependencies:
     - ceph-htk
 ...

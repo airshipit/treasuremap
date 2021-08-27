@@ -18,6 +18,5 @@ data:
     - compute-utility
     - etcdctl-utility
     - mysqlclient-utility
-    - ncct-utility
     - openstack-utility
     - postgresql-utility

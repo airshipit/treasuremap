@@ -96,6 +96,14 @@ data:
             release_group: clcp-ucp-armada
   values:
     pod:
+      mandatory_access_control:
+        type: apparmor
+        armada-api:
+          init: runtime/default
+          armada-api: runtime/default
+          tiller: runtime/default
+        armada-api-test:
+          armada-api-test: runtime/default
       affinity:
         anti:
           type:

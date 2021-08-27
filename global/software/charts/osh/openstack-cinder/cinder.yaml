@@ -225,6 +225,38 @@ data:
           jobs:
             - clcp-openstack-rabbitmq-cluster-wait
     pod:
+      mandatory_access_control:
+        type: apparmor
+        cinder-api:
+          cinder-api: runtime/default
+          ceph-coordination-volume-perms: runtime/default
+          init: runtime/default
+        cinder-backup:
+          cinder-backup: runtime/default
+          ceph-coordination-volume-perms: runtime/default
+          init: runtime/default
+        cinder-scheduler:
+          cinder-scheduler: runtime/default
+          ceph-coordination-volume-perms: runtime/default
+          init: runtime/default
+        cinder-volume:
+          cinder-volume: runtime/default
+          ceph-coordination-volume-perms: runtime/default
+          init-cinder-conf: runtime/default
+          init: runtime/default
+        cinder-backup-storage-init:
+          cinder-backup-storage-init: runtime/default
+          init: runtime/default
+        cinder-test:
+          init: runtime/default
+          cinder-test: runtime/default
+          cinder-test-ks-user: runtime/default
+        cinder-create-internal-tenant:
+          init: runtime/default
+          create-internal-tenant: runtime/default
+        cinder-volume-usage-audit:
+          cinder-volume-usage-audit: runtime/default
+          init: runtime/default
       replicas:
         api: 3
         volume: 3
@@ -243,11 +275,25 @@ data:
             pod_replacement_strategy: RollingUpdate
             rolling_update:
               max_unavailable: 50%
+      useHostNetwork:
+        volume: true
+        backup: true
       security_context:
         cinder_volume:
           container:
             cinder_volume:
               allowPrivilegeEscalation: true
+              privileged: true
+              readOnlyRootFilesystem: false
+        cinder_backup:
+          container:
+            cinder_backup:
+              privileged: true
+        cinder_api:
+          container:
+            cinder_api:
+              runAsUser: 0
+              readOnlyRootFilesystem: false
     labels:
       api:
         node_selector_key: openstack-control-plane
@@ -270,7 +316,69 @@ data:
     ceph_client:
       configmap: tenant-ceph-etc
       user_secret_name: pvc-tceph-client-key
+    network:
+      api:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/backend-protocol: "https"
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              more_set_headers "X-Content-Type-Options: nosniff";
+              more_set_headers "X-Frame-Options: deny";
+              more_set_headers "Content-Security-Policy: default-src 'self'";
+              more_set_headers "X-Permitted-Cross-Domain-Policies: none";
+              more_set_headers "X-XSS-Protection: 1; mode=block";
+    endpoints:
+      ingress:
+        port:
+          ingress:
+            default: 443
     conf:
+      software:
+        apache2:
+          binary: apache2
+          start_parameters: -DFOREGROUND
+          site_dir: /etc/apache2/sites-enabled
+          conf_dir: /etc/apache2/conf-enabled
+          mods_dir: /etc/apache2/mods-available
+          a2enmod:
+            - ssl
+          a2dismod: null
+      mpm_event: |
+        <IfModule mpm_event_module>
+          ServerLimit         1024
+          StartServers        32
+          MinSpareThreads     32
+          MaxSpareThreads     256
+          ThreadsPerChild     25
+          MaxRequestsPerChild 128
+          ThreadLimit         720
+        </IfModule>
+      wsgi_cinder: |
+        {{- $portInt := tuple "volume" "internal" "api" $ | include "helm-toolkit.endpoints.endpoint_port_lookup" }}
+        Listen {{ $portInt }}
+        <VirtualHost *:{{ $portInt }}>
+          ServerName {{ printf "%s.%s.svc.%s" "cinder-api" .Release.Namespace .Values.endpoints.cluster_domain_suffix }}
+          WSGIDaemonProcess cinder-api processes=1 threads=1 user=cinder display-name=%{GROUP}
+          WSGIProcessGroup cinder-api
+          WSGIScriptAlias /  /var/www/cgi-bin/cinder/cinder-wsgi
+          WSGIApplicationGroup %{GLOBAL}
+          WSGIPassAuthorization On
+          AllowEncodedSlashes On
+          <IfVersion >= 2.4>
+            ErrorLogFormat "%{cu}t %M"
+          </IfVersion>
+          SetEnvIf X-Forwarded-For "^.*\..*\..*\..*" forwarded
+          ErrorLog /dev/stdout
+          CustomLog /dev/stdout combined env=!forwarded
+          CustomLog /dev/stdout proxy env=forwarded
+
+          SSLEngine on
+          SSLCertificateFile      /etc/cinder/certs/tls.crt
+          SSLCertificateKeyFile   /etc/cinder/certs/tls.key
+          SSLProtocol             all -SSLv3 -TLSv1 -TLSv1.1
+          SSLCipherSuite          ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256
+          SSLHonorCipherOrder     on
+        </VirtualHost>
       ceph:
         pools:
           backup:

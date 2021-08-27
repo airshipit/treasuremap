@@ -101,8 +101,8 @@ data:
     image: 'bionic'
     kernel: 'ga-18.04'
     kernel_params:
-      kernel_package: 'linux-image-4.15.0-64-generic'
-      console: 'ttyS1,115200n8'
+      kernel_package: 'linux-image-4.15.0-140-generic'
+      console: 'ttyS0,115200n8 console=tty0'
       intel_iommu: 'on'
       iommu: 'pt'
       amd_iommu: 'on'

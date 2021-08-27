@@ -164,6 +164,7 @@ NO_PROXY=${NO_PROXY:-}
 # Promenade specific variables for downloading hyperkube image to generate genesis.sh
 PROMENADE_TMP=${PROMENADE_TMP:-}
 PROMENADE_TMP_LOCAL=${PROMENADE_TMP_LOCAL:-}
+PROMENADE_ENCRYPTION_KEY=${PROMENADE_ENCRYPTION_KEY:-}
 EOF
 
   # extract Hyperkube binary before running Promenade container

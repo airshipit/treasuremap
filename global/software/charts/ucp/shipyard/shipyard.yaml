@@ -276,6 +276,38 @@ data:
         anti:
           type:
             default: requiredDuringSchedulingIgnoredDuringExecution
+      mandatory_access_control:
+        type: apparmor
+        shipyard-api:
+          init: runtime/default
+          shipyard-api: runtime/default
+          airflow-web: runtime/default
+        airflow-worker:
+          init: runtime/default
+          worker-perms: runtime/default
+          airflow-worker: runtime/default
+          airflow-scheduler: runtime/default
+          airflow-logrotate: runtime/default
+        airflow-scheduler:
+          init: runtime/default
+          airflow-scheduler: runtime/default
+        shipyard-db-auxiliary:
+          init: runtime/default
+          shipyard-db-auxiliary: runtime/default
+        shipyard-db-init:
+          init: runtime/default
+          shipyard-db-init: runtime/default
+        shipyard-db-sync:
+          init: runtime/default
+          shipyard-db-sync: runtime/default
+        airflow-db-init:
+          init: runtime/default
+          airflow-db-init: runtime/default
+        airflow-db-sync:
+          init: runtime/default
+          airflow-db-sync: runtime/default
+        shipyard-api-test:
+          shipyard-api-test: runtime/default
       replicas:
         shipyard:
           api: 1
@@ -293,6 +325,9 @@ data:
         ingress:
           annotations:
             nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              more_set_headers "X-XSS-Protection: 1; mode=block";
+              more_set_headers "X-Frame-Options: deny";
       airflow:
         web:
           enable_node_port: false
@@ -300,6 +335,8 @@ data:
       shipyard:
         keystone_authtoken:
           memcache_security_strategy: None
+        requests_config:
+          deckhand_client_read_timeout: 300
       rabbitmq:
       # adding rmq policy to mirror messages from celery queues
       # TODO: the vhost should be sourced from the same place as the config of the queue (endpoints)

@@ -50,7 +50,7 @@ metadata:
 
     # Secrets
     - dest:
-       path: .values.conf.ceph.global.fsid
+        path: .values.conf.ceph.global.fsid
       src:
         schema: deckhand/Passphrase/v1
         name: ceph_fsid
@@ -88,6 +88,12 @@ data:
       provisioner:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
+      csi_rbd_plugin:
+        node_selector_key: ceph-osd
+        node_selector_value: enabled
+      test:
+        node_selector_key: ceph-osd
+        node_selector_value: enabled
     endpoints:
       ceph_mon:
         namespace: ceph
@@ -96,12 +102,36 @@ data:
       client_secrets: false
       rbd_provisioner: true
       cephfs_provisioner: false
+      csi: true
     bootstrap:
       enabled: true
     pod:
+      mandatory_access_control:
+        type: apparmor
+        ceph-cephfs-provisioner:
+          ceph-cephfs-provisioner: runtime/default
+          init: runtime/default
+        ceph-cepfs-client-key-generator:
+          ceph-storage-keys-generator: runtime/default
+        ceph-rbd-provisioner:
+          ceph-rbd-provisioner: runtime/default
+          init: runtime/default
+        ceph-rbd-csi-provisioner:
+          ceph-rbd-provisioner: runtime/default
+          init: runtime/default
+          ceph-rbd-snapshotter: runtime/default
+          ceph-rbd-attacher: runtime/default
+          csi-resizer: runtime/default
+          csi-rbdplugin: runtime/default
+        ceph-rbd-plugin:
+          driver-registrar: runtime/default
+          csi-rbdplugin: runtime/default
+          init: runtime/default
+        ceph-provisioner-test:
+          init: runtime/default
+          ceph-provisioner-helm-test: runtime/default
       replicas:
         rbd_provisioner: 1
-
     conf:
       ceph:
         global:

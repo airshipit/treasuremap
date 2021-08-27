@@ -56,7 +56,7 @@ metadata:
 
     # Secrets
     - dest:
-       path: .values.conf.ceph.global.fsid
+        path: .values.conf.ceph.global.fsid
       src:
         schema: deckhand/Passphrase/v1
         name: ceph_fsid
@@ -118,9 +118,81 @@ data:
       - balancer
       - iostat
     pod:
+      mandatory_access_control:
+        type: apparmor
+        ceph-checkdns:
+          ceph-checkdns: runtime/default
+          init: runtime/default
+        ceph-mds:
+          ceph-mds: runtime/default
+          ceph-init-dirs: runtime/default
+        ceph-mgr:
+          ceph-mgr: runtime/default
+          ceph-init-dirs: runtime/default
+        ceph-rbd-pool:
+          ceph-rbd-pool: runtime/default
+          init: runtime/default
+        ceph-client-bootstrap:
+          ceph-client-bootstrap: runtime/default
+          init: runtime/default
+        ceph-client-test:
+          ceph-cluster-helm-test: runtime/default
+          init: runtime/default
       replicas:
         mds: 1
         mgr: 1
+      resources:
+        enabled: true
+        mds:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        mgr:
+          requests:
+            memory: "2Gi"
+            cpu: "2000m"
+          limits:
+            memory: "8Gi"
+            cpu: "4000m"
+        checkdns:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        jobs:
+          bootstrap:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          image_repo_sync:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          rbd_pool:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          tests:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
     jobs:
       pool_checkPGs:
         # Run once a month at midnight of the first day of the month
@@ -134,11 +206,20 @@ data:
           # Skip new job if previous job still active
           execPolicy: Forbid
         startingDeadlineSecs: 60
+      rbd_pool:
+        restartPolicy: Never
     conf:
       features:
         pg_autoscaler: false
+        cluster_flags:
+          set: "noup"
       pool:
         spec:
+          # Health metrics pool
+          - name: device_health_metrics
+            application: mgr_devicehealth
+            replication: 3
+            percent_total_data: 5
           # RBD pool
           - name: rbd
             application: rbd
@@ -205,9 +286,13 @@ data:
           osd: 1
           pg_per_osd: 100
           protected: true
-          # Quota at 10000 to ensure that all pools have quotas greater
-          # than the cluster's capacity. 1000 would get some to about 85%
-          quota: 10000
+          # NOTE: 'quota' represents a scaler for effective capacity of cluster
+          # as a percent value. Setting it to anything more than 100 will mean
+          # that if all pools completely use their quotas, total data stored is
+          # more than capacity. For example quota at 10000 would ensure that
+          # EVERY pool can exceed cluster capacity. Set to 85 in order to maintain
+          # healthy state and allow data move in case of failures.
+          quota: 85
         default:
           # NOTE(alanmeadows): This is required ATM for bootstrapping a Ceph
           # cluster with only one OSD.  Depending on OSD targeting & site
@@ -220,6 +305,9 @@ data:
           # cluster with only one OSD.  Depending on OSD targeting & site
           # configuration this can be changed.
           osd_pool_default_size: 1
+          mon_pg_warn_min_per_osd: 0
+          mon_pg_warn_max_object_skew: 0
+
     manifests:
       cronjob_defragosds: false
   dependencies:

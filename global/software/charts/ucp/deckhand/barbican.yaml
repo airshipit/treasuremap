@@ -127,6 +127,12 @@ metadata:
         schema: deckhand/Passphrase/v1
         name: ucp_oslo_messaging_password
         path: .
+    - dest:
+        path: .values.conf.barbican.simple_crypto_plugin.kek
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_barbican_kek
+        path: .
 data:
   chart_name: ucp-barbican
   release: ucp-barbican
@@ -151,11 +157,14 @@ data:
     post:
       create: []
   values:
+    helm3_hook: false
     conf:
       barbican:
         DEFAULT:
           max_allowed_request_size_in_bytes: 256000
           max_allowed_secret_in_bytes: 256000
+        simple_crypto_plugin:
+          kek: ""
       policy:
         secret_project_match: project_id:%(target.secret.project_id)s
         secret_creator_user: user_id:%(target.secret.creator_id)s
@@ -231,10 +240,14 @@ data:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
     pod:
-      apparmor:
-        barbican:
-          barbican: localhost/docker-default
-          init: localhost/docker-default
+      mandatory_access_control:
+        type: apparmor
+        barbican-api:
+          barbican-api: runtime/default
+          init: runtime/default
+        barbican-test:
+          init: runtime/default
+          barbican-test: runtime/default
       affinity:
         anti:
           type:

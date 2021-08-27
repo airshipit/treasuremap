@@ -51,6 +51,12 @@ metadata:
         path: .
       dest:
         path: .values.secrets.maas_region.value
+    - src:
+        schema: nc/CorridorConfig/v1
+        name: corridor-config
+        path: .airship.log_level
+      dest:
+        path: .values.conf.syslog.log_level
 
     # Endpoint substitutions
     - src:
@@ -147,6 +153,43 @@ data:
             release_group: clcp-maas
   values:
     pod:
+      mandatory_access_control:
+        type: apparmor
+        maas-rack:
+          maas-rack: runtime/default
+          init: runtime/default
+        maas-region:
+          maas-region: runtime/default
+          maas-cache: runtime/default
+          init: runtime/default
+        maas-syslog:
+          syslog: runtime/default
+          logrotate: runtime/default
+          init: runtime/default
+        maas-ingress:
+          maas-ingress-vip: runtime/default
+          maas-ingress: runtime/default
+          init: runtime/default
+          maas-ingress-vip-init: runtime/default
+        maas-ingress-errors:
+          maas-ingress-errors: runtime/default
+        maas-bootstrap-admin-user:
+          maas-bootstrap-admin-user: runtime/default
+          init: runtime/default
+        maas-db-init:
+          maas-db-init: runtime/default
+          init: runtime/default
+        maas-db-sync:
+          maas-db-sync: runtime/default
+          init: runtime/default
+        maas-export-api-key:
+          exporter: runtime/default
+          init: runtime/default
+        maas-import-resources:
+          region-import-resources: runtime/default
+          init: runtime/default
+        maas-api-test:
+          maas-api-test: runtime/default
       affinity:
         anti:
           type:
@@ -171,7 +214,12 @@ data:
           enabled: false
     conf:
       cache:
-        enabled: false
+        enabled: true
+      cloudconfig:
+        override: true
+        sections:
+          bootcmd:
+            - "rm -fr /var/lib/apt/lists"
       maas:
         credentials:
           secret:
@@ -189,6 +237,14 @@ data:
           default_os: 'ubuntu'
           default_image: 'bionic'
           default_kernel: 'ga-18.04'
+        force_gpt: true
+        extra_settings:
+          # disable network discovery completely
+          network_discovery: disabled
+          active_discovery_interval: 0
+        # disable creation of root account with default password
+        system_user: null
+        system_passwd: null
   dependencies:
     - maas-htk
 ...

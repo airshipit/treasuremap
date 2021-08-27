@@ -54,7 +54,7 @@ metadata:
 
     # Secrets
     - dest:
-       path: .values.conf.ceph.global.fsid
+        path: .values.conf.ceph.global.fsid
       src:
         schema: deckhand/Passphrase/v1
         name: ceph_fsid
@@ -84,6 +84,42 @@ data:
           labels:
             release_group: clcp-ucp-ceph-mon
   values:
+    pod:
+      mandatory_access_control:
+        type: apparmor
+        ceph-mon:
+          ceph-init-dirs: runtime/default
+          ceph-mon: runtime/default
+          ceph-log-ownership: runtime/default
+        ceph-mon-check:
+          ceph-mon: runtime/default
+          init: runtime/default
+        ceph-bootstrap:
+          ceph-bootstrap: runtime/default
+          init: runtime/default
+        ceph-storage-keys-generator:
+          ceph-storage-keys-generator: runtime/default
+          init: runtime/default
+        ceph-mon-keyring-generator:
+          ceph-mon-keyring-generator: runtime/default
+          init: runtime/default
+        ceph-mgr-keyring-generator:
+          init: runtime/default
+          ceph-mgr-keyring-generator: runtime/default
+        ceph-mds-keyring-generator:
+          init: runtime/default
+          ceph-mds-keyring-generator: runtime/default
+        ceph-osd-keyring-generator:
+          ceph-osd-keyring-generator: runtime/default
+          init: runtime/default
+      lifecycle:
+        upgrades:
+          daemonsets:
+            pod_replacement_strategy: RollingUpdate
+            mon:
+              enabled: true
+              min_ready_seconds: 0
+              max_unavailable: 1
     labels:
       job:
         node_selector_key: ucp-control-plane
@@ -103,6 +139,8 @@ data:
       ceph:
         global:
           mon_data_avail_warn: 30
+          mon_pg_warn_min_per_osd: 0
+          mon_pg_warn_max_object_skew: 0
   dependencies:
     - ceph-htk
 ...

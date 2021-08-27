@@ -136,6 +136,27 @@ data:
     bootstrap:
       enabled: false
     pod:
+      mandatory_access_control:
+        type: apparmor
+        ceph-rgw:
+          init: runtime/default
+          ceph-rgw: runtime/default
+          ceph-init-dirs: runtime/default
+          ceph-rgw-init: runtime/default
+        ceph-rgw-bootstrap:
+          ceph-keyring-placement: runtime/default
+          init: runtime/default
+          ceph-rgw-bootstrap: runtime/default
+        ceph-rgw-storage-init:
+          ceph-keyring-placement: runtime/default
+          init: runtime/default
+          ceph-rgw-storage-init: runtime/default
+        ceph-rgw-s3-admin:
+          ceph-keyring-placement: runtime/default
+          init: runtime/default
+          create-s3-admin: runtime/default
+        ceph-rgw-test:
+          ceph-rgw-ks-validation: runtime/default
       affinity:
         anti:
           type:
@@ -146,12 +167,22 @@ data:
       rgw_ks:
         enabled: true
         config:
-          rgw_keystone_accepted_roles: "admin, _member_, member"
+          rgw_keystone_accepted_roles: "admin, member, swift_pool_ro, swift_pool_admin, swift_admin"
     ceph_client:
       configmap: ceph-etc
     secrets:
       keyrings:
         admin: pvc-ceph-client-key
+    network:
+      api:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /
+            nginx.ingress.kubernetes.io/proxy-body-size: "0"
+            nginx.ingress.kubernetes.io/proxy-max-temp-file-size: "0"
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              more_set_headers "X-Content-Type-Options: nosniff";
+              more_set_headers "X-Frame-Options: deny";
   dependencies:
     - ceph-htk
 ...

@@ -60,6 +60,14 @@ data:
         node_selector_key: openvswitch
         node_selector_value: enabled
     pod:
+      mandatory_access_control:
+        type: apparmor
+        openvswitch-vswitchd:
+          openvswitch-vswitchd: runtime/default
+          openvswitch-vswitchd-modules: runtime/default
+        openvswitch-db:
+          openvswitch-db: runtime/default
+          openvswitch-db-perms: runtime/default
       probes:
         ovs_db:
           ovs_db:

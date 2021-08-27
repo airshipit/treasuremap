@@ -254,6 +254,11 @@ data:
             release_group: clcp-ucp-apiserver-webhook
   values:
     pod:
+      mandatory_access_control:
+        type: apparmor
+        apiserver-webhook:
+          apiserver: runtime/default
+          webhook: runtime/default
       replicas:
         api: 1
       affinity:
@@ -271,6 +276,18 @@ data:
       kubernetes_apiserver:
         node_selector_key: kubernetes-apiserver
         node_selector_value: enabled
+    network:
+      api:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /
+            nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+            nginx.ingress.kubernetes.io/ssl-redirect: "true"
+            nginx.ingress.kubernetes.io/secure-backends: "true"
+            nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              more_set_headers "X-XSS-Protection: 1; mode=block";
+              more_set_headers "X-Frame-Options: deny";
     conf:
       policy:
         - resource:
@@ -294,38 +311,6 @@ data:
               - pods/exec
             namespace: "utility"
             version: "*"
-          match:
-            - type: role
-              values:
-                - utility_exec
-        - nonresource:
-            verbs:
-              - get
-            path: "/api"
-          match:
-            - type: role
-              values:
-                - utility_exec
-        - nonresource:
-            verbs:
-              - get
-            path: "/api/*"
-          match:
-            - type: role
-              values:
-                - utility_exec
-        - nonresource:
-            verbs:
-              - get
-            path: "/apis"
-          match:
-            - type: role
-              values:
-                - utility_exec
-        - nonresource:
-            verbs:
-              - get
-            path: "/apis/*"
           match:
             - type: role
               values:
@@ -385,14 +370,6 @@ data:
               - "*"
             namespace: "*"
             version: "*"
-          match:
-            - type: role
-              values:
-                - admin_k8scluster
-        - nonresource:
-            verbs:
-              - "*"
-            path: "*"
           match:
             - type: role
               values:
@@ -706,6 +683,141 @@ data:
             - type: role
               values:
                 - admin_k8scluster_viewer
+        # gatekeeper constraints can be viewed
+        - resource:
+            verbs:
+              - get
+              - list
+            resources:
+              - "*"
+            version: constraints.gatekeeper.sh
+            namespace: "*"
+          match:
+            - type: role
+              values:
+                - gatekeeper_constraint_reader
+        # argo workflows can be viewed, created, and deleted in the aqua namespace
+        - resource:
+            verbs:
+              - create
+              - get
+              - list
+              - delete
+              - watch
+            resources:
+              - workflows
+            version: argoproj.io
+            namespace: aqua
+          match:
+            - type: role
+              values:
+                - aqua_bathysphere
+        # Every built-in or custom resource can be get/list in aqua namespace
+        - resource:
+            verbs:
+              - get
+              - list
+            resources:
+              - '*'
+            version: '*'
+            namespace: aqua
+          match:
+            - type: role
+              values:
+                - aqua_bathysphere
+        # To enable discovery when using Kubectl get/list command on nodes
+        - resource:
+            verbs:
+              - get
+              - list
+            resources:
+              - nodes
+            version: ''
+            namespace: "*"
+          match:
+            - type: role
+              values:
+                - aqua_bathysphere
+        # TestResultRef custom resources can be fully managed in the aqua namespace
+        - resource:
+            verbs:
+              - get
+              - list
+              - create
+              - delete
+              - watch
+              - update
+              - patch
+            resources:
+              - testresultrefs
+            version: 'aqua.att.com'
+            namespace: aqua
+          match:
+            - type: role
+              values:
+                - aqua_bathysphere
+        - nonresource:
+            verbs:
+              - get
+            path: "/api"
+          match:
+            - type: role
+              values:
+                - utility_exec
+                - admin_k8scluster_viewer
+                - kube-system-viewer
+        - nonresource:
+            verbs:
+              - get
+            path: "/api/*"
+          match:
+            - type: role
+              values:
+                - utility_exec
+                - admin_k8scluster_viewer
+                - kube-system-viewer
+        - nonresource:
+            verbs:
+              - get
+            path: "/apis"
+          match:
+            - type: role
+              values:
+                - utility_exec
+                - admin_k8scluster_viewer
+                - kube-system-viewer
+        - nonresource:
+            verbs:
+              - get
+            path: "/apis/*"
+          match:
+            - type: role
+              values:
+                - utility_exec
+                - admin_k8scluster_viewer
+                - kube-system-viewer
+        - nonresource:
+            verbs:
+              - get
+            path: "/version"
+          match:
+            - type: role
+              values:
+                - utility_exec
+                - admin_k8scluster_viewer
+                - kube-system-viewer
+        - nonresource:
+            verbs:
+              - "*"
+            path: "*"
+          match:
+            - type: role
+              values:
+                - admin
+                - admin_k8scluster
+                - admin_k8scluster_editor
+                - aqua_bathysphere
+                - kube-system-admin
       apiserver:
         encryption_provider:
           file: encryption_provider.yaml

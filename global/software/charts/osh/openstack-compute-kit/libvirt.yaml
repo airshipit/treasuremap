@@ -64,6 +64,15 @@ data:
         type: apparmor
         libvirt-libvirt-default:
           libvirt: localhost/libvirt-v1
+      resources:
+        enabled: true
+        libvirt:
+          requests:
+            memory: "4096Mi"
+            cpu: "4000m"
+          limits:
+            memory: "4096Mi"
+            cpu: "4000m"
     ceph_client:
       configmap: tenant-ceph-etc
       user_secret_name: pvc-tceph-client-key
