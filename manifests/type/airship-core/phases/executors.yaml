@@ -3,7 +3,7 @@ kind: GenericContainer
 metadata:
   name: kubectl-annotate-node-for-hostconfig-operator
 spec:
-  image: quay.io/airshipit/toolbox:latest
+  image: localhost/toolbox
   hostNetwork: true
 configRef:
   kind: ConfigMap

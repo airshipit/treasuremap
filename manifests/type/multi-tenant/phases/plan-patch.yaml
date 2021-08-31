@@ -2,7 +2,7 @@ apiVersion: airshipit.org/v1alpha1
 kind: PhasePlan
 metadata:
   name: deploy-gating
-description: "Phase plan for airship-core deployment on gating"
+description: "Phase plan for multi tenant bare metal deployment"
 phases:
   # Deploy ephemeral node using redfish with iso
   - name: remotedirect-ephemeral
@@ -142,11 +142,10 @@ phases:
   # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
   # and find ConfigMap with name kubectl-check-ingress-ctrl
   - name: kubectl-check-ingress-ctrl-target
-  # (TODO) Need to verify these phases
-  # - name: lma-infra
-  # - name: lma-stack
-  # - name: lma-configs
-  # - name: deliver-network-policy
+    #- name: lma-infra
+    #- name: lma-stack
+    #- name: lma-configs
+    #- name: deliver-network-policy
 validation:
  kindsToSkip:
    - Clusterctl

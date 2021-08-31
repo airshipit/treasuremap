@@ -1,4 +1,5 @@
 resources:
+  - ../catalogues
   - ../../../../type/multi-tenant/ephemeral/initinfra-networking
 transformers:
   - ../../../../type/multi-tenant/ephemeral/initinfra-networking/replacements

@@ -8,3 +8,4 @@ resources:
   - ../../../function/phase-helper
 patchesStrategicMerge:
   - cluster_map_patch.yaml
+  - plan-patch.yaml

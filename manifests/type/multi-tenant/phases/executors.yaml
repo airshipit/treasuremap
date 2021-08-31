@@ -25,3 +25,15 @@ configRef:
   kind: ConfigMap
   name: calicoctl-delete
   apiVersion: v1
+---
+apiVersion: airshipit.org/v1alpha1
+kind: GenericContainer
+metadata:
+  name: kubectl-annotate-node-for-hostconfig-operator
+spec:
+  image: localhost/toolbox
+  hostNetwork: true
+configRef:
+  kind: ConfigMap
+  name: kubectl-annotate-node-for-hostconfig-operator
+  apiVersion: v1
