@@ -1,7 +1,0 @@
-resources:
-  - namespace.yaml
-  - kubeadmconfigtemplate.yaml
-  - machinedeployment.yaml
-  - metal3machinetemplate.yaml
-
-namespace: target-infra

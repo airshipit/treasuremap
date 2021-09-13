@@ -6,4 +6,4 @@ resources:
 
 transformers:
   - ../../../../../function/workers-vm-infra/replacements
-  - ../../../../../function/workers-capm3/replacements
+  - ../../../../../../../airshipctl/manifests/function/workers-capm3/replacements
