@@ -5,4 +5,4 @@ resources:
   - ../../../../type/multi-tenant/target/workers
   - ../catalogues
 transformers:
-  - ../../../../type/airship-core/target/workers/replacements
+  - ../../../../type/multi-tenant/target/workers/replacements
