@@ -1,6 +1,12 @@
 resources:
   - ../kubeconfig
   - ../../../type/airship-core/phases
+  - ../target/catalogues
+
+transformers:
+  - ../../../../../airshipctl/manifests/function/clusterctl/replacements
+  - ../../../../../airshipctl/manifests/phases/replacements
+
 ## TODO Consider making a catalogue combined with variable substitution instead
 patchesStrategicMerge:
   - phase-patch.yaml

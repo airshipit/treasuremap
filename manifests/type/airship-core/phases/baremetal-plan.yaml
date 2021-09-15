@@ -1,0 +1,155 @@
+apiVersion: airshipit.org/v1alpha1
+kind: PhasePlan
+metadata:
+  name: deploy-baremetal
+description: "Phase plan for airship-core deployment on bare metals"
+phases:
+  # Deploy ephemeral node using redfish with iso
+  - name: remotedirect-ephemeral
+  # Wait for apiserver to become available
+  # Scripts for this phase placed in manifests/function/phase-helpers/wait_node/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-wait-node
+  - name: kubectl-wait-node-ephemeral
+  # Waiting for any pods to be available
+  # Scripts for this phase placed in manifests/function/phase-helpers/wait_pods_any/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-wait-pods-any
+  - name: kubectl-wait-pods-any-ephemeral
+  # Deploy calico using tigera operator
+  - name: initinfra-networking-ephemeral
+  # Wait for Calico to be deployed using tigera
+  # Scripts for this phase placed in manifests/function/phase-helpers/wait_tigera/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-wait_tigera
+  - name: kubectl-wait-tigera-ephemeral
+  # Deploy metal3.io components to ephemeral node
+  - name: initinfra-ephemeral
+  # Getting pods as debug information"
+  # Scripts for this phase placed in manifests/function/phase-helpers/get_pods/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-get-pods
+  - name: kubectl-get-pods-ephemeral
+  # Deploy cluster-api components to ephemeral node
+  - name: clusterctl-init-ephemeral
+  # Waiting for clusterapi pods to come up
+  # Scripts for this phase placed in manifests/function/phase-helpers/wait_deploy/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-wait-deploy
+  - name: kubectl-wait-deploy-ephemeral
+  # Scripts for this phase placed in manifests/function/phase-helpers/get_pods/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-get-pods
+  - name: kubectl-get-pods-ephemeral
+  # Create target k8s cluster resources
+  - name: controlplane-ephemeral
+  # List all nodes in target cluster
+  # Scripts for this phase placed in manifests/function/phase-helpers/get_node/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-get-node
+  - name: kubectl-get-node-target
+  # List all pods in target cluster
+  # Scripts for this phase placed in manifests/function/phase-helpers/get_pods/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-get-pods
+  - name: kubectl-get-pods-target
+  # Deploy calico using tigera operator
+  - name: initinfra-networking-target
+  # Wait for Calico to be deployed using tigera
+  # Scripts for this phase placed in manifests/function/phase-helpers/wait_tigera/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-wait-tigera
+  - name: kubectl-wait-tigera-target
+  # Deploy infra to cluster
+  - name: initinfra-target
+  # List all pods
+  # Scripts for this phase placed in manifests/function/phase-helpers/get_pods/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-get-pods
+  - name: kubectl-get-pods-target
+  # Annotate node for hostconfig-operator
+  # Scripts for this phase placed in manifests/function/phase-helpers/annotate_node_for_hostconfig_operator/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-annotate-node-for-hostconfig-operator
+  - name: kubectl-annotate-node-for-hostconfig-operator-target
+  # Deploy CAPI components to target cluster
+  - name: clusterctl-init-target
+  # Waiting for pods to be ready
+  # Scripts for this phase placed in manifests/function/phase-helpers/wait_pods_ready/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-wait-pods-ready
+  - name: kubectl-wait-pods-ready-target
+  # Scripts for this phase placed in manifests/function/phase-helpers/get_pods/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-get-pods
+  - name: kubectl-get-pods-target
+  # Move Cluster Object to Target Cluster
+  - name: clusterctl-move
+  # Waiting for pods to be ready
+  # Scripts for this phase placed in manifests/function/phase-helpers/wait_pods_ready/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-wait-pods-ready
+  - name: kubectl-wait-pods-ready-target
+  # Scripts for this phase placed in manifests/function/phase-helpers/get_pods/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-get-pods
+  - name: kubectl-get-pods-target
+  # Wait till crds are created
+  # Scripts for this phase placed in manifests/function/phase-helpers/wait_cluster/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-wait-cluster
+  - name: kubectl-wait-cluster-target
+  # Power off Ephemeral baremetal host avoid DHCP conflict
+  - name: power-off-ephemeral
+  # (TODO) Need to add manifests for controlplane-target phase
+  # Create target k8s cluster resources
+  # - name: controlplane-target
+  # List all nodes in target cluster
+  # Scripts for this phase placed in manifests/function/phase-helpers/get_node/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-get-node
+  - name: kubectl-get-node-target
+  # List all pods in target cluster
+  # Scripts for this phase placed in manifests/function/phase-helpers/get_pods/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-get-pods
+  - name: kubectl-get-pods-target
+  # Deploy worker node
+  - name: workers-target
+  # Waiting for node to be provisioned
+  # Scripts for this phase placed in manifests/function/phase-helpers/wait_label_node/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-wait-label-node
+  - name: kubectl-wait-label-node-target
+  # Annotate node for hostconfig-operator
+  # Scripts for this phase placed in manifests/function/phase-helpers/annotate_node_for_hostconfig_operator/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-annotate-node-for-hostconfig-operator
+  - name: kubectl-annotate-node-for-hostconfig-operator-target
+  # Deploy workload
+  - name: workload-target
+  # Ensure we can reach ingress controller default backend
+  # Scripts for this phase placed in manifests/function/phase-helpers/check_ingress_ctrl/
+  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
+  # and find ConfigMap with name kubectl-check-ingress-ctrl
+  - name: kubectl-check-ingress-ctrl-target
+  # (TODO) Need to verify these phases
+  # - name: lma-infra
+  # - name: lma-stack
+  # - name: lma-configs
+  # - name: deliver-network-policy
+validation:
+ kindsToSkip:
+   - Clusterctl
+   - VariableCatalogue
+   - StorageCatalogue
+---
+apiVersion: airshipit.org/v1alpha1
+kind: PhasePlan
+metadata:
+  name: iso
+validation:
+  kindsToSkip:
+    - RemoteDirectConfiguration
+    - VariableCatalogue
+    - StorageCatalogue

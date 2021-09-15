@@ -4,5 +4,8 @@ resources:
   - nodes
   - ../../../../type/multi-tenant/target/workers
   - ../catalogues
+
+namespace: target-infra
+
 transformers:
   - ../../../../type/multi-tenant/target/workers/replacements
