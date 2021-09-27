@@ -1,6 +1,6 @@
 resources:
-  - generated/
-  - imported/
+  - secrets.yaml
 
 transformers:
   - ../../../../../type/airship-core/shared/decrypt-secrets/
+  - ../../../../../type/airship-core/shared/decrypt-secrets/cleanup/

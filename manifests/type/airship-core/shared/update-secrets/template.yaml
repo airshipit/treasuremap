@@ -1,0 +1,140 @@
+apiVersion: airshipit.org/v1alpha1
+kind: Templater
+metadata:
+  name: secret-template
+  annotations:
+    config.kubernetes.io/function: |
+      container:
+        image: quay.io/airshipit/templater:latest
+        envs:
+          - FORCE_REGENERATE
+          - ONLY_CLUSTERS
+          - DEBUG_TEMPLATER
+values:
+  # these settings are overridable
+  sshKeyGen:
+    encBit: 4096
+  ephemeralCluster:
+    ca:
+      subj: "/CN=Kubernetes API"
+      validity: 3650
+    kubeconfigCert:
+      subj: "/CN=admin/O=system:masters"
+      validity: 365
+  targetCluster:
+    ca:
+      subj: "/CN=Kubernetes API"
+      validity: 3650
+    kubeconfigCert:
+      subj: "/CN=admin/O=system:masters"
+      validity: 365
+template: |
+  {{/***********************************************************************/}}
+  {{/*          define regenerate templates for different sections         */}}
+  {{/***********************************************************************/}}
+  {{- define "regenEphemeralK8sSecrets" -}}
+    {{- $ClusterCa := genCAEx .ephemeralCluster.ca.subj (int .ephemeralCluster.ca.validity) }}
+    {{- $KubeconfigCert := genSignedCertEx .ephemeralCluster.kubeconfigCert.subj nil nil (int .ephemeralCluster.kubeconfigCert.validity) $ClusterCa -}}
+  values:
+    - data: {{ $ClusterCa.Cert | b64enc | quote }}
+      name: caCrt
+    - data: {{ $ClusterCa.Key | b64enc | quote }}
+      name: caKey
+    - data: {{ $KubeconfigCert.Cert | b64enc | quote }}
+      name: crt
+    - data: {{ $KubeconfigCert.Key | b64enc | quote }}
+      name: key
+  {{- end -}}
+  {{- define "regenTargetK8sSecrets" -}}
+    {{- $ClusterCa := genCAEx .targetCluster.ca.subj (int .targetCluster.ca.validity) }}
+    {{- $KubeconfigCert := genSignedCertEx .targetCluster.kubeconfigCert.subj nil nil (int .targetCluster.kubeconfigCert.validity) $ClusterCa }}
+  values:
+    - data: {{ $ClusterCa.Cert | b64enc | quote }}
+      name: caCrt
+    - data: {{ $ClusterCa.Key | b64enc | quote }}
+      name: caKey
+    - data: {{ $KubeconfigCert.Cert | b64enc | quote }}
+      name: crt
+    - data: {{ $KubeconfigCert.Key | b64enc | quote }}
+      name: key
+  {{- end -}}
+  {{- define "regenIsoImageSecrets" -}}
+  values:
+    - data: {{ derivePassword 1 "long" (randAscii 10) "user" "airshipit.org" | quote }}
+      name: rootPasswd
+    - data: {{ derivePassword 1 "long" (randAscii 10) "user" "airshipit.org" | quote }}
+      name: deployerPasswd
+  {{- end -}}
+  {{- define "regenTargetSshSecrets" -}}
+    {{- $sshKey := genSSHKeyPair (int .sshKeyGen.encBit) }}
+  values:
+    - data: {{ $sshKey.Private | quote }}
+      name: privateKey
+    - data: {{ $sshKey.Public | quote }}
+      name: publicKey
+  {{- end -}}
+  {{/***********************************************************************/}}
+  {{- $onlyClusters := list -}}
+  {{- if not (eq (env "ONLY_CLUSTERS") "") -}}
+    {{- $onlyClusters = splitList "," (env "ONLY_CLUSTERS") -}}
+  {{- end -}}
+  {{/***********************************************************************/}}
+  {{/* get combined-secrets yaml and exclude it from the bundle */}}
+  {{- $combinedSecrets := index (KOneFilter getItems (include "grepTpl" (list "[\"metadata\", \"name\"]" "^combined-ephemeral-secrets$" "false"))) 0 -}}
+  {{- $_ := setItems (KOneFilter getItems (include "grepTpl" (list "[\"metadata\", \"name\"]" "^combined-ephemeral-secrets$" "true"))) -}}
+  {{/* get combined-secrets-import yaml and exclude it from the bundle */}}
+  {{- $combinedSecretsImport := index (KOneFilter getItems (include "grepTpl" (list "[\"metadata\", \"name\"]" "^combined-ephemeral-secrets-import$"))) 0 -}}
+  {{/* skip secrets generation if it wasn't decrypted */}}
+  {{- if and (eq (include "isEncrypted" $combinedSecrets) "false") (or (eq (len $onlyClusters) 0) (has "ephemeral" $onlyClusters)) -}}
+  {{- $_ := setItems (KOneFilter getItems (include "grepTpl" (list "[\"metadata\", \"name\"]" "^combined-ephemeral-secrets-import$" "true"))) -}}
+  apiVersion: airshipit.org/v1alpha1
+  kind: VariableCatalogue
+  metadata:
+    labels:
+      airshipit.org/deploy-k8s: "false"
+    name: combined-ephemeral-secrets-import
+  secretGroups: []
+  ---
+  apiVersion: airshipit.org/v1alpha1
+  kind: VariableCatalogue
+  metadata:
+    annotations:
+      config.kubernetes.io/path: "ephemeral/catalogues/encrypted/secrets.yaml"
+    labels:
+      airshipit.org/deploy-k8s: "false"
+    name: combined-ephemeral-secrets
+  secretGroups:
+    - {{ include "group" (list . $combinedSecrets $combinedSecretsImport "isoImageSecrets" "once" "regenIsoImageSecrets" ) | indent 4 | trim }}
+    - {{ include "group" (list . $combinedSecrets $combinedSecretsImport "ephemeralK8sSecrets" "once" "regenEphemeralK8sSecrets" ) | indent 4 | trim }}
+  ---
+  {{- end -}}
+  {{/***********************************************************************/}}
+  {{/* get combined-secrets yaml and exclude it from the bundle */}}
+  {{- $combinedSecrets = index (KOneFilter getItems (include "grepTpl" (list "[\"metadata\", \"name\"]" "^combined-target-secrets$" "false"))) 0 -}}
+  {{- $_ := setItems (KOneFilter getItems (include "grepTpl" (list "[\"metadata\", \"name\"]" "^combined-target-secrets$" "true"))) -}}
+  {{/* get combined-secrets-import yaml and exclude it from the bundle */}}
+  {{- $combinedSecretsImport = index (KOneFilter getItems (include "grepTpl" (list "[\"metadata\", \"name\"]" "^combined-target-secrets-import$"))) 0 -}}
+  {{/* skip secrets generation if it wasn't decrypted */}}
+  {{- if and (eq (include "isEncrypted" $combinedSecrets) "false") (or (eq (len $onlyClusters) 0) (has "target" $onlyClusters)) -}}
+  {{- $_ := setItems (KOneFilter getItems (include "grepTpl" (list "[\"metadata\", \"name\"]" "^combined-target-secrets-import$" "true"))) -}}
+  apiVersion: airshipit.org/v1alpha1
+  kind: VariableCatalogue
+  metadata:
+    labels:
+      airshipit.org/deploy-k8s: "false"
+    name: combined-target-secrets-import
+  secretGroups: []
+  ---
+  apiVersion: airshipit.org/v1alpha1
+  kind: VariableCatalogue
+  metadata:
+    annotations:
+      config.kubernetes.io/path: "target/catalogues/encrypted/secrets.yaml"
+    labels:
+      airshipit.org/deploy-k8s: "false"
+    name: combined-target-secrets
+  secretGroups:
+    - {{ include "group" (list . $combinedSecrets $combinedSecretsImport "targetK8sSecrets" "yearly" "regenTargetK8sSecrets" ) | indent 4 | trim }}
+    - {{ include "group" (list . $combinedSecrets $combinedSecretsImport "targetSshSecrets" "yearly" "regenTargetSshSecrets" ) | indent 4 | trim }}
+  ---
+  {{- end -}}

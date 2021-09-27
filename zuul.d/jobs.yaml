@@ -35,7 +35,7 @@
         - ./tools/deployment/common/21_systemwide_executable.sh
         - ./tools/deployment/common/22_test_configs.sh
         - ./tools/deployment/common/23_pull_documents.sh
-        - ./tools/validate_docs
+        - ./tools/validate_docs virtual-airship-core
 
 - job:
     name: treasuremap-upload-git-mirror
