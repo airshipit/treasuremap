@@ -659,7 +659,7 @@ data:
         type: git
       mariadb-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 27f181a9d30294030d695b747b2e4560ffbd29be
+        reference: f08d30df6b871044135534eedf76c8f2760d9923
         subpath: helm-toolkit
         type: git
       memcached:
