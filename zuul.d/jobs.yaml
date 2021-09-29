@@ -30,12 +30,13 @@
         # Override AIRSHIPCTL default 'test-site' validation so gate jobs will run
         # on all the sites present in  TREASUREMAP repo
         SITE: ""
+        SITES_TO_SKIP: "reference-multi-tenant virtual-multi-tenant"
       gate_scripts:
         - ./tools/deployment/common/01_install_essentials.sh
         - ./tools/deployment/common/21_systemwide_executable.sh
         - ./tools/deployment/common/22_test_configs.sh
         - ./tools/deployment/common/23_pull_documents.sh
-        - ./tools/validate_docs virtual-airship-core
+        - ./tools/validate_docs
 
 - job:
     name: treasuremap-upload-git-mirror

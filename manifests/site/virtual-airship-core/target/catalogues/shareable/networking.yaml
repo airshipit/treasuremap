@@ -16,6 +16,7 @@ spec:
   ironic:
     provisioningIp: "10.23.24.102"
     dhcpRange: "10.23.24.200,10.23.24.250"
+    ironicAutomatedClean: true
   # Update the attribute "address" for both entries
   # with your DNS IPs below if you are behind a proxy
   commonHostNetworking:

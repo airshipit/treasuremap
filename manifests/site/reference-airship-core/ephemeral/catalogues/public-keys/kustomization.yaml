@@ -1,0 +1,10 @@
+configMapGenerator:
+  - name: ephemeral-encryption-keys
+    options:
+      disableNameSuffixHash: true
+    files:
+      - cmd-import-pgp=example.pub
+    literals:
+      # user U1, U2 and U3
+      - pgp=FBC7B9E2A4F9289AC0C1D4843D16CEE4A27381B4,D7229043384BCC60326C6FB9D8720D957C3D3074,9DC6FBBDB3801E4E1144017138959A55322BC64B
+      # - hc-vault-transit=http://127.0.0.1:8200/v1/sops/keys/firstkey,http://127.0.0.1:8200/v1/sops/keys/secondkey

@@ -22,7 +22,7 @@ phases:
   # Scripts for this phase placed in manifests/function/phase-helpers/wait_tigera/
   # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
   # and find ConfigMap with name kubectl-wait_tigera
-  - name: kubectl-wait-tigera-ephemeral
+  #- name: kubectl-wait-tigera-ephemeral
   # Deploy metal3.io components to ephemeral node
   - name: initinfra-ephemeral
   # Getting pods as debug information"
@@ -59,7 +59,7 @@ phases:
   # Scripts for this phase placed in manifests/function/phase-helpers/wait_tigera/
   # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
   # and find ConfigMap with name kubectl-wait-tigera
-  - name: kubectl-wait-tigera-target
+  #- name: kubectl-wait-tigera-target
   # Deploy infra to cluster
   - name: initinfra-target
   # List all pods
