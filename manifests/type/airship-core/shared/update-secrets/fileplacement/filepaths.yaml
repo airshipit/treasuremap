@@ -1,0 +1,25 @@
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: imported-filnames-patch-0
+patch: |
+  apiVersion: airshipit.org/v1alpha1
+  kind: VariableCatalogue
+  metadata:
+    name: combined-ephemeral-secrets-import
+    annotations:
+      config.kubernetes.io/path: "encrypted/update/secrets.yaml"
+      config.kubernetes.io/index: '0'
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: imported-filnames-patch-1
+patch: |
+  apiVersion: airshipit.org/v1alpha1
+  kind: VariableCatalogue
+  metadata:
+    name: combined-target-secrets-import
+    annotations:
+      config.kubernetes.io/path: "encrypted/update/secrets.yaml"
+      config.kubernetes.io/index: '1'

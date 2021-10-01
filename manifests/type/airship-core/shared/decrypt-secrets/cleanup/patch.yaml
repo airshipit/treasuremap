@@ -1,0 +1,12 @@
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: delete-decryption-secrets
+target:
+ name: decryption-key
+patch: |
+  apiVersion: not-important
+  kind: not-important
+  metadata:
+    name: not-important
+  $patch: delete

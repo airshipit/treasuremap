@@ -1,4 +1,0 @@
-resources:
-  - ../results/imported/
-transformers:
-  - ../../../../../type/airship-core/target/importer/fileplacement/

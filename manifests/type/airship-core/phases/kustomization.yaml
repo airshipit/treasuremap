@@ -1,5 +1,5 @@
 resources:
-  - ../../../../../airshipctl/manifests/phases/
+  - ../../../../../airshipctl/manifests/type/gating/phases/
   - ../../../function/phase-helper/
   - executors.yaml
   - phases.yaml

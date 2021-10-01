@@ -19,15 +19,20 @@ template: |
     annotations:
       config.k8s.io/function: |
         container:
-          image: localhost/sops
+          image:  gcr.io/kpt-fn-contrib/sops:v0.3.0
           envs:
           - SOPS_IMPORT_PGP
+          - SOPS_IMPORT_AGE
+          - VAULT_ADDR
+          - VAULT_TOKEN
+          network: true
   data:
     ignore-mac: true
     cmd: decrypt
     {{- if eq $tolerate "true" }}
     cmd-tolerate-failures: true
     {{- end }}
-    {{- if not (eq $debug "true")  }}
-    override-preexec-cmd: '[ "$SOPS_IMPORT_PGP" == "" ] || (echo "$SOPS_IMPORT_PGP" | gpg --import 2>/dev/null)'
+    {{- if eq $debug "true"  }}
+    override-preexec-cmd: '[ "$SOPS_IMPORT_PGP" == "" ] || (echo "$SOPS_IMPORT_PGP" | gpg --import >&2); [ "$SOPS_IMPORT_AGE" == "" ] || (echo "$SOPS_IMPORT_AGE" >> $XDG_CONFIG_HOME/sops/age/keys.txt);'
     {{- end }}
+    cmd-extra-params-json-path-filter: '$[?(@.metadata.name=="decryption-key")]'

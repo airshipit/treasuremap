@@ -1,0 +1,3 @@
+resources:
+  - encrypt-ephemeral.yaml
+  - encrypt-target.yaml
