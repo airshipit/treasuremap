@@ -1,0 +1,10 @@
+directories:
+  - "./"
+fileExtensions:
+  - ".md"
+  - ".rst"
+goldenURL: "https://google.com"
+ignored:
+  - "https://google.com"
+maxFailures: 0
+logVerbosity: 1

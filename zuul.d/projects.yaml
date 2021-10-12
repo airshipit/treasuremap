@@ -19,13 +19,15 @@
     check:
       jobs:
         - airship-treasuremap-validate-site-docs
-#        - airship-treasuremap-functional-existing-k8s TODO: Enable this when functional tests exist, and a cluster is up
         - airship-treasuremap-deploy-virtual-airship-core
+        - airship-treasuremap-dead-link-linter
+#        - airship-treasuremap-functional-existing-k8s TODO: Enable this when functional tests exist, and a cluster is up
     gate:
       jobs:
         - noop
         - airship-treasuremap-validate-site-docs
         - airship-treasuremap-deploy-virtual-airship-core
+        - airship-treasuremap-dead-link-linter
 #        - airship-treasuremap-functional-existing-k8s TODO: Enable this when functional tests exist, and a cluster is up
     experimental:
       jobs:
