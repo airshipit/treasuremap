@@ -5,7 +5,7 @@ metadata:
 upstream:
   type: git
   git:
-    commit: 69591248f69e23964734f0192944ef2442bc7885
+    commit: 16d2ffbb2d1ff8c36f3735c96f309c1cca0d9308
     repo: https://github.com/rook/rook
     directory: cluster/examples/kubernetes/ceph/csi/rbd
-    ref: v1.6.3
+    ref: v1.7.5

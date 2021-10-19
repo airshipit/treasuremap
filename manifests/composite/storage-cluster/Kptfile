@@ -5,5 +5,5 @@ dependencies:
   git:
     repo: https://github.com/rook/rook
     directory: cluster/examples/kubernetes/ceph
-    ref: v1.6.3
+    ref: v1.7.5
   updateStrategy: force-delete-replace

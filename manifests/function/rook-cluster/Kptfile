@@ -5,29 +5,29 @@ dependencies:
   git:
     repo: https://github.com/rook/rook
     directory: cluster/examples/kubernetes/ceph
-    ref: v1.6.3
+    ref: v1.7.5
   updateStrategy: force-delete-replace
 - name: dashboard/base/upstream
   git:
     repo: https://github.com/rook/rook
     directory: cluster/examples/kubernetes/ceph
-    ref: v1.6.3
+    ref: v1.7.5
   updateStrategy: force-delete-replace
 - name: pools/base/upstream
   git:
     repo: https://github.com/rook/rook
     directory: cluster/examples/kubernetes/ceph
-    ref: v1.6.3
+    ref: v1.7.5
   updateStrategy: force-delete-replace
 - name: storageclasses/block/upstream
   git:
     repo: https://github.com/rook/rook
     directory: cluster/examples/kubernetes/ceph/csi/rbd
-    ref: v1.6.3
+    ref: v1.7.5
   updateStrategy: force-delete-replace
 - name: storageclasses/file/upstream
   git:
     repo: https://github.com/rook/rook
     directory: cluster/examples/kubernetes/ceph/csi/cephfs
-    ref: v1.6.3
+    ref: v1.7.5
   updateStrategy: force-delete-replace
