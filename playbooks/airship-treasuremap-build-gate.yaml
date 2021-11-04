@@ -30,7 +30,7 @@
 
     - name: docker install
       include_role:
-        name: docker-install
+        name: ensure-docker
 
     - name: install kustomize
       include_role:

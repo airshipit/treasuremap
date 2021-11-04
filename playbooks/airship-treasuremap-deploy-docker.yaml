@@ -12,4 +12,4 @@
 
 - hosts: all
   roles:
-    - docker-install
+    - ensure-docker

@@ -35,7 +35,7 @@ envsubst <"${AIRSHIPCTL_WS}/tools/gate/config_template.yaml" > "$PLAYBOOK_CONFIG
 # use new version of ansible, Ubuntu has old one
 sudo apt update
 sudo DEBIAN_FRONTEND=noninteractive apt -y install software-properties-common python3-pip curl wget ca-certificates
-sudo DEBIAN_FRONTEND=noninteractive apt -y --no-install-recommends install docker.io make
+sudo DEBIAN_FRONTEND=noninteractive apt -y --no-install-recommends install make
 
 PACKAGES="ansible netaddr"
 if [[ -z "${http_proxy}" ]]; then

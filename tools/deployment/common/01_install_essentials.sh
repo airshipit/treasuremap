@@ -20,7 +20,7 @@ pkg_check() {
   done
 }
 
-pkg_check software-properties-common curl wget ca-certificates docker.io make
+pkg_check software-properties-common curl wget ca-certificates make
 
 : ${AIRSHIPCTL_PROJECT:="../airshipctl"}
 
