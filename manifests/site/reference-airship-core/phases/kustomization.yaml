@@ -9,4 +9,5 @@ transformers:
 
 ## TODO Consider making a catalogue combined with variable substitution instead
 patchesStrategicMerge:
+  - baremetal-plan.yaml
   - phase-patch.yaml

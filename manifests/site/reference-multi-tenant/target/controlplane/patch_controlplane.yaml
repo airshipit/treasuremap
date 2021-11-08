@@ -4,8 +4,8 @@ metadata:
   name: cluster-controlplane
 spec:
   replicas: 3
-  infrastructureTemplate:
-    kind: Metal3MachineTemplate
-    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha4
-    name: cluster-controlplane-2
-
+  machineTemplate:
+    infrastructureRef:
+      kind: Metal3MachineTemplate
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+      name: cluster-controlplane-2

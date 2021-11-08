@@ -1,0 +1,3 @@
+resources:
+  - ../../ephemeral/catalogues/public-keys/
+  - ../../target/catalogues/public-keys/

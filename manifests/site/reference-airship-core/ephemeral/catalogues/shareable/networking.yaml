@@ -2,7 +2,6 @@
 # ephemeral cluster, on top of the target cluster networking definition.
 # These values can be overridden at the site, type, etc levels as appropriate.
 
-## NEWSITE_CHANGEME: update file with ephemeral node ips
 apiVersion: airshipit.org/v1alpha1
 kind: NetworkCatalogue
 metadata:
@@ -19,12 +18,6 @@ spec:
     apiserverCertSANs: "[172.64.0.12, 172.63.0.12]"
   ironic:
     # NEWSITE_CHANGEME: Ephemeral node PXE network
-    deployKernelUrl: http://172.63.0.12:80/images/ipa-ubuntu-master.kernel
-    deployRamdiskUrl: http://172.63.0.12:80/images/ipa-ubuntu-master.initramfs
-    httpPort: 6180
-    ironicFastTrack: "false"
-    ironicEndpoint: http://172.63.0.12:6385/v1/
-    ironicInspectorEndpoint: http://172.63.0.12:5050/v1/
     provisioningInterface: "eno4"
     provisioningIp: "172.63.0.12"
     dhcpRange: "172.63.0.31,172.63.0.126"

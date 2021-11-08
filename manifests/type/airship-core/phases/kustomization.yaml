@@ -4,6 +4,3 @@ resources:
   - executors.yaml
   - phases.yaml
   - workload-config.yaml
-
-patchesStrategicMerge:
-   - plan-patch.yaml

@@ -8,12 +8,12 @@ resources:
 patches:
   - target:
       group: controlplane.cluster.x-k8s.io
-      version: v1alpha3
+      version: v1alpha4
       kind: KubeadmControlPlane
     path: oidc-apiserver-ca-cert.json
   - target:
       group: controlplane.cluster.x-k8s.io
-      version: v1alpha3
+      version: v1alpha4
       kind: KubeadmControlPlane
     path: oidc-apiserver-extra-args.yaml
 

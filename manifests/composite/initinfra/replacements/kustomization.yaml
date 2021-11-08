@@ -1,3 +1,4 @@
 resources:
-  - ../../../../../airshipctl/manifests/function/baremetal-operator/replacements
+  - ../../../../../airshipctl/manifests/function/baremetal-operator/v0.5.0/replacements
   - ../../../function/clusterctl/replacements
+  - ../../../../../airshipctl/manifests/function/ironic-deployment/v0.5.0/replacements

@@ -7,9 +7,11 @@ resources:
   - ../catalogues
   - metal3machinetemplate.yaml
 
+namespace: target-infra
+
 patchesStrategicMerge:
-        #- versions-catalogue-patch.yaml
-        - patch_controlplane.yaml
+  - versions-catalogue-patch.yaml
+  - patch_controlplane.yaml
 
 transformers:
   #- ../../../../../../airshipctl/manifests/function/k8scontrol/replacements

@@ -1,6 +1,5 @@
 # Override default controlplane image location
 
-## NEWSITE_CHANGEME: update the file with the ephemeral node pxe ip
 apiVersion: airshipit.org/v1alpha1
 kind: VersionsCatalogue
 metadata:

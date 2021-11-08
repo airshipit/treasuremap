@@ -6,7 +6,7 @@ resources:
   - ../../../../function/ingress
   - ../../../../function/helm-chart-repository
   - ../../../../function/local-storage
-  - dex-aio
+  # - dex-aio
 
 patches:
   - patch: |-

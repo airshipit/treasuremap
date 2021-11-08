@@ -4,12 +4,12 @@ kind: Kustomization
 namespace: target-infra
 
 resources:
-  - ../k8scontrol-oidc
+  - ../../../../airshipctl/manifests/function/k8scontrol
 
 patches:
   - target:
       group: controlplane.cluster.x-k8s.io
-      version: v1alpha3
+      version: v1alpha4
       kind: KubeadmControlPlane
     path:  vrrp_keepalived_patch.yaml
 

@@ -1,0 +1,3 @@
+resources:
+  - ../../ephemeral/catalogues/encrypted
+  - ../../target/catalogues/encrypted

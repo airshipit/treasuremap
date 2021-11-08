@@ -7,4 +7,5 @@ transformers:
   - ../../../../../airshipctl/manifests/function/clusterctl/replacements
 ## TODO Consider making a catalogue combined with variable substitution instead
 patchesStrategicMerge:
+  - plan-patch.yaml
   - phase-patch.yaml

@@ -1,5 +1,6 @@
 resources:
-  - ../../../../airshipctl/manifests/function/baremetal-operator/
+  - ../../../../airshipctl/manifests/function/baremetal-operator/v0.5.0
   - ../../function/clusterctl
+  - ../../../../airshipctl/manifests/function/ironic-deployment/v0.5.0
 commonLabels:
   airshipit.org/stage: initinfra

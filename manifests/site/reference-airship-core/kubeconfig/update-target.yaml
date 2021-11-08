@@ -10,8 +10,8 @@ replacements:
 - source:
     objref:
       kind: VariableCatalogue
-      name: generated-secrets
-    fieldref: "{.targetKubeconfig.certificate-authority-data}"
+      name: combined-target-secrets
+    fieldref: ".secretGroups.[name=targetK8sSecrets].values.[name=caCrt].data"
   target:
     objref:
       kind: KubeConfig
@@ -20,8 +20,8 @@ replacements:
 - source:
     objref:
       kind: VariableCatalogue
-      name: generated-secrets
-    fieldref: "{.targetKubeconfig.client-certificate-data}"
+      name: combined-target-secrets
+    fieldref: ".secretGroups.[name=targetK8sSecrets].values.[name=crt].data"
   target:
     objref:
       kind: KubeConfig
@@ -30,8 +30,8 @@ replacements:
 - source:
     objref:
       kind: VariableCatalogue
-      name: generated-secrets
-    fieldref: "{.targetKubeconfig.client-key-data}"
+      name: combined-target-secrets
+    fieldref: ".secretGroups.[name=targetK8sSecrets].values.[name=key].data"
   target:
     objref:
       kind: KubeConfig
@@ -40,8 +40,8 @@ replacements:
 - source:
     objref:
       kind: VariableCatalogue
-      name: generated-secrets
-    fieldref: "{.ephemeralKubeconfig.certificate-authority-data}"
+      name: combined-ephemeral-secrets
+    fieldref: ".secretGroups.[name=ephemeralK8sSecrets].values.[name=caCrt].data"
   target:
     objref:
       kind: KubeConfig
@@ -50,8 +50,8 @@ replacements:
 - source:
     objref:
       kind: VariableCatalogue
-      name: generated-secrets
-    fieldref: "{.ephemeralKubeconfig.client-certificate-data}"
+      name: combined-ephemeral-secrets
+    fieldref: ".secretGroups.[name=ephemeralK8sSecrets].values.[name=crt].data"
   target:
     objref:
       kind: KubeConfig
@@ -60,8 +60,8 @@ replacements:
 - source:
     objref:
       kind: VariableCatalogue
-      name: generated-secrets
-    fieldref: "{.ephemeralKubeconfig.client-key-data}"
+      name: combined-ephemeral-secrets
+    fieldref: ".secretGroups.[name=ephemeralK8sSecrets].values.[name=key].data"
   target:
     objref:
       kind: KubeConfig

@@ -26,3 +26,4 @@ status:
   hardwareProfile: ""
   operationalStatus: ""
   poweredOn: false
+  errorCount: 0

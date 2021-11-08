@@ -1,7 +1,7 @@
 # Patch the versions catalogue to use the site-specific local image URL
 # TODO: patch this in from a site-networking catalogue in the future
 apiVersion: airshipit.org/v1alpha1
-kind: VariableCatalogue
+kind: VersionsCatalogue
 metadata:
   name: versions-airshipctl
 spec:
@@ -10,6 +10,5 @@ spec:
       # Host the image in a locally served location for CI
       cluster_controlplane_image:
         ## NEWSITE_CHANGEME: update with the first target node pxe ip
-        url: http://172.63.0.11:80/images/ubuntu-18.04-server-cloudimg-amd64.img
+        url: http://172.63.0.11/images/control-plane.qcow2
         checksum: "e0d74d3d37e70e4eec1b204f8402ed3c"
-

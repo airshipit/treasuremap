@@ -23,6 +23,7 @@ status:
     ID: ""
   operationHistory: {}
   errorMessage: ""
-  hardwareProfile: ""
+  hardwareProfile: "default"
   operationalStatus: ""
   poweredOn: false
+  errorCount: 0

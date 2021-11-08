@@ -1,7 +1,6 @@
 # Site-level host catalogue.  This info feeds the Templater
 # kustomize plugin config in the hostgenerator-m3 function.
 
-## NEWSITE_CHANGEME: update the whole file with the site specific host details
 apiVersion: airshipit.org/v1alpha1
 kind: VariableCatalogue
 metadata:
@@ -19,6 +18,8 @@ hosts:
       bmcUsername: root
       bmcPassword: WWTwwt1!
       disableCertificateVerification: true
+      macAddresses:
+        pxe: E4:43:4B:EE:F4:CB
       ipAddresses:
         oam-ipv4: 10.254.125.230
         pxe-ipv4: 172.63.0.11
@@ -32,6 +33,8 @@ hosts:
       bmcUsername: root
       bmcPassword: WWTwwt1!
       disableCertificateVerification: true
+      macAddresses:
+        pxe: E4:43:4B:EE:B0:43
       ipAddresses:
         oam-ipv4: 10.254.125.231
         pxe-ipv4: 172.63.0.12
@@ -46,6 +49,8 @@ hosts:
       bmcUsername: root
       bmcPassword: WWTwwt1!
       disableCertificateVerification: true
+      macAddresses:
+        pxe: E4:43:4B:EE:D7:D9
       ipAddresses:
         oam-ipv4: 10.254.125.232
         pxe-ipv4: 172.63.0.13
@@ -60,6 +65,8 @@ hosts:
       bmcUsername: root
       bmcPassword: WWTwwt1!
       disableCertificateVerification: true
+      macAddresses:
+        pxe: E4:43:4B:EE:DD:0F
       ipAddresses:
         oam-ipv4: 10.254.125.233
         pxe-ipv4: 172.63.0.14
@@ -74,6 +81,8 @@ hosts:
       bmcUsername: root
       bmcPassword: WWTwwt1!
       disableCertificateVerification: true
+      macAddresses:
+        pxe: E4:43:4B:EE:D7:2F
       ipAddresses:
         oam-ipv4: 10.254.125.234
         pxe-ipv4: 172.63.0.15
@@ -88,6 +97,8 @@ hosts:
       bmcUsername: root
       bmcPassword: WWTwwt1!
       disableCertificateVerification: true
+      macAddresses:
+        pxe: E4:43:4B:EE:F3:B7
       ipAddresses:
         oam-ipv4: 10.254.125.235
         pxe-ipv4: 172.63.0.16

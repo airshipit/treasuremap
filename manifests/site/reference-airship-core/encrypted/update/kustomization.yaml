@@ -1,0 +1,12 @@
+resources:
+  - ../get/
+  - ../encryption-keys/
+  - secrets.yaml
+  - ../../../../../../airshipctl/manifests/function/templater-helpers/secret-generator/ # libs needed for generator
+transformers:
+  - ../../../../type/airship-core/shared/update-secrets/
+  - ../../../../../../airshipctl/manifests/function/templater-helpers/cleanup/ # remove libs after using in all generators
+  - ../../../../type/airship-core/shared/update-secrets/fileplacement # update paths for imports
+  - ../../../../type/airship-core/shared/encrypt-secrets
+  - ../../../../type/airship-core/shared/encrypt-secrets/cleanup
+

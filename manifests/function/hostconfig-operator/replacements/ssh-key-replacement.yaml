@@ -11,8 +11,8 @@ replacements:
 - source:
     objref:
       kind: VariableCatalogue
-      name: generated-secrets
-    fieldref: "{.sshKeys.privateKey}"
+      name: combined-target-secrets
+    fieldref: ".secretGroups.[name=targetSshSecrets].values.[name=privateKey].data"
   target:
     objref:
       kind: Secret

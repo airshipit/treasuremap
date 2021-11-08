@@ -1,7 +1,6 @@
 # This catalogue alone needs to be overriden at site level based on the
 # networkign requirement like HA
 
-## NEWSITE_CHANGEME: Update the file with the vrrp ips
 apiVersion: airshipit.org/v1alpha1
 kind: VariableCatalogue
 metadata:

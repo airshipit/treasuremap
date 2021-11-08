@@ -3,5 +3,8 @@ apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
 metadata:
   name: cluster-controlplane
 spec:
-  infrastructureTemplate:
-    name: cluster-controlplane-lma
+  machineTemplate:
+    infrastructureRef:
+      kind: Metal3MachineTemplate
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+      name: cluster-controlplane-lma

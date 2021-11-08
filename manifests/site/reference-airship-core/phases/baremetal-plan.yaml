@@ -2,7 +2,7 @@ apiVersion: airshipit.org/v1alpha1
 kind: PhasePlan
 metadata:
   name: deploy-gating
-description: "Phase plan for airship-core deployment on gating"
+description: "Phase plan for airship-core deployment on bare metals"
 phases:
   # Deploy ephemeral node using redfish with iso
   - name: remotedirect-ephemeral
@@ -41,12 +41,6 @@ phases:
   # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
   # and find ConfigMap with name kubectl-get-pods
   - name: kubectl-get-pods-ephemeral
-  # TODO (dukov) this is needed due to sushy tools inserts cdrom image to
-  # all vms. This can be removed once sushy tool is fixed
-  # Scripts for this phase placed in manifests/function/phase-helpers/virsh-eject-cdrom-images/
-  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
-  # and find ConfigMap with name virsh-eject-cdrom-images
-  - name: virsh-eject-cdrom-images
   # Create target k8s cluster resources
   - name: controlplane-ephemeral
   # List all nodes in target cluster
@@ -105,24 +99,23 @@ phases:
   # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
   # and find ConfigMap with name kubectl-wait-cluster
   - name: kubectl-wait-cluster-target
+  # Eject virtual media Ephemeral baremetal host to ensure it can reused.
+  - name: eject-virtual-media-ephemeral
+  # Power off Ephemeral baremetal host avoid DHCP conflict
+  - name: power-off-ephemeral
   # (TODO) Need to add manifests for controlplane-target phase
   # Create target k8s cluster resources
-  # - name: controlplane-target
+  - name: controlplane-target
   # List all nodes in target cluster
   # Scripts for this phase placed in manifests/function/phase-helpers/get_node/
   # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
   # and find ConfigMap with name kubectl-get-node
-  # - name: kubectl-get-node-target
+  - name: kubectl-get-node-target
   # List all pods in target cluster
   # Scripts for this phase placed in manifests/function/phase-helpers/get_pods/
   # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
   # and find ConfigMap with name kubectl-get-pods
-  # - name: kubectl-get-pods-target
-  # all vms. This can be removed once sushy tool is fixed
-  # Scripts for this phase placed in manifests/function/phase-helpers/virsh-destroy-vms/
-  # To get ConfigMap for this phase, execute `airshipctl phase render --source config -k ConfigMap`
-  # and find ConfigMap with name virsh-destroy-vms
-  - name: virsh-destroy-vms
+  - name: kubectl-get-pods-target
   # Deploy worker node
   - name: workers-target
   # Waiting for node to be provisioned

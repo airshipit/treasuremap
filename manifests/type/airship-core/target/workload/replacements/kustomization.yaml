@@ -1,7 +1,7 @@
 resources:
   - ../../../../../composite/storage-cluster/replacements
   - ../../../../../function/ingress/replacements
-  - ../../../../../function/dex-aio/replacements
+  #  - ../../../../../function/dex-aio/replacements
   - ../../../../../function/helm-chart-repository/replacements
   - ../../../../../function/local-storage/replacements
   - ../../../../../composite/lma-infra/replacements
