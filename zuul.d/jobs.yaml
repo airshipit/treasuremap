@@ -110,3 +110,10 @@
       - ^manifests/type/multi-tenant/.*$
       - ^manifests/function/.*$
       - ^manifests/composite/.*$
+
+- job:
+    name: airship-treasuremap-dead-link-linter
+    description: Ensures all URLs referenced in documentation are still working
+    run: playbooks/airship-treasuremap-dead-link-linter.yaml
+    nodeset: airship-treasuremap-single-node
+    voting: false
