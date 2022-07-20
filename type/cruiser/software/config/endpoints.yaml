@@ -285,6 +285,7 @@ data:
           default: 8088
           public: 443
     oslo_db:
+      namespace: openstack
       hosts:
         default: mariadb
         discovery: mariadb-discovery

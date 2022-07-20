@@ -10,9 +10,10 @@ metadata:
     layer: global
   storagePolicy: cleartext
 data:
-  description: Deploy Nova, Neutron, Openvswitch, and Libvirt
+  description: Deploy Nova, Neutron, Openvswitch, Placement, and Libvirt
   chart_group:
     - libvirt
     - openvswitch
     - neutron
+    - placement
     - nova

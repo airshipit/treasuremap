@@ -99,21 +99,23 @@ data:
       create_kibana_indexes:
         enabled: true
         indexes:
-          - airship
-          - audit_tsee
-          - auth
-          - calico
-          - ceph
-          - flows
-          - jenkins
-          - journal
-          - kernel_syslog
-          - libvirt
-          - logstash
-          - lma
-          - openstack
-          - utility_access
-          - openvswitch
+          base:
+            - airship
+            - audit_tsee
+            - auth
+            - calico
+            - ceph
+            - flows
+            - jenkins
+            - journal
+            - kernel_syslog
+            - libvirt
+            - logstash
+            - lma
+            - utility_access
+          application:
+            - openstack
+            - openvswitch
         default_index: logstash
       kibana:
         elasticsearch:

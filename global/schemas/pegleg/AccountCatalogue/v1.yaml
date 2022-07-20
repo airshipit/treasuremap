@@ -631,6 +631,11 @@ data:
                   properties:
                     username:
                       type: string
+                placement:
+                  type: object
+                  properties:
+                    username:
+                      type: string
             oslo_db:
               type: object
               properties:
@@ -646,6 +651,44 @@ data:
                 database:
                   type: string
             oslo_db_cell0:
+              type: object
+              properties:
+                username:
+                  type: string
+                database:
+                  type: string
+        placement:
+          type: object
+          properties:
+            placement:
+              type: object
+              properties:
+                role:
+                  type: string
+                region_name:
+                  type: string
+                username:
+                  type: string
+                project_name:
+                  type: string
+                user_domain_name:
+                  type: string
+                project_domain_name:
+                  type: string
+            oslo_messaging:
+              type: object
+              properties:
+                admin:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                placement:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+            oslo_db:
               type: object
               properties:
                 username:

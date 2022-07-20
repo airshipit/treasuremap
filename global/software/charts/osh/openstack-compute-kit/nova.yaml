@@ -325,6 +325,20 @@ data:
     post:
       create: []
   values:
+    manifests:
+      # NOTE(lamt): disable consoleauth and placement from nova in Train release.
+      certificates: false
+      deployment_consoleauth: false
+      deployment_placement: false
+      ingress_placement: false
+      job_db_init_placement: false
+      job_ks_placement_endpoints: false
+      job_ks_placement_service: false
+      job_ks_placement_user: false
+      pdb_placement: false
+      secret_keystone_placement: false
+      service_ingress_placement: false
+      service_placement: false
     dependencies:
       static:
         rabbit_init:
@@ -775,20 +789,14 @@ data:
               values:
                 - RetryFilter
                 - AvailabilityZoneFilter
-                - RamFilter
-                - CoreFilter
-                - DiskFilter
                 - ComputeFilter
                 - ImagePropertiesFilter
                 - ServerGroupAntiAffinityFilter
                 - ServerGroupAffinityFilter
                 - AggregateInstanceExtraSpecsFilter
-                - AggregateCoreFilter
-                - AggregateRamFilter
                 - AggregateMultiTenancyIsolation
                 - JsonFilter
                 - IoOpsFilter
-                - AggregateDiskFilter
                 - AllHostsFilter
                 - IsolatedHostsFilter
                 - AggregateImagePropertiesIsolation
@@ -816,6 +824,7 @@ data:
           key_pairs: 10
         cinder:
           http_retries: 6
+          catalog_info: "volumev3::internalURL"
         oslo_messaging_rabbit:
           heartbeat_timeout_threshold: 60
         audit_middleware_notifications:

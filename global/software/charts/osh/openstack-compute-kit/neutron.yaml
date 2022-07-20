@@ -236,7 +236,7 @@ data:
     native:
       enabled: false
   test:
-    timeout: 720
+    timeout: 1400
   install:
     no_hooks: false
   upgrade:

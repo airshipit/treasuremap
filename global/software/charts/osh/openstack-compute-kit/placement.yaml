@@ -1,0 +1,416 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: placement
+  labels:
+    name: placement-global
+    component: placement
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.placement
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh.placement
+      dest:
+        path: .values.images.tags
+
+    # Endpoints
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.identity
+      dest:
+        path: .values.endpoints.identity
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.oslo_db
+      dest:
+        path: .values.endpoints.oslo_db
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.oslo_messaging
+      dest:
+        path: .values.endpoints.oslo_messaging
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.oslo_cache
+      dest:
+        path: .values.endpoints.oslo_cache
+    - src:
+        schema: pegleg/EndpointCatalogue/v1
+        name: osh_endpoints
+        path: .osh.placement
+      dest:
+        path: .values.endpoints.placement
+
+    # Service Accounts
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.keystone.admin
+      dest:
+        path: .values.endpoints.identity.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.placement.placement
+      dest:
+        path: .values.endpoints.identity.auth.placement
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.placement.test
+      dest:
+        path: .values.endpoints.identity.auth.test
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.oslo_messaging.admin
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.admin
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.nova.oslo_messaging.placement
+      dest:
+        path: .values.endpoints.oslo_messaging.auth.placement
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.placement.oslo_db.username
+      dest:
+        path: .values.endpoints.oslo_db.auth.placement.username
+    - src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.placement.oslo_db.database
+      dest:
+        path: .values.endpoints.oslo_db.path
+        pattern: DB_NAME
+
+    # Secrets
+    - dest:
+        path: .values.endpoints.identity.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_keystone_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.placement.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_placement_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.test.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_nova_test_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.neutron.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_neutron_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.placement.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_placement_password
+        path: .
+    - dest:
+        path: .values.endpoints.identity.auth.ironic.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_ironic_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_messaging.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_oslo_messaging_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_messaging.auth.placement.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_nova_oslo_messaging_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_db.auth.placement.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_nova_oslo_db_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_db.auth.admin.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_oslo_db_admin_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_cache.auth.memcache_secret_key
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_oslo_cache_secret_key
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_db.auth.nova_api.password
+      src:
+        schema: deckhand/Passphrase/v1
+        name: osh_nova_oslo_db_password
+        path: .
+    - dest:
+        path: .values.endpoints.oslo_db.auth.nova_api.username
+      src:
+        schema: pegleg/AccountCatalogue/v1
+        name: osh_service_accounts
+        path: .osh.nova.oslo_db.username
+
+
+data:
+  chart_name: placement
+  release: placement
+  namespace: openstack
+  wait:
+    timeout: 2700
+    labels:
+      release_group: clcp-placement
+    resources:
+      - type: job
+      - type: deployment
+        min_ready: 100%
+    native:
+      enabled: false
+  test:
+    timeout: 600
+  install:
+    no_hooks: false
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: clcp-placement
+    post:
+      create: []
+  values:
+    manifests:
+      certificates: false
+      job_db_migrate: false
+    dependencies:
+      static:
+        rabbit_init:
+          services:
+            - endpoint: internal
+              service: oslo_messaging
+          jobs:
+            - clcp-openstack-rabbitmq-cluster-wait
+        db_sync:
+          jobs:
+            - placement-db-init
+    labels:
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      api:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      test:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    pod:
+      mandatory_access_control:
+        type: apparmor
+        placement-api:
+          placement-api: runtime/default
+          init: runtime/default
+        placement-db-migrate:
+          init: runtime/default
+          placement-mysql-migration: runtime/default
+      replicas:
+        api: 4
+      affinity:
+        anti:
+          type:
+            placement: requiredDuringSchedulingIgnoredDuringExecution
+          weight:
+            default: 100
+      lifecycle:
+        upgrades:
+          deployments:
+            pod_replacement_strategy: RollingUpdate
+            rolling_update:
+              max_unavailable: 50%
+      security_context:
+        placement:
+          container:
+            placement_api:
+              allowPrivilegeEscalation: false
+    network:
+      api:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/backend-protocol: "https"
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              more_set_headers "X-XSS-Protection: 1; mode=block";
+              more_set_headers "X-Frame-Options: deny";
+              if ($request_method !~ ^(HEAD|GET|POST|PUT|PATCH|DELETE)$ ) {
+                return 405;
+              }
+    conf:
+      logging:
+        loggers:
+          keys:
+            - root
+            - placement
+            - oslo.messaging
+        handlers:
+          keys:
+            - stdout
+            - stderr
+            - "null"
+        formatters:
+          keys:
+            - context
+            - default
+        logger_root:
+          level: WARNING
+          handlers: "null"
+        logger_placement:
+          level: INFO
+          handlers:
+            - stdout
+          qualname: placement
+        logger_oslo.messaging:
+          level: INFO
+          handlers:
+            - stdout
+          qualname: oslo.messaging
+        logger_amqp:
+          level: WARNING
+          handlers: stderr
+          qualname: amqp
+        logger_amqplib:
+          level: WARNING
+          handlers: stderr
+          qualname: amqplib
+        logger_eventletwsgi:
+          level: WARNING
+          handlers: stderr
+          qualname: eventlet.wsgi.server
+        logger_sqlalchemy:
+          level: WARNING
+          handlers: stderr
+          qualname: sqlalchemy
+        logger_boto:
+          level: WARNING
+          handlers: stderr
+          qualname: boto
+        handler_null:
+          class: logging.NullHandler
+          formatter: default
+          args: ()
+        handler_stdout:
+          class: StreamHandler
+          args: (sys.stdout,)
+          formatter: context
+        handler_stderr:
+          class: StreamHandler
+          args: (sys.stderr,)
+          formatter: context
+        formatter_context:
+          class: oslo_log.formatters.ContextFormatter
+        formatter_default:
+          format: "%(message)s"
+      policy:
+        "context_is_admin": "role:admin"
+        "admin_or_owner": "rule:context_is_admin or project_id:%(project_id)s"
+        "default": "rule:admin_or_owner"
+        "admin_api": "role:admin"
+        "placement:resource_providers:list": "rule:admin_api"
+        "placement:resource_providers:create": "rule:admin_api"
+        "placement:resource_providers:show": "rule:admin_api"
+        "placement:resource_providers:update": "rule:admin_api"
+        "placement:resource_providers:delete": "rule:admin_api"
+        "placement:resource_classes:list": "rule:admin_api"
+        "placement:resource_classes:create": "rule:admin_api"
+        "placement:resource_classes:show": "rule:admin_api"
+        "placement:resource_classes:update": "rule:admin_api"
+        "placement:resource_classes:delete": "rule:admin_api"
+        "placement:resource_providers:inventories:list": "rule:admin_api"
+        "placement:resource_providers:inventories:create": "rule:admin_api"
+        "placement:resource_providers:inventories:show": "rule:admin_api"
+        "placement:resource_providers:inventories:update": "rule:admin_api"
+        "placement:resource_providers:inventories:delete": "rule:admin_api"
+        "placement:resource_providers:aggregates:list": "rule:admin_api"
+        "placement:resource_providers:aggregates:update": "rule:admin_api"
+        "placement:resource_providers:usages": "rule:admin_api"
+        "placement:usages": "rule:admin_api"
+        "placement:traits:list": "rule:admin_api"
+        "placement:traits:show": "rule:admin_api"
+        "placement:traits:update": "rule:admin_api"
+        "placement:traits:delete": "rule:admin_api"
+        "placement:resource_providers:traits:list": "rule:admin_api"
+        "placement:resource_providers:traits:update": "rule:admin_api"
+        "placement:resource_providers:traits:delete": "rule:admin_api"
+        "placement:allocations:manage": "rule:admin_api"
+        "placement:allocations:list": "rule:admin_api"
+        "placement:allocations:update": "rule:admin_api"
+        "placement:allocations:delete": "rule:admin_api"
+        "placement:resource_providers:allocations:list": "rule:admin_api"
+        "placement:allocation_candidates:list": "rule:admin_api"
+        "placement:reshaper:reshape": "rule:admin_api"
+        "not_implemented_in_aic": '!'
+      placement:
+        DEFAULT:
+          debug: false
+  dependencies:
+   - os-placement-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: os-placement-htk
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.placement-htk
+      dest:
+        path: .source
+  storagePolicy: cleartext
+data:
+  chart_name: os-placement-htk
+  release: os-placement-htk
+  namespace: os-placement-htk
+  timeout: 600
+  wait:
+    timeout: 600
+  upgrade:
+    no_hooks: true
+  values: {}
+  dependencies: []
+...

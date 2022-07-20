@@ -123,13 +123,13 @@ data:
       enabled: true
       script: |
         set -x
-        DESIRED_VERSION="octopus"
+        DESIRED_VERSION="nautilus"
         ADDITIONAL_VERSIONS=1
         while [ $ADDITIONAL_VERSIONS -gt 0 ]; do
             sleep 5
-            ADDITIONAL_VERSIONS=$(ceph tell osd.* version --format json | awk -F 'osd.[0-9]*: ' '/^osd/ { print $2}' | jq -r '.release' | uniq | grep -v ${DESIRED_VERSION} | wc -l )
+            ADDITIONAL_VERSIONS=$(ceph tell osd.* version --format json | awk -F 'osd.[0-9]*: ' '/^osd/ { print $2}' | jq -r '.version' | awk '{ print $(NF-1) }' | uniq | grep -v ${DESIRED_VERSION} | wc -l )
         done
-        while [[ `ceph pg stat -f json | jq -r ".pg_summary.num_pgs"` -eq 0 ]] || [[ `ceph pg ls -f json | jq -r '.pg_stats[].state' | grep -v "active"` ]]
+        while [[ `ceph pg ls | tail -n +2 | grep -v "active+\|NOTE"` ]]
         do
           sleep 5
         done
@@ -239,9 +239,7 @@ data:
       features:
         # NOTE(st053q): If autoscaler is disabled, then
         # mon_pg_warn_max_object_skew should not be 0 in ceph.conf
-        pg_autoscaler: true
-        cluster_flags:
-          unset: "noup"
+        pg_autoscaler: false
       pool:
         spec:
           # Health metrics pool

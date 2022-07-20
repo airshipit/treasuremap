@@ -256,6 +256,10 @@ data:
           podport: 10283
         status:
           podport: 18089
+        stream:
+          podport: 18090
+        profiler:
+          podport: 18088
     kubernetesprovisioner:
       name: promenade
       hosts:

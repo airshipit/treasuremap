@@ -93,6 +93,7 @@ data:
             component: test
   test:
     enabled: true
+    timeout: 3600
   values:
     labels:
       job:
@@ -211,8 +212,6 @@ data:
     conf:
       features:
         pg_autoscaler: false
-        cluster_flags:
-          set: "noup"
       pool:
         spec:
           # Health metrics pool
