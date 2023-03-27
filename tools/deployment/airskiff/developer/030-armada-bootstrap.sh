@@ -31,20 +31,17 @@ AIRSKIFF_PERMISSIONS=$(stat --format '%a' airskiff.yaml)
 KUBE_CONFIG_PERMISSIONS=$(stat --format '%a' ~/.kube/config)
 
 sudo chmod 0644 airskiff.yaml
-sudo chmod 0644 ~/.kube/config
+# sudo chmod 0644 ~/.kube/config
 
-# In the event that this docker command fails, we want to continue the script
-# and reset the file permissions.
-set +e
 
 # Download latest Armada image and deploy Airship components
 docker run --rm --net host -p 8000:8000 --name armada \
     -v ~/.kube/config:/armada/.kube/config \
     -v "$(pwd)"/airskiff.yaml:/airskiff.yaml \
     -v "${INSTALL_PATH}":/airship-components \
-    quay.io/airshipit/armada:latest-ubuntu_bionic \
-    apply /airskiff.yaml --target-manifest $TARGET_MANIFEST
+    quay.io/airshipit/armada:latest-ubuntu_focal\
+    apply /airskiff.yaml --debug --target-manifest $TARGET_MANIFEST
 
-# Set back permissions of the files
+# # Set back permissions of the files
 sudo chmod "${AIRSKIFF_PERMISSIONS}" airskiff.yaml
-sudo chmod "${KUBE_CONFIG_PERMISSIONS}" ~/.kube/config
+# sudo chmod "${KUBE_CONFIG_PERMISSIONS}" ~/.kube/config

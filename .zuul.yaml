@@ -49,14 +49,21 @@
       - name: ubuntu-bionic
         label: ubuntu-bionic
 
+- nodeset:
+    name: treasuremap-single-node-ubuntu-focal
+    nodes:
+      - name: ubuntu-focal
+        label: ubuntu-focal
+
+
 - job:
     name: treasuremap-site-lint
     description:
       Lint a site using Pegleg. Default site is seaworthy.
-    nodeset: treasuremap-single-node
+    nodeset: treasuremap-single-node-ubuntu-focal
     timeout: 900
     pre-run:
-      - tools/gate/playbooks/install-docker.yaml
+      - tools/gate/playbooks/initial-setup.yaml
       - tools/gate/playbooks/git-config.yaml
     run: tools/gate/playbooks/site-lint.yaml
     vars:
@@ -146,6 +153,7 @@
       Lint the aiab site using Pegleg.
     parent: treasuremap-site-lint
     pre-run:
+      - tools/gate/playbooks/initial-setup.yaml
       - tools/gate/playbooks/generate-certs.yaml
     vars:
       site: aiab
@@ -159,12 +167,13 @@
 
 - job:
     name: treasuremap-airskiff-deployment-ubuntu
-    nodeset: treasuremap-single-node
+    nodeset: treasuremap-single-node-ubuntu-focal
     description: |
       Deploy Memcached using Airskiff and latest Treasuremap changes.
-    voting: false
+    voting: true
     timeout: 9600
     pre-run:
+      - tools/gate/playbooks/initial-setup.yaml
       - tools/gate/playbooks/git-config.yaml
       - tools/gate/playbooks/airskiff-reduce-site.yaml
     run: tools/gate/playbooks/airskiff-deploy-gate.yaml
@@ -180,12 +189,13 @@
 
 - job:
     name: treasuremap-airskiff-deployment-suse
-    nodeset: treasuremap-single-node
+    nodeset: treasuremap-single-node-ubuntu-focal
     description: |
       Deploy Memcached using Airskiff-suse and latest Treasuremap changes.
     voting: false
     timeout: 9600
     pre-run:
+      - tools/gate/playbooks/initial-setup.yaml
       - tools/gate/playbooks/git-config.yaml
       - tools/gate/playbooks/airskiff-reduce-site.yaml
     run: tools/gate/playbooks/airskiff-deploy-gate.yaml

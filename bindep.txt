@@ -1,0 +1,10 @@
+# This file contains runtime (non-python) dependencies
+# More info at: https://docs.openstack.org/infra/bindep/readme.html
+
+libffi-dev [test platform:dpkg]
+libkrb5-dev [platform:dpkg]
+libpq-dev [platform:dpkg]
+libsasl2-dev [platform:dpkg]
+libssl-dev [platform:dpkg]
+libre2-dev [platform:dpkg]
+ethtool [platform:dpkg]

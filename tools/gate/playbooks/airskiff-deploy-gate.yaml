@@ -12,44 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- hosts: ubuntu-bionic
-  tasks:
-    # Stop systemd-resolved service before starting docker.
-    - name: stop systemd-resolved service
-      systemd:
-        state: stopped
-        enabled: no
-        masked: yes
-        daemon_reload: yes
-        name: systemd-resolved
-      become: yes
-    - name: ensure pip3 installed
-      apt:
-        name: "{{ item }}"
-      with_items:
-        - python3-pip
-      become: yes
+- hosts: all
 
+  # roles:
+  #   - disable-systemd-resolved
+
+  tasks:
     - name: Clone dependencies
       shell: |
+        set -ex
         ./tools/deployment/airskiff/developer/000-clone-dependencies.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
 
     - name: Setup AppArmor
       shell: |
+        set -ex
         ./tools/deployment/airskiff/developer/009-setup-apparmor.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
 
     - name: Deploy Kubernetes with Minikube
       shell: |
+        set -ex
         ./tools/deployment/airskiff/developer/010-deploy-k8s.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
 
     - name: Setup OpenStack Client
       shell: |
+        set -ex
         ./tools/deployment/airskiff/developer/020-setup-client.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
@@ -57,7 +49,8 @@
 
     - name: Deploy Airship components using Armada
       shell: |
-        mkdir ~/.kube
+        set -ex
+        mkdir  -p ~/.kube
         cp -rp /home/zuul/.kube/config ~/.kube/config
         export PL_SITE="{{ site }}"
         ./tools/deployment/airskiff/developer/030-armada-bootstrap.sh
@@ -67,6 +60,7 @@
 
     - name: Deploy Software using Airship
       shell: |
+        set -ex
         export PL_SITE="{{ site }}"
         ./tools/deployment/airskiff/developer/100-deploy-osh.sh
       args:
@@ -75,7 +69,8 @@
 
     - name: Wait for deployment completion
       shell: |
-        . ./tools/deployment/airskiff/common/os-env.sh
+        set -ex
+        ./tools/deployment/airskiff/common/os-env.sh
         ./tools/gate/wait-for-shipyard.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"

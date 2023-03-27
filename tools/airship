@@ -67,7 +67,7 @@ manifests_lookup(){
   local allow_fail="$6"
 
   FAIL=false
-  RESULT=`python3 -c "
+  RESULT=$(python3 -c "
 
 import yaml,sys
 from distutils.version import StrictVersion
@@ -94,7 +94,7 @@ for x in y:
           print(x$key_path)
           break
 else:
-  sys.exit(1)" 2>&1` || FAIL=true
+  sys.exit(1)" 2>&1) || FAIL=true
 
   if [[ $FAIL = true ]] && [[ $allow_fail != true ]]; then
      echo "error: Lookup failed for schema '$schema', \
@@ -130,7 +130,7 @@ pegleg() {
 USER=pegleg
 EOF
 
-  docker run --rm --net=host $TERM_OPTS \
+  docker run   --rm --net=host $TERM_OPTS \
       -u "${USER}:${GROUP}" \
       -w /target \
       -v $(pwd):/target \
@@ -169,14 +169,14 @@ EOF
   # extract Hyperkube binary before running Promenade container
   # this is replacing internal extraction step in Promenade
   # no need to share Docker socket
-  docker run --rm $TERM_OPTS \
+  docker run   --rm $TERM_OPTS \
       -v "${PROMENADE_TMP}:/tmp/${PROMENADE_TMP_LOCAL}" \
       --env-file $ENV_FILE \
       --entrypoint /bin/cp \
       "${IMAGE_HYPERKUBE}" \
           /hyperkube "/tmp/${PROMENADE_TMP_LOCAL}"
 
-  docker run --rm --net=host $TERM_OPTS \
+  docker run   --rm --net=host $TERM_OPTS \
       -u "${USER}:${GROUP}" \
       -w /target \
       -v $(pwd):/target \
@@ -190,7 +190,7 @@ shipyard() {
   versions_lookup "['data']['images']['ucp']['shipyard']['shipyard']"
 
   SHIPYARD_IMAGE=$RESULT
-  docker run --rm --net=host $TERM_OPTS \
+  docker run   --rm --net=host $TERM_OPTS \
     -u "${USER}:${GROUP}" \
     -w /target \
     -v $(pwd):/target \

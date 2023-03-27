@@ -93,6 +93,9 @@ data:
           .:53 {
               errors
               health
+              header {
+                response set ra
+              }
               autopath @kubernetes
               kubernetes CLUSTER_DOMAIN SERVICE_CIDR POD_CIDR {
                 pods insecure

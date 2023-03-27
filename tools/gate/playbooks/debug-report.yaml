@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- hosts: ubuntu-bionic
+- hosts: all
+
   tasks:
     - name: Build debug report
       shell: |

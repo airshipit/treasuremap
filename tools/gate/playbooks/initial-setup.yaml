@@ -12,20 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- hosts: ubuntu-bionic
-  tasks:
-    - name: Install Docker CE
-      shell: |
-        set -xe;
-
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-        apt-add-repository \
-        "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-        $(lsb_release -cs) \
-        stable"
-
-        apt-get update
-        apt-get install --no-install-recommends -y docker-ce
-      args:
-        chdir: "{{ zuul.project.src_dir }}"
-      become: yes
+- hosts: all
+  roles:
+    - bindep
+    - clear-firewall
+    - ensure-docker
+    - ensure-python
+    - ensure-pip

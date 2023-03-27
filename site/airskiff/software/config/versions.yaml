@@ -21,10 +21,10 @@ data:
       armada:
         api: "quay.io/airshipit/armada:latest-ubuntu_bionic"
       deckhand:
-        deckhand: "quay.io/airshipit/deckhand:latest-ubuntu_xenial"
+        deckhand: "quay.io/airshipit/deckhand:latest-ubuntu_bionic"
       shipyard:
-        shipyard: "quay.io/airshipit/shipyard:latest-ubuntu_xenial"
-        shipyard_db_sync: "quay.io/airshipit/shipyard:latest-ubuntu_xenial"
-        airflow: "quay.io/airshipit/airflow:latest-ubuntu_xenial"
-        airflow_db_sync: "quay.io/airshipit/airflow:latest-ubuntu_xenial"
+        shipyard: "quay.io/airshipit/shipyard:latest-ubuntu_bionic"
+        shipyard_db_sync: "quay.io/airshipit/shipyard:latest-ubuntu_bionic"
+        airflow: "quay.io/airshipit/airflow:latest-ubuntu_bionic"
+        airflow_db_sync: "quay.io/airshipit/airflow:latest-ubuntu_bionic"
 ...

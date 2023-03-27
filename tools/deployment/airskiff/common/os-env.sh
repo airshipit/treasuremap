@@ -14,9 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export OS_PROJECT_DOMAIN_NAME=`grep -m 1 project_domain_name /etc/openstack/clouds.yaml | cut -d "'" -f 2`
-export OS_USER_DOMAIN_NAME=`grep -m 1 user_domain_name /etc/openstack/clouds.yaml | cut -d "'" -f 2`
-export OS_PROJECT_NAME=`grep -m 1 project_name /etc/openstack/clouds.yaml | cut -d "'" -f 2`
-export OS_USERNAME=`grep -m 1 username /etc/openstack/clouds.yaml | cut -d "'" -f 2`
-export OS_PASSWORD=`grep -m 1 password /etc/openstack/clouds.yaml | cut -d "'" -f 2`
-export OS_AUTH_URL=`grep -m 1 auth_url /etc/openstack/clouds.yaml | cut -d "'" -f 2`
+export OS_PROJECT_DOMAIN_NAME=$(grep -m 1 project_domain_name /etc/openstack/clouds.yaml | cut -d "'" -f 2)
+export OS_USER_DOMAIN_NAME=$(grep -m 1 user_domain_name /etc/openstack/clouds.yaml | cut -d "'" -f 2)
+export OS_PROJECT_NAME=$(grep -m 1 project_name /etc/openstack/clouds.yaml | cut -d "'" -f 2)
+export OS_USERNAME=$(grep -m 1 username /etc/openstack/clouds.yaml | cut -d "'" -f 2)
+export OS_PASSWORD=$(grep -m 1 password /etc/openstack/clouds.yaml | cut -d "'" -f 2)
+export OS_AUTH_URL=$(grep -m 1 auth_url /etc/openstack/clouds.yaml | cut -d "'" -f 2)
