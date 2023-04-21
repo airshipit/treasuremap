@@ -19,9 +19,9 @@ data:
   images:
     ucp:
       armada:
-        api: "quay.io/airshipit/armada:latest-ubuntu_bionic"
+        api: "quay.io/airshipit/armada:latest-ubuntu_focal"
       deckhand:
-        deckhand: "quay.io/airshipit/deckhand:latest-ubuntu_bionic"
+        deckhand: "quay.io/airshipit/deckhand:latest-ubuntu_focal"
       shipyard:
         shipyard: "quay.io/airshipit/shipyard:latest-ubuntu_bionic"
         shipyard_db_sync: "quay.io/airshipit/shipyard:latest-ubuntu_bionic"

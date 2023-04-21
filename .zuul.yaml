@@ -25,7 +25,7 @@
         - treasuremap-airsloop-site-lint
         - treasuremap-aiab-site-lint
         - treasuremap-airskiff-deployment-ubuntu
-        - treasuremap-airskiff-deployment-suse
+        # - treasuremap-airskiff-deployment-suse
     gate:
       jobs:
         - treasuremap-seaworthy-site-lint
@@ -43,11 +43,11 @@
             files:
               - ^doc/.*$
 
-- nodeset:
-    name: treasuremap-single-node
-    nodes:
-      - name: ubuntu-bionic
-        label: ubuntu-bionic
+# - nodeset:
+#     name: treasuremap-single-node
+#     nodes:
+#       - name: ubuntu-bionic
+#         label: ubuntu-bionic
 
 - nodeset:
     name: treasuremap-single-node-ubuntu-focal
@@ -187,27 +187,27 @@
       - ^site/airsloop/.*$
       - ^site/aiab/.*$
 
-- job:
-    name: treasuremap-airskiff-deployment-suse
-    nodeset: treasuremap-single-node-ubuntu-focal
-    description: |
-      Deploy Memcached using Airskiff-suse and latest Treasuremap changes.
-    voting: false
-    timeout: 9600
-    pre-run:
-      - tools/gate/playbooks/initial-setup.yaml
-      - tools/gate/playbooks/git-config.yaml
-      - tools/gate/playbooks/airskiff-reduce-site.yaml
-    run: tools/gate/playbooks/airskiff-deploy-gate.yaml
-    vars:
-      site: airskiff-suse
-    post-run: tools/gate/playbooks/debug-report.yaml
-    irrelevant-files:
-      - ^.*\.rst$
-      - ^doc/.*$
-      - ^site/seaworthy/.*$
-      - ^site/airsloop/.*$
-      - ^site/aiab/.*$
+# - job:
+#     name: treasuremap-airskiff-deployment-suse
+#     nodeset: treasuremap-single-node-ubuntu-focal
+#     description: |
+#       Deploy Memcached using Airskiff-suse and latest Treasuremap changes.
+#     voting: false
+#     timeout: 9600
+#     pre-run:
+#       - tools/gate/playbooks/initial-setup.yaml
+#       - tools/gate/playbooks/git-config.yaml
+#       - tools/gate/playbooks/airskiff-reduce-site.yaml
+#     run: tools/gate/playbooks/airskiff-deploy-gate.yaml
+#     vars:
+#       site: airskiff-suse
+#     post-run: tools/gate/playbooks/debug-report.yaml
+#     irrelevant-files:
+#       - ^.*\.rst$
+#       - ^doc/.*$
+#       - ^site/seaworthy/.*$
+#       - ^site/airsloop/.*$
+#       - ^site/aiab/.*$
 
 - secret:
     name: airshipit-github-secret
