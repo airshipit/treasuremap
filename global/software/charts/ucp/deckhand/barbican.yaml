@@ -234,29 +234,4 @@ data:
     pod:
       replicas:
         api: 2
-  dependencies:
-    - ucp-barbican-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: ucp-barbican-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.barbican-htk
-      dest:
-        path: .source
-data:
-  chart_name: ucp-barbican-htk
-  release: ucp-barbican-htk
-  namespace: ucp-barbican-htk
-  values: {}
-  dependencies: []
 ...

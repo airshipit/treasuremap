@@ -92,6 +92,4 @@ data:
         provision_storage_class: false
     manifests:
       helm_tests: false
-  dependencies:
-    - tenant-ceph-htk
 ...

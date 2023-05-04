@@ -159,29 +159,4 @@ data:
           pool_size: 200
         plugins:
           ingester: drydock_provisioner.ingester.plugins.deckhand.DeckhandIngester
-  dependencies:
-    - drydock-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: drydock-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.drydock-htk
-      dest:
-        path: .source
-data:
-  chart_name: drydock-htk
-  release: drydock-htk
-  namespace: drydock-htk
-  values: {}
-  dependencies: []
 ...

@@ -105,6 +105,4 @@ data:
       storage_secrets: true
     bootstrap:
       enabled: true
-  dependencies:
-    - tenant-ceph-htk
 ...

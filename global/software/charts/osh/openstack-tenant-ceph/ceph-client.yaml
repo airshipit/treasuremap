@@ -208,6 +208,4 @@ data:
         # configuration this can be changed.
           osd_pool_default_size: 1
 
-  dependencies:
-    - tenant-ceph-htk
 ...

@@ -47,6 +47,14 @@
         chdir: "{{ zuul.project.src_dir }}"
       become: yes
 
+    - name: Build all charts locally
+      shell: |
+        set -ex
+        ./tools/deployment/airskiff/developer/015-make-all-charts.sh
+      args:
+        chdir: "{{ zuul.project.src_dir }}"
+      become: yes
+
     - name: Deploy Airship components using Armada
       shell: |
         set -ex

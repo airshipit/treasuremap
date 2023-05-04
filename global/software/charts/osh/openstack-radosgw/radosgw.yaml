@@ -142,6 +142,4 @@ data:
     secrets:
       keyrings:
         admin: pvc-tceph-client-key
-  dependencies:
-    - tenant-ceph-htk
 ...

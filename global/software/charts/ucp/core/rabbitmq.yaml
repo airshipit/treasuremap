@@ -86,29 +86,4 @@ data:
     monitoring:
       prometheus:
         enabled: true
-  dependencies:
-    - ucp-rabbitmq-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: ucp-rabbitmq-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.rabbitmq-htk
-      dest:
-        path: .source
-data:
-  chart_name: ucp-rabbitmq-htk
-  release: ucp-rabbitmq-htk
-  namespace: ucp-rabbitmq-htk
-  values: {}
-  dependencies: []
 ...

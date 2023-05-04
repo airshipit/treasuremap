@@ -108,29 +108,4 @@ data:
       server:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-  dependencies:
-    - postgres-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: postgres-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.postgresql-htk
-      dest:
-        path: .source
-data:
-  chart_name: postgres-htk
-  release: postgres-htk
-  namespace: postgres-htk
-  values: {}
-  dependencies: []
 ...

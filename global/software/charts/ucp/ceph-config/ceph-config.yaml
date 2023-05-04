@@ -93,6 +93,4 @@ data:
           userSecretName: pvc-ceph-client-key
       cephfs:
         provision_storage_class: false
-  dependencies:
-    - ceph-htk
 ...

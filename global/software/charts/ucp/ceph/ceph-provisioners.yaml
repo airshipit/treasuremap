@@ -104,6 +104,4 @@ data:
         ceph_configmap_name: ceph-client-keys-etc
         parameters:
           userSecretName: pvc-ceph-client-key
-  dependencies:
-    - ceph-htk
 ...

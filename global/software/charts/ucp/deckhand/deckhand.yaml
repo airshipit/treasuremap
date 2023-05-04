@@ -147,29 +147,4 @@ data:
           use_syslog: true
         keystone_authtoken:
           memcache_security_strategy: None
-  dependencies:
-    - deckhand-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: deckhand-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.deckhand-htk
-      dest:
-        path: .source
-data:
-  chart_name: deckhand-htk
-  release: deckhand-htk
-  namespace: deckhand-htk
-  values: {}
-  dependencies: []
 ...

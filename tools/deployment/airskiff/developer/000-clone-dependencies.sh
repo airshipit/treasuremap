@@ -19,7 +19,8 @@ set -xe
 
 CURRENT_DIR="$(pwd)"
 : "${INSTALL_PATH:="../"}"
-: "${OSH_INFRA_COMMIT:="e6dfa15c269caa9fffb7d2205e614bb2deae43d6"}"
+: "${OSH_COMMIT:="63529d7dc0d3a494b923978dc711313f2e18bd49"}"
+: "${OSH_INFRA_COMMIT:="97ce6d7d8e9a090c748800d69a57bbd9af698b60"}"
 : "${CLONE_ARMADA:=true}"
 : "${CLONE_DECKHAND:=true}"
 : "${CLONE_SHIPYARD:=true}"
@@ -38,9 +39,17 @@ if [[ ${CLONE_SHIPYARD} = true ]] ; then
 fi
 
 # Clone dependencies
+git clone "https://review.opendev.org/airship/maas.git"
+git clone "https://review.opendev.org/airship/porthole.git"
+git clone https://opendev.org/openstack/openstack-helm.git
+cd openstack-helm
+git checkout "${OSH_COMMIT}"
+
+cd "${INSTALL_PATH}"
 git clone https://opendev.org/openstack/openstack-helm-infra.git
 
 cd openstack-helm-infra
 git checkout "${OSH_INFRA_COMMIT}"
+
 
 cd "${CURRENT_DIR}"

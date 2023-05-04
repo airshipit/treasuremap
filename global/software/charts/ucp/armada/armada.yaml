@@ -100,29 +100,4 @@ data:
     manifests:
       deployment_tiller: false
       service_tiller_deploy: false
-  dependencies:
-    - armada-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: armada-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.ucp.armada-htk
-      dest:
-        path: .source
-data:
-  chart_name: armada-htk
-  release: armada-htk
-  namespace: armada-htk
-  values: {}
-  dependencies: []
 ...

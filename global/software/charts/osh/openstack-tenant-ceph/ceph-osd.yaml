@@ -106,6 +106,4 @@ data:
         osd:
           osd_op_num_threads_per_hdd: 2
           osd_op_num_threads_per_ssd: 4
-  dependencies:
-    - tenant-ceph-htk
 ...

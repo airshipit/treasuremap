@@ -134,6 +134,4 @@ data:
           rgw_keystone_token_cache_size: '0'
     ceph_client:
       configmap: ceph-client-keys-etc
-  dependencies:
-    - ceph-htk
 ...

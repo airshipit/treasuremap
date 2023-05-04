@@ -92,6 +92,4 @@ data:
         # cluster with only one OSD.  Depending on OSD targeting & site
         # configuration this can be changed.
         osd_crush_chooseleaf_type: 0
-  dependencies:
-    - ceph-htk
 ...
