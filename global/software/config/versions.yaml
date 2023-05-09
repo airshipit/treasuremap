@@ -332,99 +332,99 @@ data:
         type: git
     ucp:
       armada:
-        location: http://localhost:8282/armada.tgz
+        location: http://control-plane.minikube.internal:8282/armada.tgz
         subpath: armada
         type: tar
       barbican:
-        location: http://localhost:8282/barbican.tgz
+        location: http://control-plane.minikube.internal:8282/barbican.tgz
         subpath: barbican
         type: tar
       ceph-client:
-        location: http://localhost:8282/ceph-client.tgz
+        location: http://control-plane.minikube.internal:8282/ceph-client.tgz
         subpath: ceph-client
         type: tar
       ceph-mon:
-        location: http://localhost:8282/ceph-mon.tgz
+        location: http://control-plane.minikube.internal:8282/ceph-mon.tgz
         subpath: ceph-mon
         type: tar
       ceph-osd:
-        location: http://localhost:8282/ceph-osd.tgz
+        location: http://control-plane.minikube.internal:8282/ceph-osd.tgz
         subpath: ceph-osd
         type: tar
       ceph-provisioners:
-        location: http://localhost:8282/ceph-provisioners.tgz
+        location: http://control-plane.minikube.internal:8282/ceph-provisioners.tgz
         subpath: ceph-provisioners
         type: tar
       ceph-rgw:
-        location: http://localhost:8282/ceph-rgw.tgz
+        location: http://control-plane.minikube.internal:8282/ceph-rgw.tgz
         subpath: ceph-rgw
         type: tar
       deckhand:
-        location: http://localhost:8282/deckhand.tgz
+        location: http://control-plane.minikube.internal:8282/deckhand.tgz
         subpath: deckhand
         type: tar
       divingbell:
-        location: http://localhost:8282/divingbell.tgz
+        location: http://control-plane.minikube.internal:8282/divingbell.tgz
         subpath: divingbell
         type: tar
       drydock:
-        location: http://localhost:8282/drydock.tgz
+        location: http://control-plane.minikube.internal:8282/drydock.tgz
         subpath: drydock
         type: tar
       ingress:
-        location: http://localhost:8282/ingress.tgz
+        location: http://control-plane.minikube.internal:8282/ingress.tgz
         subpath: ingress
         type: tar
       keystone:
-        location: http://localhost:8282/keystone.tgz
+        location: http://control-plane.minikube.internal:8282/keystone.tgz
         subpath: keystone
         type: tar
       maas:
-        location: http://localhost:8282/maas.tgz
+        location: http://control-plane.minikube.internal:8282/maas.tgz
         subpath: maas
         type: tar
       mariadb:
-        location: http://localhost:8282/mariadb.tgz
+        location: http://control-plane.minikube.internal:8282/mariadb.tgz
         subpath: mariadb
         type: tar
       memcached:
-        location: http://localhost:8282/memcached.tgz
+        location: http://control-plane.minikube.internal:8282/memcached.tgz
         subpath: memcached
         type: tar
       postgresql:
-        location: http://localhost:8282/postgresql.tgz
+        location: http://control-plane.minikube.internal:8282/postgresql.tgz
         subpath: postgresql
         type: tar
       promenade:
-        location: http://localhost:8282/promenade.tgz
+        location: http://control-plane.minikube.internal:8282/promenade.tgz
         subpath: promenade
         type: tar
       rabbitmq:
-        location: http://localhost:8282/rabbitmq.tgz
+        location: http://control-plane.minikube.internal:8282/rabbitmq.tgz
         subpath: rabbitmq
         type: tar
       shipyard:
-        location: http://localhost:8282/shipyard.tgz
+        location: http://control-plane.minikube.internal:8282/shipyard.tgz
         subpath: shipyard
         type: tar
       tenant-ceph-client:
-        location: http://localhost:8282/ceph-client.tgz
+        location: http://control-plane.minikube.internal:8282/ceph-client.tgz
         subpath: ceph-client
         type: tar
       tenant-ceph-mon:
-        location: http://localhost:8282/ceph-mon.tgz
+        location: http://control-plane.minikube.internal:8282/ceph-mon.tgz
         subpath: ceph-mon
         type: tar
       tenant-ceph-osd:
-        location: http://localhost:8282/ceph-osd.tgz
+        location: http://control-plane.minikube.internal:8282/ceph-osd.tgz
         subpath: ceph-osd
         type: tar
       tenant-ceph-provisioners:
-        location: http://localhost:8282/ceph-provisioners.tgz
+        location: http://control-plane.minikube.internal:8282/ceph-provisioners.tgz
         subpath: ceph-provisioners
         type: tar
       tenant-ceph-rgw:
-        location: http://localhost:8282/ceph-rgw.tgz
+        location: http://control-plane.minikube.internal:8282/ceph-rgw.tgz
         subpath: ceph-rgw
         type: tar
       tiller:
@@ -746,6 +746,7 @@ data:
         dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
         memcached: docker.io/library/memcached:1.5.5
         prometheus_memcached_exporter: docker.io/prom/memcached-exporter:v0.4.1
+        image_repo_sync: docker.io/library/docker:17.07.0
       neutron:
         bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
@@ -982,8 +983,8 @@ data:
         ks_user: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
         scripted_test: docker.io/openstackhelm/mariadb:ubuntu_focal-20210415
       memcached:
-        dep_check: 'quay.io/airshipit/kubernetes-entrypoint:v1.0.0'
-        memcached: 'docker.io/library/memcached:1.5.5'
+        dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
+        memcached: docker.io/library/memcached:1.5.5
         prometheus_memcached_exporter: docker.io/prom/memcached-exporter:v0.4.1
         image_repo_sync: docker.io/library/docker:17.07.0
       pegleg:
@@ -1013,15 +1014,15 @@ data:
         scripted_test: docker.io/library/rabbitmq:3.9.0-management
         image_repo_sync: docker.io/library/docker:17.07.0
       shipyard:
-        airflow: quay.io/airshipit/airflow:latest-ubuntu_bionic
-        shipyard: quay.io/airshipit/shipyard:latest-ubuntu_bionic
+        airflow: quay.io/airshipit/airflow:latest-ubuntu_focal
+        shipyard: quay.io/airshipit/shipyard:latest-ubuntu_focal
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         shipyard_db_init: docker.io/postgres:14.5
         shipyard_db_auxiliary: docker.io/postgres:14.5
-        shipyard_db_sync: quay.io/airshipit/shipyard:latest-ubuntu_bionic
+        shipyard_db_sync: quay.io/airshipit/shipyard:latest-ubuntu_focal
         airflow_db_init: docker.io/postgres:14.5
         rabbit_init: docker.io/library/rabbitmq:3.9.0-management
-        airflow_db_sync: quay.io/airshipit/airflow:latest-ubuntu_bionic
+        airflow_db_sync: quay.io/airshipit/airflow:latest-ubuntu_focal
         ks_user: docker.io/openstackhelm/heat:ocata
         ks_service: docker.io/openstackhelm/heat:ocata
         ks_endpoints: docker.io/openstackhelm/heat:ocata

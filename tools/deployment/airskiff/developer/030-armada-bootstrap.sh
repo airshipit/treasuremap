@@ -34,7 +34,7 @@ sudo chmod 0644 airskiff.yaml
 # sudo chmod 0644 ~/.kube/config
 
 # start http server with artifacts
-docker rm artifacts --force | true
+docker rm artifacts --force || true
 docker run --name artifacts -p 8282:80 -v $(pwd)/../artifacts:/usr/share/nginx/html -d nginx
 
 # Download latest Armada image and deploy Airship components

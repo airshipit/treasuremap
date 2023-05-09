@@ -23,8 +23,8 @@ data:
       deckhand:
         deckhand: "quay.io/airshipit/deckhand:latest-ubuntu_focal"
       shipyard:
-        shipyard: "quay.io/airshipit/shipyard:latest-ubuntu_bionic"
-        shipyard_db_sync: "quay.io/airshipit/shipyard:latest-ubuntu_bionic"
-        airflow: "quay.io/airshipit/airflow:latest-ubuntu_bionic"
-        airflow_db_sync: "quay.io/airshipit/airflow:latest-ubuntu_bionic"
+        shipyard: "quay.io/airshipit/shipyard:latest-ubuntu_focal"
+        shipyard_db_sync: "quay.io/airshipit/shipyard:latest-ubuntu_focal"
+        airflow: "quay.io/airshipit/airflow:latest-ubuntu_focal"
+        airflow_db_sync: "quay.io/airshipit/airflow:latest-ubuntu_focal"
 ...
