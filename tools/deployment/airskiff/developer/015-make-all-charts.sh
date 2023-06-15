@@ -28,9 +28,9 @@ CURRENT_DIR="$(pwd)"
 : "${MAKE_CHARTS_MAAS:=true}"
 : "${MAKE_CHARTS_PORTHOLE:=true}"
 
-mkdir -p ${ARTIFACTS_PATH}
+mkdir -p "${ARTIFACTS_PATH}"
 
-cd ${INSTALL_PATH}
+cd "${INSTALL_PATH}"
 
 # Make charts in Airship and OSH-INFRA projects
 if [[ ${MAKE_CHARTS_ARMADA} = true ]] ; then
@@ -63,7 +63,7 @@ if [[ ${MAKE_CHARTS_SHIPYARD} = true ]] ; then
 fi
 if [[ ${MAKE_CHARTS_OSH_INFRA} = true ]] ; then
     pushd openstack-helm-infra
-    make charts
+    make all
     for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
     do
         find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
