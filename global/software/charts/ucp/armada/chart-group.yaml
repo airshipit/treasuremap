@@ -13,5 +13,4 @@ data:
   description: Armada
   sequenced: true
   chart_group:
-    - ucp-tiller
     - ucp-armada

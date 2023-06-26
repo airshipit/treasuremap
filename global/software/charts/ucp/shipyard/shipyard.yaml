@@ -276,4 +276,6 @@ data:
       shipyard:
         keystone_authtoken:
           memcache_security_strategy: None
+    logrotate:
+      percent_max_log_fs_usage: 90
 ...

@@ -14,11 +14,7 @@
 
 - hosts: all
 
-  # roles:
-  #   - disable-systemd-resolved
-
   tasks:
-
     - name: Clone dependencies
       shell: |
         set -ex

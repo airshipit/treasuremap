@@ -25,14 +25,12 @@ if [ -n "${PROXY}" ]; then
 fi
 
 # Deploy K8s with Minikube
-: "${HELM_VERSION:="v3.6.3"}"
-: "${KUBE_VERSION:="v1.26.3"}"
-: "${CRICTL_VERSION:="v1.26.0"}"
-: "${CRI_DOCKERD_VERSION:="v0.3.1"}"
-: "${CRI_DOCKERD_PACKAGE_VERSION:="0.3.1.3-0.ubuntu-focal"}"
-: "${MINIKUBE_VERSION:="v1.29.0"}"
-: "${CALICO_VERSION:="v3.25"}"
-: "${CORE_DNS_VERSION:="v1.9.4"}"
+: "${HELM_VERSION:="v3.11.1"}"
+: "${KUBE_VERSION:="v1.27.3"}"
+: "${MINIKUBE_VERSION:="v1.30.1"}"
+: "${CRICTL_VERSION:="v1.27.0"}"
+: "${CALICO_VERSION:="v3.26.1"}"
+: "${CORE_DNS_VERSION:="v1.10.1"}"
 : "${YQ_VERSION:="v4.6.0"}"
 : "${KUBE_DNS_IP="10.96.0.10"}"
 
@@ -52,8 +50,7 @@ function configure_resolvconf {
 
   kube_dns_ip="${KUBE_DNS_IP}"
   # keep all nameservers from both resolv.conf excluding local addresses
-  old_ns=$(grep -P --no-filename "^nameserver\s+(?!127\.0\.0\.|${kube_dns_ip})" \
-           /etc/resolv.conf /run/systemd/resolve/resolv.conf | sort | uniq)
+  old_ns=$(cat /run/systemd/resolve/resolv.conf /etc/resolv.conf /run/systemd/resolve/resolv.conf | sort | uniq)
 
   if [[ -f "/run/systemd/resolve/resolv.conf" ]]; then
     sudo cp --remove-destination /run/systemd/resolve/resolv.conf /etc/resolv.conf
@@ -66,8 +63,7 @@ function configure_resolvconf {
   sudo sed -i  "/^nameserver\s\+127.*/d" /etc/resolv.conf
 
   # Insert kube DNS as first nameserver instead of entirely overwriting /etc/resolv.conf
-  grep -q "nameserver ${kube_dns_ip}" /etc/resolv.conf || \
-    sudo sed -i -e "1inameserver ${kube_dns_ip}" /etc/resolv.conf
+  grep -q "nameserver ${kube_dns_ip}" /etc/resolv.conf || sudo sed -i -e "1inameserver ${kube_dns_ip}" /etc/resolv.conf
 
   local dns_servers
   if [ -z "${HTTP_PROXY}" ]; then
@@ -76,25 +72,19 @@ function configure_resolvconf {
     dns_servers="${old_ns}"
   fi
 
-  grep -q "${dns_servers}" /etc/resolv.conf || \
-    echo -e ${dns_servers} | sudo tee -a /etc/resolv.conf
+  grep -q "${dns_servers}" /etc/resolv.conf || echo -e ${dns_servers} | sudo tee -a /etc/resolv.conf
 
-  grep -q "${dns_servers}" /run/systemd/resolve/resolv.conf || \
-    echo -e ${dns_servers} | sudo tee /run/systemd/resolve/resolv.conf
+  grep -q "${dns_servers}" /run/systemd/resolve/resolv.conf || echo -e ${dns_servers} | sudo tee /run/systemd/resolve/resolv.conf
 
   local search_options='search svc.cluster.local cluster.local'
-  grep -q "${search_options}" /etc/resolv.conf || \
-    echo "${search_options}" | sudo tee -a /etc/resolv.conf
+  grep -q "${search_options}" /etc/resolv.conf ||  echo "${search_options}" | sudo tee -a /etc/resolv.conf
 
-  grep -q "${search_options}" /run/systemd/resolve/resolv.conf || \
-    echo "${search_options}" | sudo tee -a /run/systemd/resolve/resolv.conf
+  grep -q "${search_options}" /run/systemd/resolve/resolv.conf ||  echo "${search_options}" | sudo tee -a /run/systemd/resolve/resolv.conf
 
   local dns_options='options ndots:5 timeout:1 attempts:1'
-  grep -q "${dns_options}" /etc/resolv.conf || \
-    echo ${dns_options} | sudo tee -a /etc/resolv.conf
+  grep -q "${dns_options}" /etc/resolv.conf ||  echo ${dns_options} | sudo tee -a /etc/resolv.conf
 
-  grep -q "${dns_options}" /run/systemd/resolve/resolv.conf || \
-    echo ${dns_options} | sudo tee -a /run/systemd/resolve/resolv.conf
+  grep -q "${dns_options}" /run/systemd/resolve/resolv.conf || echo ${dns_options} | sudo tee -a /run/systemd/resolve/resolv.conf
 }
 
 # NOTE: Clean Up hosts file
@@ -108,6 +98,9 @@ configure_resolvconf
 # shellcheck disable=SC1091
 . /etc/os-release
 
+# uninstalling conflicting packages
+for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt remove $pkg || true; done
+
 # NOTE: Add docker repo
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo apt-key fingerprint 0EBFCD88
@@ -117,7 +110,7 @@ sudo add-apt-repository \
   stable"
 
 # NOTE: Configure docker
-docker_resolv="/run/systemd/resolve/resolv.conf"
+docker_resolv="/etc/resolv.conf"
 docker_dns_list="$(awk '/^nameserver/ { printf "%s%s",sep,"\"" $NF "\""; sep=", "} END{print ""}' "${docker_resolv}")"
 
 sudo -E mkdir -p /etc/docker
@@ -134,6 +127,8 @@ sudo -E tee /etc/docker/daemon.json <<EOF
 }
 EOF
 
+cat /etc/docker/daemon.json
+
 if [ -n "${HTTP_PROXY}" ]; then
   sudo mkdir -p /etc/systemd/system/docker.service.d
   cat <<EOF | sudo -E tee /etc/systemd/system/docker.service.d/http-proxy.conf
@@ -147,7 +142,7 @@ fi
 # Install required packages for K8s on host
 wget -q -O- 'https://download.ceph.com/keys/release.asc' | sudo apt-key add -
 RELEASE_NAME=$(grep 'CODENAME' /etc/lsb-release | awk -F= '{print $2}')
-sudo add-apt-repository "deb https://download.ceph.com/debian-nautilus/
+sudo add-apt-repository "deb https://download.ceph.com/debian-quincy/
 ${RELEASE_NAME} main"
 
 sudo -E apt-get update
@@ -155,6 +150,8 @@ sudo -E apt-get install -y \
   docker-ce \
   docker-ce-cli \
   containerd.io \
+  docker-buildx-plugin \
+  docker-compose-plugin \
   socat \
   jq \
   util-linux \
@@ -176,6 +173,7 @@ sudo -E tee /etc/modprobe.d/rbd.conf << EOF
 install rbd /bin/true
 EOF
 
+
 # Prepare tmpfs for etcd when running on CI
 # CI VMs can have slow I/O causing issues for etcd
 # Only do this on CI (when user is zuul), so that local development can have a kubernetes
@@ -195,24 +193,69 @@ sudo -E curl -sSLo /usr/local/bin/kubectl "${URL}"/kubernetes-release/release/"$
 sudo -E chmod +x /usr/local/bin/minikube
 sudo -E chmod +x /usr/local/bin/kubectl
 
-
-# Install cri-dockerd
-# from https://github.com/Mirantis/cri-dockerd/releases
-CRI_TEMP_DIR=$(mktemp -d)
-pushd "${CRI_TEMP_DIR}"
-wget https://github.com/Mirantis/cri-dockerd/releases/download/${CRI_DOCKERD_VERSION}/cri-dockerd_${CRI_DOCKERD_PACKAGE_VERSION}_amd64.deb
-sudo dpkg -i "cri-dockerd_${CRI_DOCKERD_PACKAGE_VERSION}_amd64.deb"
-sudo dpkg --configure -a
-popd
-if [ -d "${CRI_TEMP_DIR}" ]; then
-  rm -rf mkdir "${CRI_TEMP_DIR}"
-fi
-
 # Install cri-tools
 wget https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRICTL_VERSION}/crictl-${CRICTL_VERSION}-linux-amd64.tar.gz
 sudo tar zxvf "crictl-${CRICTL_VERSION}-linux-amd64.tar.g"z -C /usr/local/bin
 rm -f "crictl-${CRICTL_VERSION}-linux-amd64.tar.gz"
 
+
+#Forwarding IPv4 and letting iptables see bridged traffic
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+
+sudo modprobe overlay
+sudo modprobe br_netfilter
+
+# sysctl params required by setup, params persist across reboots
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward                 = 1
+EOF
+
+# Apply sysctl params without reboot
+sudo sysctl --system
+sudo sysctl net.bridge.bridge-nf-call-iptables net.bridge.bridge-nf-call-ip6tables net.ipv4.ip_forward
+
+lsmod | grep br_netfilter
+lsmod | grep overlay
+
+
+
+cat << EOF | sudo tee /etc/containerd/config.toml
+version = 2
+
+[debug]
+  level = "warn"
+
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+  runtime_type = "io.containerd.runc.v2"
+
+  [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+    SystemdCgroup = true
+EOF
+sudo systemctl restart containerd
+
+
+# Install CNI Plugins
+# from https://github.com/containernetworking/plugins.git
+CNI_TEMP_DIR=$(mktemp -d)
+pushd "${CNI_TEMP_DIR}"
+git clone https://github.com/containernetworking/plugins.git
+pushd plugins
+git checkout v0.8.5
+popd
+docker run --rm  -v ./plugins:/usr/local/src -w /usr/local/src golang:1.13.8  bash -c './build_linux.sh'
+sudo mkdir -p /opt/cni
+sudo cp -a plugins/bin /opt/cni/
+popd
+if [ -d "${CNI_TEMP_DIR}" ]; then
+  sudo rm -rf mkdir "${CNI_TEMP_DIR}"
+fi
+sudo systemctl restart containerd
+sudo systemctl restart docker
 
 # Install Helm
 TMP_DIR=$(mktemp -d)
@@ -226,10 +269,6 @@ rm -rf "${TMP_DIR}"
 sudo -E minikube config set kubernetes-version "${KUBE_VERSION}"
 sudo -E minikube config set vm-driver none
 
-# NOTE: set RemoveSelfLink to false, to enable it as it is required by the ceph-rbd-provisioner.
-# SelfLinks were deprecated in k8s v1.16, and in k8s v1.20, they are
-# disabled by default.
-# https://github.com/kubernetes/enhancements/issues/1164
 export CHANGE_MINIKUBE_NONE_USER=true
 export MINIKUBE_IN_STYLE=false
 
@@ -243,20 +282,24 @@ if [[ "${api_server_status}" != "Running" ]]; then
     --docker-env HTTPS_PROXY="${HTTPS_PROXY}" \
     --docker-env NO_PROXY="${NO_PROXY},10.96.0.0/12" \
     --network-plugin=cni \
+    --cni=calico \
     --wait=apiserver,system_pods \
     --apiserver-names="$(hostname -f)" \
     --extra-config=controller-manager.allocate-node-cidrs=true \
     --extra-config=controller-manager.cluster-cidr=192.168.0.0/16 \
     --extra-config=kube-proxy.mode=ipvs \
     --extra-config=apiserver.service-node-port-range=1-65535 \
-    --embed-certs
+    --extra-config=kubelet.cgroup-driver=systemd \
+    --extra-config=kubelet.resolv-conf=/run/systemd/resolve/resolv.conf \
+    --embed-certs \
+    --container-runtime=containerd
 fi
 
 sudo -E systemctl enable --now kubelet
 
 sudo -E minikube addons list
 
-curl -LSs https://docs.projectcalico.org/archive/"${CALICO_VERSION}"/manifests/calico.yaml -o /tmp/calico.yaml
+curl -LSs https://raw.githubusercontent.com/projectcalico/calico/"${CALICO_VERSION}"/manifests/calico.yaml -o /tmp/calico.yaml
 
 sed -i -e 's#docker.io/calico/#quay.io/calico/#g' /tmp/calico.yaml
 
@@ -353,6 +396,14 @@ sleep 10
 host -v control-plane.minikube.internal
 
 kubectl label nodes --all --overwrite ucp-control-plane=enabled
+
+
+kubectl run multitool --image=praqma/network-multitool
+kubectl wait --for=condition=ready pod multitool --timeout=300s
+kubectl exec -it multitool -- nslookup control-plane.minikube.internal
+kubectl exec -it multitool -- ping -c 4 8.8.8.8
+kubectl exec -it multitool -- nslookup google.com
+
 
 # # Add user to Docker group
 # # NOTE: This requires re-authentication. Restart your shell.
