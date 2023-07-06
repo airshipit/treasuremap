@@ -70,8 +70,8 @@ manifests_lookup(){
   RESULT=$(python3 -c "
 
 import yaml,sys
-from distutils.version import StrictVersion
-if StrictVersion(yaml.__version__) < StrictVersion('5.1'):
+from packaging import version
+if version.Version(yaml.__version__) < version.Version('5.1'):
   y = yaml.load_all(open('$file'))
 else:
   y = yaml.load_all(open('$file'), Loader=yaml.FullLoader)

@@ -19,3 +19,12 @@
     - ensure-docker
     - ensure-python
     - ensure-pip
+
+  tasks:
+    - name: Install Packaging python module for tools/airship
+      block:
+        - pip:
+            name: packaging
+            version: 23.1
+            executable: pip3
+      become: True
