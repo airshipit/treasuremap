@@ -27,6 +27,7 @@ CURRENT_DIR="$(pwd)"
 : "${MAKE_CHARTS_SHIPYARD:=true}"
 : "${MAKE_CHARTS_MAAS:=true}"
 : "${MAKE_CHARTS_PORTHOLE:=true}"
+: "${MAKE_CHARTS_PROMENADE:=true}"
 
 mkdir -p "${ARTIFACTS_PATH}"
 
@@ -87,17 +88,27 @@ if [[ ${MAKE_CHARTS_MAAS} = true ]] ; then
         find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
     done
     popd
+    rm -rf maas
 fi
-# Disabled until porthole charts are based on helm v2.x
-# if [[ ${MAKE_CHARTS_PORTHOLE} = true ]] ; then
-#     pushd porthole
-#     make charts
-#     cd charts
-#     for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
-#     do
-#         find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../../artifacts/$i.tgz" \;
-#     done
-#     popd
-# fi
+if [[ ${MAKE_CHARTS_PORTHOLE} = true ]] ; then
+    pushd porthole
+    make charts
+    cd charts
+    for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
+    do
+        find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../../artifacts/$i.tgz" \;
+    done
+    popd
+fi
+if [[ ${MAKE_CHARTS_PROMENADE} = true ]] ; then
+    pushd promenade
+    make charts
+    cd charts
+    for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
+    do
+        find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../../artifacts/$i.tgz" \;
+    done
+    popd
+fi
 
 cd "${CURRENT_DIR}"

@@ -18,9 +18,6 @@
 set -xe
 
 # Install OpenStack client and create OpenStack client configuration file.
-sudo -H -E pip3 install "cmd2<=0.8.7"
-sudo -H -E pip3 install --upgrade setuptools==50.0.0
-sudo -H -E pip3 install python-openstackclient python-heatclient
 
 sudo -H mkdir -p /etc/openstack
 sudo -H chown -R "$(id -un)": /etc/openstack
@@ -46,4 +43,27 @@ clouds:
       project_domain_name: 'default'
       user_domain_name: 'default'
       auth_url: 'http://keystone-api.openstack.svc.cluster.local:5000/v3'
+  openstack_helm:
+    region_name: RegionOne
+    identity_api_version: 3
+    auth:
+      username: 'admin'
+      password: 'password'
+      project_name: 'admin'
+      project_domain_name: 'default'
+      user_domain_name: 'default'
+      auth_url: 'http://keystone.openstack.svc.cluster.local/v3'
 EOF
+
+
+# Deploy docker-based openstack client
+sudo tee /usr/local/bin/openstack << EOF
+#!/bin/bash
+
+docker run \
+    -v /etc/openstack/clouds.yaml:/etc/openstack/clouds.yaml \
+    -e OS_CLOUD=\${OS_CLOUD} \
+    quay.io/airshipit/porthole-openstack-utility:latest-ubuntu_focal \
+        openstack \$@
+EOF
+sudo chmod +x /usr/local/bin/openstack

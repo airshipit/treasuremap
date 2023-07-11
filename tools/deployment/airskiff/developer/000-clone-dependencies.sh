@@ -24,6 +24,7 @@ set -xe
 : "${CLONE_DECKHAND:=true}"
 : "${CLONE_SHIPYARD:=true}"
 : "${CLONE_PORTHOLE:=true}"
+: "${CLONE_PROMENADE:=true}"
 : "${CLONE_MAAS:=true}"
 : "${CLONE_OSH:=true}"
 
@@ -39,6 +40,10 @@ fi
 if [[ ${CLONE_SHIPYARD} = true ]] ; then
     git clone https://opendev.org/airship/shipyard.git
 fi
+if [[ ${CLONE_PROMENADE} = true ]] ; then
+    git clone https://opendev.org/airship/promenade.git
+fi
+
 
 # Clone dependencies
 if [[ ${CLONE_MAAS} = true ]] ; then
