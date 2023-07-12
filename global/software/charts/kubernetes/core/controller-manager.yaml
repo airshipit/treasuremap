@@ -111,28 +111,4 @@ data:
       - --pod-eviction-timeout=60s
     network:
       kubernetes_netloc: 127.0.0.1:6553
-  dependencies:
-    - kubernetes-controller-manager-htk
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: kubernetes-controller-manager-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.kubernetes.controller-manager-htk
-      dest:
-        path: .source
-data:
-  chart_name: kubernetes-controller-manager-htk
-  release: kubernetes-controller-manager-htk
-  namespace: kubernetes-controller-manager-htk
-  values: {}
-  dependencies: []
 ...

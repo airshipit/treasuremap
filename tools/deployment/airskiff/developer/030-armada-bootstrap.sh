@@ -33,12 +33,6 @@ KUBE_CONFIG_PERMISSIONS=$(stat --format '%a' ~/.kube/config)
 sudo chmod 0644 airskiff.yaml
 # sudo chmod 0644 ~/.kube/config
 
-# start http server with artifacts
-docker rm artifacts --force || true
-docker run --name artifacts -p 8282:80 -v $(pwd)/../artifacts:/usr/share/nginx/html -d nginx
-sleep 10
-curl --verbose -I http://control-plane.minikube.internal:8282/ingress.tgz
-
 # Download latest Armada image and deploy Airship components
 docker run --rm --net host -p 8000:8000 --name armada \
     -v ~/.kube/config:/armada/.kube/config \

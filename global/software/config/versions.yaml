@@ -3,106 +3,46 @@ data:
   charts:
     kubernetes:
       apiserver:
-        location: https://opendev.org/airship/promenade
-        reference: 64807416b71958e31156ef7a50e169813acc4e15
-        subpath: charts/apiserver
-        type: git
-      apiserver-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/apiserver.tgz
+        subpath: apiserver
+        type: tar
       calico:
         calico:
-          location: https://opendev.org/openstack/openstack-helm-infra
-          reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-          subpath: calico
-          type: git
-        calico-htk:
-          location: https://opendev.org/openstack/openstack-helm-infra
-          reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-          subpath: helm-toolkit
-          type: git
+          location: http://control-plane.minikube.internal:8282/calico.tgz
+          subpath: etcd
+          type: calico
         etcd:
-          location: https://opendev.org/airship/promenade
-          reference: 64807416b71958e31156ef7a50e169813acc4e15
-          subpath: charts/etcd
-          type: git
-        etcd-htk:
-          location: https://opendev.org/openstack/openstack-helm-infra
-          reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-          subpath: helm-toolkit
-          type: git
+          location: http://control-plane.minikube.internal:8282/etcd.tgz
+          subpath: etcd
+          type: tar
       controller-manager:
-        location: https://opendev.org/airship/promenade
-        reference: 64807416b71958e31156ef7a50e169813acc4e15
-        subpath: charts/controller_manager
-        type: git
-      controller-manager-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/controller_manager.tgz
+        subpath: controller_manager
+        type: tar
       coredns:
-        location: https://opendev.org/airship/promenade
-        reference: 2125b61b5769e1bc85707ff39f7566d42e49023a
-        subpath: charts/coredns
-        type: git
-      coredns-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 2125b61b5769e1bc85707ff39f7566d42e49023a
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/etcd.tgz
+        subpath: etcd
+        type: tar
       etcd:
-        location: https://opendev.org/airship/promenade
-        reference: 64807416b71958e31156ef7a50e169813acc4e15
-        subpath: charts/etcd
-        type: git
-      etcd-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/coredns.tgz
+        subpath: coredns
+        type: tar
       haproxy:
-        location: https://opendev.org/airship/promenade
-        reference: 64807416b71958e31156ef7a50e169813acc4e15
-        subpath: charts/haproxy
-        type: git
-      haproxy-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/haproxy.tgz
+        subpath: haproxy
+        type: tar
       ingress:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/ingress.tgz
         subpath: ingress
-        type: git
-      ingress-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       proxy:
-        location: https://opendev.org/airship/promenade
-        reference: 64807416b71958e31156ef7a50e169813acc4e15
-        subpath: charts/proxy
-        type: git
-      proxy-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/proxy.tgz
+        subpath: proxy
+        type: tar
       scheduler:
-        location: https://opendev.org/airship/promenade
-        reference: 64807416b71958e31156ef7a50e169813acc4e15
-        subpath: charts/scheduler
-        type: git
-      scheduler-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/scheduler.tgz
+        subpath: scheduler
+        type: tar
     osh:
       barbican:
         location: https://opendev.org/openstack/openstack-helm
@@ -140,10 +80,9 @@ data:
         subpath: helm-toolkit
         type: git
       helm_toolkit:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/helm-toolkit.tgz
         subpath: helm-toolkit
-        type: git
+        type: tar
       horizon:
         location: https://opendev.org/openstack/openstack-helm
         reference: 536eaed62d55eca694eaae0c50df910dbb55fff7
@@ -195,15 +134,9 @@ data:
         subpath: helm-toolkit
         type: git
       memcached:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/memcached.tgz
         subpath: memcached
-        type: git
-      memcached-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       neutron:
         location: https://opendev.org/openstack/openstack-helm
         reference: 536eaed62d55eca694eaae0c50df910dbb55fff7

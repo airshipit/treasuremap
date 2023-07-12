@@ -171,28 +171,4 @@ data:
           plugins:
           - name: EventRateLimit
             path: eventconfig.yaml
-  dependencies:
-    - kubernetes-apiserver-htk
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: kubernetes-apiserver-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.kubernetes.apiserver-htk
-      dest:
-        path: .source
-data:
-  chart_name: kubernetes-apiserver-htk
-  release: kubernetes-apiserver-htk
-  namespace: kubernetes-apiserver-htk
-  values: {}
-  dependencies: []
 ...

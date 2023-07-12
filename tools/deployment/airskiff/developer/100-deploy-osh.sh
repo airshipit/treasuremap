@@ -24,15 +24,7 @@ set -xe
 : "${PL_SITE:="airskiff"}"
 
 # Source OpenStack credentials for Airship utility scripts
-. tools/deployment/airskiff/common/os-env.sh
-
-
-# start http server with artifacts
-docker rm artifacts --force || true
-docker run --name artifacts -p 8282:80 -v $(pwd)/../artifacts:/usr/share/nginx/html -d nginx
-sleep 10
-curl --verbose -I http://control-plane.minikube.internal:8282/ingress.tgz
-
+source ./tools/deployment/airskiff/common/os-env.sh
 
 # NOTE(drewwalters96): Disable Pegleg linting errors P001 and P009; a
 #  a cleartext storage policy is acceptable for non-production use cases

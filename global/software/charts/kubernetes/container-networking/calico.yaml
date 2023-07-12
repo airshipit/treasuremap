@@ -146,28 +146,4 @@ data:
       daemonset_calico_etcd: false
       job_image_repo_sync: false
       service_calico_etcd: false
-  dependencies:
-    - calico-htk
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: calico-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.kubernetes.calico.calico-htk
-      dest:
-        path: .source
-data:
-  chart_name: calico-htk
-  release: calico-htk
-  namespace: calico-htk
-  values: {}
-  dependencies: []
 ...

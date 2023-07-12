@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Utility to execute OpenStack CLI using Heat container.
+# Utility to execute OpenStack CLI using utility container.
 # This is an example, and should be adjusted to ones needs.
 #
 # Usage: openstack endpoint list
@@ -37,5 +37,5 @@ exec sudo docker run --rm ${TERM_OPTS} --net host \
    -v $(pwd):/target \
    -v ${OS_CLOUD_CFG}:/etc/openstack/clouds.yaml:ro \
    -e OS_CLOUD=openstack_helm \
-   docker.io/openstackhelm/heat:ocata openstack "$@"
+   quay.io/airshipit/porthole-openstack-utility:latest-ubuntu_focal openstack "$@"
 

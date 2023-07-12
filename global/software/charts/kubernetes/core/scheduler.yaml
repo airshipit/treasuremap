@@ -68,28 +68,4 @@ data:
   values:
     network:
       kubernetes_netloc: 127.0.0.1:6553
-  dependencies:
-    - kubernetes-scheduler-htk
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: kubernetes-scheduler-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.kubernetes.scheduler-htk
-      dest:
-        path: .source
-data:
-  chart_name: kubernetes-scheduler-htk
-  release: kubernetes-scheduler-htk
-  namespace: kubernetes-scheduler-htk
-  values: {}
-  dependencies: []
 ...

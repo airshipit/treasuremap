@@ -110,28 +110,4 @@ data:
         name: service_peer
         port: 2380
         target_port: 2380
-  dependencies:
-    - kubernetes-etcd-htk
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: kubernetes-etcd-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.kubernetes.etcd-htk
-      dest:
-        path: .source
-data:
-  chart_name: kubernetes-etcd-htk
-  release: kubernetes-etcd-htk
-  namespace: kubernetes-etcd-htk
-  values: {}
-  dependencies: []
 ...
