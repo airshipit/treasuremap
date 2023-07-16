@@ -88,7 +88,6 @@ if [[ ${MAKE_CHARTS_MAAS} = true ]] ; then
         find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
     done
     popd
-    rm -rf maas
 fi
 if [[ ${MAKE_CHARTS_PORTHOLE} = true ]] ; then
     pushd porthole
