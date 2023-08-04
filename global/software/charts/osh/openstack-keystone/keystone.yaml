@@ -262,29 +262,4 @@ data:
     manifests:
       job_rabbit_init: false
       secret_rabbitmq: false
-  dependencies:
-    - keystone-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: keystone-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.osh.keystone-htk
-      dest:
-        path: .source
-data:
-  chart_name: keystone-htk
-  release: keystone-htk
-  namespace: keystone-htk
-  values: {}
-  dependencies: []
 ...

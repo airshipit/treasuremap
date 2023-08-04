@@ -94,25 +94,13 @@ data:
         subpath: helm-toolkit
         type: git
       ingress:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/ingress.tgz
         subpath: ingress
-        type: git
-      ingress-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       keystone:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: 536eaed62d55eca694eaae0c50df910dbb55fff7
+        location: http://control-plane.minikube.internal:8282/keystone.tgz
         subpath: keystone
-        type: git
-      keystone-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       libvirt:
         location: https://opendev.org/openstack/openstack-helm-infra
         reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
@@ -124,15 +112,9 @@ data:
         subpath: helm-toolkit
         type: git
       mariadb:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/mariadb.tgz
         subpath: mariadb
-        type: git
-      mariadb-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       memcached:
         location: http://control-plane.minikube.internal:8282/memcached.tgz
         subpath: memcached
@@ -564,7 +546,7 @@ data:
         ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        rabbit_init: docker.io/library/rabbitmq:3.9.0-management
+        rabbit_init: docker.io/library/rabbitmq:3.10.18-management
         scripted_test: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
       cinder:
         bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
@@ -582,7 +564,7 @@ data:
         ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        rabbit_init: docker.io/library/rabbitmq:3.9.0-management
+        rabbit_init: docker.io/library/rabbitmq:3.10.18-management
         test: docker.io/xrally/xrally-openstack:1.3.0
       glance:
         bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
@@ -599,7 +581,7 @@ data:
         ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        rabbit_init: docker.io/library/rabbitmq:3.9.0-management
+        rabbit_init: docker.io/library/rabbitmq:3.10.18-management
         test: docker.io/xrally/xrally-openstack:1.3.0
       heat:
         bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
@@ -616,7 +598,7 @@ data:
         ks_endpoints: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         ks_service: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
         ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        rabbit_init: docker.io/library/rabbitmq:3.9.0-management
+        rabbit_init: docker.io/library/rabbitmq:3.10.18-management
         test: docker.io/xrally/xrally-openstack:1.3.0
       horizon:
         db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
@@ -635,21 +617,22 @@ data:
         dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
         image_repo_sync: docker.io/library/docker:17.07.0
       keystone:
-        bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        db_drop: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        db_init: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
+        bootstrap: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
+        test: docker.io/xrally/xrally-openstack:2.0.0
+        db_init: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
+        keystone_db_sync: docker.io/openstackhelm/keystone:wallaby-ubuntu_focal
+        db_drop: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
+        ks_user: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
+        rabbit_init: docker.io/library/rabbitmq:3.10.18-management
+        keystone_fernet_setup: docker.io/openstackhelm/keystone:wallaby-ubuntu_focal
+        keystone_fernet_rotate: docker.io/openstackhelm/keystone:wallaby-ubuntu_focal
+        keystone_credential_setup: docker.io/openstackhelm/keystone:wallaby-ubuntu_focal
+        keystone_credential_rotate: docker.io/openstackhelm/keystone:wallaby-ubuntu_focal
+        keystone_credential_cleanup: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
+        keystone_api: docker.io/openstackhelm/keystone:wallaby-ubuntu_focal
+        keystone_domain_manage: docker.io/openstackhelm/keystone:wallaby-ubuntu_focal
         dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
-        keystone_api: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_credential_cleanup: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        keystone_credential_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_credential_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_db_sync: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_domain_manage: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_fernet_rotate: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        keystone_fernet_setup: docker.io/openstackhelm/keystone:ocata-ubuntu_xenial
-        ks_user: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
-        rabbit_init: docker.io/library/rabbitmq:3.9.0-management
-        test: docker.io/xrally/xrally-openstack:1.3.0
+        image_repo_sync: docker.io/docker:17.07.0
       libvirt:
         dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
         libvirt: docker.io/openstackhelm/libvirt:ubuntu_xenial-20190903
@@ -657,7 +640,7 @@ data:
         mariadb: docker.io/openstackhelm/mariadb:latest-ubuntu_focal
         ingress: registry.k8s.io/ingress-nginx/controller:v1.5.1
         error_pages: registry.k8s.io/defaultbackend:1.4
-        prometheus_create_mysql_user: docker.io/library/mariadb:10.5.9-focal
+        prometheus_create_mysql_user: docker.io/library/mariadb:10.6.14-focal
         prometheus_mysql_exporter: docker.io/prom/mysqld-exporter:v0.12.1
         prometheus_mysql_exporter_helm_tests: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
         dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
@@ -691,7 +674,7 @@ data:
         neutron_sriov_agent: docker.io/openstackhelm/neutron:ocata-18.04-sriov
         neutron_sriov_agent_init: docker.io/openstackhelm/neutron:ocata-18.04-sriov
         purge_test: docker.io/openstackhelm/ospurge:latest
-        rabbit_init: docker.io/library/rabbitmq:3.9.0-management
+        rabbit_init: docker.io/library/rabbitmq:3.10.18-management
         test: docker.io/xrally/xrally-openstack:1.3.0
       nova:
         bootstrap: docker.io/openstackhelm/heat:ocata-ubuntu_xenial
@@ -717,7 +700,7 @@ data:
         nova_service_cleaner: docker.io/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
         nova_spiceproxy: docker.io/openstackhelm/nova:ocata-ubuntu_xenial
         nova_spiceproxy_assets: docker.io/kolla/ubuntu-source-nova-spicehtml5proxy:ocata
-        rabbit_init: docker.io/library/rabbitmq:3.9.0-management
+        rabbit_init: docker.io/library/rabbitmq:3.10.18-management
         test: docker.io/xrally/xrally-openstack:1.3.0
       openvswitch:
         dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
@@ -727,9 +710,9 @@ data:
         prometheus_rabbitmq_exporter: docker.io/kbudde/rabbitmq-exporter:v1.0.0-RC7.1
         prometheus_rabbitmq_exporter_helm_tests: docker.io/openstackhelm/heat:stein-ubuntu_bionic
         rabbitmq_init: docker.io/openstackhelm/heat:stein-ubuntu_bionic
-        rabbitmq: docker.io/library/rabbitmq:3.9.0
+        rabbitmq: docker.io/library/rabbitmq:3.10.18
         dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
-        scripted_test: docker.io/library/rabbitmq:3.9.0-management
+        scripted_test: docker.io/library/rabbitmq:3.10.18-management
         image_repo_sync: docker.io/library/docker:17.07.0
       tempest:
         dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
@@ -833,7 +816,7 @@ data:
         ks_service: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
         ks_endpoints: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
         barbican_api: docker.io/openstackhelm/barbican:wallaby-ubuntu_focal
-        rabbit_init: docker.io/library/rabbitmq:3.9.0-management
+        rabbit_init: docker.io/library/rabbitmq:3.10.18-management
         image_repo_sync: docker.io/docker:17.07.0
       deckhand:
         db_init: docker.io/library/postgres:14.8
@@ -870,7 +853,7 @@ data:
         keystone_db_sync: docker.io/openstackhelm/keystone:wallaby-ubuntu_focal
         db_drop: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
         ks_user: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
-        rabbit_init: docker.io/library/rabbitmq:3.9.0-management
+        rabbit_init: docker.io/library/rabbitmq:3.10.18-management
         keystone_fernet_setup: docker.io/openstackhelm/keystone:wallaby-ubuntu_focal
         keystone_fernet_rotate: docker.io/openstackhelm/keystone:wallaby-ubuntu_focal
         keystone_credential_setup: docker.io/openstackhelm/keystone:wallaby-ubuntu_focal
@@ -897,7 +880,7 @@ data:
         mariadb: docker.io/openstackhelm/mariadb:latest-ubuntu_focal
         ingress: registry.k8s.io/ingress-nginx/controller:v1.5.1
         error_pages: registry.k8s.io/defaultbackend:1.4
-        prometheus_create_mysql_user: docker.io/library/mariadb:10.5.9-focal
+        prometheus_create_mysql_user: docker.io/library/mariadb:10.6.14-focal
         prometheus_mysql_exporter: docker.io/prom/mysqld-exporter:v0.12.1
         prometheus_mysql_exporter_helm_tests: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
         dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
@@ -932,9 +915,9 @@ data:
         prometheus_rabbitmq_exporter: docker.io/kbudde/rabbitmq-exporter:v1.0.0-RC7.1
         prometheus_rabbitmq_exporter_helm_tests: docker.io/openstackhelm/heat:stein-ubuntu_bionic
         rabbitmq_init: docker.io/openstackhelm/heat:stein-ubuntu_bionic
-        rabbitmq: docker.io/library/rabbitmq:3.9.0
+        rabbitmq: docker.io/library/rabbitmq:3.10.18
         dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
-        scripted_test: docker.io/library/rabbitmq:3.9.0-management
+        scripted_test: docker.io/library/rabbitmq:3.10.18-management
         image_repo_sync: docker.io/library/docker:17.07.0
       shipyard:
         airflow: quay.io/airshipit/airflow:latest-ubuntu_focal
@@ -944,7 +927,7 @@ data:
         shipyard_db_auxiliary: docker.io/library/postgres:14.8
         shipyard_db_sync: quay.io/airshipit/shipyard:latest-ubuntu_focal
         airflow_db_init: docker.io/library/postgres:14.8
-        rabbit_init: docker.io/library/rabbitmq:3.9.0-management
+        rabbit_init: docker.io/library/rabbitmq:3.10.18-management
         airflow_db_sync: quay.io/airshipit/airflow:latest-ubuntu_focal
         ks_user: docker.io/openstackhelm/heat:ocata
         ks_service: docker.io/openstackhelm/heat:ocata
