@@ -44,3 +44,5 @@ docker run --rm --net host -p 8000:8000 --name armada \
 # # Set back permissions of the files
 sudo chmod "${AIRSKIFF_PERMISSIONS}" airskiff.yaml
 # sudo chmod "${KUBE_CONFIG_PERMISSIONS}" ~/.kube/config
+
+df -h

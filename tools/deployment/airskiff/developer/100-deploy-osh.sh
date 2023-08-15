@@ -43,3 +43,5 @@ ${SHIPYARD} create configdocs airskiff-design \
              --directory=${PL_OUTPUT}
 ${SHIPYARD} commit configdocs
 ${SHIPYARD} create action update_software --allow-intermediate-commits
+
+df -h

@@ -32,6 +32,16 @@
     - name: Deploy Kubernetes with Minikube
       shell: |
         set -ex
+        sudo fdisk --list
+        df -h
+        sudo mkdir -p /opt/ext_vol
+        BIG_VOLUME=$(sudo fdisk -l 2>&1 | grep  -E 80G | grep Linux | awk '{print $1}')
+        if ! mount | grep "${BIG_VOLUME}"
+        then
+          sudo mkfs.ext4 "${BIG_VOLUME}"
+          sudo mount "${BIG_VOLUME}" /opt/ext_vol
+          df -h
+        fi
         ./tools/deployment/airskiff/developer/010-deploy-k8s.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"

@@ -111,3 +111,4 @@ if [[ ${MAKE_CHARTS_PROMENADE} = true ]] ; then
 fi
 
 cd "${CURRENT_DIR}"
+df -h

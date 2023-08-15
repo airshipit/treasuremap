@@ -39,6 +39,18 @@ export DEBIAN_FRONTEND=noninteractive
 
 sudo swapoff -a
 
+sudo mkdir -p /opt/ext_vol
+sudo mkdir -p /opt/ext_vol/docker
+sudo mkdir -p /opt/ext_vol/containerd
+
+sudo mkdir -p /opt/ext_vol/run_containerd
+sudo rsync -a /run/containerd/ /opt/ext_vol/run_containerd/
+sudo mount --bind /run/containerd /opt/ext_vol/run_containerd
+sudo systemctl restart containerd
+mount
+sudo fdisk --list
+df -h
+
 echo "DefaultLimitMEMLOCK=16384" | sudo tee -a /etc/systemd/system.conf
 sudo systemctl daemon-reexec
 
@@ -109,25 +121,7 @@ sudo add-apt-repository \
   $(lsb_release -cs) \
   stable"
 
-# NOTE: Configure docker
-docker_resolv="/etc/resolv.conf"
-docker_dns_list="$(awk '/^nameserver/ { printf "%s%s",sep,"\"" $NF "\""; sep=", "} END{print ""}' "${docker_resolv}")"
 
-sudo -E mkdir -p /etc/docker
-sudo -E tee /etc/docker/daemon.json <<EOF
-{
-  "exec-opts": ["native.cgroupdriver=systemd"],
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "100m"
-  },
-  "storage-driver": "overlay2",
-  "live-restore": true,
-  "dns": [${docker_dns_list}]
-}
-EOF
-
-cat /etc/docker/daemon.json
 
 if [ -n "${HTTP_PROXY}" ]; then
   sudo mkdir -p /etc/systemd/system/docker.service.d
@@ -172,6 +166,46 @@ sudo -E apt-get install -y \
 sudo -E tee /etc/modprobe.d/rbd.conf << EOF
 install rbd /bin/true
 EOF
+
+
+
+cat << EOF | sudo tee /etc/containerd/config.toml
+version = 2
+
+# persistent data location
+root = "/opt/ext_vol/containerd"
+
+[debug]
+  level = "warn"
+
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+  runtime_type = "io.containerd.runc.v2"
+
+  [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+    SystemdCgroup = true
+EOF
+sudo systemctl restart containerd
+
+# NOTE: Configure docker
+docker_resolv="/etc/resolv.conf"
+docker_dns_list="$(awk '/^nameserver/ { printf "%s%s",sep,"\"" $NF "\""; sep=", "} END{print ""}' "${docker_resolv}")"
+
+sudo -E mkdir -p /etc/docker
+sudo -E tee /etc/docker/daemon.json <<EOF
+{
+  "data-root": "/opt/ext_vol/docker",
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2",
+  "live-restore": true,
+  "dns": [${docker_dns_list}]
+}
+EOF
+
+sudo systemctl restart docker
 
 
 # Prepare tmpfs for etcd when running on CI
@@ -223,20 +257,6 @@ lsmod | grep br_netfilter
 lsmod | grep overlay
 
 
-
-cat << EOF | sudo tee /etc/containerd/config.toml
-version = 2
-
-[debug]
-  level = "warn"
-
-[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
-  runtime_type = "io.containerd.runc.v2"
-
-  [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
-    SystemdCgroup = true
-EOF
-sudo systemctl restart containerd
 
 
 # Install CNI Plugins
@@ -420,3 +440,4 @@ kubectl exec -it multitool -- nslookup google.com
 #                  w /dev/stdout' /etc/resolv.conf
 
 cd "${CURRENT_DIR}"
+df -h
