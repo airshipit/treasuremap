@@ -267,6 +267,14 @@ git clone https://github.com/containernetworking/plugins.git
 pushd plugins
 git checkout v0.8.5
 popd
+for t in 1 2 3 4
+do
+  sleep $t
+  if docker pull golang:1.13.8
+  then
+    break
+  fi
+done
 docker run --rm  -v ./plugins:/usr/local/src -w /usr/local/src golang:1.13.8  bash -c './build_linux.sh'
 sudo mkdir -p /opt/cni
 sudo cp -a plugins/bin /opt/cni/
