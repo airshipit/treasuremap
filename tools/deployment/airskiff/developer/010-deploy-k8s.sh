@@ -136,7 +136,7 @@ fi
 # Install required packages for K8s on host
 wget -q -O- 'https://download.ceph.com/keys/release.asc' | sudo apt-key add -
 RELEASE_NAME=$(grep 'CODENAME' /etc/lsb-release | awk -F= '{print $2}')
-sudo add-apt-repository "deb https://download.ceph.com/debian-pacific/
+sudo add-apt-repository "deb https://download.ceph.com/debian-octopus/
 ${RELEASE_NAME} main"
 
 sudo -E apt-get update
