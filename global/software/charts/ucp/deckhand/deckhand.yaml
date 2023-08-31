@@ -147,4 +147,10 @@ data:
           use_syslog: true
         keystone_authtoken:
           memcache_security_strategy: None
+    network:
+      api:
+        ingress:
+          classes:
+            namespace: "ucp-ingress"
+            cluster: "ucp-ingress"
 ...

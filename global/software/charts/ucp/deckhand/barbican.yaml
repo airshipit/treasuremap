@@ -234,4 +234,10 @@ data:
     pod:
       replicas:
         api: 2
+    network:
+      api:
+        ingress:
+          classes:
+            namespace: "ucp-ingress"
+            cluster: "ucp-ingress"
 ...

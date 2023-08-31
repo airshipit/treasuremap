@@ -53,11 +53,23 @@ data:
     deployment:
       mode: cluster
       type: Deployment
+      cluster:
+        class: kube-ingress
+        controllerClass: k8s.io/kube-ingress
+    conf:
+      ingress:
+        proxy-body-size: 20m
     network:
       host_namespace: true
       ingress:
         annotations:
-          nginx.ingress.kubernetes.io/proxy-read-timeout: "603"
+          nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+        ingressClass:
+          spec:
+            controller: k8s.io/kube-ingress
+        ingress:
+          spec:
+            ingressClassName: kube-ingress
     pod:
       replicas:
         ingress: 1

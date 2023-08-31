@@ -278,4 +278,15 @@ data:
           memcache_security_strategy: None
     logrotate:
       percent_max_log_fs_usage: 90
+    network:
+      airflow_webserver_ui:
+        ingress:
+          classes:
+            namespace: "ucp-ingress"
+            cluster: "ucp-ingress"
+      shipyard:
+        ingress:
+          classes:
+            namespace: "ucp-ingress"
+            cluster: "ucp-ingress"
 ...

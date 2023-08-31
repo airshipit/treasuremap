@@ -25,7 +25,7 @@ if [ -n "${PROXY}" ]; then
 fi
 
 # Deploy K8s with Minikube
-: "${HELM_VERSION:="v3.11.1"}"
+: "${HELM_VERSION:="v3.12.2"}"
 : "${KUBE_VERSION:="v1.27.3"}"
 : "${MINIKUBE_VERSION:="v1.30.1"}"
 : "${CRICTL_VERSION:="v1.27.0"}"
@@ -267,7 +267,7 @@ git clone https://github.com/containernetworking/plugins.git
 pushd plugins
 git checkout v0.8.5
 popd
-for t in 1 2 3 4
+for t in 10 20 30 40
 do
   sleep $t
   if docker pull golang:1.13.8

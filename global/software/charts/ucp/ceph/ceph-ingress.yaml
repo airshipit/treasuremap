@@ -45,6 +45,13 @@ data:
     conf:
       ingress:
         proxy-body-size: 20m
+    controller:
+      ingressClass: ceph-ingress
+      ingressClassByName: true
+      ingressClassResource:
+        controllerValue: k8s.io/ceph-ingress
+        enabled: false
+        name: ceph-ingress
     labels:
       server:
         node_selector_key: ucp-control-plane

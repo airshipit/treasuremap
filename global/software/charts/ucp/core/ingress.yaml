@@ -42,6 +42,10 @@ data:
           labels:
             release_group: airship-ingress
   values:
+    deployment:
+      cluster:
+        class: ucp-ingress
+        controllerClass: k8s.io/ucp-ingress
     conf:
       ingress:
         proxy-body-size: 20m
@@ -61,4 +65,10 @@ data:
         annotations:
           nginx.ingress.kubernetes.io/proxy-body-size: 20m
           nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+        ingressClass:
+          spec:
+            controller: k8s.io/ucp-ingress
+        ingress:
+          spec:
+            ingressClassName: ucp-ingress
 ...

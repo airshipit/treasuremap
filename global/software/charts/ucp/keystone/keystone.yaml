@@ -215,6 +215,11 @@ data:
       job:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-
+    network:
+      api:
+        ingress:
+          classes:
+            namespace: "ucp-ingress"
+            cluster: "ucp-ingress"
 
 ...

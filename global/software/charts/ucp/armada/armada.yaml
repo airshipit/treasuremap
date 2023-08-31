@@ -100,4 +100,10 @@ data:
     manifests:
       deployment_tiller: false
       service_tiller_deploy: false
+    network:
+      api:
+        ingress:
+          classes:
+            namespace: "ucp-ingress"
+            cluster: "ucp-ingress"
 ...

@@ -41,7 +41,15 @@ data:
         - type: job
           labels:
             release_group: airship-osh-infra-ingress-controller
+
   values:
+    deployment:
+      cluster:
+        class: osh-infra-ingress
+        controllerClass: k8s.io/osh-infra-ingress
+    conf:
+      ingress:
+        proxy-body-size: 20m
     labels:
       server:
         node_selector_key: openstack-control-plane
@@ -53,5 +61,16 @@ data:
       replicas:
         ingress: 2
         error_page: 2
+    network:
+      ingress:
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-body-size: 20m
+          nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+        ingressClass:
+          spec:
+            controller: k8s.io/osh-infra-ingress
+        ingress:
+          spec:
+            ingressClassName: osh-infra-ingress
   dependencies:
     - osh-helm-toolkit
