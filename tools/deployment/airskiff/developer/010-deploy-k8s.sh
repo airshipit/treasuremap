@@ -25,10 +25,10 @@ if [ -n "${PROXY}" ]; then
 fi
 
 # Deploy K8s with Minikube
-: "${HELM_VERSION:="v3.12.2"}"
-: "${KUBE_VERSION:="v1.27.3"}"
+: "${HELM_VERSION:="v3.13.2"}"
+: "${KUBE_VERSION:="v1.28.4"}"
 : "${MINIKUBE_VERSION:="v1.30.1"}"
-: "${CRICTL_VERSION:="v1.27.0"}"
+: "${CRICTL_VERSION:="v1.28.0"}"
 : "${CALICO_VERSION:="v3.26.1"}"
 : "${CORE_DNS_VERSION:="v1.10.1"}"
 : "${YQ_VERSION:="v4.6.0"}"
