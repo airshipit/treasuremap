@@ -22,55 +22,126 @@ metadata:
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .images.osh.ingress
+        path: .images.osh.ingress.controller
+        pattern: ^(.*):(.*)$
+        match_group: 1
       dest:
-        path: .values.images.tags
+        path: .values.controller.image.repository
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh.ingress.controller
+        pattern: ^(.*):(.*)$
+        match_group: 2
+      dest:
+        path: .values.controller.image.tag
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh.ingress.defaultBackend
+        pattern: ^(.*):(.*)$
+        match_group: 1
+      dest:
+        path: .values.defaultBackend.image.repository
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh.ingress.defaultBackend
+        pattern: ^(.*):(.*)$
+        match_group: 2
+      dest:
+        path: .values.defaultBackend.image.tag
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh.ingress.patch
+        pattern: ^(.*):(.*)$
+        match_group: 1
+      dest:
+        path: .values.controller.admissionWebhooks.patch.image.repository
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.osh.ingress.defaultBackend
+        pattern: ^(.*):(.*)$
+        match_group: 2
+      dest:
+        path: .values.controller.admissionWebhooks.patch.image.tag
 data:
   chart_name: openstack-ingress-controller
   release: openstack-ingress-controller
   namespace: openstack
   wait:
-    timeout: 900
+    timeout: 300
     labels:
       release_group: airship-openstack-ingress-controller
+    resources:
+      - type: deployment
+        min_ready: 33%
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
     no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-openstack-ingress-controller
   values:
-    deployment:
-      cluster:
-        class: openstack-ingress
-        controllerClass: k8s.io/openstack-ingress
-    conf:
-      ingress:
-        proxy-body-size: 20m
-    labels:
-      server:
-        node_selector_key: openstack-control-plane
-        node_selector_value: enabled
-      error_server:
-        node_selector_key: openstack-control-plane
-        node_selector_value: enabled
-    pod:
-      replicas:
-        ingress: 2
-        error_page: 2
-    network:
-      ingress:
-        annotations:
-          nginx.ingress.kubernetes.io/proxy-body-size: 20m
-          nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-        ingressClass:
-          spec:
-            controller: k8s.io/openstack-ingress
-        ingress:
-          spec:
-            ingressClassName: openstack-ingress
-...
-
+    commonLabels:
+      release_group: airship-openstack-ingress-controller
+    controller:
+      allowSnippetAnnotations: true
+      enableAnnotationValidations: true
+      admissionWebhooks:
+        enabled: false
+        patch:
+          image:
+            tag: REPLACED
+            repository: REPLACED
+      config:
+        enable-underscores-in-headers: "true"
+        proxy-next-upstream: error timeout http_504
+        upstream-keepalive-timeout: "300"
+        ssl-ciphers: "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256"
+        ssl-reject-handshake: "true"
+      electionID: airship-openstack-ingress-controller
+      image:
+        tag: REPLACED
+        repository: REPLACED
+      ingressClass: openstack-ingress
+      ingressClassByName: true
+      ingressClassResource:
+        controllerValue: k8s.io/openstack-ingress
+        enabled: true
+        name: openstack-ingress
+      kind: Deployment
+      metrics:
+        enabled: true
+        service:
+          annotations:
+            prometheus.io/port: '10254'
+            prometheus.io/scrape: 'true'
+      nodeSelector:
+        openstack-control-plane: enabled
+      podLabels:
+        app: ingress-api
+        application: ingress
+        component: server
+        release_group: airship-openstack-ingress-controller
+      replicaCount: 1
+      scope:
+        enabled: true
+      service:
+        type: ClusterIP
+    defaultBackend:
+      enabled: true
+      image:
+        tag: REPLACED
+        repository: REPLACED
+      nodeSelector:
+        openstack-control-plane: enabled
+      podLabels:
+        application: ingress
+        component: error-pages
+        release_group: airship-openstack-ingress-controller
+    fullnameOverride: openstack-ingress
+    rbac:
+      scope: false

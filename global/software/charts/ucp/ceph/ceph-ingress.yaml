@@ -3,11 +3,11 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: ucp-ceph-ingress
+  labels:
+    name: ucp-ceph-ingress-global
   layeringDefinition:
     abstract: false
     layer: global
-  labels:
-    name: ucp-ceph-ingress-global
   storagePolicy: cleartext
   substitutions:
     # Chart source
@@ -21,9 +21,51 @@ metadata:
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .images.ucp.ingress
+        path: .images.ucp.ingress.controller
+        pattern: ^(.*):(.*)$
+        match_group: 1
       dest:
-        path: .values.images.tags
+        path: .values.controller.image.repository
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.ingress.controller
+        pattern: ^(.*):(.*)$
+        match_group: 2
+      dest:
+        path: .values.controller.image.tag
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.ingress.defaultBackend
+        pattern: ^(.*):(.*)$
+        match_group: 1
+      dest:
+        path: .values.defaultBackend.image.repository
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.ingress.defaultBackend
+        pattern: ^(.*):(.*)$
+        match_group: 2
+      dest:
+        path: .values.defaultBackend.image.tag
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.ingress.patch
+        pattern: ^(.*):(.*)$
+        match_group: 1
+      dest:
+        path: .values.controller.admissionWebhooks.patch.image.repository
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.ingress.defaultBackend
+        pattern: ^(.*):(.*)$
+        match_group: 2
+      dest:
+        path: .values.controller.admissionWebhooks.patch.image.tag
 data:
   chart_name: ucp-ceph-ingress
   release: ucp-ceph-ingress
@@ -32,40 +74,70 @@ data:
     timeout: 300
     labels:
       release_group: airship-ucp-ceph-ingress
+    resources:
+      - type: deployment
+        min_ready: 33%
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
     no_hooks: false
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: airship-ucp-ceph-ingress
   values:
-    conf:
-      ingress:
-        proxy-body-size: 20m
+    commonLabels:
+      release_group: airship-ucp-ceph-ingress
     controller:
+      allowSnippetAnnotations: true
+      enableAnnotationValidations: true
+      admissionWebhooks:
+        enabled: false
+        patch:
+          image:
+            tag: REPLACED
+            repository: REPLACED
+      config:
+        enable-underscores-in-headers: "true"
+        proxy-body-size: 20m
+        ssl-reject-handshake: "true"
+      electionID: airship-ucp-ceph-ingress
+      image:
+        tag: REPLACED
+        repository: REPLACED
       ingressClass: ceph-ingress
       ingressClassByName: true
       ingressClassResource:
         controllerValue: k8s.io/ceph-ingress
         enabled: false
-        name: ceph-ingress
-    labels:
-      server:
-        node_selector_key: ucp-control-plane
-        node_selector_value: enabled
-      error_server:
-        node_selector_key: ucp-control-plane
-        node_selector_value: enabled
-    pod:
-      replicas:
-        ingress: 2
-        error_page: 2
-    network:
-      ingress:
-        annotations:
-          nginx.ingress.kubernetes.io/proxy-body-size: 20m
-          nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-...
+      kind: Deployment
+      metrics:
+        enabled: true
+        service:
+          annotations:
+            prometheus.io/port: '10254'
+            prometheus.io/scrape: 'true'
+      nodeSelector:
+        ucp-control-plane: enabled
+      podLabels:
+        app: ingress-api
+        application: ingress
+        component: server
+        release_group: airship-ucp-ceph-ingress
+      replicaCount: 1
+      scope:
+        enabled: true
+      service:
+        type: ClusterIP
+    defaultBackend:
+      enabled: true
+      image:
+        tag: REPLACED
+        repository: REPLACED
+      nodeSelector:
+        ucp-control-plane: enabled
+      podLabels:
+        application: ingress
+        component: error-pages
+        release_group: airship-ucp-ceph-ingress
+    fullnameOverride: ingress
+    rbac:
+      scope: true

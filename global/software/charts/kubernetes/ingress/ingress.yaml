@@ -22,9 +22,60 @@ metadata:
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .images.kubernetes.ingress
+        path: .images.kubernetes.ingress.controller
+        pattern: ^(.*):(.*)$
+        match_group: 1
       dest:
-        path: .values.images.tags
+        path: .values.controller.image.repository
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.ingress.controller
+        pattern: ^(.*):(.*)$
+        match_group: 2
+      dest:
+        path: .values.controller.image.tag
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.ingress.defaultBackend
+        pattern: ^(.*):(.*)$
+        match_group: 1
+      dest:
+        path: .values.defaultBackend.image.repository
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.ingress.defaultBackend
+        pattern: ^(.*):(.*)$
+        match_group: 2
+      dest:
+        path: .values.defaultBackend.image.tag
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.ingress.patch
+        pattern: ^(.*):(.*)$
+        match_group: 1
+      dest:
+        path: .values.controller.admissionWebhooks.patch.image.repository
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.ingress.defaultBackend
+        pattern: ^(.*):(.*)$
+        match_group: 2
+      dest:
+        path: .values.controller.admissionWebhooks.patch.image.tag
+    # Ingress VIP
+    # - src:
+    #     schema: pegleg/CommonAddresses/v1
+    #     name: common-addresses
+    #     path: .calico.bgp.ipv4.ingress_vip
+    #     pattern: ^(.*)/
+    #     match_group: 1
+    #   dest:
+    #     path: .values.controller.service.externalIPs[0]
 data:
   chart_name: ingress-kube-system
   release: ingress-kube-system
@@ -43,35 +94,64 @@ data:
           labels:
             release_group: airship-ingress-kube-system
   values:
-    labels:
-      server:
-        node_selector_key: kube-ingress
-        node_selector_value: enabled
-      error_server:
-        node_selector_key: kube-ingress
-        node_selector_value: enabled
-    deployment:
-      mode: cluster
-      type: Deployment
-      cluster:
-        class: kube-ingress
-        controllerClass: k8s.io/kube-ingress
-    conf:
-      ingress:
-        proxy-body-size: 20m
-    network:
-      host_namespace: true
-      ingress:
-        annotations:
-          nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-        ingressClass:
-          spec:
-            controller: k8s.io/kube-ingress
-        ingress:
-          spec:
-            ingressClassName: kube-ingress
-    pod:
-      replicas:
-        ingress: 1
-        error_page: 1
-...
+    commonLabels:
+      release_group: airship-ingress-kube-system
+    controller:
+      allowSnippetAnnotations: true
+      enableAnnotationValidations: true
+      admissionWebhooks:
+        enabled: false
+        patch:
+          image:
+            tag: REPLACED
+            repository: REPLACED
+      config:
+        enable-underscores-in-headers: "true"
+        proxy-connect-timeout: "75"
+        proxy-next-upstream: error timeout http_503 http_504
+        proxy-read-timeout: "60"
+        proxy-send-timeout: "60"
+        ssl-ciphers: ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256
+        ssl-reject-handshake: "true"
+        upstream-keepalive-timeout: "300"
+      electionID: airship-ingress-kube-system-nginx-cluster
+      extraArgs:
+        default-ssl-certificate: ucp/keystone-tls-public
+      image:
+        tag: REPLACED
+        repository: REPLACED
+      ingressClass: kube-ingress
+      ingressClassByName: true
+      ingressClassResource:
+        controllerValue: k8s.io/kube-ingress
+        enabled: true
+        name: kube-ingress
+      kind: DaemonSet
+      metrics:
+        enabled: true
+        service:
+          annotations:
+            prometheus.io/port: "10254"
+            prometheus.io/scrape: "true"
+      nodeSelector:
+        kube-ingress: enabled
+      podLabels:
+        application: ingress
+        component: server
+        release_group: airship-ingress-kube-system
+      service:
+        externalIPs:
+          - REPLACED
+        type: ClusterIP
+    defaultBackend:
+      enabled: true
+      image:
+        tag: REPLACED
+        repository: REPLACED
+      nodeSelector:
+        kube-ingress: enabled
+      podLabels:
+        application: ingress
+        component: error-pages
+        release_group: airship-ingress-kube-system
+    fullnameOverride: ingress

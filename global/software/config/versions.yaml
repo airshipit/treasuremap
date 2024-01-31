@@ -17,7 +17,7 @@ data:
           type: tar
       controller-manager:
         location: http://control-plane.minikube.internal:8282/controller_manager.tgz
-        subpath: controller_manager
+        subpath: controller_managerin
         type: tar
       coredns:
         location: http://control-plane.minikube.internal:8282/etcd.tgz
@@ -32,8 +32,8 @@ data:
         subpath: haproxy
         type: tar
       ingress:
-        location: http://control-plane.minikube.internal:8282/ingress.tgz
-        subpath: ingress
+        location: https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.8.3/ingress-nginx-4.8.3.tgz
+        subpath: ingress-nginx
         type: tar
       proxy:
         location: http://control-plane.minikube.internal:8282/proxy.tgz
@@ -94,8 +94,8 @@ data:
         subpath: helm-toolkit
         type: git
       ingress:
-        location: http://control-plane.minikube.internal:8282/ingress.tgz
-        subpath: ingress
+        location: https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.8.3/ingress-nginx-4.8.3.tgz
+        subpath: ingress-nginx
         type: tar
       keystone:
         location: http://control-plane.minikube.internal:8282/keystone.tgz
@@ -287,8 +287,8 @@ data:
         subpath: drydock
         type: tar
       ingress:
-        location: http://control-plane.minikube.internal:8282/ingress.tgz
-        subpath: ingress
+        location: https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.8.3/ingress-nginx-4.8.3.tgz
+        subpath: ingress-nginx
         type: tar
       keystone:
         location: http://control-plane.minikube.internal:8282/keystone.tgz
@@ -519,13 +519,9 @@ data:
         test: docker.io/library/python:3.6
       hyperkube: gcr.io/google-containers/hyperkube-amd64:v1.17.3
       ingress:
-        dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
-        entrypoint: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
-        error_pages: gcr.io/google_containers/defaultbackend:1.0
-        ingress: registry.k8s.io/ingress-nginx/controller:v1.8.2
-        ingress_module_init: docker.io/openstackhelm/neutron:xena-ubuntu_focal
-        ingress_routed_vip: docker.io/openstackhelm/neutron:xena-ubuntu_focal
-        keepalived: docker.io/osixia/keepalived:1.4.5
+        controller: registry.k8s.io/ingress-nginx/controller:v1.9.4
+        defaultBackend: k8s.gcr.io/defaultbackend-amd64:1.5
+        patch: k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343
       pause: gcr.io/google-containers/pause-amd64:3.1
       proxy:
         proxy: gcr.io/google-containers/hyperkube-amd64:v1.17.3
@@ -608,14 +604,9 @@ data:
         horizon_db_sync: docker.io/openstackhelm/horizon:ocata-ubuntu_xenial-20200513
         test: docker.io/openstackhelm/osh-selenium:latest-ubuntu_bionic
       ingress:
-        entrypoint: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
-        ingress: registry.k8s.io/ingress-nginx/controller:v1.8.2
-        ingress_module_init: docker.io/openstackhelm/neutron:xena-ubuntu_focal
-        ingress_routed_vip: docker.io/openstackhelm/neutron:xena-ubuntu_focal
-        error_pages: registry.k8s.io/defaultbackend:1.4
-        keepalived: docker.io/osixia/keepalived:1.4.5
-        dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
-        image_repo_sync: docker.io/library/docker:17.07.0
+        controller: registry.k8s.io/ingress-nginx/controller:v1.9.4
+        defaultBackend: k8s.gcr.io/defaultbackend-amd64:1.5
+        patch: k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343
       keystone:
         bootstrap: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
         test: docker.io/xrally/xrally-openstack:2.0.0
@@ -838,14 +829,9 @@ data:
         drydock_db_cleanup: quay.io/airshipit/drydock:master
         drydock_db_sync: quay.io/airshipit/drydock:master
       ingress:
-        entrypoint: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
-        ingress: registry.k8s.io/ingress-nginx/controller:v1.8.2
-        ingress_module_init: docker.io/openstackhelm/neutron:xena-ubuntu_focal
-        ingress_routed_vip: docker.io/openstackhelm/neutron:xena-ubuntu_focal
-        error_pages: registry.k8s.io/defaultbackend:1.4
-        keepalived: docker.io/osixia/keepalived:1.4.5
-        dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
-        image_repo_sync: docker.io/library/docker:17.07.0
+        controller: registry.k8s.io/ingress-nginx/controller:v1.9.4
+        defaultBackend: k8s.gcr.io/defaultbackend-amd64:1.5
+        patch: k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343
       keystone:
         bootstrap: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
         test: docker.io/xrally/xrally-openstack:2.0.0
