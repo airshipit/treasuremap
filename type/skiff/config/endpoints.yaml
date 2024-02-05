@@ -81,7 +81,7 @@ data:
     oslo_db:
       hosts:
         default: mariadb
-        discovery: mariadb-discovery
+        primary: mariadb
       host_fqdn_override:
         default: null
       path: /DB_NAME
@@ -368,7 +368,7 @@ data:
     oslo_db:
       hosts:
         default: mariadb
-        discovery: mariadb-discovery
+        primary: mariadb
       host_fqdn_override:
         default: null
       path: /DB_NAME
@@ -775,6 +775,7 @@ data:
       namespace: osh-infra
       hosts:
         default: mariadb
+        primary: mariadb
       host_fqdn_override:
         default: null
       path: /DB_NAME

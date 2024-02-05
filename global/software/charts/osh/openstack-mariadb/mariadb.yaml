@@ -97,4 +97,14 @@ data:
     monitoring:
       prometheus:
         enabled: true
+    conf:
+      galera:
+        cluster_leader_ttl: 60
+    manifests:
+      deployment_ingress: false
+      deployment_error: false
+      service_ingress: false
+      configmap_ingress_conf: false
+      configmap_ingress_etc: false
+      service_error: false
 ...

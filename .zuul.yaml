@@ -182,9 +182,9 @@
     vars:
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.12.2-linux-amd64.tar.gz
-      HTK_COMMIT: ae91cf3fc3f288b6d92ace4a3a405606a653638f
-      OSH_INFRA_COMMIT: db3537e56b182a54e7f6931ce57e2a190714019b
-      OSH_COMMIT: 75c30f43db44218e7842611e880fd8d7a30fa79c
+      HTK_COMMIT: cfff60ec10a6c386f38db79bb9f59a552c2b032f
+      OSH_INFRA_COMMIT: cfff60ec10a6c386f38db79bb9f59a552c2b032f
+      OSH_COMMIT: 2d9457e34ca4200ed631466bd87569b0214c92e7
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$

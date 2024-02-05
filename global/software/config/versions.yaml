@@ -17,7 +17,7 @@ data:
           type: tar
       controller-manager:
         location: http://control-plane.minikube.internal:8282/controller_manager.tgz
-        subpath: controller_managerin
+        subpath: controller_manager
         type: tar
       coredns:
         location: http://control-plane.minikube.internal:8282/etcd.tgz
