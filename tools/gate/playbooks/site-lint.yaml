@@ -20,4 +20,4 @@
         ./tools/gate/lint-site.sh "{{ site }}"
       args:
         chdir: "{{ zuul.project.src_dir }}"
-      become: yes
+      become: true

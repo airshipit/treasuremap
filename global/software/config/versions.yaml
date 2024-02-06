@@ -20,12 +20,12 @@ data:
         subpath: controller_manager
         type: tar
       coredns:
-        location: http://control-plane.minikube.internal:8282/etcd.tgz
-        subpath: etcd
-        type: tar
-      etcd:
         location: http://control-plane.minikube.internal:8282/coredns.tgz
         subpath: coredns
+        type: tar
+      etcd:
+        location: http://control-plane.minikube.internal:8282/etcd.tgz
+        subpath: etcd
         type: tar
       haproxy:
         location: http://control-plane.minikube.internal:8282/haproxy.tgz

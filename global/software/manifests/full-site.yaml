@@ -20,14 +20,14 @@ data:
     - kubernetes-haproxy
     - kubernetes-core
     - ingress-kube-system
-    - ucp-ceph-update
+    - ucp-ceph
     - ucp-ceph-config
     - ucp-core
     - ucp-keystone
     - ucp-divingbell
     - ucp-armada
     - ucp-deckhand
-    - ucp-drydock-scaled
+    - ucp-drydock
     - ucp-promenade
     - ucp-shipyard
     - ucp-prometheus-openstack-exporter

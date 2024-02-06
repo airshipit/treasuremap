@@ -19,14 +19,14 @@
     masked: yes
     daemon_reload: yes
     name: systemd-resolved
-  become: yes
+  become: true
 
 - name: Remove local stub dns from resolv.conf, if it exists
   lineinfile:
     path: /etc/resolv.conf
     state: absent
     regexp: '^nameserver.*127.0.0.1'
-  become: yes
+  become: true
 
 - name: Add upstream nameservers in resolv.conf
   blockinfile:
@@ -34,4 +34,4 @@
     block: |
       nameserver 8.8.8.8
       nameserver 8.8.4.4
-  become: yes
+  become: true
