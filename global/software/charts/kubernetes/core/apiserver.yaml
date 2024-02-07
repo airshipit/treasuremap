@@ -163,7 +163,7 @@ data:
       acconfig:
         file: acconfig.yaml
         command_options:
-          - '--enable-admission-plugins=PodSecurityPolicy,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds,NodeRestriction,EventRateLimit'
+          - '--enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds,NodeRestriction,EventRateLimit'
           - '--admission-control-config-file=/etc/kubernetes/apiserver/acconfig.yaml'
         content:
           kind: AdmissionConfiguration

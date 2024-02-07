@@ -142,12 +142,15 @@ data:
               $ref: '#/definitions/image'
             etcd:
               $ref: '#/definitions/image'
+            etcdctl:
+              $ref: '#/definitions/image'
             scheduler:
               $ref: '#/definitions/image'
           required:
             - apiserver
             - controller-manager
             - etcd
+            - etcdctl
             - scheduler
           additionalProperties: false
       required:
