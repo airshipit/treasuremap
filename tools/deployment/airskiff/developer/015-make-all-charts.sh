@@ -20,7 +20,7 @@ set -xe
 CURRENT_DIR="$(pwd)"
 : "${INSTALL_PATH:="../"}"
 : "${ARTIFACTS_PATH:="../artifacts"}"
-: "${HTK_COMMIT:="ae91cf3fc3f288b6d92ace4a3a405606a653638f"}"
+: "${HTK_COMMIT:="cfff60ec10a6c386f38db79bb9f59a552c2b032f"}"
 : "${MAKE_CHARTS_OPENSTACK_HELM:=true}"
 : "${MAKE_CHARTS_OSH_INFRA:=true}"
 : "${MAKE_CHARTS_ARMADA:=true}"

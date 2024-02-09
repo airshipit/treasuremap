@@ -55,7 +55,7 @@
         ./tools/deployment/airskiff/developer/020-setup-client.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
-      become: yes
+      become: true
 
     - name: Build all charts locally
       shell: |
@@ -67,7 +67,7 @@
         ./tools/deployment/airskiff/developer/015-make-all-charts.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
-      become: yes
+      become: true
 
     - name: Start artifactory
       shell: |
@@ -79,7 +79,7 @@
         curl --verbose -I http://control-plane.minikube.internal:8282/memcached.tgz
       args:
         chdir: "{{ zuul.project.src_dir }}"
-      become: yes
+      become: true
 
     - name: Deploy Airship components using Armada
       shell: |
@@ -90,7 +90,7 @@
         ./tools/deployment/airskiff/developer/030-armada-bootstrap.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
-      become: yes
+      become: true
 
     - name: Deploy Software using Airship
       shell: |
@@ -99,7 +99,7 @@
         ./tools/deployment/airskiff/developer/100-deploy-osh.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
-      become: yes
+      become: true
 
     - name: Wait for deployment completion
       shell: |
@@ -108,7 +108,7 @@
         ./tools/gate/wait-for-shipyard.sh
       args:
         chdir: "{{ zuul.project.src_dir }}"
-      become: yes
+      become: true
 
     - name: Stop artifactory
       shell: |
@@ -117,4 +117,4 @@
         docker rm artifacts --force || true
       args:
         chdir: "{{ zuul.project.src_dir }}"
-      become: yes
+      become: true
