@@ -30,6 +30,24 @@ CURRENT_DIR="$(pwd)"
 : "${MAKE_CHARTS_PORTHOLE:=true}"
 : "${MAKE_CHARTS_PROMENADE:=true}"
 
+
+MAKE_CHARTS_OPENSTACK_HELM=$(echo "$MAKE_CHARTS_OPENSTACK_HELM" | tr '[:upper:]' '[:lower:]')
+MAKE_CHARTS_OSH_INFRA=$(echo "$MAKE_CHARTS_OSH_INFRA" | tr '[:upper:]' '[:lower:]')
+MAKE_CHARTS_ARMADA=$(echo "$MAKE_CHARTS_ARMADA" | tr '[:upper:]' '[:lower:]')
+MAKE_CHARTS_DECKHAND=$(echo "$MAKE_CHARTS_DECKHAND" | tr '[:upper:]' '[:lower:]')
+MAKE_CHARTS_SHIPYARD=$(echo "$MAKE_CHARTS_SHIPYARD" | tr '[:upper:]' '[:lower:]')
+MAKE_CHARTS_MAAS=$(echo "$MAKE_CHARTS_MAAS" | tr '[:upper:]' '[:lower:]')
+MAKE_CHARTS_PORTHOLE=$(echo "$MAKE_CHARTS_PORTHOLE" | tr '[:upper:]' '[:lower:]')
+MAKE_CHARTS_PROMENADE=$(echo "$MAKE_CHARTS_PROMENADE" | tr '[:upper:]' '[:lower:]')
+export MAKE_CHARTS_OPENSTACK_HELM
+export MAKE_CHARTS_OSH_INFRA
+export MAKE_CHARTS_ARMADA
+export MAKE_CHARTS_DECKHAND
+export MAKE_CHARTS_SHIPYARD
+export MAKE_CHARTS_MAAS
+export MAKE_CHARTS_PORTHOLE
+export MAKE_CHARTS_PROMENADE
+
 mkdir -p "${ARTIFACTS_PATH}"
 
 cd "${INSTALL_PATH}"

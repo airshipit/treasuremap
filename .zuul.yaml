@@ -24,8 +24,13 @@
         - treasuremap-airskiff-suse-site-lint
         - treasuremap-airsloop-site-lint
         - treasuremap-aiab-site-lint
-        - treasuremap-airskiff-deployment-ubuntu
-        - treasuremap-airskiff-multinode-full-site
+        # deprecated
+        # - treasuremap-airskiff-deployment-ubuntu
+        # disabled
+        # TODO
+        # update OSH charts vaoues in manifests and add more
+        # charts to full-site manifests
+        # - treasuremap-airskiff-multinode-full-site
         - treasuremap-airskiff-1node-reduced-site
     gate:
       jobs:
@@ -129,7 +134,10 @@
       loopback_device: /dev/loop100
       loopback_image: "/opt/ext_vol/openstack-helm/ceph-loop.img"
       ceph_osd_data_device: /dev/loop100
-      kube_version: "1.28.4-1.1"
+      kube_version_repo: "v1.29"
+      # the list of k8s package versions are available here
+      # https://pkgs.k8s.io/core:/stable:/{{ kube_version_repo }}/deb/Packages
+      kube_version: "1.29.2-1.1"
       calico_version: "v3.27.0"
       coredns_version: "v1.11.1"
       helm_version: "v3.13.2"
@@ -160,13 +168,12 @@
         - ./tools/deployment/airskiff/developer/000-clone-dependencies.sh
         - ./tools/deployment/airskiff/developer/020-setup-client.sh
         - ./tools/deployment/airskiff/developer/015-make-all-charts.sh
+        - ./tools/deployment/airskiff/developer/017-make-all-images.sh
         - ./tools/deployment/airskiff/developer/025-start-artifactory.sh
-        - ./tools/deployment/airskiff/developer/026-reduce-site.sh
         - ./tools/deployment/airskiff/developer/030-armada-bootstrap.sh
         - ./tools/deployment/airskiff/developer/100-deploy-osh.sh
         - ./tools/deployment/airskiff/common/os-env.sh
         - ./tools/gate/wait-for-shipyard.sh
-        # - ./tools/deployment/airskiff/common/sleep.sh
 
 - job:
     name: treasuremap-airskiff-1node-reduced-site
@@ -182,6 +189,7 @@
       HTK_COMMIT: cfff60ec10a6c386f38db79bb9f59a552c2b032f
       OSH_INFRA_COMMIT: cfff60ec10a6c386f38db79bb9f59a552c2b032f
       OSH_COMMIT: 2d9457e34ca4200ed631466bd87569b0214c92e7
+      DISTRO: ubuntu_focal
       gate_scripts_relative_path: .
       gate_scripts:
         - ./tools/deployment/airskiff/developer/000-prepare-k8s.sh
@@ -189,6 +197,7 @@
         - ./tools/deployment/airskiff/developer/000-clone-dependencies.sh
         - ./tools/deployment/airskiff/developer/020-setup-client.sh
         - ./tools/deployment/airskiff/developer/015-make-all-charts.sh
+        - ./tools/deployment/airskiff/developer/017-make-all-images.sh
         - ./tools/deployment/airskiff/developer/025-start-artifactory.sh
         - ./tools/deployment/airskiff/developer/026-reduce-site.sh
         - ./tools/deployment/airskiff/developer/030-armada-bootstrap.sh

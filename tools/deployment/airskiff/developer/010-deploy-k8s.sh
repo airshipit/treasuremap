@@ -420,8 +420,14 @@ kubectl set image deployment coredns -n kube-system "coredns=registry.k8s.io/cor
 rm -f "${PATCH}"
 kubectl rollout restart -n kube-system deployment/coredns
 kubectl rollout status --watch --timeout=300s -n kube-system deployment/coredns
-sleep 10
-host -v control-plane.minikube.internal
+for t in 10 20 30 40
+do
+  sleep $t
+  if host -v control-plane.minikube.internal
+  then
+    break
+  fi
+done
 
 kubectl label nodes --all --overwrite ucp-control-plane=enabled
 

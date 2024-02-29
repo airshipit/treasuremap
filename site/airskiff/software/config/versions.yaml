@@ -22,6 +22,7 @@ data:
         api: "quay.io/airshipit/armada:latest-ubuntu_focal"
       deckhand:
         deckhand: "quay.io/airshipit/deckhand:latest-ubuntu_focal"
+        db_sync: quay.io/airshipit/deckhand:latest-ubuntu_focal
       shipyard:
         shipyard: "quay.io/airshipit/shipyard:latest-ubuntu_focal"
         shipyard_db_sync: "quay.io/airshipit/shipyard:latest-ubuntu_focal"

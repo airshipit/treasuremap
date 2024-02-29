@@ -28,6 +28,22 @@ set -xe
 : "${CLONE_MAAS:=true}"
 : "${CLONE_OSH:=true}"
 
+CLONE_ARMADA=$(echo "$CLONE_ARMADA" | tr '[:upper:]' '[:lower:]')
+CLONE_DECKHAND=$(echo "$CLONE_DECKHAND" | tr '[:upper:]' '[:lower:]')
+CLONE_SHIPYARD=$(echo "$CLONE_SHIPYARD" | tr '[:upper:]' '[:lower:]')
+CLONE_PORTHOLE=$(echo "$CLONE_PORTHOLE" | tr '[:upper:]' '[:lower:]')
+CLONE_PROMENADE=$(echo "$CLONE_PROMENADE" | tr '[:upper:]' '[:lower:]')
+CLONE_MAAS=$(echo "$CLONE_MAAS" | tr '[:upper:]' '[:lower:]')
+CLONE_OSH=$(echo "$CLONE_OSH" | tr '[:upper:]' '[:lower:]')
+
+export CLONE_ARMADA
+export CLONE_DECKHAND
+export CLONE_SHIPYARD
+export CLONE_PORTHOLE
+export CLONE_PROMENADE
+export CLONE_MAAS
+export CLONE_OSH
+
 cd "${INSTALL_PATH}"
 
 # Clone Airship projects
