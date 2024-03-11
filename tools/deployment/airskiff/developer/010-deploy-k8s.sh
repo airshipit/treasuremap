@@ -26,7 +26,7 @@ fi
 
 # Deploy K8s with Minikube
 : "${HELM_VERSION:="v3.13.2"}"
-: "${KUBE_VERSION:="v1.29.0"}"
+: "${KUBE_VERSION:="v1.29.2"}"
 : "${MINIKUBE_VERSION:="v1.30.1"}"
 : "${CRICTL_VERSION:="v1.29.0"}"
 : "${CALICO_VERSION:="v3.26.1"}"
