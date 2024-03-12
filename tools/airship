@@ -119,6 +119,7 @@ Examples:
   tools/airship promenade generate-certs -o /target/certs /target/collect/*.yaml
   tools/airship promenade build-all -o /target/bundle /target/collect/*.yaml /target/certs/*.yaml
   tools/airship shipyard get actions
+  tools/airship armada apply actions
 "
 }
 
@@ -189,13 +190,29 @@ shipyard() {
 
   versions_lookup "['data']['images']['ucp']['shipyard']['shipyard']"
 
-  SHIPYARD_IMAGE=$RESULT
+  IMAGE_SHIPYARD=$IMAGE_URL
   docker run   --rm --net=host $TERM_OPTS \
     -u "${USER}:${GROUP}" \
     -w /target \
     -v $(pwd):/target \
     --env-file $ENV_FILE \
-    $IMAGE_URL $@
+    $IMAGE_SHIPYARD $@
+}
+
+
+armada() {
+
+  versions_lookup "['data']['images']['ucp']['armada']['api']"
+
+  IMAGE_ARMADA=$IMAGE_URL
+  docker run --rm --net host $TERM_OPTS \
+    -u "${USER}:${GROUP}" \
+    -v ${HOME}/.kube/config:/armada/.kube/config \
+    -v "$(pwd)"/airskiff.yaml:/airskiff.yaml \
+    -v "${REPO_DIR}"/../:/airship-components \
+    --env-file $ENV_FILE \
+    $IMAGE_ARMADA $@
+
 }
 
 
@@ -209,6 +226,10 @@ case "$1" in
 'shipyard')
   shift;
   shipyard $@
+  ;;
+'armada')
+  shift;
+  armada $@
   ;;
 *) help
    exit 1

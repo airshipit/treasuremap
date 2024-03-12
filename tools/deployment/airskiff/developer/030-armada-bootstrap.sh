@@ -20,9 +20,8 @@ set -xe
 : "${INSTALL_PATH:="$(pwd)/../"}"
 : "${PEGLEG:="./tools/airship pegleg"}"
 : "${PL_SITE:="airskiff"}"
+: "${ARMADA:="./tools/airship armada"}"
 : "${TARGET_MANIFEST:="cluster-bootstrap"}"
-: "${DISTRO:=ubuntu_focal}"
-: "${DOCKER_REGISTRY:=quay.io}"
 
 
 # Render documents
@@ -37,12 +36,7 @@ sudo chmod 0644 airskiff.yaml
 # sudo chmod 0644 ~/.kube/config
 
 # Download latest Armada image and deploy Airship components
-docker run --rm --net host -p 8000:8000 --name armada \
-    -v ~/.kube/config:/armada/.kube/config \
-    -v "$(pwd)"/airskiff.yaml:/airskiff.yaml \
-    -v "${INSTALL_PATH}":/airship-components \
-    "${DOCKER_REGISTRY}/airshipit/armada:latest-${DISTRO}" \
-    apply /airskiff.yaml --debug --target-manifest "${TARGET_MANIFEST}"
+${ARMADA} apply /airskiff.yaml --debug --target-manifest "${TARGET_MANIFEST}"
 
 # # Set back permissions of the files
 sudo chmod "${AIRSKIFF_PERMISSIONS}" airskiff.yaml
