@@ -209,10 +209,49 @@ armada() {
     -u "${USER}:${GROUP}" \
     -v ${HOME}/.kube/config:/armada/.kube/config \
     -v "$(pwd)"/airskiff.yaml:/airskiff.yaml \
-    -v "${REPO_DIR}"/../:/airship-components \
     --env-file $ENV_FILE \
     $IMAGE_ARMADA $@
 
+}
+
+armada-operator() {
+
+  # create CRDs
+  kubectl apply -f ../armada-operator/config/crd/bases/
+
+  versions_lookup "['data']['images']['ucp']['armada-operator']['operator']"
+
+  IMAGE_ARMADA_OPERATOR=$IMAGE_URL
+  docker run -d --net host $TERM_OPTS \
+    -u "${USER}:${GROUP}" \
+    -v ${HOME}/.kube/config:/armada/.kube/config \
+    -e KUBECONFIG=/armada/.kube/config \
+    --env-file $ENV_FILE \
+    --name armada-operator \
+    $IMAGE_ARMADA_OPERATOR /manager
+
+  # Wait for the container to start running
+  while true; do
+      if [[ "$(docker inspect -f '{{.State.Running}}' "armada-operator" )" == "true" ]]; then
+          break
+      fi
+      sleep 10
+  done
+
+  versions_lookup "['data']['images']['ucp']['armada-operator']['go']"
+
+  IMAGE_ARMADA_GO=$IMAGE_URL
+  docker run --rm --net host $TERM_OPTS \
+    -u "${USER}:${GROUP}" \
+    -v ${HOME}/.kube/config:/armada/.kube/config \
+    -e KUBECONFIG=/armada/.kube/config \
+    -v "$(pwd)"/airskiff.yaml:/airskiff.yaml \
+    --env-file $ENV_FILE \
+    $IMAGE_ARMADA_GO $@
+
+  docker logs armada-operator
+
+  docker rm --force armada-operator || true
 }
 
 
@@ -230,6 +269,10 @@ case "$1" in
 'armada')
   shift;
   armada $@
+  ;;
+'armada-operator')
+  shift;
+  armada-operator $@
   ;;
 *) help
    exit 1

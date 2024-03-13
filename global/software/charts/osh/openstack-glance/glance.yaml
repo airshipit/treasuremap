@@ -343,29 +343,4 @@ data:
           class: oslo_log.formatters.ContextFormatter
         formatter_default:
           format: "%(message)s"
-  dependencies:
-    - glance-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: glance-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.osh.glance-htk
-      dest:
-        path: .source
-data:
-  chart_name: glance-htk
-  release: glance-htk
-  namespace: glance-htk
-  values: {}
-  dependencies: []
 ...

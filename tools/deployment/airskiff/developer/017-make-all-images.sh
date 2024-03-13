@@ -22,6 +22,8 @@ CURRENT_DIR="$(pwd)"
 : "${DISTRO:=ubuntu_focal}"
 : "${DOCKER_REGISTRY:=localhost:5000}"
 : "${MAKE_ARMADA_IMAGES:=false}"
+: "${MAKE_ARMADA_GO_IMAGES:=false}"
+: "${MAKE_ARMADA_OPERATOR_IMAGES:=false}"
 : "${MAKE_DECKHAND_IMAGES:=false}"
 : "${MAKE_SHIPYARD_IMAGES:=false}"
 : "${MAKE_PORTHOLE_IMAGES:=false}"
@@ -29,12 +31,16 @@ CURRENT_DIR="$(pwd)"
 
 # Convert both values to lowercase (or uppercase)
 MAKE_ARMADA_IMAGES=$(echo "$MAKE_ARMADA_IMAGES" | tr '[:upper:]' '[:lower:]')
+MAKE_ARMADA_GO_IMAGES=$(echo "$MAKE_ARMADA_GO_IMAGES" | tr '[:upper:]' '[:lower:]')
+MAKE_ARMADA_OPERATOR_IMAGES=$(echo "$MAKE_ARMADA_OPERATOR_IMAGES" | tr '[:upper:]' '[:lower:]')
 MAKE_DECKHAND_IMAGES=$(echo "$MAKE_DECKHAND_IMAGES" | tr '[:upper:]' '[:lower:]')
 MAKE_SHIPYARD_IMAGES=$(echo "$MAKE_SHIPYARD_IMAGES" | tr '[:upper:]' '[:lower:]')
 MAKE_PORTHOLE_IMAGES=$(echo "$MAKE_PORTHOLE_IMAGES" | tr '[:upper:]' '[:lower:]')
 MAKE_PROMENADE_IMAGES=$(echo "$MAKE_PROMENADE_IMAGES" | tr '[:upper:]' '[:lower:]')
 
 export MAKE_ARMADA_IMAGES
+export MAKE_ARMADA_GO_IMAGES
+export MAKE_ARMADA_OPERATOR_IMAGES
 export MAKE_DECKHAND_IMAGES
 export MAKE_SHIPYARD_IMAGES
 export MAKE_PORTHOLE_IMAGES
@@ -56,6 +62,26 @@ if [[ ${MAKE_ARMADA_IMAGES} = true ]] ; then
     pushd treasuremap
     sed -i "s#quay.io/airshipit/armada:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/armada:latest-${DISTRO}#g" ./site/airskiff/software/config/versions.yaml
     sed -i "s#quay.io/airshipit/armada:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/armada:latest-${DISTRO}#g" ./global/software/config/versions.yaml
+    popd
+fi
+if [[ ${MAKE_ARMADA_GO_IMAGES} = true ]] ; then
+    pushd armada-go
+    make images
+    docker push "${DOCKER_REGISTRY}/airshipit/armada-go:latest-${DISTRO}"
+    popd
+    pushd treasuremap
+    sed -i "s#quay.io/airshipit/armada-go:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/armada-go:latest-${DISTRO}#g" ./site/airskiff/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/armada-go:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/armada-go:latest-${DISTRO}#g" ./global/software/config/versions.yaml
+    popd
+fi
+if [[ ${MAKE_ARMADA_OPERATOR_IMAGES} = true ]] ; then
+    pushd armada-operator
+    make images
+    docker push "${DOCKER_REGISTRY}/airshipit/armada-operator:latest-${DISTRO}"
+    popd
+    pushd treasuremap
+    sed -i "s#quay.io/airshipit/armada-operator:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/armada-operator:latest-${DISTRO}#g" ./site/airskiff/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/armada-operator:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/armada-operator:latest-${DISTRO}#g" ./global/software/config/versions.yaml
     popd
 fi
 if [[ ${MAKE_DECKHAND_IMAGES} = true ]] ; then

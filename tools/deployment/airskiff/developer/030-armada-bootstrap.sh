@@ -21,8 +21,12 @@ set -xe
 : "${PEGLEG:="./tools/airship pegleg"}"
 : "${PL_SITE:="airskiff"}"
 : "${ARMADA:="./tools/airship armada"}"
+: "${ARMADA_OPERATOR:="./tools/airship armada-operator"}"
 : "${TARGET_MANIFEST:="cluster-bootstrap"}"
+: "${USE_ARMADA_GO:=false}"
 
+USE_ARMADA_GO=$(echo "$USE_ARMADA_GO" | tr '[:upper:]' '[:lower:]')
+export USE_ARMADA_GO
 
 # Render documents
 ${PEGLEG} site -r . render "${PL_SITE}" -o airskiff.yaml
@@ -36,10 +40,13 @@ sudo chmod 0644 airskiff.yaml
 # sudo chmod 0644 ~/.kube/config
 
 # Download latest Armada image and deploy Airship components
-${ARMADA} apply /airskiff.yaml --debug --target-manifest "${TARGET_MANIFEST}"
-
+if [[ ${USE_ARMADA_GO} = true ]] ; then
+    ${ARMADA_OPERATOR} apply /airskiff.yaml --debug --target-manifest "${TARGET_MANIFEST}"
+else
+    ${ARMADA} apply /airskiff.yaml --debug --target-manifest "${TARGET_MANIFEST}"
+fi
 # # Set back permissions of the files
 sudo chmod "${AIRSKIFF_PERMISSIONS}" airskiff.yaml
 # sudo chmod "${KUBE_CONFIG_PERMISSIONS}" ~/.kube/config
 
-df -h
+kubectl get pods -A

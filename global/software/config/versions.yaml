@@ -45,40 +45,21 @@ data:
         type: tar
     osh:
       barbican:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: 536eaed62d55eca694eaae0c50df910dbb55fff7
+        location: http://control-plane.minikube.internal:8282/barbican.tgz
         subpath: barbican
-        type: git
+        type: tar
       cinder:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: 536eaed62d55eca694eaae0c50df910dbb55fff7
+        location: http://control-plane.minikube.internal:8282/cinder.tgz
         subpath: cinder
-        type: git
-      cinder-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       glance:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: 536eaed62d55eca694eaae0c50df910dbb55fff7
+        location: http://control-plane.minikube.internal:8282/glance.tgz
         subpath: glance
-        type: git
-      glance-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       heat:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: 536eaed62d55eca694eaae0c50df910dbb55fff7
+        location: http://control-plane.minikube.internal:8282/heat.tgz
         subpath: heat
-        type: git
-      heat-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       helm_toolkit:
         location: http://control-plane.minikube.internal:8282/helm-toolkit.tgz
         subpath: helm-toolkit
@@ -206,10 +187,9 @@ data:
         subpath: nagios
         type: git
       nfs_provisioner:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/nfs-provisioner.tgz
         subpath: nfs-provisioner
-        type: git
+        type: tar
       podsecuritypolicy:
         location: https://opendev.org/openstack/openstack-helm-infra
         reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
@@ -795,6 +775,19 @@ data:
         ks_endpoints: docker.io/openstackhelm/heat:newton
         ks_service: docker.io/openstackhelm/heat:newton
         ks_user: docker.io/openstackhelm/heat:newton
+        image_repo_sync: docker.io/docker:17.07.0
+        tiller: ghcr.io/helm/tiller:v2.17.0
+      armada-operator:
+        api: quay.io/airshipit/armada-go:latest-ubuntu_focal
+        go: quay.io/airshipit/armada-go:latest-ubuntu_focal
+        operator: quay.io/airshipit/armada-operator:latest-ubuntu_focal
+        dep_check: quay.io/airshipit/kubernetes-entrypoint:v1.0.0
+        helm: docker.io/lachlanevenson/k8s-helm:v2.16.9
+        ks_endpoints: docker.io/openstackhelm/heat:newton
+        ks_service: docker.io/openstackhelm/heat:newton
+        ks_user: docker.io/openstackhelm/heat:newton
+        image_repo_sync: docker.io/docker:17.07.0
+        test: quay.io/airshipit/porthole-compute-utility:latest-ubuntu_focal
         tiller: ghcr.io/helm/tiller:v2.17.0
       barbican:
         bootstrap: docker.io/openstackhelm/heat:wallaby-ubuntu_focal

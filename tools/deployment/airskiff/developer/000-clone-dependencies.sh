@@ -21,6 +21,8 @@ set -xe
 : "${OSH_COMMIT:="2d9457e34ca4200ed631466bd87569b0214c92e7"}"
 : "${OSH_INFRA_COMMIT:="cfff60ec10a6c386f38db79bb9f59a552c2b032f"}"
 : "${CLONE_ARMADA:=true}"
+: "${CLONE_ARMADA_GO:=true}"
+: "${CLONE_ARMADA_OPERATOR:=true}"
 : "${CLONE_DECKHAND:=true}"
 : "${CLONE_SHIPYARD:=true}"
 : "${CLONE_PORTHOLE:=true}"
@@ -29,6 +31,8 @@ set -xe
 : "${CLONE_OSH:=true}"
 
 CLONE_ARMADA=$(echo "$CLONE_ARMADA" | tr '[:upper:]' '[:lower:]')
+CLONE_ARMADA_GO=$(echo "$CLONE_ARMADA_GO" | tr '[:upper:]' '[:lower:]')
+CLONE_ARMADA_OPERATOR=$(echo "$CLONE_ARMADA_OPERATOR" | tr '[:upper:]' '[:lower:]')
 CLONE_DECKHAND=$(echo "$CLONE_DECKHAND" | tr '[:upper:]' '[:lower:]')
 CLONE_SHIPYARD=$(echo "$CLONE_SHIPYARD" | tr '[:upper:]' '[:lower:]')
 CLONE_PORTHOLE=$(echo "$CLONE_PORTHOLE" | tr '[:upper:]' '[:lower:]')
@@ -37,6 +41,8 @@ CLONE_MAAS=$(echo "$CLONE_MAAS" | tr '[:upper:]' '[:lower:]')
 CLONE_OSH=$(echo "$CLONE_OSH" | tr '[:upper:]' '[:lower:]')
 
 export CLONE_ARMADA
+export CLONE_ARMADA_GO
+export CLONE_ARMADA_OPERATOR
 export CLONE_DECKHAND
 export CLONE_SHIPYARD
 export CLONE_PORTHOLE
@@ -49,6 +55,12 @@ cd "${INSTALL_PATH}"
 # Clone Airship projects
 if [[ ${CLONE_ARMADA} = true ]] ; then
     git clone https://opendev.org/airship/armada.git
+fi
+if [[ ${CLONE_ARMADA_GO} = true ]] ; then
+    git clone https://opendev.org/airship/armada-go.git
+fi
+if [[ ${CLONE_ARMADA_OPERATOR} = true ]] ; then
+    git clone https://opendev.org/airship/armada-operator.git
 fi
 if [[ ${CLONE_DECKHAND} = true ]] ; then
     git clone https://opendev.org/airship/deckhand.git

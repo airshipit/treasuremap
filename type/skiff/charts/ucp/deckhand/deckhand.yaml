@@ -12,18 +12,18 @@ metadata:
     parentSelector:
       name: ucp-deckhand-global
     actions:
-      - method: replace
-        path: .source
+      # - method: replace
+      #   path: .source
       - method: merge
         path: .
   storagePolicy: cleartext
 data:
   wait:
     timeout: 1800
-  source:
-    type: local
-    location: /airship-components/deckhand
-    subpath: charts/deckhand
+  # source:
+  #   type: local
+  #   location: /airship-components/deckhand
+  #   subpath: charts/deckhand
   values:
     pod:
       replicas:

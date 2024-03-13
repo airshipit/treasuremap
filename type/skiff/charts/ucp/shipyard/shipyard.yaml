@@ -12,18 +12,18 @@ metadata:
     parentSelector:
       name: ucp-shipyard-global
     actions:
-      - method: replace
-        path: .source
+      # - method: replace
+      #   path: .source
       - method: merge
         path: .
   storagePolicy: cleartext
 data:
   wait:
     timeout: 1800
-  source:
-    type: local
-    location: /airship-components/shipyard
-    subpath: charts/shipyard
+  # source:
+  #   type: local
+  #   location: /airship-components/shipyard
+  #   subpath: charts/shipyard
   values:
     pod:
       replicas:
