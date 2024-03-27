@@ -28,6 +28,7 @@ CURRENT_DIR="$(pwd)"
 : "${MAKE_SHIPYARD_IMAGES:=false}"
 : "${MAKE_PORTHOLE_IMAGES:=false}"
 : "${MAKE_PROMENADE_IMAGES:=false}"
+: "${MAKE_KUBERTENES_ENTRYPOINT_IMAGES:=false}"
 
 # Convert both values to lowercase (or uppercase)
 MAKE_ARMADA_IMAGES=$(echo "$MAKE_ARMADA_IMAGES" | tr '[:upper:]' '[:lower:]')
@@ -37,6 +38,7 @@ MAKE_DECKHAND_IMAGES=$(echo "$MAKE_DECKHAND_IMAGES" | tr '[:upper:]' '[:lower:]'
 MAKE_SHIPYARD_IMAGES=$(echo "$MAKE_SHIPYARD_IMAGES" | tr '[:upper:]' '[:lower:]')
 MAKE_PORTHOLE_IMAGES=$(echo "$MAKE_PORTHOLE_IMAGES" | tr '[:upper:]' '[:lower:]')
 MAKE_PROMENADE_IMAGES=$(echo "$MAKE_PROMENADE_IMAGES" | tr '[:upper:]' '[:lower:]')
+MAKE_KUBERTENES_ENTRYPOINT_IMAGES=$(echo "$MAKE_KUBERTENES_ENTRYPOINT_IMAGES" | tr '[:upper:]' '[:lower:]')
 
 export MAKE_ARMADA_IMAGES
 export MAKE_ARMADA_GO_IMAGES
@@ -45,6 +47,7 @@ export MAKE_DECKHAND_IMAGES
 export MAKE_SHIPYARD_IMAGES
 export MAKE_PORTHOLE_IMAGES
 export MAKE_PROMENADE_IMAGES
+export MAKE_KUBERTENES_ENTRYPOINT_IMAGES
 
 cd "${INSTALL_PATH}"
 
@@ -128,6 +131,15 @@ if [[ ${MAKE_PROMENADE_IMAGES} = true ]] ; then
     popd
     pushd treasuremap
     sed -i "s#quay.io/airshipit/promenade:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/promenade:latest-${DISTRO}#g" ./global/software/config/versions.yaml
+    popd
+fi
+if [[ ${MAKE_KUBERTENES_ENTRYPOINT_IMAGES} = true ]] ; then
+    pushd kubernetes-entrypoint
+    make images
+    docker push "${DOCKER_REGISTRY}/airshipit/kubernetes-entrypoint:latest-${DISTRO}"
+    popd
+    pushd treasuremap
+    sed -i "s#quay.io/airshipit/kubernetes-entrypoint:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/kubernetes-entrypoint:latest-${DISTRO}#g" ./global/software/config/versions.yaml
     popd
 fi
 

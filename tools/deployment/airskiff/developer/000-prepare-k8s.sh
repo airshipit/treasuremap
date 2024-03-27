@@ -45,13 +45,27 @@ EOF
 kubectl apply -f /tmp/${NAMESPACE}-ns.yaml
 done
 
+# DNS resolve temp fix
+cat << EOF | sudo tee /etc/resolv.conf > /dev/null
+nameserver 10.96.0.10
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+search svc.cluster.local cluster.local
+options ndots:5 timeout:1 attempts:1
+EOF
 
+# CoreDNS version upgrade
+kubectl set image deployment coredns -n kube-system "coredns=registry.k8s.io/coredns/coredns:${COREDNS_VERSION}"
+kubectl rollout restart -n kube-system deployment/coredns
+kubectl rollout status --watch --timeout=300s -n kube-system deployment/coredns
+
+
+# Add control-plane.minikube.internal host resord into CodeDNS
 PATCH=$(mktemp)
 HOSTIP=$(hostname -I| awk '{print $1}')
-kubectl get configmap coredns -n kube-system -o json | jq -r "{data: .data}"  | sed 's/ready\\n/header \{\\n        response set ra\\n    \}\\n    ready\\n/g' > "${PATCH}"
-sed -i "s;forward . /etc/resolv.conf {\\\n       max_concurrent 1000\\\n    }\\\n;forward . /etc/resolv.conf {\\\n       max_concurrent 1000\\\n    }\\\n    hosts {\\\n       $HOSTIP control-plane.minikube.internal\\\n       fallthrough\\\n    }\\\n;" "${PATCH}"
+kubectl get configmap coredns -n kube-system -o json | jq -r "{data: .data}"  > "${PATCH}"
+sed -i "s;forward . /etc/resolv.conf {\\\n       max_concurrent 1000\\\n    }\\\n;forward . /etc/resolv.conf {\\\n    }\\\n    hosts {\\\n       $HOSTIP control-plane.minikube.internal\\\n       fallthrough\\\n    }\\\n;" "${PATCH}"
 kubectl patch configmap coredns -n kube-system --patch-file "${PATCH}"
-kubectl set image deployment coredns -n kube-system "coredns=registry.k8s.io/coredns/coredns:${COREDNS_VERSION}"
 rm -f "${PATCH}"
 kubectl rollout restart -n kube-system deployment/coredns
 kubectl rollout status --watch --timeout=300s -n kube-system deployment/coredns
@@ -59,7 +73,6 @@ sleep 10
 host -v control-plane.minikube.internal
 
 kubectl label nodes --all --overwrite ucp-control-plane=enabled
-
 
 kubectl run multitool --image=praqma/network-multitool
 kubectl wait --for=condition=ready pod multitool --timeout=300s

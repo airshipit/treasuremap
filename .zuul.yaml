@@ -77,6 +77,18 @@
         nodes:
           - node-1
           - node-2
+      - name: k8s_cluster
+        nodes:
+          - primary
+          - node-1
+          - node-2
+      - name: k8s_control_plane
+        nodes:
+          - primary
+      - name: k8s_nodes
+        nodes:
+          - node-1
+          - node-2
 
 
 - nodeset:
@@ -86,6 +98,12 @@
         label: ubuntu-focal
     groups:
       - name: primary
+        nodes:
+          - primary
+      - name: k8s_cluster
+        nodes:
+          - primary
+      - name: k8s_control_plane
         nodes:
           - primary
 
@@ -156,9 +174,9 @@
     vars:
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
-      HTK_COMMIT: cfff60ec10a6c386f38db79bb9f59a552c2b032f
-      OSH_INFRA_COMMIT: cfff60ec10a6c386f38db79bb9f59a552c2b032f
-      OSH_COMMIT: 2d9457e34ca4200ed631466bd87569b0214c92e7
+      HTK_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
+      OSH_INFRA_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
+      OSH_COMMIT: 176b412072969f982386db9560b6f50fcb7e0148
       gate_scripts_relative_path: .
       gate_scripts:
         - ./tools/deployment/airskiff/developer/000-prepare-k8s.sh
@@ -184,9 +202,9 @@
     vars:
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
-      HTK_COMMIT: cfff60ec10a6c386f38db79bb9f59a552c2b032f
-      OSH_INFRA_COMMIT: cfff60ec10a6c386f38db79bb9f59a552c2b032f
-      OSH_COMMIT: 2d9457e34ca4200ed631466bd87569b0214c92e7
+      HTK_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
+      OSH_INFRA_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
+      OSH_COMMIT: 176b412072969f982386db9560b6f50fcb7e0148
       DISTRO: ubuntu_focal
       gate_scripts_relative_path: .
       gate_scripts:
@@ -215,9 +233,9 @@
     vars:
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
-      HTK_COMMIT: cfff60ec10a6c386f38db79bb9f59a552c2b032f
-      OSH_INFRA_COMMIT: cfff60ec10a6c386f38db79bb9f59a552c2b032f
-      OSH_COMMIT: 2d9457e34ca4200ed631466bd87569b0214c92e7
+      HTK_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
+      OSH_INFRA_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
+      OSH_COMMIT: 176b412072969f982386db9560b6f50fcb7e0148
       USE_ARMADA_GO: true
       gate_scripts_relative_path: .
       gate_scripts:
@@ -363,9 +381,9 @@
     vars:
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
-      HTK_COMMIT: cfff60ec10a6c386f38db79bb9f59a552c2b032f
-      OSH_INFRA_COMMIT: cfff60ec10a6c386f38db79bb9f59a552c2b032f
-      OSH_COMMIT: 2d9457e34ca4200ed631466bd87569b0214c92e7
+      HTK_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
+      OSH_INFRA_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
+      OSH_COMMIT: 176b412072969f982386db9560b6f50fcb7e0148
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$
