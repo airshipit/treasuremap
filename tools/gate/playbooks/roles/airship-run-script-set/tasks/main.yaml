@@ -49,6 +49,7 @@
         CLONE_SHIPYARD: "{{ CLONE_SHIPYARD | default('true') }}"
         CLONE_PORTHOLE: "{{ CLONE_PORTHOLE | default('true') }}"
         CLONE_PROMENADE: "{{ CLONE_PROMENADE | default('true') }}"
+        CLONE_KUBERNETES_ENTRYPOINT: "{{ CLONE_KUBERNETES_ENTRYPOINT | default('true') }}"
         CLONE_MAAS: "{{ CLONE_MAAS | default('true') }}"
         CLONE_OSH: "{{ CLONE_OSH | default('true') }}"
         MAKE_ARMADA_IMAGES: "{{ MAKE_ARMADA_IMAGES | default('false') }}"
