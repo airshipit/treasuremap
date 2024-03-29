@@ -45,26 +45,17 @@ EOF
 kubectl apply -f /tmp/${NAMESPACE}-ns.yaml
 done
 
-# DNS resolve temp fix
-cat << EOF | sudo tee /etc/resolv.conf > /dev/null
-nameserver 10.96.0.10
-nameserver 8.8.8.8
-nameserver 8.8.4.4
-search svc.cluster.local cluster.local
-options ndots:5 timeout:1 attempts:1
-EOF
 
 # CoreDNS version upgrade
 kubectl set image deployment coredns -n kube-system "coredns=registry.k8s.io/coredns/coredns:${COREDNS_VERSION}"
 kubectl rollout restart -n kube-system deployment/coredns
 kubectl rollout status --watch --timeout=300s -n kube-system deployment/coredns
 
-
 # Add control-plane.minikube.internal host resord into CodeDNS
 PATCH=$(mktemp)
 HOSTIP=$(hostname -I| awk '{print $1}')
 kubectl get configmap coredns -n kube-system -o json | jq -r "{data: .data}"  > "${PATCH}"
-sed -i "s;forward . /etc/resolv.conf {\\\n       max_concurrent 1000\\\n    }\\\n;forward . /etc/resolv.conf {\\\n    }\\\n    hosts {\\\n       $HOSTIP control-plane.minikube.internal\\\n       fallthrough\\\n    }\\\n;" "${PATCH}"
+sed -i "s;forward . 8.8.8.8 {\\\n      max_concurrent 1000\\\n    }\\\n;forward . 8.8.8.8 {\\\n      max_concurrent 1000\\\n    }\\\nhosts {\\\n       $HOSTIP control-plane.minikube.internal\\\n       fallthrough\\\n    }\\\n;" "${PATCH}"
 kubectl patch configmap coredns -n kube-system --patch-file "${PATCH}"
 rm -f "${PATCH}"
 kubectl rollout restart -n kube-system deployment/coredns
