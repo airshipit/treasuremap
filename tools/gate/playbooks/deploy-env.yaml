@@ -18,11 +18,11 @@
   roles:
     - ensure-python
     - ensure-pip
-    - ensure-tox
     - clear-firewall
     - deploy-apparmor
     - deploy-selenium
     - deploy-env
+    - ensure-tox
 
   tasks:
     - name: Install Packaging python module for tools/airship

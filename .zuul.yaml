@@ -117,6 +117,7 @@
     required-projects:
       - openstack/openstack-helm
       - openstack/openstack-helm-infra
+      - openstack/openstack-helm-plugin
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$
@@ -144,19 +145,20 @@
       containerd:
         root_path: "/opt/ext_vol/containerd"
       kubeadm:
-        pod_network_cidr: "10.244.0.0/24"
+        pod_network_cidr: "10.244.0.0/16"
         service_cidr: "10.96.0.0/16"
+      osh_plugin_repo: "{{ zuul.project.src_dir }}/../../openstack/openstack-helm-plugin"
       loopback_setup: true
       loopback_device: /dev/loop100
       loopback_image: "/opt/ext_vol/openstack-helm/ceph-loop.img"
       ceph_osd_data_device: /dev/loop100
       kube_version_repo: "v1.29"
-      # the list of k8s package versions are available here
-      # https://pkgs.k8s.io/core:/stable:/{{ kube_version_repo }}/deb/Packages
-      kube_version: "1.29.2-1.1"
+      kube_version: "1.29.5-1.1"
+      calico_setup: true
       calico_version: "v3.27.0"
-      coredns_version: "v1.11.1"
-      helm_version: "v3.13.2"
+      cilium_setup: false
+      cilium_version: "1.15.6"
+      helm_version: "v3.6.3"
       yq_version: "v4.6.0"
       crictl_version: "v1.26.1"
       zuul_osh_infra_relative_path: ../openstack-helm-infra
@@ -174,9 +176,9 @@
     vars:
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
-      HTK_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
-      OSH_INFRA_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
-      OSH_COMMIT: 176b412072969f982386db9560b6f50fcb7e0148
+      HTK_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
+      OSH_INFRA_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
+      OSH_COMMIT: 049e679939fbd3b0c659dd0977911b8dc3b5a015
       gate_scripts_relative_path: .
       gate_scripts:
         - ./tools/deployment/airskiff/developer/000-prepare-k8s.sh
@@ -202,9 +204,9 @@
     vars:
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
-      HTK_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
-      OSH_INFRA_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
-      OSH_COMMIT: 176b412072969f982386db9560b6f50fcb7e0148
+      HTK_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
+      OSH_INFRA_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
+      OSH_COMMIT: 049e679939fbd3b0c659dd0977911b8dc3b5a015
       DISTRO: ubuntu_focal
       gate_scripts_relative_path: .
       gate_scripts:
@@ -233,9 +235,9 @@
     vars:
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
-      HTK_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
-      OSH_INFRA_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
-      OSH_COMMIT: 176b412072969f982386db9560b6f50fcb7e0148
+      HTK_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
+      OSH_INFRA_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
+      OSH_COMMIT: 049e679939fbd3b0c659dd0977911b8dc3b5a015
       USE_ARMADA_GO: true
       gate_scripts_relative_path: .
       gate_scripts:
@@ -381,9 +383,9 @@
     vars:
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
-      HTK_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
-      OSH_INFRA_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
-      OSH_COMMIT: 176b412072969f982386db9560b6f50fcb7e0148
+      HTK_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
+      OSH_INFRA_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
+      OSH_COMMIT: 049e679939fbd3b0c659dd0977911b8dc3b5a015
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$

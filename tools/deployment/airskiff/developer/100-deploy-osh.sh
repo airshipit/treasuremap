@@ -19,7 +19,7 @@ set -xe
 
 # Lint deployment documents
 : "${AIRSHIP_PATH:="./tools/airship"}"
-: "${PEGLEG:="${AIRSHIP_PATH} pegleg"}"
+: "${PEGLEG:="sudo ${AIRSHIP_PATH} pegleg"}"
 : "${SHIPYARD:="${AIRSHIP_PATH} shipyard"}"
 : "${PL_SITE:="airskiff"}"
 
@@ -36,6 +36,8 @@ ${PEGLEG} site -r . lint "${PL_SITE}" -x P001 -x P009
 mkdir -p ${PL_OUTPUT}
 
 TERM_OPTS="-l info" ${PEGLEG} site -r . collect ${PL_SITE} -s ${PL_OUTPUT}
+
+sudo chown -R ${USER} peggles
 
 # Start the deployment
 ${SHIPYARD} create configdocs airskiff-design \

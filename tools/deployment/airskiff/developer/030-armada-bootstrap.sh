@@ -29,7 +29,7 @@ USE_ARMADA_GO=$(echo "$USE_ARMADA_GO" | tr '[:upper:]' '[:lower:]')
 export USE_ARMADA_GO
 
 # Render documents
-${PEGLEG} site -r . render "${PL_SITE}" -o airskiff.yaml
+sudo ${PEGLEG} site -r . render "${PL_SITE}" -o airskiff.yaml
 
 # Set permissions o+r, beacause these files need to be readable
 # for Armada in the container
