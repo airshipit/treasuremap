@@ -32,7 +32,7 @@ data:
         subpath: haproxy
         type: tar
       ingress:
-        location: https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.8.3/ingress-nginx-4.8.3.tgz
+        location: https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.11.2/ingress-nginx-4.11.2.tgz
         subpath: ingress-nginx
         type: tar
       proxy:
@@ -75,7 +75,7 @@ data:
         subpath: helm-toolkit
         type: git
       ingress:
-        location: https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.8.3/ingress-nginx-4.8.3.tgz
+        location: https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.11.2/ingress-nginx-4.11.2.tgz
         subpath: ingress-nginx
         type: tar
       keystone:
@@ -267,7 +267,7 @@ data:
         subpath: drydock
         type: tar
       ingress:
-        location: https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.8.3/ingress-nginx-4.8.3.tgz
+        location: https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.11.2/ingress-nginx-4.11.2.tgz
         subpath: ingress-nginx
         type: tar
       keystone:
@@ -488,7 +488,7 @@ data:
         anchor: gcr.io/google-containers/hyperkube-amd64:v1.17.3
         controller_manager: gcr.io/google-containers/hyperkube-amd64:v1.17.3
       coredns:
-        coredns: coredns/coredns:1.9.4
+        coredns: coredns/coredns:1.11.1
         test: quay.io/airshipit/promenade:latest
       etcd:
         etcd: quay.io/coreos/etcd:v3.5.11
@@ -499,9 +499,9 @@ data:
         test: docker.io/library/python:3.6
       hyperkube: gcr.io/google-containers/hyperkube-amd64:v1.17.3
       ingress:
-        controller: registry.k8s.io/ingress-nginx/controller:v1.9.4
+        controller: registry.k8s.io/ingress-nginx/controller:v1.11.2
         defaultBackend: k8s.gcr.io/defaultbackend-amd64:1.5
-        patch: k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343
+        patch: k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.4.3
       pause: gcr.io/google-containers/pause-amd64:3.1
       proxy:
         proxy: gcr.io/google-containers/hyperkube-amd64:v1.17.3
@@ -584,9 +584,9 @@ data:
         horizon_db_sync: docker.io/openstackhelm/horizon:ocata-ubuntu_xenial-20200513
         test: docker.io/openstackhelm/osh-selenium:latest-ubuntu_bionic
       ingress:
-        controller: registry.k8s.io/ingress-nginx/controller:v1.9.4
+        controller: registry.k8s.io/ingress-nginx/controller:v1.11.2
         defaultBackend: k8s.gcr.io/defaultbackend-amd64:1.5
-        patch: k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343
+        patch: k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.4.3
       keystone:
         bootstrap: docker.io/openstackhelm/heat:wallaby-ubuntu_focal
         test: docker.io/xrally/xrally-openstack:2.0.0
@@ -822,7 +822,7 @@ data:
         drydock_db_cleanup: quay.io/airshipit/drydock:master
         drydock_db_sync: quay.io/airshipit/drydock:master
       ingress:
-        controller: registry.k8s.io/ingress-nginx/controller:v1.9.4
+        controller: registry.k8s.io/ingress-nginx/controller:v1.11.2
         defaultBackend: k8s.gcr.io/defaultbackend-amd64:1.5
         patch: k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343
       keystone:
@@ -857,8 +857,8 @@ data:
         maas_syslog: quay.io/airshipit/maas-region-controller:latest
       mariadb:
         mariadb: docker.io/openstackhelm/mariadb:latest-ubuntu_focal
-        ingress: registry.k8s.io/ingress-nginx/controller:v1.5.1
-        error_pages: registry.k8s.io/defaultbackend:1.4
+        ingress: registry.k8s.io/ingress-nginx/controller:v1.11.2
+        error_pages: k8s.gcr.io/defaultbackend-amd64:1.5
         prometheus_create_mysql_user: docker.io/library/mariadb:10.6.14-focal
         prometheus_mysql_exporter: docker.io/prom/mysqld-exporter:v0.12.1
         prometheus_mysql_exporter_helm_tests: docker.io/openstackhelm/heat:wallaby-ubuntu_focal

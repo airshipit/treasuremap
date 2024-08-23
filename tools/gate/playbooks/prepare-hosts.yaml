@@ -14,4 +14,5 @@
 - hosts: all
   roles:
     - start-zuul-console
+
 ...

@@ -18,8 +18,8 @@
 set -xe
 
 : "${INSTALL_PATH:="../"}"
-: "${OSH_COMMIT:="176b412072969f982386db9560b6f50fcb7e0148"}"
-: "${OSH_INFRA_COMMIT:="6ca83be78013446540b68fd28d0a75d5b2329f40"}"
+: "${OSH_COMMIT:="049e679939fbd3b0c659dd0977911b8dc3b5a015"}"
+: "${OSH_INFRA_COMMIT:="05f2f45971abcf483189358d663e2b46c3fc2fe8"}"
 : "${CLONE_ARMADA:=true}"
 : "${CLONE_ARMADA_GO:=true}"
 : "${CLONE_ARMADA_OPERATOR:=true}"
@@ -87,14 +87,14 @@ if [[ ${CLONE_PORTHOLE} = true ]] ; then
     git clone "https://review.opendev.org/airship/porthole.git"
 fi
 if [[ ${CLONE_OSH} = true ]] ; then
-    git clone https://opendev.org/openstack/openstack-helm.git
+    git clone "https://opendev.org/openstack/openstack-helm.git"
     pushd openstack-helm
     git checkout "${OSH_COMMIT}"
     popd
 fi
 
 
-git clone https://opendev.org/openstack/openstack-helm-infra.git
+git clone "https://opendev.org/openstack/openstack-helm-infra.git"
 pushd openstack-helm-infra
 git checkout "${OSH_INFRA_COMMIT}"
 popd

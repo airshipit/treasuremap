@@ -175,7 +175,7 @@
     voting: true
     vars:
       site: airskiff
-      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
+      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
       HTK_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
       OSH_INFRA_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
       OSH_COMMIT: 049e679939fbd3b0c659dd0977911b8dc3b5a015
@@ -192,6 +192,7 @@
         - ./tools/deployment/airskiff/developer/100-deploy-osh.sh
         - ./tools/deployment/airskiff/common/os-env.sh
         - ./tools/gate/wait-for-shipyard.sh
+        # - ./tools/deployment/airskiff/common/sleep.sh
 
 - job:
     name: treasuremap-airskiff-1node-reduced-site
@@ -203,7 +204,7 @@
     voting: true
     vars:
       site: airskiff
-      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
+      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
       HTK_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
       OSH_INFRA_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
       OSH_COMMIT: 049e679939fbd3b0c659dd0977911b8dc3b5a015
@@ -218,6 +219,7 @@
         - ./tools/deployment/airskiff/developer/017-make-all-images.sh
         - ./tools/deployment/airskiff/developer/025-start-artifactory.sh
         - ./tools/deployment/airskiff/developer/026-reduce-site.sh
+        - ./tools/deployment/airskiff/developer/020-setup-client.sh
         - ./tools/deployment/airskiff/developer/030-armada-bootstrap.sh
         - ./tools/deployment/airskiff/developer/100-deploy-osh.sh
         - ./tools/deployment/airskiff/common/os-env.sh
@@ -234,7 +236,7 @@
     voting: true
     vars:
       site: airskiff
-      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
+      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
       HTK_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
       OSH_INFRA_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
       OSH_COMMIT: 049e679939fbd3b0c659dd0977911b8dc3b5a015
@@ -382,7 +384,7 @@
     post-run: tools/gate/playbooks/debug-report.yaml
     vars:
       site: airskiff
-      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
+      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
       HTK_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
       OSH_INFRA_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
       OSH_COMMIT: 049e679939fbd3b0c659dd0977911b8dc3b5a015
