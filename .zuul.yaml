@@ -59,6 +59,11 @@
       - name: ubuntu-focal
         label: ubuntu-focal
 
+- nodeset:
+    name: treasuremap-single-node-ubuntu-jammy
+    nodes:
+      - name: ubuntu-jammy
+        label: ubuntu-jammy
 
 - nodeset:
     name: treasuremap-airskiff-3nodes-ubuntu_focal
@@ -90,12 +95,58 @@
           - node-1
           - node-2
 
+- nodeset:
+    name: treasuremap-airskiff-3nodes-ubuntu_jammy
+    nodes:
+      - name: primary
+        label: ubuntu-jammy
+      - name: node-1
+        label: ubuntu-jammy
+      - name: node-2
+        label: ubuntu-jammy
+    groups:
+      - name: primary
+        nodes:
+          - primary
+      - name: nodes
+        nodes:
+          - node-1
+          - node-2
+      - name: k8s_cluster
+        nodes:
+          - primary
+          - node-1
+          - node-2
+      - name: k8s_control_plane
+        nodes:
+          - primary
+      - name: k8s_nodes
+        nodes:
+          - node-1
+          - node-2
+
 
 - nodeset:
     name: treasuremap-airskiff-1node-ubuntu_focal
     nodes:
       - name: primary
         label: ubuntu-focal
+    groups:
+      - name: primary
+        nodes:
+          - primary
+      - name: k8s_cluster
+        nodes:
+          - primary
+      - name: k8s_control_plane
+        nodes:
+          - primary
+
+- nodeset:
+    name: treasuremap-airskiff-1node-ubuntu_jammy
+    nodes:
+      - name: primary
+        label: ubuntu-jammy
     groups:
       - name: primary
         nodes:
@@ -152,15 +203,16 @@
       loopback_device: /dev/loop100
       loopback_image: "/opt/ext_vol/openstack-helm/ceph-loop.img"
       ceph_osd_data_device: /dev/loop100
-      kube_version_repo: "v1.29"
-      kube_version: "1.29.5-1.1"
+      kube_version_repo: "v1.30"
+      kube_version: "1.30.3-1.1"
       calico_setup: true
-      calico_version: "v3.27.0"
+      calico_version: "v3.27.4"
       cilium_setup: false
-      cilium_version: "1.15.6"
-      helm_version: "v3.6.3"
-      yq_version: "v4.6.0"
-      crictl_version: "v1.26.1"
+      cilium_version: "1.16.0"
+      flannel_setup: false
+      flannel_version: v0.25.4
+      helm_version: "v3.14.0"
+      crictl_version: "v1.30.1"
       zuul_osh_infra_relative_path: ../openstack-helm-infra
       gate_scripts_relative_path: ../openstack-helm-infra
       run_helm_tests: "no"
@@ -176,9 +228,9 @@
     vars:
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
-      HTK_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
-      OSH_INFRA_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
-      OSH_COMMIT: 049e679939fbd3b0c659dd0977911b8dc3b5a015
+      HTK_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
+      OSH_INFRA_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
+      OSH_COMMIT: 540df5cb0dbdaed63c202e2d6f2b7891062f8203
       gate_scripts_relative_path: .
       gate_scripts:
         - ./tools/deployment/airskiff/developer/000-prepare-k8s.sh
@@ -205,9 +257,9 @@
     vars:
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
-      HTK_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
-      OSH_INFRA_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
-      OSH_COMMIT: 049e679939fbd3b0c659dd0977911b8dc3b5a015
+      HTK_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
+      OSH_INFRA_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
+      OSH_COMMIT: 540df5cb0dbdaed63c202e2d6f2b7891062f8203
       DISTRO: ubuntu_focal
       gate_scripts_relative_path: .
       gate_scripts:
@@ -237,9 +289,9 @@
     vars:
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
-      HTK_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
-      OSH_INFRA_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
-      OSH_COMMIT: 049e679939fbd3b0c659dd0977911b8dc3b5a015
+      HTK_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
+      OSH_INFRA_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
+      OSH_COMMIT: 540df5cb0dbdaed63c202e2d6f2b7891062f8203
       USE_ARMADA_GO: true
       gate_scripts_relative_path: .
       gate_scripts:
@@ -385,9 +437,9 @@
     vars:
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
-      HTK_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
-      OSH_INFRA_COMMIT: 05f2f45971abcf483189358d663e2b46c3fc2fe8
-      OSH_COMMIT: 049e679939fbd3b0c659dd0977911b8dc3b5a015
+      HTK_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
+      OSH_INFRA_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
+      OSH_COMMIT: 540df5cb0dbdaed63c202e2d6f2b7891062f8203
     irrelevant-files:
       - ^.*\.rst$
       - ^doc/.*$
