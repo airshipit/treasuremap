@@ -139,6 +139,13 @@ data:
     pod:
       replicas:
         deckhand: 2
+      security_context:
+        deckhand:
+          pod:
+            runAsUser: 1000
+        db_sync:
+          pod:
+            runAsUser: 1000
     conf:
       deckhand:
         DEFAULT:

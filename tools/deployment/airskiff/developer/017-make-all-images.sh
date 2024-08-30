@@ -28,6 +28,7 @@ CURRENT_DIR="$(pwd)"
 : "${MAKE_SHIPYARD_IMAGES:=false}"
 : "${MAKE_PORTHOLE_IMAGES:=false}"
 : "${MAKE_PROMENADE_IMAGES:=false}"
+: "${MAKE_PEGLEG_IMAGES:=false}"
 : "${MAKE_KUBERTENES_ENTRYPOINT_IMAGES:=false}"
 
 # Convert both values to lowercase (or uppercase)
@@ -38,6 +39,7 @@ MAKE_DECKHAND_IMAGES=$(echo "$MAKE_DECKHAND_IMAGES" | tr '[:upper:]' '[:lower:]'
 MAKE_SHIPYARD_IMAGES=$(echo "$MAKE_SHIPYARD_IMAGES" | tr '[:upper:]' '[:lower:]')
 MAKE_PORTHOLE_IMAGES=$(echo "$MAKE_PORTHOLE_IMAGES" | tr '[:upper:]' '[:lower:]')
 MAKE_PROMENADE_IMAGES=$(echo "$MAKE_PROMENADE_IMAGES" | tr '[:upper:]' '[:lower:]')
+MAKE_PEGLEG_IMAGES=$(echo "$MAKE_PEGLEG_IMAGES" | tr '[:upper:]' '[:lower:]')
 MAKE_KUBERTENES_ENTRYPOINT_IMAGES=$(echo "$MAKE_KUBERTENES_ENTRYPOINT_IMAGES" | tr '[:upper:]' '[:lower:]')
 
 export MAKE_ARMADA_IMAGES
@@ -47,6 +49,7 @@ export MAKE_DECKHAND_IMAGES
 export MAKE_SHIPYARD_IMAGES
 export MAKE_PORTHOLE_IMAGES
 export MAKE_PROMENADE_IMAGES
+export MAKE_PEGLEG_IMAGES
 export MAKE_KUBERTENES_ENTRYPOINT_IMAGES
 
 cd "${INSTALL_PATH}"
@@ -60,86 +63,98 @@ curl -Ik "http://${DOCKER_REGISTRY}"
 if [[ ${MAKE_ARMADA_IMAGES} = true ]] ; then
     pushd armada
     make images
-    docker push "${DOCKER_REGISTRY}/airshipit/armada:latest-${DISTRO}"
     popd
     pushd treasuremap
-    sed -i "s#quay.io/airshipit/armada:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/armada:latest-${DISTRO}#g" ./site/airskiff/software/config/versions.yaml
-    sed -i "s#quay.io/airshipit/armada:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/armada:latest-${DISTRO}#g" ./global/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/armada:latest-#${DOCKER_REGISTRY}/airshipit/armada:latest-#g" ./site/airskiff/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/armada:latest-#${DOCKER_REGISTRY}/airshipit/armada:latest-#g" ./global/software/config/versions.yaml
+    grep armada global/software/config/versions.yaml
+    grep armada site/airskiff/software/config/versions.yaml
     popd
 fi
 if [[ ${MAKE_ARMADA_GO_IMAGES} = true ]] ; then
     pushd armada-go
     make images
-    docker push "${DOCKER_REGISTRY}/airshipit/armada-go:latest-${DISTRO}"
     popd
     pushd treasuremap
-    sed -i "s#quay.io/airshipit/armada-go:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/armada-go:latest-${DISTRO}#g" ./site/airskiff/software/config/versions.yaml
-    sed -i "s#quay.io/airshipit/armada-go:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/armada-go:latest-${DISTRO}#g" ./global/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/armada-go:latest-#${DOCKER_REGISTRY}/airshipit/armada-go:latest-#g" ./global/software/config/versions.yaml
+    grep armada-go global/software/config/versions.yaml
     popd
 fi
 if [[ ${MAKE_ARMADA_OPERATOR_IMAGES} = true ]] ; then
     pushd armada-operator
     make images
-    docker push "${DOCKER_REGISTRY}/airshipit/armada-operator:latest-${DISTRO}"
     popd
     pushd treasuremap
-    sed -i "s#quay.io/airshipit/armada-operator:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/armada-operator:latest-${DISTRO}#g" ./site/airskiff/software/config/versions.yaml
-    sed -i "s#quay.io/airshipit/armada-operator:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/armada-operator:latest-${DISTRO}#g" ./global/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/armada-operator:latest-#${DOCKER_REGISTRY}/airshipit/armada-operator:latest-#g" ./global/software/config/versions.yaml
+    grep armada-operator global/software/config/versions.yaml
     popd
 fi
 if [[ ${MAKE_DECKHAND_IMAGES} = true ]] ; then
     pushd deckhand
     make images
-    docker push "${DOCKER_REGISTRY}/airshipit/deckhand:latest-${DISTRO}"
     popd
     pushd treasuremap
-    sed -i "s#quay.io/airshipit/deckhand:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/deckhand:latest-${DISTRO}#g" ./site/airskiff/software/config/versions.yaml
-    sed -i "s#quay.io/airshipit/deckhand:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/deckhand:latest-${DISTRO}#g" ./global/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/deckhand:latest-#${DOCKER_REGISTRY}/airshipit/deckhand:latest-#g" ./site/airskiff/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/deckhand:latest-#${DOCKER_REGISTRY}/airshipit/deckhand:latest-#g" ./global/software/config/versions.yaml
+    grep deckhand global/software/config/versions.yaml
+    grep deckhand site/airskiff/software/config/versions.yaml
     popd
 fi
 if [[ ${MAKE_SHIPYARD_IMAGES} = true ]] ; then
     pushd shipyard
     make images
-    docker push "${DOCKER_REGISTRY}/airshipit/airflow:latest-${DISTRO}"
-    docker push "${DOCKER_REGISTRY}/airshipit/shipyard:latest-${DISTRO}"
     popd
     pushd treasuremap
-    sed -i "s#quay.io/airshipit/airflow:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/airflow:latest-${DISTRO}#g" ./site/airskiff/software/config/versions.yaml
-    sed -i "s#quay.io/airshipit/shipyard:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/shipyard:latest-${DISTRO}#g" ./site/airskiff/software/config/versions.yaml
-    sed -i "s#quay.io/airshipit/airflow:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/airflow:latest-${DISTRO}#g" ./global/software/config/versions.yaml
-    sed -i "s#quay.io/airshipit/shipyard:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/shipyard:latest-${DISTRO}#g" ./global/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/airflow:latest-#${DOCKER_REGISTRY}/airshipit/airflow:latest-#g" ./site/airskiff/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/shipyard:latest-#${DOCKER_REGISTRY}/airshipit/shipyard:latest-#g" ./site/airskiff/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/airflow:latest-#${DOCKER_REGISTRY}/airshipit/airflow:latest-#g" ./global/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/shipyard:latest-#${DOCKER_REGISTRY}/airshipit/shipyard:latest-#g" ./global/software/config/versions.yaml
+    grep airflow global/software/config/versions.yaml
+    grep airflow site/airskiff/software/config/versions.yaml
+    grep shipyard global/software/config/versions.yaml
+    grep shipyard site/airskiff/software/config/versions.yaml
     popd
 fi
 if [[ ${MAKE_PORTHOLE_IMAGES} = true ]] ; then
     pushd porthole
     make images
+    popd
     # Define a list of images
     IMAGE_LIST=("calicoctl-utility" "ceph-utility" "compute-utility" "etcdctl-utility" "mysqlclient-utility" "openstack-utility" "postgresql-utility")
-    for IMAGE in "${IMAGE_LIST}"
+    for IMAGE in ${IMAGE_LIST}
     do
-        docker push "${DOCKER_REGISTRY}/airshipit/porthole-${IMAGE}:latest-${DISTRO}"
+
+        pushd treasuremap
+        sed -i "s#quay.io/airshipit/porthole-${IMAGE}:latest-#${DOCKER_REGISTRY}/airshipit/porthole-${IMAGE}:latest-#g" ./global/software/config/versions.yaml
+        grep ${IMAGE} global/software/config/versions.yaml
+        popd
     done
-    popd
-    pushd treasuremap
-    sed -i "s#quay.io/airshipit/porthole-${IMAGE}:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/porthole-${IMAGE}:latest-${DISTRO}#g" ./global/software/config/versions.yaml
-    popd
 fi
 if [[ ${MAKE_PROMENADE_IMAGES} = true ]] ; then
     pushd promenade
     make images
-    docker push "${DOCKER_REGISTRY}/airshipit/promenade:latest-${DISTRO}"
     popd
     pushd treasuremap
-    sed -i "s#quay.io/airshipit/promenade:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/promenade:latest-${DISTRO}#g" ./global/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/promenade:latest-#${DOCKER_REGISTRY}/airshipit/promenade:latest-#g" ./global/software/config/versions.yaml
+    grep promenade global/software/config/versions.yaml
+    popd
+fi
+if [[ ${MAKE_PEGLEG_IMAGES} = true ]] ; then
+    pushd pegleg
+    make images
+    popd
+    pushd treasuremap
+    sed -i "s#quay.io/airshipit/pegleg:latest-#${DOCKER_REGISTRY}/airshipit/pegleg:latest-#g" ./global/software/config/versions.yaml
+    grep pegleg global/software/config/versions.yaml
     popd
 fi
 if [[ ${MAKE_KUBERTENES_ENTRYPOINT_IMAGES} = true ]] ; then
     pushd kubernetes-entrypoint
     make images
-    docker push "${DOCKER_REGISTRY}/airshipit/kubernetes-entrypoint:latest-${DISTRO}"
     popd
     pushd treasuremap
-    sed -i "s#quay.io/airshipit/kubernetes-entrypoint:latest-${DISTRO}#${DOCKER_REGISTRY}/airshipit/kubernetes-entrypoint:latest-${DISTRO}#g" ./global/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/kubernetes-entrypoint:latest-#${DOCKER_REGISTRY}/airshipit/kubernetes-entrypoint:latest-#g" ./global/software/config/versions.yaml
+    grep kubernetes-entrypoint global/software/config/versions.yaml
     popd
 fi
 

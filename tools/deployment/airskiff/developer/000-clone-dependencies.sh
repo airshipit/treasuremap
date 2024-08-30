@@ -27,6 +27,7 @@ set -xe
 : "${CLONE_SHIPYARD:=true}"
 : "${CLONE_PORTHOLE:=true}"
 : "${CLONE_PROMENADE:=true}"
+: "${CLONE_PEGLEG:=true}"
 : "${CLONE_KUBERNETES_ENTRYPOINT:=true}"
 : "${CLONE_MAAS:=true}"
 : "${CLONE_OSH:=true}"
@@ -38,6 +39,7 @@ CLONE_DECKHAND=$(echo "$CLONE_DECKHAND" | tr '[:upper:]' '[:lower:]')
 CLONE_SHIPYARD=$(echo "$CLONE_SHIPYARD" | tr '[:upper:]' '[:lower:]')
 CLONE_PORTHOLE=$(echo "$CLONE_PORTHOLE" | tr '[:upper:]' '[:lower:]')
 CLONE_PROMENADE=$(echo "$CLONE_PROMENADE" | tr '[:upper:]' '[:lower:]')
+CLONE_PEGLEG=$(echo "$CLONE_PEGLEG" | tr '[:upper:]' '[:lower:]')
 CLONE_KUBERNETES_ENTRYPOINT=$(echo "$CLONE_KUBERNETES_ENTRYPOINT" | tr '[:upper:]' '[:lower:]')
 CLONE_MAAS=$(echo "$CLONE_MAAS" | tr '[:upper:]' '[:lower:]')
 CLONE_OSH=$(echo "$CLONE_OSH" | tr '[:upper:]' '[:lower:]')
@@ -49,6 +51,7 @@ export CLONE_DECKHAND
 export CLONE_SHIPYARD
 export CLONE_PORTHOLE
 export CLONE_PROMENADE
+export CLONE_PEGLEG
 export CLONE_KUBERNETES_ENTRYPOINT
 export CLONE_MAAS
 export CLONE_OSH
@@ -73,6 +76,9 @@ if [[ ${CLONE_SHIPYARD} = true ]] ; then
 fi
 if [[ ${CLONE_PROMENADE} = true ]] ; then
     git clone https://opendev.org/airship/promenade.git
+fi
+if [[ ${CLONE_PEGLEG} = true ]] ; then
+    git clone https://opendev.org/airship/pegleg.git
 fi
 if [[ ${CLONE_KUBERNETES_ENTRYPOINT} = true ]] ; then
     git clone https://opendev.org/airship/kubernetes-entrypoint.git
