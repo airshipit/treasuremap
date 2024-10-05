@@ -19,7 +19,7 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
-import sphinx_rtd_theme
+# import sphinx_rtd_theme
 
 
 # -- General configuration ------------------------------------------------
@@ -89,9 +89,8 @@ todo_include_todos = False
 #
 html_logo = '_static/airship.logo.white.svg'
 html_theme = "sphinx_rtd_theme"
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+
 html_theme_options = {
-    'display_version': False,
     'logo_only': True
 }
 html_show_sourcelink = False
