@@ -19,13 +19,13 @@ data:
   images:
     ucp:
       armada:
-        api: "quay.io/airshipit/armada:latest-ubuntu_focal"
+        api: "quay.io/airshipit/armada:latest-ubuntu_jammy"
       deckhand:
-        deckhand: "quay.io/airshipit/deckhand:latest-ubuntu_focal"
-        db_sync: quay.io/airshipit/deckhand:latest-ubuntu_focal
+        deckhand: "quay.io/airshipit/deckhand:latest-ubuntu_jammy"
+        db_sync: quay.io/airshipit/deckhand:latest-ubuntu_jammy
       shipyard:
-        shipyard: "quay.io/airshipit/shipyard:latest-ubuntu_focal"
-        shipyard_db_sync: "quay.io/airshipit/shipyard:latest-ubuntu_focal"
-        airflow: "quay.io/airshipit/airflow:latest-ubuntu_focal"
-        airflow_db_sync: "quay.io/airshipit/airflow:latest-ubuntu_focal"
+        shipyard: "quay.io/airshipit/shipyard:latest-ubuntu_jammy"
+        shipyard_db_sync: "quay.io/airshipit/shipyard:latest-ubuntu_jammy"
+        airflow: "quay.io/airshipit/airflow:latest-ubuntu_jammy"
+        airflow_db_sync: "quay.io/airshipit/airflow:latest-ubuntu_jammy"
 ...

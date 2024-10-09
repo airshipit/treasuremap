@@ -12,4 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: disable-systemd-resolved.yaml
+- name: Disable systemd-resolved service
+  systemd:
+    state: stopped
+    enabled: no
+    masked: yes
+    daemon_reload: yes
+    name: systemd-resolved
+  become: true
+
+- name: Remove local stub dns from resolv.conf, if it exists
+  lineinfile:
+    path: /etc/resolv.conf
+    state: absent
+    regexp: '^nameserver.*127.0.0.1'
+  become: true
+
+- name: Add upstream nameservers in resolv.conf
+  blockinfile:
+    path: /etc/resolv.conf
+    block: |
+      nameserver 8.8.8.8
+      nameserver 8.8.4.4
+  become: true

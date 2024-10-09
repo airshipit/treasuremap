@@ -769,7 +769,7 @@ data:
         image_repo_sync: docker.io/library/docker:17.07.0
     ucp:
       armada:
-        api: quay.io/airshipit/armada:latest-ubuntu_focal
+        api: quay.io/airshipit/armada:latest-ubuntu_jammy
         dep_check: quay.io/airshipit/kubernetes-entrypoint:latest-ubuntu_focal
         helm: docker.io/lachlanevenson/k8s-helm:v2.16.9
         ks_endpoints: docker.io/openstackhelm/heat:newton
@@ -804,8 +804,8 @@ data:
         image_repo_sync: docker.io/docker:17.07.0
       deckhand:
         db_init: docker.io/library/postgres:14.8
-        db_sync: quay.io/airshipit/deckhand:latest-ubuntu_focal
-        deckhand: quay.io/airshipit/deckhand:latest-ubuntu_focal
+        db_sync: quay.io/airshipit/deckhand:latest-ubuntu_jammy
+        deckhand: quay.io/airshipit/deckhand:latest-ubuntu_jammy
         dep_check: quay.io/airshipit/kubernetes-entrypoint:latest-ubuntu_focal
         ks_endpoints: docker.io/openstackhelm/heat:newton
         ks_service: docker.io/openstackhelm/heat:newton
@@ -813,7 +813,7 @@ data:
       divingbell:
         divingbell: docker.io/library/ubuntu:20.04
       drydock:
-        drydock: quay.io/airshipit/drydock:latest-ubuntu_focal
+        drydock: quay.io/airshipit/drydock:latest-ubuntu_jammy
         dep_check: quay.io/airshipit/kubernetes-entrypoint:latest-ubuntu_focal
         ks_user: docker.io/openstackhelm/heat:newton
         ks_service: docker.io/openstackhelm/heat:newton
@@ -873,7 +873,7 @@ data:
         prometheus_memcached_exporter: docker.io/prom/memcached-exporter:v0.4.1
         image_repo_sync: docker.io/library/docker:17.07.0
       pegleg:
-        pegleg: quay.io/airshipit/pegleg:latest-ubuntu_focal
+        pegleg: quay.io/airshipit/pegleg:latest-ubuntu_jammy
       postgresql:
         postgresql: docker.io/library/postgres:14.8
         dep_check: quay.io/airshipit/kubernetes-entrypoint:latest-ubuntu_focal
@@ -884,7 +884,7 @@ data:
         postgresql_backup: "quay.io/airshipit/porthole-postgresql-utility:latest-ubuntu_focal"
       promenade:
         monitoring_image: busybox:1.28.3
-        promenade: quay.io/airshipit/promenade:latest-ubuntu_focal
+        promenade: quay.io/airshipit/promenade:latest-ubuntu_jammy
         ks_user: docker.io/openstackhelm/heat:newton
         ks_service: docker.io/openstackhelm/heat:newton
         ks_endpoints: docker.io/openstackhelm/heat:newton
@@ -899,15 +899,15 @@ data:
         scripted_test: docker.io/library/rabbitmq:3.10.18-management
         image_repo_sync: docker.io/library/docker:17.07.0
       shipyard:
-        airflow: quay.io/airshipit/airflow:latest-ubuntu_focal
-        shipyard: quay.io/airshipit/shipyard:latest-ubuntu_focal
+        airflow: quay.io/airshipit/airflow:latest-ubuntu_jammy
+        shipyard: quay.io/airshipit/shipyard:latest-ubuntu_jammy
         dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.3.1
         shipyard_db_init: docker.io/library/postgres:14.8
         shipyard_db_auxiliary: docker.io/library/postgres:14.8
-        shipyard_db_sync: quay.io/airshipit/shipyard:latest-ubuntu_focal
+        shipyard_db_sync: quay.io/airshipit/shipyard:latest-ubuntu_jammy
         airflow_db_init: docker.io/library/postgres:14.8
         rabbit_init: docker.io/library/rabbitmq:3.10.18-management
-        airflow_db_sync: quay.io/airshipit/airflow:latest-ubuntu_focal
+        airflow_db_sync: quay.io/airshipit/airflow:latest-ubuntu_jammy
         ks_user: docker.io/openstackhelm/heat:ocata
         ks_service: docker.io/openstackhelm/heat:ocata
         ks_endpoints: docker.io/openstackhelm/heat:ocata
