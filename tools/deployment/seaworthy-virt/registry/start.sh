@@ -23,4 +23,4 @@ docker run -d \
     --restart=always \
     --name registry \
     -v "$REGISTRY_DATA_DIR:/var/lib/registry" \
-        registry:2
+        public.ecr.aws/docker/library/registry:2
