@@ -63,7 +63,7 @@ sudo tee /usr/local/bin/openstack << EOF
 docker run \
     -v /etc/openstack/clouds.yaml:/etc/openstack/clouds.yaml \
     -e OS_CLOUD=\${OS_CLOUD} \
-    quay.io/airshipit/porthole-openstack-utility:latest-ubuntu_focal \
+    quay.io/airshipit/porthole-openstack-utility:latest-ubuntu_jammy \
         openstack \$@
 EOF
 sudo chmod +x /usr/local/bin/openstack

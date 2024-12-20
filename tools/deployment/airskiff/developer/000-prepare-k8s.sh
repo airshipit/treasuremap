@@ -65,7 +65,7 @@ host -v control-plane.minikube.internal
 
 kubectl label nodes --all --overwrite ucp-control-plane=enabled
 
-kubectl run multitool --image=praqma/network-multitool
+kubectl run multitool --image=quay.io/airshipit/network-multitool
 kubectl wait --for=condition=ready pod multitool --timeout=300s
 kubectl exec -it multitool -- nslookup control-plane.minikube.internal
 kubectl exec -it multitool -- ping -c 4 8.8.8.8

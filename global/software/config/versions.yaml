@@ -778,9 +778,9 @@ data:
         image_repo_sync: docker.io/docker:17.07.0
         tiller: ghcr.io/helm/tiller:v2.17.0
       armada-operator:
-        api: quay.io/airshipit/armada-go:latest-ubuntu_focal
-        go: quay.io/airshipit/armada-go:latest-ubuntu_focal
-        operator: quay.io/airshipit/armada-operator:latest-ubuntu_focal
+        api: quay.io/airshipit/armada-go:latest-ubuntu_jammy
+        go: quay.io/airshipit/armada-go:latest-ubuntu_jammy
+        operator: quay.io/airshipit/armada-operator:latest-ubuntu_jammy
         dep_check: quay.io/airshipit/kubernetes-entrypoint:latest-ubuntu_focal
         helm: docker.io/lachlanevenson/k8s-helm:v2.16.9
         ks_endpoints: docker.io/openstackhelm/heat:newton

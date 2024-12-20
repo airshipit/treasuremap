@@ -23,4 +23,4 @@ docker run -d \
     --restart=always \
     --name registry \
     -v "$REGISTRY_DATA_DIR:/var/lib/registry" \
-        public.ecr.aws/docker/library/registry:2
+        quay.io/airshipit/registry:2

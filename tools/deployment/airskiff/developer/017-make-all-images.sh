@@ -56,7 +56,7 @@ cd "${INSTALL_PATH}"
 
 # Start docker registry
 docker rm registry --force || true
-docker run -d -p 5000:5000 --restart=always --name registry public.ecr.aws/docker/library/registry:2
+docker run -d -p 5000:5000 --restart=always --name registry quay.io/airshipit/registry:2
 curl -Ik "http://${DOCKER_REGISTRY}"
 
 # Make charts in Airship and OSH-INFRA projects
