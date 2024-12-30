@@ -74,20 +74,20 @@ data:
       prometheus_mysql_exporter:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-      ingress:
+      controller:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
-      error_server:
+      job:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+      test:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
     conf:
       galera:
         cluster_leader_ttl: 60
     manifests:
-      deployment_ingress: false
-      deployment_error: false
-      service_ingress: false
-      configmap_ingress_conf: false
-      configmap_ingress_etc: false
-      service_error: false
+      deployment_controller: true
+      service_master: true
+      job_cluster_wait: false
 ...

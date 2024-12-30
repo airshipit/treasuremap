@@ -18,8 +18,8 @@
 set -xe
 
 : "${INSTALL_PATH:="../"}"
-: "${OSH_COMMIT:="049e679939fbd3b0c659dd0977911b8dc3b5a015"}"
-: "${OSH_INFRA_COMMIT:="05f2f45971abcf483189358d663e2b46c3fc2fe8"}"
+: "${OSH_COMMIT:="540df5cb0dbdaed63c202e2d6f2b7891062f8203"}"
+: "${OSH_INFRA_COMMIT:="43fd7143481b6ddda0dbd2f26bf6ec39a417b15b"}"
 : "${CLONE_ARMADA:=true}"
 : "${CLONE_ARMADA_GO:=true}"
 : "${CLONE_ARMADA_OPERATOR:=true}"

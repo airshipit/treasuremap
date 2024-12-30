@@ -24,5 +24,4 @@ data:
     pod:
       replicas:
         server: 1
-        ingress: 1
 ...

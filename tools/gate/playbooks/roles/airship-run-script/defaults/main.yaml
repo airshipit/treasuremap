@@ -19,9 +19,9 @@ osh_params:
   container_distro_version: focal
   # feature_gates:
 site: airskiff
-HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
-HTK_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
-OSH_INFRA_COMMIT: 6ca83be78013446540b68fd28d0a75d5b2329f40
+HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.16.4-linux-amd64.tar.gz
+HTK_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
+OSH_INFRA_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
 OSH_COMMIT: 176b412072969f982386db9560b6f50fcb7e0148
 COREDNS_VERSION: v1.11.1
 DISTRO: ubuntu_focal

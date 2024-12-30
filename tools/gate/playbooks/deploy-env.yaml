@@ -20,7 +20,7 @@
     - ensure-pip
     - clear-firewall
     - deploy-apparmor
-    - deploy-selenium
+    # - deploy-selenium
     - deploy-env
     - ensure-tox
 

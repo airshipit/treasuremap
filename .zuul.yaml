@@ -203,14 +203,16 @@
       loopback_device: /dev/loop100
       loopback_image: "/opt/ext_vol/openstack-helm/ceph-loop.img"
       ceph_osd_data_device: /dev/loop100
-      kube_version_repo: "v1.30"
-      kube_version: "1.30.3-1.1"
+      kube_version_repo: "v1.31"
+      kube_version: "1.31.3-1.1"
       calico_setup: true
       calico_version: "v3.27.4"
       cilium_setup: false
       cilium_version: "1.16.0"
       flannel_setup: false
       flannel_version: v0.25.4
+      metallb_setup: false
+      metallb_version: "0.13.12"
       helm_version: "v3.14.0"
       crictl_version: "v1.30.1"
       zuul_osh_infra_relative_path: ../openstack-helm-infra
@@ -220,17 +222,17 @@
 - job:
     name: treasuremap-airskiff-multinode-full-site
     parent: treasuremap-airskiff-infra-deploy
-    nodeset: treasuremap-airskiff-3nodes-ubuntu_focal
+    nodeset: treasuremap-airskiff-3nodes-ubuntu_jammy
     description: |
       Deploy Openstack using Airskiff and latest Treasuremap changes.
-      Airskiff is using latest Airship v1.x based on Airflow-2.6.2
+      Airskiff is using latest Airship v1.x based on Airflow-2.10.4
     voting: true
     vars:
       site: airskiff
-      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
-      HTK_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
-      OSH_INFRA_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
-      OSH_COMMIT: 540df5cb0dbdaed63c202e2d6f2b7891062f8203
+      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.16.4-linux-amd64.tar.gz
+      HTK_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
+      OSH_INFRA_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
+      OSH_COMMIT: 450f355bc7dd68c449700c8c5f3ff89d45103474
       gate_scripts_relative_path: .
       gate_scripts:
         - ./tools/deployment/airskiff/developer/000-prepare-k8s.sh
@@ -244,23 +246,24 @@
         - ./tools/deployment/airskiff/developer/100-deploy-osh.sh
         - ./tools/deployment/airskiff/common/os-env.sh
         - ./tools/gate/wait-for-shipyard.sh
+        - ./tools/deployment/airskiff/common/get-airflow-worker-logs.sh
         # - ./tools/deployment/airskiff/common/sleep.sh
 
 - job:
     name: treasuremap-airskiff-1node-reduced-site
     parent: treasuremap-airskiff-infra-deploy
-    nodeset: treasuremap-airskiff-1node-ubuntu_focal
+    nodeset: treasuremap-airskiff-1node-ubuntu_jammy
     description: |
       Deploy Openstack using Airskiff and latest Treasuremap changes.
-      Airskiff is using latest Airship v1.x based on Airflow-2.6.2
+      Airskiff is using latest Airship v1.x based on Airflow-2.10.4
     voting: true
     vars:
       site: airskiff
-      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
-      HTK_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
-      OSH_INFRA_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
-      OSH_COMMIT: 540df5cb0dbdaed63c202e2d6f2b7891062f8203
-      DISTRO: ubuntu_focal
+      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.16.4-linux-amd64.tar.gz
+      HTK_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
+      OSH_INFRA_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
+      OSH_COMMIT: 450f355bc7dd68c449700c8c5f3ff89d45103474
+      DISTRO: ubuntu_jammy
       gate_scripts_relative_path: .
       gate_scripts:
         - ./tools/deployment/airskiff/developer/000-prepare-k8s.sh
@@ -272,26 +275,28 @@
         - ./tools/deployment/airskiff/developer/025-start-artifactory.sh
         - ./tools/deployment/airskiff/developer/026-reduce-site.sh
         - ./tools/deployment/airskiff/developer/020-setup-client.sh
+        - ./tools/deployment/airskiff/developer/027-enable-armada-operator.sh
         - ./tools/deployment/airskiff/developer/030-armada-bootstrap.sh
         - ./tools/deployment/airskiff/developer/100-deploy-osh.sh
         - ./tools/deployment/airskiff/common/os-env.sh
         - ./tools/gate/wait-for-shipyard.sh
+        - ./tools/deployment/airskiff/common/get-airflow-worker-logs.sh
         # - ./tools/deployment/airskiff/common/sleep.sh
 
 - job:
     name: treasuremap-airskiff-1node-reduced-site-armada-operator
     parent: treasuremap-airskiff-infra-deploy
-    nodeset: treasuremap-airskiff-1node-ubuntu_focal
+    nodeset: treasuremap-airskiff-1node-ubuntu_jammy
     description: |
       Deploy Openstack using Airskiff and latest Treasuremap changes.
-      Airskiff is using latest Airship v1.x based on Airflow-2.6.2
+      Airskiff is using latest Airship v1.x based on Airflow-2.10.4
     voting: true
     vars:
       site: airskiff
-      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
-      HTK_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
-      OSH_INFRA_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
-      OSH_COMMIT: 540df5cb0dbdaed63c202e2d6f2b7891062f8203
+      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.16.4-linux-amd64.tar.gz
+      HTK_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
+      OSH_INFRA_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
+      OSH_COMMIT: 450f355bc7dd68c449700c8c5f3ff89d45103474
       USE_ARMADA_GO: true
       gate_scripts_relative_path: .
       gate_scripts:
@@ -308,6 +313,7 @@
         - ./tools/deployment/airskiff/developer/100-deploy-osh.sh
         - ./tools/deployment/airskiff/common/os-env.sh
         - ./tools/gate/wait-for-shipyard.sh
+        - ./tools/deployment/airskiff/common/get-airflow-worker-logs.sh
         # - ./tools/deployment/airskiff/common/sleep.sh
 
 
@@ -315,7 +321,7 @@
     name: treasuremap-site-lint
     description:
       Lint a site using Pegleg. Default site is seaworthy.
-    nodeset: treasuremap-single-node-ubuntu-focal
+    nodeset: treasuremap-single-node-ubuntu-jammy
     timeout: 900
     pre-run:
       - tools/gate/playbooks/initial-setup.yaml
@@ -419,33 +425,6 @@
       - ^site/seaworthy-virt/.*$
       - ^site/airskiff/.*$
       - ^site/airsloop/.*$
-
-- job:
-    name: treasuremap-airskiff-deployment-ubuntu
-    nodeset: treasuremap-single-node-ubuntu-focal
-    description: |
-      Deploy Memcached using Airskiff and latest Treasuremap changes.
-      Airskiff is using latest Airship v1.x based on Airflow-2.6.2
-    voting: true
-    timeout: 9600
-    pre-run:
-      - tools/gate/playbooks/initial-setup.yaml
-      - tools/gate/playbooks/git-config.yaml
-      - tools/gate/playbooks/airskiff-reduce-site.yaml
-    run: tools/gate/playbooks/airskiff-deploy-gate.yaml
-    post-run: tools/gate/playbooks/debug-report.yaml
-    vars:
-      site: airskiff
-      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
-      HTK_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
-      OSH_INFRA_COMMIT: 43fd7143481b6ddda0dbd2f26bf6ec39a417b15b
-      OSH_COMMIT: 540df5cb0dbdaed63c202e2d6f2b7891062f8203
-    irrelevant-files:
-      - ^.*\.rst$
-      - ^doc/.*$
-      - ^site/seaworthy/.*$
-      - ^site/airsloop/.*$
-      - ^site/aiab/.*$
 
 # - job:
 #     name: treasuremap-airskiff-deployment-suse

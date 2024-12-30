@@ -20,7 +20,7 @@ set -xe
 CURRENT_DIR="$(pwd)"
 : "${INSTALL_PATH:="../"}"
 : "${ARTIFACTS_PATH:="../artifacts"}"
-: "${HTK_COMMIT:="6ca83be78013446540b68fd28d0a75d5b2329f40"}"
+: "${HTK_COMMIT:="3a4fb2185dec899a2f77e6ff46a04947ac89cd6c"}"
 : "${MAKE_CHARTS_OPENSTACK_HELM:=true}"
 : "${MAKE_CHARTS_OSH_INFRA:=true}"
 : "${MAKE_CHARTS_ARMADA:=true}"
@@ -84,18 +84,18 @@ fi
 if [[ ${MAKE_CHARTS_OSH_INFRA} = true ]] ; then
     pushd openstack-helm-infra
     make all
-    for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
+    for i in $(find . -maxdepth 1 -name "*.tgz" -print | sed -E 's|\.\/([a-zA-Z0-9\-]+)-[0-9.]+\+.*\.tgz|\1|' | sort -u)
     do
-        find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
+        find . -name "$i-*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
     done
     popd
 fi
 if [[ ${MAKE_CHARTS_OPENSTACK_HELM} = true ]] ; then
     pushd openstack-helm
     make all
-    for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
+    for i in $(find . -maxdepth 1 -name "*.tgz" -print | sed -E 's|\.\/([a-zA-Z0-9\-]+)-[0-9.]+\+.*\.tgz|\1|' | sort -u)
     do
-        find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
+        find . -name "$i-*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
     done
     popd
 fi
