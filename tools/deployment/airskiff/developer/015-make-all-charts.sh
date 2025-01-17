@@ -86,7 +86,7 @@ if [[ ${MAKE_CHARTS_OSH_INFRA} = true ]] ; then
     make all
     for i in $(find . -maxdepth 1 -name "*.tgz" -print | sed -E 's|\.\/([a-zA-Z0-9\-]+)-[0-9.]+\+.*\.tgz|\1|' | sort -u)
     do
-        find . -name "$i-*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
+        find . -name "$i-[0-9]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
     done
     popd
 fi
@@ -95,7 +95,7 @@ if [[ ${MAKE_CHARTS_OPENSTACK_HELM} = true ]] ; then
     make all
     for i in $(find . -maxdepth 1 -name "*.tgz" -print | sed -E 's|\.\/([a-zA-Z0-9\-]+)-[0-9.]+\+.*\.tgz|\1|' | sort -u)
     do
-        find . -name "$i-*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
+        find . -name "$i-[0-9]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
     done
     popd
 fi
