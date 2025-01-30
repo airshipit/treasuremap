@@ -232,7 +232,7 @@
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.16.4-linux-amd64.tar.gz
       HTK_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
       OSH_INFRA_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
-      OSH_COMMIT: 450f355bc7dd68c449700c8c5f3ff89d45103474
+      OSH_COMMIT: 5a3f2080c12bb56238b150c69a06064c64d61d0f
       gate_scripts_relative_path: .
       gate_scripts:
         - ./tools/deployment/airskiff/developer/000-prepare-k8s.sh
@@ -262,7 +262,7 @@
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.16.4-linux-amd64.tar.gz
       HTK_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
       OSH_INFRA_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
-      OSH_COMMIT: 450f355bc7dd68c449700c8c5f3ff89d45103474
+      OSH_COMMIT: 5a3f2080c12bb56238b150c69a06064c64d61d0f
       DISTRO: ubuntu_jammy
       gate_scripts_relative_path: .
       gate_scripts:
@@ -296,7 +296,7 @@
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.16.4-linux-amd64.tar.gz
       HTK_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
       OSH_INFRA_COMMIT: 3a4fb2185dec899a2f77e6ff46a04947ac89cd6c
-      OSH_COMMIT: 450f355bc7dd68c449700c8c5f3ff89d45103474
+      OSH_COMMIT: 5a3f2080c12bb56238b150c69a06064c64d61d0f
       USE_ARMADA_GO: true
       gate_scripts_relative_path: .
       gate_scripts:
