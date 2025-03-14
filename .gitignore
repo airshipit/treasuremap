@@ -14,6 +14,7 @@ _build
 .vimrc
 *.swp
 .vscode/
+.devcontainer
 
 # Packages
 *.egg*

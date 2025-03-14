@@ -83,7 +83,7 @@ if [[ ${MAKE_CHARTS_SHIPYARD} = true ]] ; then
 fi
 if [[ ${MAKE_CHARTS_OSH_INFRA} = true ]] ; then
     pushd openstack-helm-infra
-    make all
+    make all SKIP_CHANGELOG=1
     for i in $(find . -maxdepth 1 -name "*.tgz" -print | sed -E 's|\.\/([a-zA-Z0-9\-]+)-[0-9.]+\+.*\.tgz|\1|' | sort -u)
     do
         find . -name "$i-[0-9]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
@@ -92,7 +92,7 @@ if [[ ${MAKE_CHARTS_OSH_INFRA} = true ]] ; then
 fi
 if [[ ${MAKE_CHARTS_OPENSTACK_HELM} = true ]] ; then
     pushd openstack-helm
-    make all
+    make all SKIP_CHANGELOG=1
     for i in $(find . -maxdepth 1 -name "*.tgz" -print | sed -E 's|\.\/([a-zA-Z0-9\-]+)-[0-9.]+\+.*\.tgz|\1|' | sort -u)
     do
         find . -name "$i-[0-9]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
