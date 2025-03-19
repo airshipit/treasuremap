@@ -20,9 +20,8 @@ set -xe
 CURRENT_DIR="$(pwd)"
 : "${INSTALL_PATH:="../"}"
 : "${ARTIFACTS_PATH:="../artifacts"}"
-: "${HTK_COMMIT:="962333df313e04a01923ca8394d2a44f2afbb714"}"
+: "${HTK_COMMIT:="master"}"
 : "${MAKE_CHARTS_OPENSTACK_HELM:=true}"
-: "${MAKE_CHARTS_OSH_INFRA:=true}"
 : "${MAKE_CHARTS_ARMADA:=true}"
 : "${MAKE_CHARTS_DECKHAND:=true}"
 : "${MAKE_CHARTS_SHIPYARD:=true}"
@@ -32,7 +31,6 @@ CURRENT_DIR="$(pwd)"
 
 
 MAKE_CHARTS_OPENSTACK_HELM=$(echo "$MAKE_CHARTS_OPENSTACK_HELM" | tr '[:upper:]' '[:lower:]')
-MAKE_CHARTS_OSH_INFRA=$(echo "$MAKE_CHARTS_OSH_INFRA" | tr '[:upper:]' '[:lower:]')
 MAKE_CHARTS_ARMADA=$(echo "$MAKE_CHARTS_ARMADA" | tr '[:upper:]' '[:lower:]')
 MAKE_CHARTS_DECKHAND=$(echo "$MAKE_CHARTS_DECKHAND" | tr '[:upper:]' '[:lower:]')
 MAKE_CHARTS_SHIPYARD=$(echo "$MAKE_CHARTS_SHIPYARD" | tr '[:upper:]' '[:lower:]')
@@ -40,7 +38,6 @@ MAKE_CHARTS_MAAS=$(echo "$MAKE_CHARTS_MAAS" | tr '[:upper:]' '[:lower:]')
 MAKE_CHARTS_PORTHOLE=$(echo "$MAKE_CHARTS_PORTHOLE" | tr '[:upper:]' '[:lower:]')
 MAKE_CHARTS_PROMENADE=$(echo "$MAKE_CHARTS_PROMENADE" | tr '[:upper:]' '[:lower:]')
 export MAKE_CHARTS_OPENSTACK_HELM
-export MAKE_CHARTS_OSH_INFRA
 export MAKE_CHARTS_ARMADA
 export MAKE_CHARTS_DECKHAND
 export MAKE_CHARTS_SHIPYARD
@@ -59,7 +56,7 @@ if [[ ${MAKE_CHARTS_ARMADA} = true ]] ; then
     cd charts
     for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
     do
-        find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../../artifacts/$i.tgz" \;
+        find . -maxdepth 1 -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../../artifacts/$i.tgz" \;
     done
     popd
 fi
@@ -68,7 +65,7 @@ if [[ ${MAKE_CHARTS_DECKHAND} = true ]] ; then
     make charts
     for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
     do
-        find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
+        find . -maxdepth 1 -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
     done
     popd
 fi
@@ -77,16 +74,7 @@ if [[ ${MAKE_CHARTS_SHIPYARD} = true ]] ; then
     make charts
     for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
     do
-        find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
-    done
-    popd
-fi
-if [[ ${MAKE_CHARTS_OSH_INFRA} = true ]] ; then
-    pushd openstack-helm-infra
-    make all SKIP_CHANGELOG=1
-    for i in $(find . -maxdepth 1 -name "*.tgz" -print | sed -E 's|\.\/([a-zA-Z0-9\-]+)-[0-9.]+\+.*\.tgz|\1|' | sort -u)
-    do
-        find . -name "$i-[0-9]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
+        find . -maxdepth 1 -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
     done
     popd
 fi
@@ -95,7 +83,7 @@ if [[ ${MAKE_CHARTS_OPENSTACK_HELM} = true ]] ; then
     make all SKIP_CHANGELOG=1
     for i in $(find . -maxdepth 1 -name "*.tgz" -print | sed -E 's|\.\/([a-zA-Z0-9\-]+)-[0-9.]+\+.*\.tgz|\1|' | sort -u)
     do
-        find . -name "$i-[0-9]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
+        find . -maxdepth 1 -name "$i-[0-9]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
     done
     popd
 fi
@@ -104,7 +92,7 @@ if [[ ${MAKE_CHARTS_MAAS} = true ]] ; then
     make charts
     for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
     do
-        find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
+        find . -maxdepth 1 -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
     done
     popd
 fi
@@ -114,7 +102,7 @@ if [[ ${MAKE_CHARTS_PORTHOLE} = true ]] ; then
     cd charts
     for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
     do
-        find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../../artifacts/$i.tgz" \;
+        find . -maxdepth 1 -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../../artifacts/$i.tgz" \;
     done
     popd
 fi
@@ -124,7 +112,7 @@ if [[ ${MAKE_CHARTS_PROMENADE} = true ]] ; then
     cd charts
     for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
     do
-        find . -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../../artifacts/$i.tgz" \;
+        find . -maxdepth 1 -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../../artifacts/$i.tgz" \;
     done
     popd
 fi

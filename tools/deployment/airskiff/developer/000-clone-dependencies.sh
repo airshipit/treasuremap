@@ -18,16 +18,15 @@
 set -xe
 
 : "${INSTALL_PATH:="../"}"
-: "${OSH_COMMIT:="540df5cb0dbdaed63c202e2d6f2b7891062f8203"}"
-: "${OSH_INFRA_COMMIT:="43fd7143481b6ddda0dbd2f26bf6ec39a417b15b"}"
+: "${OSH_COMMIT:="master"}"
 : "${CLONE_ARMADA:=true}"
 : "${CLONE_ARMADA_GO:=true}"
 : "${CLONE_ARMADA_OPERATOR:=true}"
 : "${CLONE_DECKHAND:=true}"
 : "${CLONE_SHIPYARD:=true}"
-: "${CLONE_PORTHOLE:=true}"
 : "${CLONE_PROMENADE:=true}"
 : "${CLONE_PEGLEG:=true}"
+: "${CLONE_PORTHOLE:=true}"
 : "${CLONE_KUBERNETES_ENTRYPOINT:=true}"
 : "${CLONE_MAAS:=true}"
 : "${CLONE_OSH:=true}"
@@ -37,9 +36,9 @@ CLONE_ARMADA_GO=$(echo "$CLONE_ARMADA_GO" | tr '[:upper:]' '[:lower:]')
 CLONE_ARMADA_OPERATOR=$(echo "$CLONE_ARMADA_OPERATOR" | tr '[:upper:]' '[:lower:]')
 CLONE_DECKHAND=$(echo "$CLONE_DECKHAND" | tr '[:upper:]' '[:lower:]')
 CLONE_SHIPYARD=$(echo "$CLONE_SHIPYARD" | tr '[:upper:]' '[:lower:]')
-CLONE_PORTHOLE=$(echo "$CLONE_PORTHOLE" | tr '[:upper:]' '[:lower:]')
 CLONE_PROMENADE=$(echo "$CLONE_PROMENADE" | tr '[:upper:]' '[:lower:]')
 CLONE_PEGLEG=$(echo "$CLONE_PEGLEG" | tr '[:upper:]' '[:lower:]')
+CLONE_PORTHOLE=$(echo "$CLONE_PORTHOLE" | tr '[:upper:]' '[:lower:]')
 CLONE_KUBERNETES_ENTRYPOINT=$(echo "$CLONE_KUBERNETES_ENTRYPOINT" | tr '[:upper:]' '[:lower:]')
 CLONE_MAAS=$(echo "$CLONE_MAAS" | tr '[:upper:]' '[:lower:]')
 CLONE_OSH=$(echo "$CLONE_OSH" | tr '[:upper:]' '[:lower:]')
@@ -49,9 +48,9 @@ export CLONE_ARMADA_GO
 export CLONE_ARMADA_OPERATOR
 export CLONE_DECKHAND
 export CLONE_SHIPYARD
-export CLONE_PORTHOLE
 export CLONE_PROMENADE
 export CLONE_PEGLEG
+export CLONE_PORTHOLE
 export CLONE_KUBERNETES_ENTRYPOINT
 export CLONE_MAAS
 export CLONE_OSH
@@ -80,28 +79,20 @@ fi
 if [[ ${CLONE_PEGLEG} = true ]] ; then
     git clone https://opendev.org/airship/pegleg.git
 fi
+if [[ ${CLONE_PORTHOLE} = true ]] ; then
+    git clone https://opendev.org/airship/porthole.git
+fi
 if [[ ${CLONE_KUBERNETES_ENTRYPOINT} = true ]] ; then
     git clone https://opendev.org/airship/kubernetes-entrypoint.git
 fi
-
-
-# Clone dependencies
 if [[ ${CLONE_MAAS} = true ]] ; then
     git clone "https://review.opendev.org/airship/maas.git"
 fi
-if [[ ${CLONE_PORTHOLE} = true ]] ; then
-    git clone "https://review.opendev.org/airship/porthole.git"
-fi
+
+# Clone dependencies
 if [[ ${CLONE_OSH} = true ]] ; then
     git clone "https://opendev.org/openstack/openstack-helm.git"
     pushd openstack-helm
     git checkout "${OSH_COMMIT}"
     popd
 fi
-
-
-git clone "https://opendev.org/openstack/openstack-helm-infra.git"
-pushd openstack-helm-infra
-git checkout "${OSH_INFRA_COMMIT}"
-popd
-

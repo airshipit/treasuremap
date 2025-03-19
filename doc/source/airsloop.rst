@@ -311,105 +311,57 @@ Under site/airsloop/software/config/ create a versions.yaml file in the followin
         kubernetes:
           apiserver:
             proxy_server: proxy.example.com:8080
-          apiserver-htk:
-            proxy_server: proxy.example.com:8080
           calico:
             calico:
               proxy_server: proxy.example.com:8080
-            calico-htk:
-              proxy_server: proxy.example.com:8080
             etcd:
-              proxy_server: proxy.example.com:8080
-            etcd-htk:
               proxy_server: proxy.example.com:8080
           controller-manager:
             proxy_server: proxy.example.com:8080
-          controller-manager-htk:
-            proxy_server: proxy.example.com:8080
           coredns:
-            proxy_server: proxy.example.com:8080
-          coredns-htk:
             proxy_server: proxy.example.com:8080
           etcd:
             proxy_server: proxy.example.com:8080
-          etcd-htk:
-            proxy_server: proxy.example.com:8080
           haproxy:
-            proxy_server: proxy.example.com:8080
-          haproxy-htk:
             proxy_server: proxy.example.com:8080
           ingress:
             proxy_server: proxy.example.com:8080
-          ingress-htk:
-            proxy_server: proxy.example.com:8080
           proxy:
             proxy_server: proxy.example.com:8080
-          proxy-htk:
-            proxy_server: proxy.example.com:8080
           scheduler:
-            proxy_server: proxy.example.com:8080
-          scheduler-htk:
             proxy_server: proxy.example.com:8080
         osh:
           barbican:
             proxy_server: proxy.example.com:8080
           cinder:
             proxy_server: proxy.example.com:8080
-          cinder-htk:
-            proxy_server: proxy.example.com:8080
           glance:
             proxy_server: proxy.example.com:8080
-          glance-htk:
-            proxy_server: proxy.example.com:8080
           heat:
-            proxy_server: proxy.example.com:8080
-          heat-htk:
             proxy_server: proxy.example.com:8080
           helm_toolkit:
             proxy_server: proxy.example.com:8080
           horizon:
             proxy_server: proxy.example.com:8080
-          horizon-htk:
-            proxy_server: proxy.example.com:8080
           ingress:
-            proxy_server: proxy.example.com:8080
-          ingress-htk:
             proxy_server: proxy.example.com:8080
           keystone:
             proxy_server: proxy.example.com:8080
-          keystone-htk:
-            proxy_server: proxy.example.com:8080
           libvirt:
-            proxy_server: proxy.example.com:8080
-          libvirt-htk:
             proxy_server: proxy.example.com:8080
           mariadb:
             proxy_server: proxy.example.com:8080
-          mariadb-htk:
-            proxy_server: proxy.example.com:8080
           memcached:
-            proxy_server: proxy.example.com:8080
-          memcached-htk:
             proxy_server: proxy.example.com:8080
           neutron:
             proxy_server: proxy.example.com:8080
-          neutron-htk:
-            proxy_server: proxy.example.com:8080
           nova:
-            proxy_server: proxy.example.com:8080
-          nova-htk:
             proxy_server: proxy.example.com:8080
           openvswitch:
             proxy_server: proxy.example.com:8080
-          openvswitch-htk:
-            proxy_server: proxy.example.com:8080
           rabbitmq:
             proxy_server: proxy.example.com:8080
-          rabbitmq-htk:
-            proxy_server: proxy.example.com:8080
           tempest:
-            proxy_server: proxy.example.com:8080
-          tempest-htk:
             proxy_server: proxy.example.com:8080
         osh_infra:
           elasticsearch:
@@ -445,15 +397,9 @@ Under site/airsloop/software/config/ create a versions.yaml file in the followin
         ucp:
           armada:
             proxy_server: proxy.example.com:8080
-          armada-htk:
-            proxy_server: proxy.example.com:8080
           barbican:
             proxy_server: proxy.example.com:8080
-          barbican-htk:
-            proxy_server: proxy.example.com:8080
           ceph-client:
-            proxy_server: proxy.example.com:8080
-          ceph-htk:
             proxy_server: proxy.example.com:8080
           ceph-mon:
             proxy_server: proxy.example.com:8080
@@ -465,55 +411,29 @@ Under site/airsloop/software/config/ create a versions.yaml file in the followin
             proxy_server: proxy.example.com:8080
           deckhand:
             proxy_server: proxy.example.com:8080
-          deckhand-htk:
-            proxy_server: proxy.example.com:8080
           divingbell:
-            proxy_server: proxy.example.com:8080
-          divingbell-htk:
             proxy_server: proxy.example.com:8080
           drydock:
             proxy_server: proxy.example.com:8080
-          drydock-htk:
-            proxy_server: proxy.example.com:8080
           ingress:
-            proxy_server: proxy.example.com:8080
-          ingress-htk:
             proxy_server: proxy.example.com:8080
           keystone:
             proxy_server: proxy.example.com:8080
-          keystone-htk:
-            proxy_server: proxy.example.com:8080
           maas:
-            proxy_server: proxy.example.com:8080
-          maas-htk:
             proxy_server: proxy.example.com:8080
           mariadb:
             proxy_server: proxy.example.com:8080
-          mariadb-htk:
-            proxy_server: proxy.example.com:8080
           memcached:
-            proxy_server: proxy.example.com:8080
-          memcached-htk:
             proxy_server: proxy.example.com:8080
           postgresql:
             proxy_server: proxy.example.com:8080
-          postgresql-htk:
-            proxy_server: proxy.example.com:8080
           promenade:
-            proxy_server: proxy.example.com:8080
-          promenade-htk:
             proxy_server: proxy.example.com:8080
           rabbitmq:
             proxy_server: proxy.example.com:8080
-          rabbitmq-htk:
-            proxy_server: proxy.example.com:8080
           shipyard:
             proxy_server: proxy.example.com:8080
-          shipyard-htk:
-            proxy_server: proxy.example.com:8080
           tenant-ceph-client:
-            proxy_server: proxy.example.com:8080
-          tenant-ceph-htk:
             proxy_server: proxy.example.com:8080
           tenant-ceph-mon:
             proxy_server: proxy.example.com:8080
@@ -524,8 +444,6 @@ Under site/airsloop/software/config/ create a versions.yaml file in the followin
           tenant-ceph-rgw:
             proxy_server: proxy.example.com:8080
           tiller:
-            proxy_server: proxy.example.com:8080
-          tiller-htk:
             proxy_server: proxy.example.com:8080
     metadata:
       name: software-versions

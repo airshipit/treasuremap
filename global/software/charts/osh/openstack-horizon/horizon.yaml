@@ -119,29 +119,4 @@ data:
     pod:
       replicas:
         server: 2
-  dependencies:
-    - horizon-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: horizon-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.osh.horizon-htk
-      dest:
-        path: .source
-data:
-  chart_name: horizon-htk
-  release: horizon-htk
-  namespace: horizon-htk
-  values: {}
-  dependencies: []
 ...

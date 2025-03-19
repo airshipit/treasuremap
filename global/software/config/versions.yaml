@@ -65,15 +65,9 @@ data:
         subpath: helm-toolkit
         type: tar
       horizon:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: 536eaed62d55eca694eaae0c50df910dbb55fff7
+        location: http://control-plane.minikube.internal:8282/horizon.tgz
         subpath: horizon
-        type: git
-      horizon-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       ingress:
         location: https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.11.2/ingress-nginx-4.11.2.tgz
         subpath: ingress-nginx
@@ -83,15 +77,9 @@ data:
         subpath: keystone
         type: tar
       libvirt:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/libvirt.tgz
         subpath: libvirt
-        type: git
-      libvirt-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       mariadb:
         location: http://control-plane.minikube.internal:8282/mariadb.tgz
         subpath: mariadb
@@ -101,130 +89,86 @@ data:
         subpath: memcached
         type: tar
       neutron:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: 536eaed62d55eca694eaae0c50df910dbb55fff7
+        location: http://control-plane.minikube.internal:8282/neutron.tgz
         subpath: neutron
-        type: git
-      neutron-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       nova:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: 536eaed62d55eca694eaae0c50df910dbb55fff7
+        location: http://control-plane.minikube.internal:8282/nova.tgz
         subpath: nova
-        type: git
-      nova-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       openvswitch:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/openvswitch.tgz
         subpath: openvswitch
-        type: git
-      openvswitch-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       rabbitmq:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/rabbitmq.tgz
         subpath: rabbitmq
-        type: git
-      rabbitmq-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
       tempest:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: 536eaed62d55eca694eaae0c50df910dbb55fff7
+        location: http://control-plane.minikube.internal:8282/tempest.tgz
         subpath: tempest
-        type: git
-      tempest-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
-        subpath: helm-toolkit
-        type: git
+        type: tar
     osh_infra:
       elasticsearch:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/elasticsearch.tgz
         subpath: elasticsearch
-        type: git
+        type: tar
       fluentbit:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/fluentbit.tgz
         subpath: fluentbit
-        type: git
+        type: tar
       fluentd:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/fluentd.tgz
         subpath: fluentd
-        type: git
+        type: tar
       grafana:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/grafana.tgz
         subpath: grafana
-        type: git
+        type: tar
       helm_toolkit:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/helm-toolkit.tgz
         subpath: helm-toolkit
-        type: git
+        type: tar
       kibana:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/kibana.tgz
         subpath: kibana
-        type: git
+        type: tar
       nagios:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/nagios.tgz
         subpath: nagios
-        type: git
+        type: tar
       nfs_provisioner:
         location: http://control-plane.minikube.internal:8282/nfs-provisioner.tgz
         subpath: nfs-provisioner
         type: tar
       podsecuritypolicy:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/podsecuritypolicy.tgz
         subpath: podsecuritypolicy
-        type: git
+        type: tar
       prometheus:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/prometheus.tgz
         subpath: prometheus
-        type: git
+        type: tar
       prometheus_alertmanager:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/prometheus-alertmanager.tgz
         subpath: prometheus-alertmanager
-        type: git
+        type: tar
       prometheus_kube_state_metrics:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/prometheus-kube-state-metrics.tgz
         subpath: prometheus-kube-state-metrics
-        type: git
+        type: tar
       prometheus_node_exporter:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/prometheus-node-exporter.tgz
         subpath: prometheus-node-exporter
-        type: git
+        type: tar
       prometheus_openstack_exporter:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/prometheus-openstack-exporter.tgz
         subpath: prometheus-openstack-exporter
-        type: git
+        type: tar
       prometheus_process_exporter:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 97ce6d7d8e9a090c748800d69a57bbd9af698b60
+        location: http://control-plane.minikube.internal:8282/prometheus-process-exporter.tgz
         subpath: prometheus-process-exporter
-        type: git
+        type: tar
     ucp:
       armada:
         location: http://control-plane.minikube.internal:8282/armada.tgz
@@ -324,75 +268,33 @@ data:
         type: tar
     utility:
       calicoctl-utility:
-        location: https://opendev.org/airship/porthole
-        reference: 017902b5ceea9b580be741cb3498188d7e7616cc
-        subpath: charts/calicoctl-utility
-        type: git
-      calicoctl-utility-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/calicoctl-utility.tgz
+        subpath: calicoctl-utility
+        type: tar
       ceph-utility:
-        location: https://opendev.org/airship/porthole
-        reference: 017902b5ceea9b580be741cb3498188d7e7616cc
-        subpath: charts/ceph-utility
-        type: git
-      ceph-utility-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/ceph-utility.tgz
+        subpath: ceph-utility
+        type: tar
       compute-utility:
-        location: https://opendev.org/airship/porthole
-        reference: 017902b5ceea9b580be741cb3498188d7e7616cc
-        subpath: charts/compute-utility
-        type: git
-      compute-utility-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/compute-utility.tgz
+        subpath: compute-utility
+        type: tar
       etcdctl-utility:
-        location: https://opendev.org/airship/porthole
-        reference: 017902b5ceea9b580be741cb3498188d7e7616cc
-        subpath: charts/etcdctl-utility
-        type: git
-      etcdctl-utility-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/etcdctl-utility.tgz
+        subpath: etcdctl-utility
+        type: tar
       mysqlclient-utility:
-        location: https://opendev.org/airship/porthole
-        reference: 017902b5ceea9b580be741cb3498188d7e7616cc
-        subpath: charts/mysqlclient-utility
-        type: git
-      mysqlclient-utility-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/mysqlclient-utility.tgz
+        subpath: mysqlclient-utility
+        type: tar
       openstack-utility:
-        location: https://opendev.org/airship/porthole
-        reference: 017902b5ceea9b580be741cb3498188d7e7616cc
-        subpath: charts/openstack-utility
-        type: git
-      openstack-utility-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/openstack-utility.tgz
+        subpath: openstack-utility
+        type: tar
       postgresql-utility:
-        location: https://opendev.org/airship/porthole
-        reference: 017902b5ceea9b580be741cb3498188d7e7616cc
-        subpath: charts/postgresql-utility
-        type: git
-      postgresql-utility-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 200b5e902b3a176fbfbe669b6a10a254c9b50f5d
-        subpath: helm-toolkit
-        type: git
+        location: http://control-plane.minikube.internal:8282/postgresql-utility.tgz
+        subpath: postgresql-utility
+        type: tar
   files:
     kubernetes: https://dl.k8s.io/v1.17.3/kubernetes-node-linux-amd64.tar.gz
 

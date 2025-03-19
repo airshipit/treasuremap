@@ -49,29 +49,4 @@ data:
       configmap_etc_client: true
       configmap_etc_sudoers: true
       deployment_utility: true
-  dependencies:
-    - compute-utility-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: compute-utility-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.utility.compute-utility-htk
-      dest:
-        path: .source
-data:
-  chart_name: compute-utility-htk
-  release: compute-utility-htk
-  namespace: compute-utility-htk
-  values: {}
-  dependencies: []
 ...

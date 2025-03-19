@@ -341,29 +341,4 @@ data:
             tenant_network_types: vxlan
           ml2_type_vlan:
             network_vlan_ranges: external
-  dependencies:
-    - neutron-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: neutron-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.osh.neutron-htk
-      dest:
-        path: .source
-data:
-  chart_name: neutron-htk
-  release: neutron-htk
-  namespace: neutron-htk
-  values: {}
-  dependencies: []
 ...

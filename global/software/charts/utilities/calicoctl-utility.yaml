@@ -79,29 +79,4 @@ data:
       deployment_calicoctl_utility: true
       job_image_repo_sync: false
       secret_certificates: true
-  dependencies:
-    - calicoctl-utility-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: calicoctl-utility-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.utility.calicoctl-utility-htk
-      dest:
-        path: .source
-data:
-  chart_name: calicoctl-utility-htk
-  release: calicoctl-utility-htk
-  namespace: calicoctl-utility-htk
-  values: {}
-  dependencies: []
 ...

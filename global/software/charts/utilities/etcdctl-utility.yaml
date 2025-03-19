@@ -83,29 +83,4 @@ data:
       deployment_etcdctl_utility: true
       job_image_repo_sync: false
       secret_certificates: true
-  dependencies:
-    - etcdctl-utility-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: etcdctl-utility-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.utility.etcdctl-utility-htk
-      dest:
-        path: .source
-data:
-  chart_name: etcdctl-utility-htk
-  release: etcdctl-utility-htk
-  namespace: etcdctl-utility-htk
-  values: {}
-  dependencies: []
 ...

@@ -155,6 +155,4 @@ data:
       job_image_repo_sync: false
       pod_calicoctl: false
       service_calico_etcd: false
-  dependencies:
-    - calico-htk
 ...

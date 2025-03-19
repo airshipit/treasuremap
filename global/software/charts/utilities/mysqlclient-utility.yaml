@@ -46,29 +46,3 @@ data:
       configmap_etc_client: true
       deployment_utility: true
       job_image_repo_sync: false
-  dependencies:
-    - mysqlclient-utility-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: mysqlclient-utility-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.utility.mysqlclient-utility-htk
-      dest:
-        path: .source
-data:
-  chart_name: mysqlclient-utility-htk
-  release: mysqlclient-utility-htk
-  namespace: mysqlclient-utility-htk
-  values: {}
-  dependencies: []
-...

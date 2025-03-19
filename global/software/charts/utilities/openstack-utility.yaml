@@ -49,29 +49,4 @@ data:
       configmap_etc_client: true
       configmap_etc_sudoers: true
       deployment_utility: true
-  dependencies:
-    - openstack-utility-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: openstack-utility-htk
-  layeringDefinition:
-    abstract: false
-    layer: global
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.utility.openstack-utility-htk
-      dest:
-        path: .source
-data:
-  chart_name: openstack-utility-htk
-  release: openstack-utility-htk
-  namespace: openstack-utility-htk
-  values: {}
-  dependencies: []
 ...
