@@ -163,6 +163,7 @@
     name: treasuremap-airskiff-infra-deploy
     abstract: true
     roles:
+      - zuul: airship/kubernetes-entrypoint
       - zuul: openstack/openstack-helm
       - zuul: zuul/zuul-jobs
     required-projects:
