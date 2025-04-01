@@ -9,8 +9,8 @@ data:
       calico:
         calico:
           location: http://control-plane.minikube.internal:8282/calico.tgz
-          subpath: etcd
-          type: calico
+          subpath: calico
+          type: tar
         etcd:
           location: http://control-plane.minikube.internal:8282/etcd.tgz
           subpath: etcd

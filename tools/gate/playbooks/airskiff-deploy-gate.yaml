@@ -18,7 +18,6 @@
     - name: Clone dependencies
       shell: |
         set -ex
-        export OSH_INFRA_COMMIT={{ OSH_INFRA_COMMIT }}
         export OSH_COMMIT={{ OSH_COMMIT }}
 
         ./tools/deployment/airskiff/developer/000-clone-dependencies.sh
