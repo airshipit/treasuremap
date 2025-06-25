@@ -16,5 +16,10 @@
 
 set -xe
 
+python3 \
+    tools/deployment/airskiff/common/generate_security_keys.py \
+         --layer=site \
+         --output-dir=site/$1/secrets/passphrases/
+
 # TODO(drewwalters96): make Treasuremap sites P001 and P009 compliant.
 TERM_OPTS=" " ./tools/airship pegleg site -r . lint "$1" -x P001 -x P009

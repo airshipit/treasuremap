@@ -215,6 +215,31 @@ metadata:
         path: .
       dest:
         path: .values.endpoints.oslo_messaging.auth.admin.password
+    # Airflow jwt secrets
+    - dest:
+        path: .values.conf.airflow.api_auth.jwt_secret
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_airflow_api_auth_jwt_secret
+        path: .
+    - dest:
+        path: .values.conf.airflow.webserver.secret_key
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_airflow_api_auth_jwt_secret
+        path: .
+    - dest:
+        path: .values.conf.airflow.core.fernet_key
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_airflow_core_fernet_key
+        path: .
+    - dest:
+        path: .values.conf.shipyard.airflow.worker_log_jwt_secret
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ucp_airflow_api_auth_jwt_secret
+        path: .
 
 data:
   chart_name: shipyard
@@ -267,7 +292,7 @@ data:
           # TODO: Scheduler can be set to 0 with a future version - here to
           # accommodate the upgrade to the current configuration with the
           # Scheduler being a sidecar with the Worker.
-          scheduler: 1
+          scheduler: 0
     labels:
       job:
         node_selector_key: ucp-control-plane
