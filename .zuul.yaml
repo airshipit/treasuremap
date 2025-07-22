@@ -187,6 +187,7 @@
     post-run:
       - tools/gate/playbooks/osh-infra-collect-logs.yaml
     vars:
+      overlay_network_setup: true
       extra_volume:
         size: 80G
         type: Linux
@@ -204,20 +205,21 @@
       loopback_image: "/opt/ext_vol/openstack-helm/ceph-loop.img"
       ceph_osd_data_device: /dev/loop100
       kube_version_repo: "v1.32"
-      kube_version: "1.32.1-1.1"
+      kube_version: "1.32.5-1.1"
       calico_setup: true
-      calico_version: "v3.27.4"
+      calico_version: "v3.30.1"
       cilium_setup: false
-      cilium_version: "1.16.0"
+      cilium_version: "1.17.4"
       flannel_setup: false
-      flannel_version: v0.25.4
-      metallb_setup: false
-      metallb_version: "0.13.12"
-      helm_version: "v3.14.0"
-      crictl_version: "v1.30.1"
-      zuul_osh_infra_relative_path: ../openstack-helm
-      gate_scripts_relative_path: ../openstack-helm
+      flannel_version: v0.26.7
+      metallb_setup: true
+      metallb_version: "0.14.9"
+      coredns_resolver_setup: false
+      ingress_setup: true
+      helm_version: "v3.18.1"
+      crictl_version: "v1.33.0"
       run_helm_tests: "no"
+      openstack_provider_gateway_setup: true
 
 - job:
     name: treasuremap-airskiff-multinode-full-site
@@ -225,13 +227,13 @@
     nodeset: treasuremap-airskiff-3nodes-ubuntu_jammy
     description: |
       Deploy Openstack using Airskiff and latest Treasuremap changes.
-      Airskiff is using latest Airship v1.x based on Airflow-2.10.4
+      Airskiff is using latest Airship v1.x based on Airflow-3.0.2
     voting: true
     vars:
       site: airskiff
-      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.18.3-linux-amd64.tar.gz
-      HTK_COMMIT: d7b5bbdf6266e96f93696b601ed0f085ab827e36
-      OSH_COMMIT: d7b5bbdf6266e96f93696b601ed0f085ab827e36
+      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.18.4-linux-amd64.tar.gz
+      HTK_COMMIT: 80041dfbb5c22aa67dcd8dfa3332a943aa0d366c
+      OSH_COMMIT: 80041dfbb5c22aa67dcd8dfa3332a943aa0d366c
       gate_scripts_relative_path: .
       gate_scripts:
         - ./tools/deployment/airskiff/developer/000-prepare-k8s.sh
@@ -254,13 +256,13 @@
     nodeset: treasuremap-airskiff-1node-ubuntu_jammy
     description: |
       Deploy Openstack using Airskiff and latest Treasuremap changes.
-      Airskiff is using latest Airship v1.x based on Airflow-2.10.4
+      Airskiff is using latest Airship v1.x based on Airflow-3.0.2
     voting: true
     vars:
       site: airskiff
-      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.18.3-linux-amd64.tar.gz
-      HTK_COMMIT: d7b5bbdf6266e96f93696b601ed0f085ab827e36
-      OSH_COMMIT: d7b5bbdf6266e96f93696b601ed0f085ab827e36
+      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.18.4-linux-amd64.tar.gz
+      HTK_COMMIT: 80041dfbb5c22aa67dcd8dfa3332a943aa0d366c
+      OSH_COMMIT: 80041dfbb5c22aa67dcd8dfa3332a943aa0d366c
       DISTRO: ubuntu_jammy
       gate_scripts_relative_path: .
       gate_scripts:
@@ -287,13 +289,13 @@
     nodeset: treasuremap-airskiff-1node-ubuntu_jammy
     description: |
       Deploy Openstack using Airskiff and latest Treasuremap changes.
-      Airskiff is using latest Airship v1.x based on Airflow-2.10.4
+      Airskiff is using latest Airship v1.x based on Airflow-3.0.2
     voting: true
     vars:
       site: airskiff
-      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.18.3-linux-amd64.tar.gz
-      HTK_COMMIT: d7b5bbdf6266e96f93696b601ed0f085ab827e36
-      OSH_COMMIT: d7b5bbdf6266e96f93696b601ed0f085ab827e36
+      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.18.4-linux-amd64.tar.gz
+      HTK_COMMIT: 80041dfbb5c22aa67dcd8dfa3332a943aa0d366c
+      OSH_COMMIT: 80041dfbb5c22aa67dcd8dfa3332a943aa0d366c
       USE_ARMADA_GO: true
       gate_scripts_relative_path: .
       gate_scripts:

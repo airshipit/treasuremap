@@ -31,6 +31,9 @@ kubectl label --overwrite nodes --all ceph-mgr=enabled
 # and we don't need L2 overlay (will be implemented later).
 kubectl label --overwrite nodes -l "node-role.kubernetes.io/control-plane" l3-agent=enabled
 
+kubectl label nodes --all --overwrite ucp-control-plane=enabled
+kubectl label --overwrite nodes -l "node-role.kubernetes.io/control-plane" openstack-network-node=enabled
+
 for NAMESPACE in ceph mariadb-operator openstack osh-infra; do
 tee /tmp/${NAMESPACE}-ns.yaml << EOF
 apiVersion: v1
@@ -45,7 +48,6 @@ EOF
 kubectl apply -f /tmp/${NAMESPACE}-ns.yaml
 done
 
-
 # CoreDNS version upgrade
 kubectl set image deployment coredns -n kube-system "coredns=registry.k8s.io/coredns/coredns:${COREDNS_VERSION}"
 kubectl rollout restart -n kube-system deployment/coredns
@@ -55,15 +57,16 @@ kubectl rollout status --watch --timeout=300s -n kube-system deployment/coredns
 PATCH=$(mktemp)
 HOSTIP=$(hostname -I| awk '{print $1}')
 kubectl get configmap coredns -n kube-system -o json | jq -r "{data: .data}"  > "${PATCH}"
-sed -i "s;forward . 8.8.8.8 {\\\n      max_concurrent 1000\\\n    }\\\n;forward . 8.8.8.8 {\\\n      max_concurrent 1000\\\n    }\\\nhosts {\\\n       $HOSTIP control-plane.minikube.internal\\\n       fallthrough\\\n    }\\\n;" "${PATCH}"
+sed -i "s;forward . /etc/resolv.conf {\\\n       max_concurrent 1000\\\n    }\\\n;forward . /etc/resolv.conf {\\\n       max_concurrent 1000\\\n    }\\\nhosts {\\\n       $HOSTIP control-plane.minikube.internal\\\n       fallthrough\\\n    }\\\n;" "${PATCH}"
 kubectl patch configmap coredns -n kube-system --patch-file "${PATCH}"
 rm -f "${PATCH}"
 kubectl rollout restart -n kube-system deployment/coredns
 kubectl rollout status --watch --timeout=300s -n kube-system deployment/coredns
 sleep 10
-host -v control-plane.minikube.internal
 
-kubectl label nodes --all --overwrite ucp-control-plane=enabled
+sudo sh -c 'echo "nameserver 10.96.0.10" > /etc/resolv.conf'
+
+host -v control-plane.minikube.internal
 
 kubectl run multitool --image=quay.io/airshipit/network-multitool
 kubectl wait --for=condition=ready pod multitool --timeout=300s
