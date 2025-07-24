@@ -178,6 +178,7 @@
       - ^site/aiab/.*$
     timeout: 10800
     pre-run:
+      - tools/gate/playbooks/checkout-treasuremap-ref.yaml
       - tools/gate/playbooks/prepare-hosts.yaml
       - tools/gate/playbooks/mount-volumes.yaml
       - tools/gate/playbooks/deploy-env.yaml
