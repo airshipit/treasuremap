@@ -17,7 +17,7 @@
 set -xe
 
 CURRENT_DIR="$(pwd)"
-: "${OSH_INFRA_PATH:="../openstack-helm-infra"}"
+: "${OSH_PATH:="../../openstack/openstack-helm"}"
 
 # Configure proxy settings if $PROXY is set
 if [ -n "${PROXY}" ]; then

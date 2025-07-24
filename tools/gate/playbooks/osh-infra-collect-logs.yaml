@@ -15,7 +15,7 @@
   vars_files:
     - vars.yaml
   vars:
-    work_dir: "{{ zuul.project.src_dir }}/{{ zuul_osh_infra_relative_path | default('') }}"
+    work_dir: "{{ zuul.project.src_dir }}/{{ zuul_osh_relative_path | default('') }}"
     logs_dir: "/tmp/logs"
   roles:
     - gather-host-logs
@@ -26,7 +26,7 @@
   vars_files:
     - vars.yaml
   vars:
-    work_dir: "{{ zuul.project.src_dir }}/{{ zuul_osh_infra_relative_path | default('') }}"
+    work_dir: "{{ zuul.project.src_dir }}/{{ zuul_osh_relative_path | default('') }}"
     logs_dir: "/tmp/logs"
   roles:
     - helm-release-status

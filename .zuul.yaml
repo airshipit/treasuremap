@@ -163,7 +163,6 @@
     name: treasuremap-airskiff-infra-deploy-base
     abstract: true
     roles:
-      - zuul: airship/kubernetes-entrypoint
       - zuul: openstack/openstack-helm
       - zuul: zuul/zuul-jobs
     required-projects:
@@ -234,6 +233,7 @@
         - ./tools/deployment/airskiff/developer/020-setup-client.sh
         - ./tools/deployment/airskiff/developer/015-make-all-charts.sh
         - ./tools/deployment/airskiff/developer/017-make-all-images.sh
+        - ./tools/deployment/airskiff/developer/022-generate_security_keys.sh
         - ./tools/deployment/airskiff/developer/025-start-artifactory.sh
         - ./tools/deployment/airskiff/developer/026-reduce-site.sh
         - ./tools/deployment/airskiff/developer/027-enable-armada-operator.sh
