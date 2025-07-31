@@ -66,14 +66,18 @@
         label: ubuntu-jammy
 
 - nodeset:
-    name: treasuremap-airskiff-3nodes-ubuntu_focal
+    name: treasuremap-airskiff-5nodes-ubuntu_jammy
     nodes:
       - name: primary
-        label: ubuntu-focal
+        label: ubuntu-jammy
       - name: node-1
-        label: ubuntu-focal
+        label: ubuntu-jammy
       - name: node-2
-        label: ubuntu-focal
+        label: ubuntu-jammy
+      - name: node-3
+        label: ubuntu-jammy
+      - name: node-4
+        label: ubuntu-jammy
     groups:
       - name: primary
         nodes:
@@ -82,11 +86,15 @@
         nodes:
           - node-1
           - node-2
+          - node-3
+          - node-4
       - name: k8s_cluster
         nodes:
           - primary
           - node-1
           - node-2
+          - node-3
+          - node-4
       - name: k8s_control_plane
         nodes:
           - primary
@@ -94,6 +102,8 @@
         nodes:
           - node-1
           - node-2
+          - node-3
+          - node-4
 
 - nodeset:
     name: treasuremap-airskiff-3nodes-ubuntu_jammy
@@ -187,7 +197,7 @@
     post-run:
       - tools/gate/playbooks/osh-infra-collect-logs.yaml
     vars:
-      overlay_network_setup: true
+      overlay_network_setup: false
       extra_volume:
         size: 80G
         type: Linux
@@ -212,9 +222,9 @@
       cilium_version: "1.17.4"
       flannel_setup: false
       flannel_version: v0.26.7
-      metallb_setup: true
+      metallb_setup: false
       metallb_version: "0.14.9"
-      coredns_resolver_setup: false
+      coredns_resolver_setup: true
       ingress_setup: true
       helm_version: "v3.18.1"
       crictl_version: "v1.33.0"
@@ -223,7 +233,7 @@
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.18.4-linux-amd64.tar.gz
       HTK_COMMIT: 80041dfbb5c22aa67dcd8dfa3332a943aa0d366c
-      OSH_COMMIT: 80041dfbb5c22aa67dcd8dfa3332a943aa0d366c
+      OSH_COMMIT: fed675226f8ed5490445d6cea7d1e80cb87c9771
       USE_ARMADA_GO: false
       gate_scripts_relative_path: .
       gate_scripts:
@@ -247,11 +257,13 @@
 - job:
     name: treasuremap-airskiff-multinode-full-site
     parent: treasuremap-airskiff-infra-deploy-base
-    nodeset: treasuremap-airskiff-3nodes-ubuntu_jammy
+    nodeset: treasuremap-airskiff-5nodes-ubuntu_jammy
     description: |
       Deploy Openstack using Airskiff and latest Treasuremap changes.
       Airskiff is using latest Airship v1.x based on Airflow-3.0.2
     voting: true
+    vars:
+      overlay_network_setup: true
 
 - job:
     name: treasuremap-airskiff-1node-reduced-site
