@@ -12,20 +12,15 @@
 
 ---
 - hosts: all
-
   tasks:
     - name: Checkout treasuremap ref
-      shell: |
-        set -xe;
-
-        : "${TREASUREMAP_REF:=v1.9}"
-
-        cd ../treasuremap
-        git fetch https://review.opendev.org/airship/treasuremap ${TREASUREMAP_REF} && git checkout FETCH_HEAD
-        cd -
-
-      args:
-        chdir: "{{ zuul.project.src_dir }}"
-      environment:
-        TREASUREMAP_REF: "{{ treasuremap_ref }}"
-      when: treasuremap_ref is defined
+      git:
+        repo: https://review.opendev.org/airship/treasuremap
+        dest: "{{ zuul.project.src_dir }}/{{ zuul_treasuremap_relative_path | default('') }}"
+        refspec: "{{ treasuremap_ref }}"
+        version: FETCH_HEAD
+        clone: false
+      when:
+        - treasuremap_ref is defined
+        - treasuremap_ref|length > 0
+        - treasuremap_ref != "{{ zuul.projects['opendev.org/airship/treasuremap'].checkout }}"
