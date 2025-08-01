@@ -11,7 +11,7 @@
 # limitations under the License.
 
 ---
-- hosts: all
+- hosts: primary
   tasks:
     - name: Checkout treasuremap ref
       git:
@@ -23,4 +23,4 @@
       when:
         - treasuremap_ref is defined
         - treasuremap_ref|length > 0
-        - treasuremap_ref != "{{ zuul.projects['opendev.org/airship/treasuremap'].checkout }}"
+        - treasuremap_ref != "v1.9"
