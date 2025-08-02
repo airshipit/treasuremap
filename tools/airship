@@ -144,7 +144,7 @@ promenade() {
 
   versions_lookup "['data']['images']['ucp']['promenade']['promenade']"
   IMAGE_PROMENADE=$IMAGE_URL
-  versions_lookup "['data']['images']['kubernetes']['hyperkube']"
+  versions_lookup "['data']['images']['kubernetes']['controller-manager']['controller_manager']"
   IMAGE_HYPERKUBE=$IMAGE_URL
 
   # 'cache' is hardcoded in Promenade source code

@@ -8,12 +8,6 @@ metadata:
     layer: global
   storagePolicy: cleartext
   substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .images.kubernetes.hyperkube
-      dest:
-        path: .files[0].docker_image
 
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -46,13 +40,6 @@ metadata:
         path: .images.ucp.armada.helm
       dest:
         path: .images.helm.helm
-
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .images.kubernetes.hyperkube
-      dest:
-        path: .images.kubernetes.hyperkube
 
     - src:
         schema: pegleg/SoftwareVersions/v1
@@ -112,9 +99,6 @@ metadata:
 
 data:
   files:
-    - path: /opt/kubernetes/bin/hyperkube
-      file_path: /hyperkube
-      mode: 0555
     - path: /opt/kubernetes/bin/kubelet
       tar_path: kubernetes/node/bin/kubelet
       mode: 0555

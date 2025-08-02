@@ -28,6 +28,9 @@ set -xe
 USE_ARMADA_GO=$(echo "$USE_ARMADA_GO" | tr '[:upper:]' '[:lower:]')
 export USE_ARMADA_GO
 
+# Lint documents
+sudo ${PEGLEG} site -r . lint "${PL_SITE}" -x P001 -x P009
+
 # Render documents
 sudo ${PEGLEG} site -r . render "${PL_SITE}" -o airskiff.yaml
 

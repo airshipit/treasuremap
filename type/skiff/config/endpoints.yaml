@@ -170,10 +170,10 @@ data:
         default: "http"
       port:
         region_api:
-          default: 80
+          default: 83
           nodeport: 31900
-          podport: 80
-          public: 80
+          podport: 5240
+          public: 83
         region_proxy:
           default: 8000
       host_fqdn_override:

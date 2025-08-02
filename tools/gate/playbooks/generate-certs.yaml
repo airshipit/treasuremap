@@ -20,10 +20,10 @@
         SITE="{{ site }}"
 
         mkdir collected
-        ./tools/airship pegleg site \
+        sudo ./tools/airship pegleg site \
           -r . collect ${SITE} \
           -s /target/collected
-        ./tools/airship promenade generate-certs \
+        sudo ./tools/airship promenade generate-certs \
           -o /target/site/${SITE}/secrets \
           /target/collected/treasuremap.yaml
       args:

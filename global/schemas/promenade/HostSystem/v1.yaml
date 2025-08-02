@@ -39,10 +39,6 @@ data:
           $ref: '#/definitions/url'
         tar_path:
           $ref: '#/definitions/rel_path'
-        docker_image:
-          $ref: '#/definitions/url'
-        file_path:
-          $ref: '#/definitions/abs_path'
         symlink:
           $ref: '#/definitions/abs_path'
       required:
@@ -61,12 +57,6 @@ data:
               required:
                 - tar_url
                 - tar_path
-        - type: object
-          allOf:
-            - type: object
-              required:
-                - docker_image
-                - file_path
       additionalProperties: false
 
     image:
@@ -113,17 +103,11 @@ data:
           required:
             - helm
           additionalProperties: false
-        kubernetes:
-          type: object
-          properties:
-            hyperkube:
-              $ref: '#/definitions/image'
         monitoring_image:
           $ref: '#/definitions/image'
       required:
         - haproxy
         - helm
-        - kubernetes
         - monitoring_image
       additionalProperties: false
 

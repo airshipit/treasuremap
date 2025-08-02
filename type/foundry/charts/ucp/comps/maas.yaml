@@ -12,6 +12,7 @@ metadata:
     actions:
       - method: merge
         path: .
+  replacement: true
   storagePolicy: cleartext
   substitutions:
     - src:

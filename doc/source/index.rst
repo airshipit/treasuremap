@@ -206,6 +206,7 @@ Process Flows
    airskiff
    airsloop
    seaworthy
+   seaworthy-virt
 
 .. toctree::
    :caption: Airship Project Documentation

@@ -26,6 +26,7 @@ CURRENT_DIR="$(pwd)"
 : "${MAKE_CHARTS_DECKHAND:=true}"
 : "${MAKE_CHARTS_SHIPYARD:=true}"
 : "${MAKE_CHARTS_MAAS:=true}"
+: "${MAKE_CHARTS_DRYDOCK:=true}"
 : "${MAKE_CHARTS_PORTHOLE:=true}"
 : "${MAKE_CHARTS_PROMENADE:=true}"
 
@@ -35,6 +36,7 @@ MAKE_CHARTS_ARMADA=$(echo "$MAKE_CHARTS_ARMADA" | tr '[:upper:]' '[:lower:]')
 MAKE_CHARTS_DECKHAND=$(echo "$MAKE_CHARTS_DECKHAND" | tr '[:upper:]' '[:lower:]')
 MAKE_CHARTS_SHIPYARD=$(echo "$MAKE_CHARTS_SHIPYARD" | tr '[:upper:]' '[:lower:]')
 MAKE_CHARTS_MAAS=$(echo "$MAKE_CHARTS_MAAS" | tr '[:upper:]' '[:lower:]')
+MAKE_CHARTS_DRYDOCK=$(echo "$MAKE_CHARTS_DRYDOCK" | tr '[:upper:]' '[:lower:]')
 MAKE_CHARTS_PORTHOLE=$(echo "$MAKE_CHARTS_PORTHOLE" | tr '[:upper:]' '[:lower:]')
 MAKE_CHARTS_PROMENADE=$(echo "$MAKE_CHARTS_PROMENADE" | tr '[:upper:]' '[:lower:]')
 export MAKE_CHARTS_OPENSTACK_HELM
@@ -42,12 +44,14 @@ export MAKE_CHARTS_ARMADA
 export MAKE_CHARTS_DECKHAND
 export MAKE_CHARTS_SHIPYARD
 export MAKE_CHARTS_MAAS
+export MAKE_CHARTS_DRYDOCK
 export MAKE_CHARTS_PORTHOLE
 export MAKE_CHARTS_PROMENADE
 
 mkdir -p "${ARTIFACTS_PATH}"
 
 cd "${INSTALL_PATH}"
+ls -la
 
 # Make charts in Airship and OSH-INFRA projects
 if [[ ${MAKE_CHARTS_ARMADA} = true ]] ; then
@@ -78,17 +82,17 @@ if [[ ${MAKE_CHARTS_SHIPYARD} = true ]] ; then
     done
     popd
 fi
-if [[ ${MAKE_CHARTS_OPENSTACK_HELM} = true ]] ; then
-    pushd openstack-helm
-    make all SKIP_CHANGELOG=1
-    for i in $(find . -maxdepth 1 -name "*.tgz" -print | sed -E 's|\.\/([a-zA-Z0-9\-]+)-[0-9.]+\+.*\.tgz|\1|' | sort -u)
+if [[ ${MAKE_CHARTS_MAAS} = true ]] ; then
+    pushd maas
+    make charts
+    for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
     do
-        find . -maxdepth 1 -name "$i-[0-9]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
+        find . -maxdepth 1 -name "$i-[0-9.]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
     done
     popd
 fi
-if [[ ${MAKE_CHARTS_MAAS} = true ]] ; then
-    pushd maas
+if [[ ${MAKE_CHARTS_DRYDOCK} = true ]] ; then
+    pushd drydock
     make charts
     for i in $(find  . -maxdepth 1  -name "*.tgz"  -print | sed -e 's/\-[0-9.]*\.tgz//'| cut -d / -f 2 | sort)
     do
@@ -116,5 +120,16 @@ if [[ ${MAKE_CHARTS_PROMENADE} = true ]] ; then
     done
     popd
 fi
+if [[ ${MAKE_CHARTS_OPENSTACK_HELM} = true ]] ; then
+    pushd openstack-helm
+    make all SKIP_CHANGELOG=1
+    for i in $(find . -maxdepth 1 -name "*.tgz" -print | sed -E 's|\.\/([a-zA-Z0-9\-]+)-[0-9.]+\+.*\.tgz|\1|' | sort -u)
+    do
+        find . -maxdepth 1 -name "$i-[0-9]*.tgz" -print -exec cp -av {} "../artifacts/$i.tgz" \;
+    done
+    popd
+fi
+
+ls -la
 
 cd "${CURRENT_DIR}"

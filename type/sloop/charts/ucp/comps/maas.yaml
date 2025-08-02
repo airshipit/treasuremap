@@ -6,6 +6,7 @@ metadata:
   name: ucp-maas
   labels:
     name: ucp-maas-type
+  replacement: true
   layeringDefinition:
     abstract: false
     layer: type

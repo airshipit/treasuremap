@@ -168,9 +168,29 @@
         nodes:
           - primary
 
+- nodeset:
+    name: treasuremap-airskiff-1node-32GB-ubuntu_jammy
+    nodes:
+      - name: primary
+        # This label is available in vexxhost ca-ymq-1 region
+        # The flavor v3-standard-8 in this particular region has
+        # 32GB nodes. The number of such nodes is extremely limited.
+        label: ubuntu-jammy-32GB
+    groups:
+      - name: primary
+        nodes:
+          - primary
+      - name: k8s_cluster
+        nodes:
+          - primary
+      - name: k8s_control_plane
+        nodes:
+          - primary
 
 - job:
     name: treasuremap-airskiff-infra-deploy-base
+    # Pinned for now due to Ansible 11 stopped verbosive output.
+    ansible-version: 9
     abstract: true
     roles:
       - zuul: openstack/openstack-helm
@@ -286,7 +306,44 @@
       USE_ARMADA_GO: true
 
 - job:
+    name: treasuremap-airskiff-deploy-maas-drydock-base
+    # Pinned for now due to Ansible 11 stopped verbosive output.
+    ansible-version: 9
+    parent: treasuremap-airskiff-infra-deploy-base
+    abstract: true
+    # nodeset: treasuremap-airskiff-1node-32GB-ubuntu_jammy
+    description: |
+      Deploy Openstack using Airskiff and latest Treasuremap changes.
+      Airskiff is using latest Airship v1.x based on Airflow-3.0.2
+    vars:
+      USE_ARMADA_GO: true
+      MAKE_MAAS_IMAGES: true
+      DISTRO: ubuntu_jammy
+      # DOCKER_REGISTRY: localhost:5000
+      gate_scripts:
+        - ./tools/deployment/airskiff/developer/000-prepare-k8s.sh
+        - ./tools/deployment/airskiff/developer/009-setup-apparmor.sh
+        - ./tools/deployment/airskiff/developer/000-clone-dependencies.sh
+        - ./tools/deployment/airskiff/developer/020-setup-client.sh
+        - ./tools/deployment/airskiff/developer/015-make-all-charts.sh
+        - ./tools/deployment/airskiff/developer/017-make-all-images.sh
+        - ./tools/deployment/airskiff/developer/022-generate_security_keys.sh
+        - ./tools/deployment/airskiff/developer/025-start-artifactory.sh
+        - ./tools/deployment/airskiff/developer/026-reduce-site.sh
+        - ./tools/deployment/airskiff/developer/027-enable-armada-operator.sh
+        - ./tools/deployment/airskiff/developer/028-enable-maas-drydock.sh
+        - ./tools/deployment/airskiff/developer/030-armada-bootstrap.sh
+        - ./tools/deployment/airskiff/developer/100-deploy-osh.sh
+        - ./tools/deployment/airskiff/common/os-env.sh
+        - ./tools/gate/wait-for-shipyard.sh
+        - ./tools/deployment/airskiff/common/get-airflow-worker-logs.sh
+        # - ./tools/deployment/airskiff/common/sleep.sh
+
+
+- job:
     name: treasuremap-site-lint
+    # Pinned for now due to Ansible 11 stopped verbosive output.
+    ansible-version: 9
     description:
       Lint a site using Pegleg. Default site is seaworthy.
     nodeset: treasuremap-single-node-ubuntu-jammy

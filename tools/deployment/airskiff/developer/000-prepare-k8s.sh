@@ -26,6 +26,10 @@ kubectl label --overwrite nodes --all ceph-osd=enabled
 kubectl label --overwrite nodes --all ceph-mds=enabled
 kubectl label --overwrite nodes --all ceph-rgw=enabled
 kubectl label --overwrite nodes --all ceph-mgr=enabled
+
+kubectl label nodes --all --overwrite maas-region=enabled
+kubectl label nodes --all --overwrite maas-rack=enabled
+
 # We deploy l3 agent only on the node where we run test scripts.
 # In this case virtual router will be created only on this node
 # and we don't need L2 overlay (will be implemented later).

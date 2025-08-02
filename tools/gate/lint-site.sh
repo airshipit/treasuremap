@@ -22,4 +22,4 @@ python3 \
          --output-dir=site/$1/secrets/passphrases/
 
 # TODO(drewwalters96): make Treasuremap sites P001 and P009 compliant.
-TERM_OPTS=" " ./tools/airship pegleg site -r . lint "$1" -x P001 -x P009
+TERM_OPTS=" " sudo ./tools/airship pegleg site -r . lint "$1" -x P001 -x P009

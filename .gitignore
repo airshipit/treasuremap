@@ -15,6 +15,7 @@ _build
 *.swp
 .vscode/
 .devcontainer
+.crossnote
 
 # Packages
 *.egg*
@@ -29,3 +30,11 @@ develop-eggs
 .installed.cfg
 lib
 lib64
+
+# secrets
+ucp_airflow_api_auth_jwt_secret.yaml
+ucp_airflow_fernet_key.yaml
+ucp_airflow_core_fernet_key.yaml
+
+# rendered manifests
+airskiff.yaml

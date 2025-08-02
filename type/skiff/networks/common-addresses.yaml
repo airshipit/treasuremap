@@ -100,6 +100,10 @@ data:
     maas_api: 30001
     maas_proxy: 31800  # hardcoded in MAAS
 
+  vip:
+    ingress_vip: '172.24.1.6/32'
+    maas_vip: '172.24.1.5/32'
+
   ntp:
     # comma separated NTP server list. Verify that these upstream NTP servers
     # are

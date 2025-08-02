@@ -2,7 +2,7 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: ucp-maas-global
+  name: ucp-maas
   labels:
     name: ucp-maas-global
   layeringDefinition:
@@ -118,13 +118,13 @@ metadata:
         name: ucp_maas_postgres_password
         path: .
 data:
-  chart_name: maas
-  release: maas
+  chart_name: ucp-maas
+  release: ucp-maas
   namespace: ucp
   wait:
     timeout: 1800
     labels:
-      release_group: airship-maas
+      release_group: airship-ucp-maas
   install:
     no_hooks: false
   upgrade:
@@ -133,12 +133,107 @@ data:
       delete:
         - type: job
           labels:
-            release_group: airship-maas
+            release_group: airship-ucp-maas
   values:
     pod:
       replicas:
         region: 1
         rack: 1
+      security_context:
+        ingress_errors:
+          container:
+            maas_ingress_errors:
+              appArmorProfile:
+                type: RuntimeDefault
+          pod:
+            runAsUser: 33
+        rack:
+          container:
+            maas_rack:
+              appArmorProfile:
+                type: RuntimeDefault
+              readOnlyRootFilesystem: false
+              privileged: true
+              capabilities:
+                add:
+                  - 'DAC_READ_SEARCH'
+                  - 'NET_ADMIN'
+                  - 'SYS_ADMIN'
+                  - 'SYS_PTRACE'
+                  - 'SYS_RESOURCE'
+                  - 'SYS_TIME'
+        region:
+          container:
+            maas_cache:
+              appArmorProfile:
+                type: RuntimeDefault
+            maas_region:
+              appArmorProfile:
+                type: RuntimeDefault
+              readOnlyRootFilesystem: false
+              privileged: true
+              capabilities:
+                add:
+                  - 'SYS_ADMIN'
+                  - 'NET_ADMIN'
+                  - 'SYS_PTRACE'
+                  - 'SYS_TIME'
+                  - 'SYS_RESOURCE'
+                  - 'DAC_READ_SEARCH'
+        syslog:
+          container:
+            syslog:
+              appArmorProfile:
+                type: RuntimeDefault
+            logrotate:
+              appArmorProfile:
+                type: RuntimeDefault
+        ingress:
+          container:
+            maas_ingress:
+              appArmorProfile:
+                type: RuntimeDefault
+            maas_ingress_vip:
+              appArmorProfile:
+                type: RuntimeDefault
+            maas_ingress_vip_init:
+              appArmorProfile:
+                type: RuntimeDefault
+        bootstrap_admin_user:
+          container:
+            maas_bootstrap_admin_user:
+              appArmorProfile:
+                type: RuntimeDefault
+        db_init:
+          container:
+            maas_db_init:
+              appArmorProfile:
+                type: RuntimeDefault
+        db_sync:
+          container:
+            maas_db_sync:
+              appArmorProfile:
+                type: RuntimeDefault
+        export_api_key:
+          container:
+            exporter:
+              appArmorProfile:
+                type: RuntimeDefault
+        import_resources:
+          container:
+            region_import_resources:
+              appArmorProfile:
+                type: RuntimeDefault
+        api_test:
+          container:
+            maas_api_test:
+              appArmorProfile:
+                type: RuntimeDefault
+        kubernetes_entrypoint:
+          container:
+            kubernetes_entrypoint:
+              appArmorProfile:
+                type: RuntimeDefault
     labels:
       rack:
         node_selector_key: maas-rack
@@ -153,23 +248,107 @@ data:
     conf:
       cache:
         enabled: true
+      cloudconfig:
+        override: true
+        sections:
+          bootcmd:
+            - "sysctl net.ipv6.conf.all.disable_ipv6=1"
+            - "sysctl net.ipv6.conf.default.disable_ipv6=1"
+            - "sysctl net.ipv6.conf.lo.disable_ipv6=0"
       maas:
-        images:
-          default_os: 'ubuntu'
-          default_image: 'xenial'
-          default_kernel: 'hwe-16.04'
         credentials:
           secret:
             namespace: ucp
         proxy:
-          # Use MAAS Built-in proxy. This supports environments where
-          # the PXE interface can not reach the internet.
-          # Also improves efficiency due to caching via MAAS.
-          proxy_enabled: 'true'
+          proxy_enabled: false
+          peer_proxy_enabled: false
+        cgroups:
+          disable_cgroups_region: true
+          disable_cgroups_rack: true
         ntp:
           use_external_only: 'true'
           disable_ntpd_region: true
           disable_ntpd_rack: true
         dns:
           require_dnssec: 'no'
+        images:
+          default_os: 'ubuntu'
+          default_image: 'focal'
+          default_kernel: 'ga-20.04'
+        extra_settings:
+          # disable network discovery completely
+          network_discovery: disabled
+          active_discovery_interval: 0
+          # don't commission during enlistment (until drydock can handle this)
+          enlist_commissioning: false
+          # don't use v2 network config
+          # the default for bionic and focal is v2 with source routing, which results in
+          # policy routes that break kubelet probes, for example:
+          #     root@mtn57r07c001:~# ip rule
+          #     0:      from all lookup local
+          #     0:      from 172.30.0.128/25 to 172.30.0.128/25 lookup main
+          #     100:    from 172.30.0.128/25 lookup 1
+          #     10000:  from 32.67.143.144/29 to 10.97.0.0/16 lookup main
+          #     10100:  from 32.67.143.144/29 lookup 1500
+          #     32766:  from all lookup main
+          #     32767:  from all lookup default
+          #     root@mtn57r07c001:~# ip r s table 1
+          #     default via 172.30.0.129 dev eno4 proto static
+          #     root@mtn57r07c001:~#
+          # https://github.com/maas/maas/commit/442d47053e6f96bf5a94904f16968e9e5e5c965c
+          # https://github.com/maas/maas/commit/45f2632b8164f105eab69baa88ee401cf0f68b56
+          force_v1_network_yaml: true
+        # disable creation of root account with default password
+        system_user: null
+        system_passwd: null
+    manifests:
+      secret_ssh_key: true
+      ingress_region: false
+      configmap_ingress: false
+      maas_ingress: false
+    dependencies:
+      static:
+        rack_controller:
+          services:
+            - service: maas_region
+              endpoint: internal
+          jobs:
+            - maas-export-api-key
+        region_controller:
+          jobs:
+            - maas-db-sync
+          services:
+            - service: maas_db
+              endpoint: internal
+        db_init:
+          services:
+            - service: maas_db
+              endpoint: internal
+        db_sync:
+          jobs:
+            - maas-db-init
+        bootstrap_admin_user:
+          jobs:
+            - maas-db-sync
+          services:
+            - service: maas_region
+              endpoint: internal
+            - service: maas_db
+              endpoint: internal
+        import_resources:
+          jobs:
+            - maas-bootstrap-admin-user
+          services:
+            - service: maas_region
+              endpoint: internal
+            - service: maas_db
+              endpoint: internal
+        export_api_key:
+          jobs:
+            - maas-bootstrap-admin-user
+          services:
+            - service: maas_region
+              endpoint: internal
+            - service: maas_db
+              endpoint: internal
 ...

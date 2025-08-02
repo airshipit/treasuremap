@@ -29,6 +29,7 @@ set -xe
 : "${CLONE_PORTHOLE:=true}"
 : "${CLONE_KUBERNETES_ENTRYPOINT:=true}"
 : "${CLONE_MAAS:=true}"
+: "${CLONE_DRYDOCK:=true}"
 : "${CLONE_OSH:=true}"
 
 CLONE_ARMADA=$(echo "$CLONE_ARMADA" | tr '[:upper:]' '[:lower:]')
@@ -41,6 +42,7 @@ CLONE_PEGLEG=$(echo "$CLONE_PEGLEG" | tr '[:upper:]' '[:lower:]')
 CLONE_PORTHOLE=$(echo "$CLONE_PORTHOLE" | tr '[:upper:]' '[:lower:]')
 CLONE_KUBERNETES_ENTRYPOINT=$(echo "$CLONE_KUBERNETES_ENTRYPOINT" | tr '[:upper:]' '[:lower:]')
 CLONE_MAAS=$(echo "$CLONE_MAAS" | tr '[:upper:]' '[:lower:]')
+CLONE_DRYDOCK=$(echo "$CLONE_DRYDOCK" | tr '[:upper:]' '[:lower:]')
 CLONE_OSH=$(echo "$CLONE_OSH" | tr '[:upper:]' '[:lower:]')
 
 export CLONE_ARMADA
@@ -53,6 +55,7 @@ export CLONE_PEGLEG
 export CLONE_PORTHOLE
 export CLONE_KUBERNETES_ENTRYPOINT
 export CLONE_MAAS
+export CLONE_DRYDOCK
 export CLONE_OSH
 
 cd "${INSTALL_PATH}"
@@ -88,6 +91,9 @@ fi
 if [[ ${CLONE_MAAS} = true ]] ; then
     git clone "https://review.opendev.org/airship/maas.git"
 fi
+if [[ ${CLONE_DRYDOCK} = true ]] ; then
+    git clone "https://review.opendev.org/airship/drydock.git"
+fi
 
 # Clone dependencies
 if [[ ${CLONE_OSH} = true ]] ; then
@@ -96,3 +102,5 @@ if [[ ${CLONE_OSH} = true ]] ; then
     git checkout "${OSH_COMMIT}"
     popd
 fi
+
+ls -la
