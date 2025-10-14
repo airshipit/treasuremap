@@ -166,7 +166,15 @@ if [[ ${MAKE_MAAS_IMAGES} = true ]] ; then
     pushd treasuremap
 # ...existing code...
 
-if [[ "$STRIPPED_DISTRO" == "jammy" ]]; then
+if [[ "$STRIPPED_DISTRO" == "noble" ]]; then
+    echo "Running commands for Ubuntu Noble"
+    sed -i "s/default_image: .*/default_image: 'noble'/" global/software/charts/ucp/drydock/maas.yaml
+    sed -i "s/default_kernel: .*/default_kernel: 'ga-24.04'/" global/software/charts/ucp/drydock/maas.yaml
+    sed -i "s#quay.io/airshipit/maas-region-controller-[a-zA-Z0-9]\+:latest#${DOCKER_REGISTRY}/airshipit/maas-region-controller-${STRIPPED_DISTRO}:latest#g" ./global/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/maas-rack-controller-[a-zA-Z0-9]\+:latest#${DOCKER_REGISTRY}/airshipit/maas-rack-controller-${STRIPPED_DISTRO}:latest#g" ./global/software/config/versions.yaml
+    sed -i "s#quay.io/airshipit/sstream-cache-[a-zA-Z0-9]\+:latest#${DOCKER_REGISTRY}/airshipit/sstream-cache-${STRIPPED_DISTRO}:latest#g" ./global/software/config/versions.yaml
+    # Add Jammy-specific commands here
+elif [[ "$STRIPPED_DISTRO" == "jammy" ]]; then
     echo "Running commands for Ubuntu Jammy"
     sed -i "s/default_image: .*/default_image: 'jammy'/" global/software/charts/ucp/drydock/maas.yaml
     sed -i "s/default_kernel: .*/default_kernel: 'ga-22.04'/" global/software/charts/ucp/drydock/maas.yaml
