@@ -217,7 +217,9 @@
     post-run:
       - tools/gate/playbooks/osh-infra-collect-logs.yaml
     vars:
-      overlay_network_setup: false
+      osh_params:
+        container_distro_name: ubuntu
+        container_distro_version: jammy
       extra_volume:
         size: 80G
         type: Linux
@@ -229,7 +231,6 @@
       kubeadm:
         pod_network_cidr: "10.244.0.0/16"
         service_cidr: "10.96.0.0/16"
-      osh_plugin_repo: "{{ zuul.project.src_dir }}/../../openstack/openstack-helm-plugin"
       loopback_setup: true
       loopback_device: /dev/loop100
       loopback_image: "/opt/ext_vol/openstack-helm/ceph-loop.img"
@@ -242,9 +243,7 @@
       cilium_version: "1.17.4"
       flannel_setup: false
       flannel_version: v0.26.7
-      metallb_setup: false
       metallb_version: "0.14.9"
-      coredns_resolver_setup: true
       ingress_setup: true
       helm_version: "v3.18.1"
       crictl_version: "v1.33.0"
@@ -252,9 +251,14 @@
       openstack_provider_gateway_setup: true
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.18.4-linux-amd64.tar.gz
-      HTK_COMMIT: 80041dfbb5c22aa67dcd8dfa3332a943aa0d366c
-      OSH_COMMIT: fed675226f8ed5490445d6cea7d1e80cb87c9771
+      HTK_COMMIT: c1be7b83ff530b2aa39bb81e9ac35f8155266123
+      OSH_COMMIT: c1be7b83ff530b2aa39bb81e9ac35f8155266123
       USE_ARMADA_GO: false
+      overlay_network_setup: false
+      osh_plugin_repo: "{{ zuul.project.src_dir }}/../../openstack/openstack-helm-plugin"
+      osh_values_overrides_path: "{{ zuul.project.src_dir }}/../../openstack/openstack-helm/values_overrides"
+      metallb_setup: false
+      coredns_resolver_setup: true
       gate_scripts_relative_path: .
       gate_scripts:
         - ./tools/deployment/airskiff/developer/000-prepare-k8s.sh
