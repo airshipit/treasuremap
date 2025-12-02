@@ -251,8 +251,8 @@
       openstack_provider_gateway_setup: true
       site: airskiff
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.18.4-linux-amd64.tar.gz
-      HTK_COMMIT: c1be7b83ff530b2aa39bb81e9ac35f8155266123
-      OSH_COMMIT: c1be7b83ff530b2aa39bb81e9ac35f8155266123
+      HTK_COMMIT: eacb42741a89ec2586e8a51c88b80b053d047715
+      OSH_COMMIT: eacb42741a89ec2586e8a51c88b80b053d047715
       USE_ARMADA_GO: false
       overlay_network_setup: false
       osh_plugin_repo: "{{ zuul.project.src_dir }}/../../openstack/openstack-helm-plugin"
