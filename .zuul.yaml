@@ -245,7 +245,7 @@
       flannel_version: v0.26.7
       metallb_version: "0.14.9"
       ingress_setup: true
-      helm_version: "v3.18.1"
+      helm_version: "3.18.1"
       crictl_version: "v1.33.0"
       run_helm_tests: "no"
       openstack_provider_gateway_setup: true
