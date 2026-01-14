@@ -533,6 +533,23 @@
       git_mirror_repository: airshipit/treasuremap
     secrets:
       - name: git_mirror_credentials
-        secret: airshipit-github-secret-2023-03-23
+        secret: treasuremap-airshipit-github-ed25519-secret-2026-01-13
         pass-to-parent: true
 
+- secret:
+    name: treasuremap-airshipit-github-ed25519-secret-2026-01-13
+    data:
+      user: git
+      host: github.com
+      host_key: github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
+      ssh_key: !encrypted/pkcs1-oaep
+        - ZoCBP21kF3a/+rDo0qBNLsggg+G5ZRfX1m7QkuAdDkgnaxLMvTfYlw0nTkcrshXDuJEoi
+          kjHAiWc3gKAkQglEu1yNQFSdR0JECeMVvYpghYqPFNcY3Da2y2tbvhZZQbwU3QYnvk/CI
+          t8OsYDSzCxusenFFqixta7iVwVo0M20TcCHccN0gNXkYvpzAXbmNJdVLAQ2oniDbI3Qpd
+          VANrd1/fJCi//eNmADKg47Uv8xbV6MuLQupWwExUg/LZJ8bemttjHZjXn2ICCpUY1WUwz
+          4VyRCiLjnaMKEvkspw5uRV3xiknp2a/SRqD7kuUdyThBRU9zAwdXCIZAyihOrm1xAggOH
+          y3sgg7uTzLoFHJ0w7fLv5EOZ+1ikNPxvMelWM/UoH4D7Zm+HnvVbmoKRLngu3o9QajBeK
+          gOArB7kqQKR4eXO3KDKRGubJ5tUnZhhXU22j5BIqZ3t0oxM/R68SUutYOqSGvinhiBbgY
+          JXOooat6+XmI7HagH3tG+WRXjUYlIdViESFD9H+whgszuzHlHEfsgiT/voznneLgTn64W
+          pOoSD96eIzSrHDjjEeWkEZz+0oTS8CPSUghGKxspaxW4iEn3U2lb6aDE21/05N7MEBeyq
+          sM7ToI4KnrWGiRrbWWfwg0tuM5zoF+2zIQsLaRXX253U8aibpvNSDchLDWgkzc=
