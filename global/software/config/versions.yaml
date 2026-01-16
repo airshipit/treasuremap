@@ -680,9 +680,9 @@ data:
         image_repo_sync: quay.io/airshipit/docker:27.5.0
         tiller: ghcr.io/helm/tiller:v2.17.0
       armada-operator:
-        api: quay.io/airshipit/armada-go:latest-ubuntu_jammy
-        go: quay.io/airshipit/armada-go:latest-ubuntu_jammy
-        operator: quay.io/airshipit/armada-operator:latest-ubuntu_jammy
+        api: quay.io/airshipit/armada-go:latest-ubuntu_noble
+        go: quay.io/airshipit/armada-go:latest-ubuntu_noble
+        operator: quay.io/airshipit/armada-operator:latest-ubuntu_noble
         dep_check: quay.io/airshipit/kubernetes-entrypoint:latest-ubuntu_jammy
         helm: quay.io/airshipit/helm:3.16.4-alpine
         ks_endpoints: quay.io/airshipit/heat:2024.1-ubuntu_jammy
