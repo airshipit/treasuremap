@@ -13,6 +13,23 @@
 ---
 - hosts: primary
   tasks:
+    - name: Debug all variables
+      debug:
+        msg: |
+          === treasuremap_ref variable ===
+          treasuremap_ref: {{ treasuremap_ref | default('UNDEFINED') }}
+          treasuremap_ref is defined: {{ treasuremap_ref is defined }}
+          treasuremap_ref type: {{ treasuremap_ref | type_debug if treasuremap_ref is defined else 'N/A' }}
+          treasuremap_ref length: {{ treasuremap_ref|length if treasuremap_ref is defined else 'N/A' }}
+          treasuremap_ref != v1.9: {{ (treasuremap_ref != 'v1.9') if treasuremap_ref is defined else 'N/A' }}
+
+          === zuul variables ===
+          zuul.project.src_dir: {{ zuul.project.src_dir }}
+          zuul_treasuremap_relative_path: {{ zuul_treasuremap_relative_path | default('UNDEFINED') }}
+
+          === All hostvars ===
+          {{ hostvars[inventory_hostname] | to_nice_json }}
+
     - name: Checkout treasuremap ref
       git:
         repo: https://review.opendev.org/airship/treasuremap

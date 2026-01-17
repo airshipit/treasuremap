@@ -25,12 +25,20 @@
     - ensure-tox
 
   tasks:
-    - name: Install Packaging python module for tools/airship
-      block:
-        - pip:
-            name: packaging
-            version: 23.1
-            executable: pip3
+    - name: Install Packaging python module for tools/airship (Noble and up)
+      pip:
+        name: packaging
+        version: 23.1
+        executable: pip3
+        break-system-packages: True
       become: True
+      when: ansible_distribution_release != "jammy"
 
+    - name: Install Packaging python module for tools/airship (Jammy)
+      pip:
+        name: packaging
+        version: 23.1
+        executable: pip3
+      become: True
+      when: ansible_distribution_release == "jammy"
 ...
