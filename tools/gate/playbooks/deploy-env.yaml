@@ -30,7 +30,7 @@
         name: packaging
         version: 23.1
         executable: pip3
-        break-system-packages: True
+        extra_args: --break-system-packages
       become: True
       when: ansible_distribution_release != "jammy"
 

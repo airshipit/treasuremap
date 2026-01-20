@@ -47,17 +47,11 @@
             files:
               - ^doc/.*$
 
-# - nodeset:
-#     name: treasuremap-single-node
-#     nodes:
-#       - name: ubuntu-bionic
-#         label: ubuntu-bionic
-
 - nodeset:
-    name: treasuremap-single-node-ubuntu-focal
+    name: treasuremap-single-node-ubuntu-noble
     nodes:
-      - name: ubuntu-focal
-        label: ubuntu-focal
+      - name: ubuntu-noble
+        label: ubuntu-noble
 
 - nodeset:
     name: treasuremap-single-node-ubuntu-jammy
@@ -280,8 +274,6 @@
 
 - job:
     name: treasuremap-airskiff-infra-deploy-base
-    # Pinned for now due to Ansible 11 stopped verbosive output.
-    ansible-version: 9
     abstract: true
     roles:
       - zuul: openstack/openstack-helm
@@ -310,7 +302,7 @@
     vars:
       osh_params:
         container_distro_name: ubuntu
-        container_distro_version: jammy
+        container_distro_version: noble
       extra_volume:
         size: 80G
         type: Linux
@@ -372,7 +364,7 @@
 - job:
     name: treasuremap-airskiff-multinode-full-site
     parent: treasuremap-airskiff-infra-deploy-base
-    nodeset: treasuremap-airskiff-5nodes-ubuntu_jammy
+    nodeset: treasuremap-airskiff-5nodes-ubuntu_noble
     description: |
       Deploy Openstack using Airskiff and latest Treasuremap changes.
       Airskiff is using latest Airship v1.x based on Airflow-3.1.5
@@ -383,7 +375,7 @@
 - job:
     name: treasuremap-airskiff-1node-reduced-site
     parent: treasuremap-airskiff-infra-deploy-base
-    nodeset: treasuremap-airskiff-1node-ubuntu_jammy
+    nodeset: treasuremap-airskiff-1node-ubuntu_noble
     description: |
       Deploy Openstack using Airskiff and latest Treasuremap changes.
       Airskiff is using latest Airship v1.x based on Airflow-3.1.5
@@ -394,7 +386,7 @@
 - job:
     name: treasuremap-airskiff-1node-reduced-site-armada-operator
     parent: treasuremap-airskiff-infra-deploy-base
-    nodeset: treasuremap-airskiff-1node-ubuntu_jammy
+    nodeset: treasuremap-airskiff-1node-ubuntu_noble
     description: |
       Deploy Openstack using Airskiff and latest Treasuremap changes.
       Airskiff is using latest Airship v1.x based on Airflow-3.1.5
@@ -404,11 +396,8 @@
 
 - job:
     name: treasuremap-airskiff-deploy-maas-drydock-base
-    # Pinned for now due to Ansible 11 stopped verbosive output.
-    ansible-version: 9
     parent: treasuremap-airskiff-infra-deploy-base
     abstract: true
-    # nodeset: treasuremap-airskiff-1node-32GB-ubuntu_jammy
     description: |
       Deploy Openstack using Airskiff and latest Treasuremap changes.
       Airskiff is using latest Airship v1.x based on Airflow-3.1.5
@@ -439,11 +428,9 @@
 
 - job:
     name: treasuremap-site-lint
-    # Pinned for now due to Ansible 11 stopped verbosive output.
-    ansible-version: 9
     description:
       Lint a site using Pegleg. Default site is seaworthy.
-    nodeset: treasuremap-single-node-ubuntu-jammy
+    nodeset: treasuremap-single-node-ubuntu-noble
     timeout: 900
     pre-run:
       - tools/gate/playbooks/initial-setup.yaml
