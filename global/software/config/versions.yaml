@@ -746,17 +746,17 @@ data:
         image_repo_sync: quay.io/airshipit/docker:27.5.0
       maas:
         db_init: quay.io/airshipit/postgres:17.4
-        db_sync: quay.io/airshipit/maas-region-controller-focal:latest
-        maas_rack: quay.io/airshipit/maas-rack-controller-focal:latest
-        maas_region: quay.io/airshipit/maas-region-controller-focal:latest
-        bootstrap: quay.io/airshipit/maas-region-controller-focal:latest
-        export_api_key: quay.io/airshipit/maas-region-controller-focal:latest
+        db_sync: quay.io/airshipit/maas-region-controller-noble:latest
+        maas_rack: quay.io/airshipit/maas-rack-controller-noble:latest
+        maas_region: quay.io/airshipit/maas-region-controller-noble:latest
+        bootstrap: quay.io/airshipit/maas-region-controller-noble:latest
+        export_api_key: quay.io/airshipit/maas-region-controller-noble:latest
         maas_cache: quay.io/airshipit/sstream-cache-focal:latest
         dep_check: quay.io/airshipit/kubernetes-entrypoint:latest-ubuntu_noble
         ingress: registry.k8s.io/ingress-nginx/controller:v1.11.2
         ingress_vip: docker.io/busybox:latest
         error_pages: gcr.io/google_containers/ingress-gce-404-server-with-metrics-amd64:v1.6.0
-        maas_syslog: quay.io/airshipit/maas-region-controller-focal:latest
+        maas_syslog: quay.io/airshipit/maas-region-controller-noble:latest
       mariadb:
         mariadb: quay.io/airshipit/mariadb:latest-ubuntu_jammy
         prometheus_create_mysql_user: quay.io/airshipit/mariadb:10.6.20-focal

@@ -68,6 +68,8 @@
         MAKE_KUBERTENES_ENTRYPOINT_IMAGES: "{{ MAKE_KUBERTENES_ENTRYPOINT_IMAGES | default('false') }}"
         MAKE_PEGLEG_IMAGES: "{{ MAKE_PEGLEG_IMAGES | default('false') }}"
         USE_ARMADA_GO: "{{ USE_ARMADA_GO | default('false') }}"
+        ENABLE_SLEEP: "{{ ENABLE_SLEEP | default('false') }}"
+        ENABLE_MAAS_UPGRADE: "{{ ENABLE_MAAS_UPGRADE | default('false') }}"
       # NOTE(aostapenko) using bigger than async_status timeout due to async_status issue with
       # not recognizing timed out jobs: https://github.com/ansible/ansible/issues/25637
       async: 3600

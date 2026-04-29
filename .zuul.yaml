@@ -28,8 +28,9 @@
         # update OSH charts vaoues in manifests and add more
         # charts to full-site manifests
         # - treasuremap-airskiff-multinode-full-site
-        - treasuremap-airskiff-1node-reduced-site
+        # - treasuremap-airskiff-1node-reduced-site
         - treasuremap-airskiff-1node-reduced-site-armada-operator
+        # - maas-airskiff-deployment-noble-kubeadm-maas-upgrade
     gate:
       jobs:
         - treasuremap-seaworthy-site-lint
@@ -402,6 +403,8 @@
       Deploy Openstack using Airskiff and latest Treasuremap changes.
       Airskiff is using latest Airship v1.x based on Airflow-3.1.5
     vars:
+      ENABLE_SLEEP: false
+      ENABLE_MAAS_UPGRADE: false
       USE_ARMADA_GO: true
       MAKE_MAAS_IMAGES: true
       DISTRO: ubuntu_noble
@@ -423,7 +426,31 @@
         - ./tools/deployment/airskiff/common/os-env.sh
         - ./tools/gate/wait-for-shipyard.sh
         - ./tools/deployment/airskiff/common/get-airflow-worker-logs.sh
-        # - ./tools/deployment/airskiff/common/sleep.sh
+        - ./tools/deployment/airskiff/developer/200-upgrade-maas.sh
+        - ./tools/deployment/airskiff/developer/000-sleep.sh
+
+
+# - job:
+#     name: maas-airskiff-deployment-noble-kubeadm-maas-upgrade
+#     # Pinned for now due to Ansible 11 stopped verbosive output.
+#     ansible-version: 9
+#     description: |
+#       Deploy maas using Airskiff and submitted Shipyard changes.
+#     parent: treasuremap-airskiff-deploy-maas-drydock-base
+#     nodeset: treasuremap-airskiff-1node-32GB-ubuntu_jammy
+#     required-projects:
+#       - name: airship/treasuremap
+#         override-checkout: v1.9
+#     roles:
+#       - zuul: airship/treasuremap
+#     vars:
+#       treasuremap_ref: v1.9
+#       ENABLE_SLEEP: false
+#       ENABLE_MAAS_UPGRADE: true
+#       CLONE_MAAS: true
+#       MAKE_MAAS_IMAGES: false
+#       DISTRO: ubuntu_noble
+#       DOCKER_REGISTRY: localhost:5000
 
 
 - job:
