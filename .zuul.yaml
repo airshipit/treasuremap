@@ -301,48 +301,28 @@
     post-run:
       - tools/gate/playbooks/osh-infra-collect-logs.yaml
     vars:
-      osh_params:
-        container_distro_name: ubuntu
-        container_distro_version: noble
-      extra_volume:
-        size: 80G
-        type: Linux
-        mount_point: /opt/ext_vol
       docker:
         root_path: "/opt/ext_vol/docker"
       containerd:
         root_path: "/opt/ext_vol/containerd"
-      kubeadm:
-        pod_network_cidr: "10.244.0.0/16"
-        service_cidr: "10.96.0.0/16"
       loopback_setup: true
       loopback_device: /dev/loop100
       loopback_image: "/opt/ext_vol/openstack-helm/ceph-loop.img"
       ceph_osd_data_device: /dev/loop100
-      kube_version_repo: "v1.32"
-      kube_version: "1.32.5-1.1"
-      calico_setup: true
-      calico_version: "v3.30.1"
-      cilium_setup: false
-      cilium_version: "1.17.4"
-      flannel_setup: false
-      flannel_version: v0.26.7
-      metallb_version: "0.14.9"
-      ingress_setup: true
-      helm_version: "3.18.1"
-      crictl_version: "v1.33.0"
-      run_helm_tests: "no"
-      openstack_provider_gateway_setup: true
+      floating_network_setup: false
       site: airskiff
-      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.18.4-linux-amd64.tar.gz
-      HTK_COMMIT: eacb42741a89ec2586e8a51c88b80b053d047715
-      OSH_COMMIT: eacb42741a89ec2586e8a51c88b80b053d047715
+      helm_version: "4.1.1"
+      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v4.1.1-linux-amd64.tar.gz
+      HTK_COMMIT: d89bc42b57f8c2898520181550b5019dcf31c06f
+      OSH_COMMIT: d89bc42b57f8c2898520181550b5019dcf31c06f
       USE_ARMADA_GO: false
+      ENABLE_SLEEP: false
       overlay_network_setup: false
       osh_plugin_repo: "{{ zuul.project.src_dir }}/../../openstack/openstack-helm-plugin"
       osh_values_overrides_path: "{{ zuul.project.src_dir }}/../../openstack/openstack-helm/values_overrides"
       metallb_setup: false
       coredns_resolver_setup: true
+      openstack_provider_gateway_setup: false
       gate_scripts_relative_path: .
       gate_scripts:
         - ./tools/deployment/airskiff/developer/000-prepare-k8s.sh
@@ -360,7 +340,7 @@
         - ./tools/deployment/airskiff/common/os-env.sh
         - ./tools/gate/wait-for-shipyard.sh
         - ./tools/deployment/airskiff/common/get-airflow-worker-logs.sh
-        # - ./tools/deployment/airskiff/common/sleep.sh
+        - ./tools/deployment/airskiff/common/sleep.sh
 
 - job:
     name: treasuremap-airskiff-multinode-full-site
