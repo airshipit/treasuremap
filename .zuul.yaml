@@ -28,7 +28,7 @@
         # update OSH charts vaoues in manifests and add more
         # charts to full-site manifests
         # - treasuremap-airskiff-multinode-full-site
-        # - treasuremap-airskiff-1node-reduced-site
+        - treasuremap-airskiff-1node-reduced-site
         - treasuremap-airskiff-1node-reduced-site-armada-operator
         # - maas-airskiff-deployment-noble-kubeadm-maas-upgrade
     gate:
@@ -311,18 +311,20 @@
       ceph_osd_data_device: /dev/loop100
       floating_network_setup: false
       site: airskiff
-      helm_version: "4.1.1"
-      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v4.1.1-linux-amd64.tar.gz
+      helm_version: "3.20.0"
+      HELM_ARTIFACT_URL: https://get.helm.sh/helm-v3.20.0-linux-amd64.tar.gz
       HTK_COMMIT: d89bc42b57f8c2898520181550b5019dcf31c06f
       OSH_COMMIT: d89bc42b57f8c2898520181550b5019dcf31c06f
       USE_ARMADA_GO: false
       ENABLE_SLEEP: false
       overlay_network_setup: false
+      metallb_setup: true
+      gatewayapi_setup: true
+      coredns_resolver_setup: true
+      dnsmasq_extra_args: "--server=/minikube.internal/10.96.0.10 --server=/cluster.local/10.96.0.10 --server=/svc.cluster.local/10.96.0.10"
+      openstack_provider_gateway_setup: false
       osh_plugin_repo: "{{ zuul.project.src_dir }}/../../openstack/openstack-helm-plugin"
       osh_values_overrides_path: "{{ zuul.project.src_dir }}/../../openstack/openstack-helm/values_overrides"
-      metallb_setup: false
-      coredns_resolver_setup: true
-      openstack_provider_gateway_setup: false
       gate_scripts_relative_path: .
       gate_scripts:
         - ./tools/deployment/airskiff/developer/000-prepare-k8s.sh
@@ -335,12 +337,12 @@
         - ./tools/deployment/airskiff/developer/025-start-artifactory.sh
         - ./tools/deployment/airskiff/developer/026-reduce-site.sh
         - ./tools/deployment/airskiff/developer/027-enable-armada-operator.sh
+        - ./tools/deployment/airskiff/common/sleep.sh
         - ./tools/deployment/airskiff/developer/030-armada-bootstrap.sh
         - ./tools/deployment/airskiff/developer/100-deploy-osh.sh
         - ./tools/deployment/airskiff/common/os-env.sh
         - ./tools/gate/wait-for-shipyard.sh
         - ./tools/deployment/airskiff/common/get-airflow-worker-logs.sh
-        - ./tools/deployment/airskiff/common/sleep.sh
 
 - job:
     name: treasuremap-airskiff-multinode-full-site

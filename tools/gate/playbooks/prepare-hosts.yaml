@@ -14,4 +14,21 @@
 - hosts: all
   roles:
     - start-zuul-console
+    - role: add-authorized-keys
+      public_keys:
+        - public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDA7eM8WFJrqQmki8rR0O3QBHyl8xq42jb1RduwuRwjWoGYJI5cX7Fx+7VR4A9ITCoiqxKS8DMfgKbt5jKC6SmvMALULZsnYlthB34KywurgxsW6fgp68DHWQ7J4CCBhoIpl0W3JW7s6b0vHLhab59r0E+AYemBVuWUqbFEy8nDAHcQv1S/2o1udhmljIN7c2ogO4KAJ7Lge0BoIP9ps4u6AVwyQZixp4anU9DHGNA/UQj4M5UyuALj5buEAuATBe9Vqj4sOvZjObPJAGPUrNRrGEWAFk+lSZHRzKXo0eeWtPqoh5UN9UDb5Pocg1krncMIZwjHKovlD1z/O1y91aY5LM1wxm/7aaIiX8eCihyVZaOuDCLF7WDT2SMs7ABcotX2MDtVQTrNNV3MmMAScFNDflzPKszd7cdjLl6PBq8bvPxmCkLmnitPTGOoh9d8i+JlbINvgx1pguYrpeciIyreCO1rjTW3MgB0tyoMEa31V+7HrauBMeNnE68YTqLTIB0= sm@sm
+  tasks:
+    - name: Install k9s Kubernetes CLI tool
+      block:
+        - name: Download k9s package
+          get_url:
+            url: https://github.com/derailed/k9s/releases/download/v0.50.9/k9s_linux_amd64.deb
+            dest: /tmp/k9s_linux_amd64.deb
+            mode: '0644'
+        - name: Install k9s package
+          become: yes
+          apt:
+            deb: /tmp/k9s_linux_amd64.deb
+            state: present
+
 ...
