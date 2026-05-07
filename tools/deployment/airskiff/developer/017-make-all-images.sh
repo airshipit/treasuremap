@@ -68,7 +68,7 @@ cd "${INSTALL_PATH}"
 # Start docker registry
 docker rm registry --force || true
 docker run -d -p 5000:5000 --restart=always --name registry quay.io/airshipit/registry:2
-curl -Ik "http://${DOCKER_REGISTRY}"
+curl --retry 5 --retry-all-errors -Ik "http://${DOCKER_REGISTRY}"
 
 # Make charts in Airship and OSH-INFRA projects
 if [[ ${MAKE_ARMADA_IMAGES} = true ]] ; then
