@@ -42,7 +42,7 @@ clouds:
       project_name: 'admin'
       project_domain_name: 'default'
       user_domain_name: 'default'
-      auth_url: 'http://keystone-api.openstack.svc.cluster.local:5000/v3'
+      auth_url: 'http://keystone.openstack-helm.org/v3'
   openstack_helm:
     region_name: RegionOne
     identity_api_version: 3
@@ -52,7 +52,7 @@ clouds:
       project_name: 'admin'
       project_domain_name: 'default'
       user_domain_name: 'default'
-      auth_url: 'http://keystone.openstack.svc.cluster.local/v3'
+      auth_url: 'http://keystone.openstack-helm.org/v3'
 EOF
 
 

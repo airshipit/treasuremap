@@ -66,6 +66,8 @@ data:
       release_group: airship-ucp-rabbitmq
     resources:
       - type: statefulset
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:

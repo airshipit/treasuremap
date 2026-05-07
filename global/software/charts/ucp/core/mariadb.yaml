@@ -57,6 +57,8 @@ data:
     timeout: 300
     labels:
       release_group: airship-ucp-mariadb
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:

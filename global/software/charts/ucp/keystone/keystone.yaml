@@ -125,6 +125,8 @@ data:
     timeout: 600
     labels:
       release_group: airship-ucp-keystone
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:

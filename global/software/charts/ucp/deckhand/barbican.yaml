@@ -141,6 +141,8 @@ data:
     timeout: 300
     labels:
       release_group: airship-ucp-barbican
+    native:
+      enabled: false
   install:
     no_hooks: false
   upgrade:
