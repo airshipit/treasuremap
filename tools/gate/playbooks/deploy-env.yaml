@@ -24,10 +24,61 @@
     - ensure-tox
 
   tasks:
+    - name: Create containerd certs.d directory for DOCKER_REGISTRY
+      file:
+        state: directory
+        path: "/etc/containerd/certs.d/{{ DOCKER_REGISTRY }}"
+        mode: "0755"
+      when: DOCKER_REGISTRY is defined
+
+    - name: Configure containerd to allow DOCKER_REGISTRY as insecure registry
+      copy:
+        dest: "/etc/containerd/certs.d/{{ DOCKER_REGISTRY }}/hosts.toml"
+        content: |
+          server = "http://{{ DOCKER_REGISTRY }}"
+
+          [host."http://{{ DOCKER_REGISTRY }}"]
+          capabilities = ["pull", "resolve", "push"]
+          skip_verify = true
+      when: DOCKER_REGISTRY is defined
+      register: containerd_registry_config
+
+    - name: Restart containerd after registry config change
+      service:
+        name: containerd
+        state: restarted
+      when: containerd_registry_config is changed
+
+    - name: Read current Docker daemon.json
+      slurp:
+        src: /etc/docker/daemon.json
+      register: daemon_json_raw
+      when: DOCKER_REGISTRY is defined
+
+    - name: Add DOCKER_REGISTRY to Docker insecure-registries
+      vars:
+        daemon_json: "{{ daemon_json_raw.content | b64decode | from_json }}"
+        current_insecure: "{{ daemon_json.get('insecure-registries', []) }}"
+        updated_daemon: "{{ daemon_json | combine({'insecure-registries': (current_insecure + [DOCKER_REGISTRY]) | unique}) }}"
+      copy:
+        dest: /etc/docker/daemon.json
+        content: "{{ updated_daemon | to_nice_json }}\n"
+      when:
+        - DOCKER_REGISTRY is defined
+        - DOCKER_REGISTRY not in (daemon_json_raw.content | b64decode | from_json).get('insecure-registries', [])
+      register: docker_daemon_config
+
+    - name: Restart docker after daemon.json update
+      service:
+        name: docker
+        state: restarted
+      when:
+        - docker_daemon_config is defined
+        - docker_daemon_config is changed
+
     - name: Install Packaging python module for tools/airship (Noble and up)
       pip:
         name: packaging
-        version: 23.1
         executable: pip3
         extra_args: --break-system-packages
       become: True
@@ -36,7 +87,6 @@
     - name: Install Packaging python module for tools/airship (Jammy)
       pip:
         name: packaging
-        version: 23.1
         executable: pip3
       become: True
       when: ansible_distribution_release == "jammy"

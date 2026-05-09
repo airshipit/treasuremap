@@ -325,6 +325,7 @@
       gatewayapi_setup: true
       coredns_resolver_setup: true
       dnsmasq_extra_args: "--server=/minikube.internal/10.96.0.10 --server=/cluster.local/10.96.0.10 --server=/svc.cluster.local/10.96.0.10"
+      DOCKER_REGISTRY: "control-plane.minikube.internal:5000"
       openstack_provider_gateway_setup: false
       osh_plugin_repo: "{{ zuul.project.src_dir }}/../../openstack/openstack-helm-plugin"
       osh_values_overrides_path: "{{ zuul.project.src_dir }}/../../openstack/openstack-helm/values_overrides"
