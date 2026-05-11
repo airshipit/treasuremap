@@ -17,6 +17,34 @@
 set -e
 set -o pipefail
 
+: "${NAMESPACE:=ucp}"
+: "${AIRFLOW_UI_EXTERNAL_PORT:=5590}"
+: "${AIRFLOW_UI_SVC_PORT:=80}"
+
+# Re-establish port-forward only if not already responding.
+# A previous gate step (050) may have started it and it's still alive —
+# in that case pkill/fuser can't see it (different Zuul process group),
+# so we check first and only restart if the forward is actually dead.
+if ! curl -so /dev/null --max-time 3 "http://localhost:${AIRFLOW_UI_EXTERNAL_PORT}/"; then
+  echo "Airflow port-forward not responding, restarting..."
+  # ss sees all processes by port regardless of process group
+  PF_PID=$(ss -tlnp "sport = :${AIRFLOW_UI_EXTERNAL_PORT}" | grep -oP 'pid=\K[0-9]+' | head -1 || true)
+  [[ -n "${PF_PID}" ]] && kill "${PF_PID}" 2>/dev/null || true
+  pkill -f "kubectl port-forward.*svc/airflow-int" 2>/dev/null || true
+  fuser -k "${AIRFLOW_UI_EXTERNAL_PORT}/tcp" 2>/dev/null || true
+  sleep 2
+  kubectl port-forward -n "${NAMESPACE}" svc/airflow-int "${AIRFLOW_UI_EXTERNAL_PORT}:${AIRFLOW_UI_SVC_PORT}" --address=0.0.0.0 </dev/null &
+  disown $!
+fi
+
+until curl -so /dev/null "http://localhost:${AIRFLOW_UI_EXTERNAL_PORT}/"; do
+  sleep 2
+done
+
+curl -siv "http://localhost:${AIRFLOW_UI_EXTERNAL_PORT}/" | head -10
+
+
+
 REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/../../ >/dev/null 2>&1 && pwd )"
 : "${SHIPYARD:=${REPO_DIR}/tools/airship shipyard}"
 

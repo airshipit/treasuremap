@@ -1,0 +1,148 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/vars.json
+# Copyright 2018 AT&T Intellectual Property.  All other rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Example vars.yaml for the common docker-image-build.yaml playbook.
+#
+# Copy this file to tools/gate/playbooks/vars.yaml in your project and
+# uncomment / adjust the values that differ from the defaults shown here.
+#
+# Variables NOT defined here (supplied by Zuul as job vars):
+#   distro      - target distro string, e.g. 'ubuntu_jammy'
+#   publish     - boolean; true on tag/release pipelines
+#   tags        - list of tag descriptors passed to image_tags.py
+
+# ── Docker daemon configuration (used by the ensure-docker role) ──────────────
+
+docker_daemon:
+  group: zuul
+  registry-mirrors:
+    - "http://{{ zuul_site_mirror_fqdn }}:8082/"
+  storage-driver: overlay2
+
+# ── Required: quay.io registry credentials ───────────────────────────────────
+#
+# Alias the Zuul secret for your project to the generic name the playbook uses.
+# The secret itself is injected by Zuul as a host variable.
+#
+# quay_creds: "{{ airship_myproject_quay_creds_2026 }}"
+
+# ── Image build configuration ─────────────────────────────────────────────────
+
+# make target used to build images (default: images)
+# make_target: images
+
+# subdirectory under zuul.project.src_dir where make is invoked (default: repo root)
+# make_subdir: ""
+
+# pass DISTRO=<distro> to make (default: true)
+# set to false when the project uses a different variable (e.g. porthole uses DISTRO_SUFFIX)
+# use_distro_param: true
+
+# additional make params merged into every make invocation (default: none)
+# extra_make_params: {}
+#
+# Examples:
+#   maas — pass DISTRO_ALIAS alongside DISTRO:
+#     extra_make_params:
+#       DISTRO_ALIAS: "{{ distro }}"
+#
+#   pegleg — pass proxy settings and a pinned base image:
+#     extra_make_params:
+#       BASE_IMAGE: "{{ base_image }}"
+#       PROXY: "{{ proxy }}"
+#       NO_PROXY: "{{ no_proxy }}"
+#       USE_PROXY: "{{ use_proxy | lower }}"
+#
+#   porthole — replace DISTRO with its own variables and use a different target:
+#     use_distro_param: false
+#     make_target: build
+#     make_subdir: "{{ args.chdir }}"
+#     extra_make_params:
+#       DISTRO_SUFFIX: "{{ distro_suffix }}"
+#       IMAGE_NAME: "{{ image_name }}"
+
+# run a plain 'make <target>' before the tagged build loop to capture full
+# verbose output for debugging (default: false)
+# run_verbose_build: false
+
+# make target used for the verbose debug pass (default: same as make_target)
+# armada and shipyard use run_images here
+# make_verbose_target: images
+
+# ── Ansible roles configuration ───────────────────────────────────────────────
+
+# run the bindep role to install system dependencies (default: true)
+# porthole sets false because it has no bindep.txt
+# use_bindep: true
+
+# run the clear-firewall role before other setup (default: false)
+# pegleg sets true
+# use_clear_firewall: false
+
+# ── Python / pip configuration ────────────────────────────────────────────────
+
+# pass break_system_packages: true to all pip install calls (default: true)
+# maas and porthole set false (older system Python)
+# pip_break_system_packages: true
+
+# pin the docker Python package version (default: install latest)
+# armada-go, armada-operator, porthole pin to 4.4.4
+# docker_pip_version: "4.4.4"
+
+# install the tox Python package (default: true)
+# porthole sets false
+# install_tox: true
+
+# pin the tox Python package version (default: install latest)
+# armada-go, armada-operator pin to 3.28.0
+# tox_pip_version: "3.28.0"
+
+# install the requests Python package before docker_login (default: false)
+# deckhand and drydock set true
+# install_requests: false
+
+# remove /etc/pip.conf before installing pip modules (default: false)
+# pegleg sets true to clear a mirror redirect
+# remove_pip_conf: false
+
+# pegleg-specific: map distro names to base image tags used to set base_image fact
+# base_images:
+#   ubuntu_noble:  "ubuntu:24.04"
+#   ubuntu_jammy:  "ubuntu:22.04"
+#   ubuntu_focal:  "ubuntu:20.04"
+#   ubuntu_bionic: "ubuntu:18.04"
+
+# ── Trivy CVE scan configuration ─────────────────────────────────────────────
+
+# scan each built image with Trivy before publishing (default: true)
+# run_trivy_scan: true
+
+# exit with code 1 when Trivy finds vulnerabilities, failing the job (default: true)
+# set to false to run Trivy in report-only mode without blocking the build
+# trivy_fail_on_vulns: true
+
+# comma-separated severity levels to report and gate on (default: CRITICAL,HIGH,MEDIUM)
+# e.g. set to 'CRITICAL' to block only on critical issues
+# trivy_severity: CRITICAL,HIGH,MEDIUM
+
+# ── Docker registry configuration (publish pipeline) ─────────────────────────
+
+# docker_registry: quay.io
+# image_prefix: airshipit
+# docker_registry_login_url: "https://quay.io/api/v1/"
+
+# api_version passed to docker_login (default: omit)
+# most projects use "1.45"; armada-go, armada-operator, porthole omit it
+# docker_login_api_version: "1.45"

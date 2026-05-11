@@ -1,0 +1,71 @@
+# Copyright 2019, AT&T Intellectual Property
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Common Helm chart build playbook shared across all Airship projects.
+#
+# ── Optional variables (with defaults) ────────────────────────────────────────
+#
+#   hosts_target        Ansible hosts pattern (default: 'primary')
+#                       IMPORTANT: must be set as a Zuul job var, not in
+#                       vars.yaml — it is evaluated before include_vars runs.
+#
+#   use_bindep          run the bindep role before building (default: false)
+#                       drydock sets true
+#
+#   use_docker_roles    run ensure-docker, ensure-python, and ensure-pip roles
+#                       (default: false); drydock sets true
+#
+#   run_helm_lint       run 'make helm_lint' before 'make charts'
+#                       (default: false); drydock sets true
+#
+#   HTK_COMMIT          helm-toolkit commit to pin (default: '')
+#                       passed as a Zuul job variable
+
+- hosts: "{{ hosts_target | default('primary') }}"
+
+  tasks:
+    - name: Run bindep role
+      include_role:
+        name: bindep
+      when: use_bindep | default(false) | bool
+
+    - name: Run ensure-docker role
+      include_role:
+        name: ensure-docker
+      when: use_docker_roles | default(false) | bool
+
+    - name: Run ensure-python role
+      include_role:
+        name: ensure-python
+      when: use_docker_roles | default(false) | bool
+
+    - name: Run ensure-pip role
+      include_role:
+        name: ensure-pip
+      when: use_docker_roles | default(false) | bool
+
+    - name: Execute the make target for Helm chart linting
+      make:
+        chdir: "{{ zuul.project.src_dir }}"
+        target: helm_lint
+      when: run_helm_lint | default(false) | bool
+
+    - name: Execute the make target to package Helm charts
+      make:
+        chdir: "{{ zuul.project.src_dir }}"
+        target: charts
+        params:
+          HTK_COMMIT: "{{ HTK_COMMIT | default('') }}"
+      register: result
+      failed_when: result.failed

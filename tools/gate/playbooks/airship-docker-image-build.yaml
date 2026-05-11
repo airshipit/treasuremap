@@ -1,0 +1,320 @@
+# Copyright 2018 AT&T Intellectual Property.  All other rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Common docker image build playbook shared across all Airship projects.
+#
+# Each project configures behavior via its own tools/gate/playbooks/vars.yaml.
+#
+# ── Required variable ─────────────────────────────────────────────────────────
+#
+#   quay_creds              dict with .username and .password for quay.io login
+#                           e.g.: quay_creds: "{{ airship_myproject_quay_creds_2026 }}"
+#
+# ── Optional variables (with defaults) ────────────────────────────────────────
+#
+#   hosts_target            Ansible hosts pattern (default: 'primary')
+#                           IMPORTANT: must be set as a Zuul job var, not in
+#                           vars.yaml — it is evaluated before include_vars runs.
+#                           porthole and shipyard use 'all'.
+#
+#   make_target             make target for building images (default: 'images')
+#                           porthole uses 'build'
+#
+#   make_subdir             subdirectory under zuul.project.src_dir to run make in
+#                           (default: '' — run directly in project root)
+#                           porthole uses "{{ args.chdir }}"
+#
+#   use_distro_param        pass DISTRO=<distro> to make (default: true)
+#                           set to false for porthole which uses DISTRO_SUFFIX instead
+#
+#   extra_make_params       dict of additional make params merged into every make call
+#                           (default: {})
+#                           maas:    {DISTRO_ALIAS: "{{ distro }}"}
+#                           pegleg:  {BASE_IMAGE: "{{ base_image }}", PROXY: "{{ proxy }}",
+#                                     NO_PROXY: "{{ no_proxy }}", USE_PROXY: "{{ use_proxy | lower }}"}
+#                           porthole:{DISTRO_SUFFIX: "{{ distro_suffix }}",
+#                                     IMAGE_NAME: "{{ image_name }}"}
+#
+#   use_bindep              run the bindep role (default: true)
+#                           porthole sets false (no bindep.txt)
+#
+#   use_clear_firewall      run the clear-firewall role before other setup
+#                           (default: false); pegleg sets true
+#
+#   docker_pip_version      pin the docker Python package version
+#                           (default: omit = install latest)
+#                           armada-go, armada-operator, porthole use '4.4.4'
+#
+#   install_tox             install the tox Python package (default: true)
+#                           porthole sets false
+#
+#   tox_pip_version         pin the tox Python package version
+#                           (default: omit = install latest)
+#                           armada-go, armada-operator use '3.28.0'
+#
+#   install_requests        install the requests Python package before docker_login
+#                           (default: false); deckhand and drydock set true
+#
+#   pip_break_system_packages  pass break_system_packages: true to all pip calls
+#                           (default: true); maas and porthole set false
+#
+#   run_verbose_build       run a plain shell make before the tagged build loop to
+#                           capture full verbose output for debugging (default: false)
+#
+#   make_verbose_target     make target used for the verbose debug pass
+#                           (default: same as make_target)
+#                           armada and shipyard use 'run_images'
+#
+#   remove_pip_conf         remove /etc/pip.conf before installing pip modules
+#                           (default: false); pegleg sets true
+#
+#   base_images             dict mapping distro name to base image tag; when defined,
+#                           sets the base_image fact which pegleg passes via
+#                           extra_make_params as BASE_IMAGE
+#
+#   run_trivy_scan          scan each built image with Trivy for CVEs before publishing
+#                           (default: true); set to false to skip the scan entirely
+#
+#   trivy_fail_on_vulns     exit with code 1 when Trivy finds vulnerabilities matching
+#                           trivy_severity, failing the job (default: true)
+#                           set to false to run Trivy in report-only mode
+#
+#   trivy_severity          comma-separated severity levels to scan for
+#                           (default: 'CRITICAL,HIGH,MEDIUM')
+#                           e.g. 'CRITICAL' to block only on critical issues
+#
+#   docker_registry         registry host for published images (default: 'quay.io')
+#   image_prefix            image name prefix for publish (default: 'airshipit')
+#   docker_registry_login_url  full URL for docker_login
+#                           (default: 'https://quay.io/api/v1/')
+#   docker_login_api_version   api_version passed to docker_login (default: omit)
+#                           most projects use '1.45';
+#                           armada-go, armada-operator, porthole omit it
+
+- hosts: "{{ hosts_target | default('primary') }}"
+
+  tasks:
+    - name: Load project variables
+      include_vars: vars.yaml
+
+    - name: Run clear-firewall role
+      include_role:
+        name: clear-firewall
+      when: use_clear_firewall | default(false) | bool
+
+    - name: Run bindep role
+      include_role:
+        name: bindep
+      when: use_bindep | default(true) | bool
+
+    - name: Run ensure-docker role
+      include_role:
+        name: ensure-docker
+
+    - name: Run ensure-python role
+      include_role:
+        name: ensure-python
+
+    - name: Run ensure-pip role
+      include_role:
+        name: ensure-pip
+
+    - name: Debug tag generation inputs
+      block:
+        - debug:
+            var: publish
+        - debug:
+            var: distro
+        - debug:
+            var: tags
+        - debug:
+            var: zuul
+        - debug:
+            msg: "{{ tags | to_json }}"
+
+    - name: Determine tags
+      shell: echo '{{ tags | to_json }}' | python3 {{ zuul.project.src_dir }}/tools/image_tags.py
+      environment:
+        BRANCH: "{{ zuul.branch | default('') }}"
+        CHANGE: "{{ zuul.change | default('') }}"
+        COMMIT: "{{ zuul.newrev | default('') }}"
+        PATCHSET: "{{ zuul.patchset | default('') }}"
+      register: image_tags
+
+    - name: Debug computed tags
+      debug:
+        var: image_tags
+
+    - name: Set base image fact from base_images map
+      set_fact:
+        base_image: "{{ base_images[distro] }}"
+      when:
+        - base_images is defined
+        - distro in base_images
+
+    - name: Remove default pip mirror config
+      file:
+        path: /etc/pip.conf
+        state: absent
+      become: true
+      when: remove_pip_conf | default(false) | bool
+
+    - name: Install Docker python module
+      pip:
+        name: docker
+        version: "{{ docker_pip_version | default(omit) }}"
+        executable: pip3
+        break_system_packages: "{{ pip_break_system_packages | default(true) | bool }}"
+      become: true
+
+    - name: Install tox python module
+      pip:
+        name: tox
+        version: "{{ tox_pip_version | default(omit) }}"
+        executable: pip3
+        break_system_packages: "{{ pip_break_system_packages | default(true) | bool }}"
+      become: true
+      when: install_tox | default(true) | bool
+
+    - name: Install requests python module
+      pip:
+        name: requests
+        executable: pip3
+        break_system_packages: "{{ pip_break_system_packages | default(true) | bool }}"
+      become: true
+      when: install_requests | default(false) | bool
+
+    - name: Set effective make working directory
+      set_fact:
+        _make_chdir: >-
+          {{ zuul.project.src_dir ~ ('/' ~ make_subdir if (make_subdir | default('')) else '') }}
+
+    - name: Set make build params
+      set_fact:
+        _build_params: >-
+          {{ ({'DISTRO': distro} if use_distro_param | default(true) | bool else {})
+             | combine(extra_make_params | default({})) }}
+
+    - name: Make images (verbose shell run for full debug output)
+      shell: "make {{ make_verbose_target | default(make_target | default('images')) }}"
+      args:
+        chdir: "{{ _make_chdir }}"
+        executable: /bin/bash
+      become: true
+      when:
+        - not publish
+        - run_verbose_build | default(false) | bool
+
+    - name: Make images
+      when: not publish
+      block:
+        - make:
+            chdir: "{{ _make_chdir }}"
+            target: "{{ make_target | default('images') }}"
+            params: "{{ _build_params | combine({'IMAGE_TAG': item}) }}"
+          with_items: "{{ image_tags.stdout_lines }}"
+
+        - shell: "docker images"
+          register: docker_images
+
+        - debug:
+            var: docker_images
+
+      become: true
+
+    - name: Scan built images for CVEs with Trivy
+      when:
+        - not publish
+        - run_trivy_scan | default(true) | bool
+      shell: |
+        set -e
+        tag="{{ item }}"
+        distro="{{ distro | default('') }}"
+        images=""
+
+        # Find images matching a given tag. Handles two output formats:
+        #   Docker: REPOSITORY  TAG  IMAGE_ID  ...  — tag is $2, image ref is "$1:$2"
+        #   Podman: IMAGE  ID  DISK_USAGE  ...       — full "repo:tag" is $1, tag after last ":"
+        find_images() {
+          local ftag="$1"
+          docker images | awk -v ftag="$ftag" '
+            /^WARNING/ || /^REPOSITORY/ || /^IMAGE/ { next }
+            {
+              n = split($1, a, ":")
+              if (n >= 2 && a[n] == ftag) { print $1; next }
+              if ($2 == ftag) { print $1":"$2 }
+            }
+          '
+        }
+
+        # Makefiles typically append distro to IMAGE_TAG (e.g. 987746-13-ubuntu_noble).
+        # Try the combined tag first, fall back to the plain tag.
+        if [ -n "$distro" ]; then
+          images=$(find_images "${tag}-${distro}" || true)
+        fi
+        if [ -z "$images" ]; then
+          images=$(find_images "$tag" || true)
+        fi
+        if [ -z "$images" ]; then
+          echo "No images found with tag ${tag}-${distro} or ${tag}, skipping Trivy scan"
+          exit 0
+        fi
+        trivy_exit_flag="{{ '--exit-code 1' if trivy_fail_on_vulns | default(true) | bool else '' }}"
+        trivy_severity="{{ trivy_severity | default('CRITICAL,HIGH,MEDIUM') }}"
+        exit_code=0
+        while IFS= read -r image_ref; do
+          echo "Scanning ${image_ref}..."
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy \
+            --insecure --quiet \
+            $trivy_exit_flag \
+            --severity "$trivy_severity" \
+            image --ignore-unfixed \
+            "${image_ref}" || exit_code=$?
+        done <<< "$images"
+        exit $exit_code
+      args:
+        executable: /bin/bash
+      with_items: "{{ image_tags.stdout_lines }}"
+      become: true
+
+    - name: Publish images
+      when: publish
+      block:
+        - docker_login:
+            username: "{{ quay_creds.username }}"
+            password: "{{ quay_creds.password }}"
+            registry_url: "{{ docker_registry_login_url | default('https://quay.io/api/v1/') }}"
+            api_version: "{{ docker_login_api_version | default(omit) }}"
+
+        - make:
+            chdir: "{{ _make_chdir }}"
+            target: "{{ make_target | default('images') }}"
+            params: >-
+              {{ _build_params
+                 | combine({'DOCKER_REGISTRY': docker_registry | default('quay.io'),
+                            'IMAGE_PREFIX': image_prefix | default('airshipit'),
+                            'IMAGE_TAG': item,
+                            'COMMIT': zuul.newrev | default(''),
+                            'PUSH_IMAGE': 'true'}) }}
+          with_items: "{{ image_tags.stdout_lines }}"
+
+        - shell: "docker images"
+          register: docker_images
+
+        - debug:
+            var: docker_images
+
+      become: true

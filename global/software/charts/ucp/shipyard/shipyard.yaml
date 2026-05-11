@@ -261,6 +261,11 @@ data:
           labels:
             release_group: airship-ucp-shipyard
   values:
+    manifests:
+      deployment_airflow_webserver_ui: true
+      secret_apache_etc: true
+      secret_airflow_webserver_ui: true
+      service_airflow_webserver_ui: true
     endpoints:
       postgresql_airflow_db:
         name: postgresql
@@ -303,6 +308,101 @@ data:
       shipyard:
         keystone_authtoken:
           memcache_security_strategy: None
+      httpd: |
+        ServerRoot "/usr/local/apache2"
+
+        Listen 80
+
+        LoadModule mpm_event_module modules/mod_mpm_event.so
+        LoadModule authn_file_module modules/mod_authn_file.so
+        LoadModule authn_core_module modules/mod_authn_core.so
+        LoadModule authz_host_module modules/mod_authz_host.so
+        LoadModule authz_groupfile_module modules/mod_authz_groupfile.so
+        LoadModule authz_user_module modules/mod_authz_user.so
+        LoadModule authz_core_module modules/mod_authz_core.so
+        LoadModule access_compat_module modules/mod_access_compat.so
+        LoadModule auth_basic_module modules/mod_auth_basic.so
+        LoadModule reqtimeout_module modules/mod_reqtimeout.so
+        LoadModule filter_module modules/mod_filter.so
+        LoadModule proxy_html_module modules/mod_proxy_html.so
+        LoadModule log_config_module modules/mod_log_config.so
+        LoadModule env_module modules/mod_env.so
+        LoadModule headers_module modules/mod_headers.so
+        LoadModule setenvif_module modules/mod_setenvif.so
+        LoadModule version_module modules/mod_version.so
+        LoadModule proxy_module modules/mod_proxy.so
+        LoadModule proxy_connect_module modules/mod_proxy_connect.so
+        LoadModule proxy_http_module modules/mod_proxy_http.so
+        LoadModule proxy_balancer_module modules/mod_proxy_balancer.so
+        LoadModule remoteip_module modules/mod_remoteip.so
+        LoadModule slotmem_shm_module modules/mod_slotmem_shm.so
+        LoadModule slotmem_plain_module modules/mod_slotmem_plain.so
+        LoadModule unixd_module modules/mod_unixd.so
+        LoadModule status_module modules/mod_status.so
+        LoadModule autoindex_module modules/mod_autoindex.so
+
+        <IfModule unixd_module>
+        User daemon
+        Group daemon
+        </IfModule>
+
+        <Directory />
+            AllowOverride none
+            Require all denied
+        </Directory>
+
+        <Files ".ht*">
+            Require all denied
+        </Files>
+
+        ErrorLog /dev/stderr
+
+        LogLevel warn
+
+        <IfModule log_config_module>
+            LogFormat "%a %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+            LogFormat "%{X-Forwarded-For}i %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" proxy
+            LogFormat "%h %l %u %t \"%r\" %>s %b" common
+
+            <IfModule logio_module>
+              LogFormat "%a %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
+            </IfModule>
+
+            SetEnvIf X-Forwarded-For "^.*\..*\..*\..*" forwarded
+            CustomLog /dev/stdout common
+            CustomLog /dev/stdout combined
+            CustomLog /dev/stdout proxy env=forwarded
+        </IfModule>
+
+        <Directory "/usr/local/apache2/cgi-bin">
+            AllowOverride None
+            Options None
+            Require all granted
+        </Directory>
+
+        <IfModule headers_module>
+            RequestHeader unset Proxy early
+        </IfModule>
+
+        <IfModule proxy_html_module>
+        Include conf/extra/proxy-html.conf
+        </IfModule>
+
+        <VirtualHost *:80>
+          RemoteIPHeader X-Original-Forwarded-For
+
+          ProxyPreserveHost On
+          ProxyPass / http://localhost:8080/
+          ProxyPassReverse / http://localhost:8080/
+
+          <Proxy *>
+              AuthName "Airflow"
+              AuthType Basic
+              AuthBasicProvider file
+              AuthUserFile /usr/local/apache2/conf/.htpasswd
+              Require valid-user
+          </Proxy>
+        </VirtualHost>
     logrotate:
       percent_max_log_fs_usage: 90
     network:
@@ -313,7 +413,15 @@ data:
             cluster: "ucp-ingress"
       shipyard:
         ingress:
+          public: true
           classes:
             namespace: "ucp-ingress"
             cluster: "ucp-ingress"
+          annotations:
+            nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+            nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              more_clear_headers "Server";
+              more_set_headers "X-Content-Type-Options: 'nosniff'";
+              more_set_headers "X-Frame-Options: 'deny'";
 ...

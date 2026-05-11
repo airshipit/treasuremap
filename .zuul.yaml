@@ -277,6 +277,19 @@
           - primary
 
 - job:
+    name: airship-docker-build-gate-base
+    abstract: true
+    timeout: 3600
+    run: tools/gate/playbooks/airship-docker-image-build.yaml
+
+
+- job:
+    name: airship-chart-build-base
+    abstract: true
+    timeout: 3600
+    run: ./tools/gate/playbooks/build-charts.yaml
+
+- job:
     name: treasuremap-airskiff-infra-deploy-base
     abstract: true
     roles:
@@ -320,7 +333,7 @@
       OSH_COMMIT: d89bc42b57f8c2898520181550b5019dcf31c06f
       USE_ARMADA_GO: false
       ENABLE_SLEEP: false
-      overlay_network_setup: false
+      overlay_network_setup: true
       metallb_setup: true
       gatewayapi_setup: true
       coredns_resolver_setup: true
@@ -343,6 +356,7 @@
         - ./tools/deployment/airskiff/developer/027-enable-armada-operator.sh
         - ./tools/deployment/airskiff/common/sleep.sh
         - ./tools/deployment/airskiff/developer/030-armada-bootstrap.sh
+        - ./tools/deployment/airskiff/developer/050-expose-airflow-ui.sh
         - ./tools/deployment/airskiff/developer/100-deploy-osh.sh
         - ./tools/deployment/airskiff/common/os-env.sh
         - ./tools/gate/wait-for-shipyard.sh
@@ -416,7 +430,7 @@
       USE_ARMADA_GO: true
       MAKE_MAAS_IMAGES: true
       DISTRO: ubuntu_noble
-      # DOCKER_REGISTRY: localhost:5000
+      DOCKER_REGISTRY: "control-plane.minikube.internal:5000"
       gate_scripts:
         - ./tools/deployment/airskiff/developer/000-prepare-k8s.sh
         - ./tools/deployment/airskiff/developer/009-setup-apparmor.sh
@@ -430,6 +444,7 @@
         - ./tools/deployment/airskiff/developer/027-enable-armada-operator.sh
         - ./tools/deployment/airskiff/developer/028-enable-maas-drydock.sh
         - ./tools/deployment/airskiff/developer/030-armada-bootstrap.sh
+        - ./tools/deployment/airskiff/developer/050-expose-airflow-ui.sh
         - ./tools/deployment/airskiff/developer/100-deploy-osh.sh
         - ./tools/deployment/airskiff/common/os-env.sh
         - ./tools/gate/wait-for-shipyard.sh
@@ -445,7 +460,7 @@
 #     description: |
 #       Deploy maas using Airskiff and submitted Shipyard changes.
 #     parent: treasuremap-airskiff-deploy-maas-drydock-base
-#     nodeset: treasuremap-airskiff-1node-32GB-ubuntu_jammy
+#     nodeset: treasuremap-airskiff-5nodes-ubuntu_noble
 #     required-projects:
 #       - name: airship/treasuremap
 #         override-checkout: v1.9
@@ -458,7 +473,6 @@
 #       CLONE_MAAS: true
 #       MAKE_MAAS_IMAGES: false
 #       DISTRO: ubuntu_noble
-#       DOCKER_REGISTRY: localhost:5000
 
 
 - job:

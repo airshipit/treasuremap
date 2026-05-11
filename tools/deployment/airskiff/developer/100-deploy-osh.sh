@@ -22,9 +22,35 @@ set -xe
 : "${PEGLEG:="sudo ${AIRSHIP_PATH} pegleg"}"
 : "${SHIPYARD:="${AIRSHIP_PATH} shipyard"}"
 : "${PL_SITE:="airskiff"}"
+: "${NAMESPACE:=ucp}"
+: "${AIRFLOW_UI_EXTERNAL_PORT:=5590}"
+: "${AIRFLOW_UI_SVC_PORT:=80}"
 
 # Source OpenStack credentials for Airship utility scripts
 source ./tools/deployment/airskiff/common/os-env.sh
+
+# Re-establish port-forward only if not already responding.
+# A previous gate step (050) may have started it and it's still alive —
+# in that case pkill/fuser can't see it (different Zuul process group),
+# so we check first and only restart if the forward is actually dead.
+if ! curl -so /dev/null --max-time 3 "http://localhost:${AIRFLOW_UI_EXTERNAL_PORT}/"; then
+  echo "Airflow port-forward not responding, restarting..."
+  # ss sees all processes by port regardless of process group
+  PF_PID=$(ss -tlnp "sport = :${AIRFLOW_UI_EXTERNAL_PORT}" | grep -oP 'pid=\K[0-9]+' | head -1 || true)
+  [[ -n "${PF_PID}" ]] && kill "${PF_PID}" 2>/dev/null || true
+  pkill -f "kubectl port-forward.*svc/airflow-int" 2>/dev/null || true
+  fuser -k "${AIRFLOW_UI_EXTERNAL_PORT}/tcp" 2>/dev/null || true
+  sleep 2
+  kubectl port-forward -n "${NAMESPACE}" svc/airflow-int "${AIRFLOW_UI_EXTERNAL_PORT}:${AIRFLOW_UI_SVC_PORT}" --address=0.0.0.0 </dev/null &
+  disown $!
+fi
+
+until curl -so /dev/null "http://localhost:${AIRFLOW_UI_EXTERNAL_PORT}/"; do
+  sleep 2
+done
+
+curl -siv "http://localhost:${AIRFLOW_UI_EXTERNAL_PORT}/" | head -10
+
 
 # NOTE(drewwalters96): Disable Pegleg linting errors P001 and P009; a
 #  a cleartext storage policy is acceptable for non-production use cases

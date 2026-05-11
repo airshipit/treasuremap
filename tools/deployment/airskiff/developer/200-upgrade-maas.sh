@@ -20,6 +20,49 @@ set -xe
 : "${ENABLE_MAAS_UPGRADE:=false}"
 : "${RELEASE:=airship-ucp-maas}"
 : "${NAMESPACE:=ucp}"
+: "${AIRFLOW_UI_EXTERNAL_PORT:=5590}"
+: "${AIRFLOW_UI_SVC_PORT:=80}"
+
+
+# Re-establish port-forward only if not already responding.
+# A previous gate step (050) may have started it and it's still alive —
+# in that case pkill/fuser can't see it (different Zuul process group),
+# so we check first and only restart if the forward is actually dead.
+if ! curl -so /dev/null --max-time 3 "http://localhost:${AIRFLOW_UI_EXTERNAL_PORT}/"; then
+  echo "Airflow port-forward not responding, restarting..."
+  # ss sees all processes by port regardless of process group
+  PF_PID=$(ss -tlnp "sport = :${AIRFLOW_UI_EXTERNAL_PORT}" | grep -oP 'pid=\K[0-9]+' | head -1 || true)
+  [[ -n "${PF_PID}" ]] && kill "${PF_PID}" 2>/dev/null || true
+  pkill -f "kubectl port-forward.*svc/airflow-int" 2>/dev/null || true
+  fuser -k "${AIRFLOW_UI_EXTERNAL_PORT}/tcp" 2>/dev/null || true
+  sleep 2
+  kubectl port-forward -n "${NAMESPACE}" svc/airflow-int "${AIRFLOW_UI_EXTERNAL_PORT}:${AIRFLOW_UI_SVC_PORT}" --address=0.0.0.0 </dev/null &
+  disown $!
+fi
+
+until curl -so /dev/null "http://localhost:${AIRFLOW_UI_EXTERNAL_PORT}/"; do
+  sleep 2
+done
+
+curl -siv "http://localhost:${AIRFLOW_UI_EXTERNAL_PORT}/" | head -10
+
+
+
+# Detect the externally-reachable IP.
+# Priority: (1) cloud metadata public IPv4 (OpenStack/AWS EC2-compat),
+#           (2) IP on the default-route interface.
+# Avoids hardcoding the interface name and handles nodes behind NAT.
+get_external_ip() {
+  local public_ip
+  public_ip=$(curl -sf --max-time 3 http://169.254.169.254/latest/meta-data/public-ipv4 2>/dev/null || true)
+  if [[ -n "${public_ip}" ]]; then
+    echo "${public_ip}"
+    return
+  fi
+  local iface
+  iface=$(ip route show default | awk '/default/ {print $5}' | head -1)
+  ip addr show "${iface:-ens3}" | awk '/inet / {print $2}' | cut -d/ -f1 | head -1
+}
 
 echo "======================================================"
 kubectl logs -n "${NAMESPACE}" \
@@ -27,19 +70,28 @@ kubectl logs -n "${NAMESPACE}" \
   --prefix --tail=-1
 echo "======================================================"
 
-EXTERNAL_IP=$(ip addr show ens3 | awk '/inet / {print $2}' | cut -d/ -f1)
-MAAS_REGION_SVC_IP=$(kubectl get svc -n "${NAMESPACE}" maas-region -o jsonpath='{.spec.clusterIP}')
-sudo iptables-legacy -t nat -S PREROUTING | grep -- '--dport 5240 -j DNAT' | while IFS= read -r rule; do
-  read -ra args <<< "${rule#-A PREROUTING }"
-  sudo iptables-legacy -t nat -D PREROUTING "${args[@]}"
+EXTERNAL_IP=$(get_external_ip)
+
+for attempt in 1 2 3; do
+  pkill -f "kubectl port-forward.*svc/maas-region" 2>/dev/null || true
+  fuser -k 5240/tcp 2>/dev/null || true
+  sleep 2
+  kubectl port-forward -n "${NAMESPACE}" svc/maas-region 5240:83 --address=0.0.0.0 </dev/null &
+  MAAS_PORT_FORWARD_PID=$!
+  sleep 2
+  if kill -0 "${MAAS_PORT_FORWARD_PID}" 2>/dev/null; then
+    disown "${MAAS_PORT_FORWARD_PID}"
+    break
+  fi
+  echo "Port-forward attempt ${attempt} failed, freeing port 5240 and retrying..."
+  fuser -k 5240/tcp 2>/dev/null || true
+  sleep 2
 done
-sudo iptables-legacy -t nat -S POSTROUTING | grep -- '--dport 83 -j MASQUERADE' | while IFS= read -r rule; do
-  read -ra args <<< "${rule#-A POSTROUTING }"
-  sudo iptables-legacy -t nat -D POSTROUTING "${args[@]}"
+
+until curl -so /dev/null "http://localhost:5240/MAAS"; do
+  sleep 2
 done
-sudo iptables-legacy -t nat -A PREROUTING -d "${EXTERNAL_IP}" -p tcp --dport 5240 -j DNAT --to-destination "${MAAS_REGION_SVC_IP}:83"
-sudo iptables-legacy -t nat -A POSTROUTING -d "${MAAS_REGION_SVC_IP}" -p tcp --dport 83 -j MASQUERADE
-curl -si http://${EXTERNAL_IP}:5240/MAAS | head -3
+curl -siv "http://localhost:5240/MAAS" | head -10
 
 set +x
 echo "╔══════════════════════════════════════════════════╗"
@@ -50,7 +102,10 @@ echo "║  Login:    admin                                 ║"
 echo "║  Password: password123                           ║"
 echo "╚══════════════════════════════════════════════════╝"
 set -x
-sleep 30
+
+echo "Sleeping for 120 seconds .............."
+sleep 120
+
 
 ENABLE_MAAS_UPGRADE=$(echo "${ENABLE_MAAS_UPGRADE}" | tr '[:upper:]' '[:lower:]')
 
@@ -154,33 +209,7 @@ until [[ -n "$(kubectl get svc -n "${NAMESPACE}" maas-region -o jsonpath='{.spec
 done
 echo "maas-region service is ready."
 
-# Remove stale DNAT rules for dport 5240
-sudo iptables-legacy -t nat -S PREROUTING | grep -- '--dport 5240 -j DNAT' | while IFS= read -r rule; do
-  read -ra args <<< "${rule#-A PREROUTING }"
-  sudo iptables-legacy -t nat -D PREROUTING "${args[@]}"
-done
-# Remove stale MASQUERADE rules for dport 83
-sudo iptables-legacy -t nat -S POSTROUTING | grep -- '--dport 83 -j MASQUERADE' | while IFS= read -r rule; do
-  read -ra args <<< "${rule#-A POSTROUTING }"
-  sudo iptables-legacy -t nat -D POSTROUTING "${args[@]}"
-done
-
-EXTERNAL_IP=$(ip addr show ens3 | awk '/inet / {print $2}' | cut -d/ -f1)
-MAAS_REGION_SVC_IP=$(kubectl get svc -n "${NAMESPACE}" maas-region -o jsonpath='{.spec.clusterIP}')
-sudo iptables-legacy -t nat -A PREROUTING -d "${EXTERNAL_IP}" -p tcp --dport 5240 -j DNAT --to-destination "${MAAS_REGION_SVC_IP}:83"
-sudo iptables-legacy -t nat -A POSTROUTING -d "${MAAS_REGION_SVC_IP}" -p tcp --dport 83 -j MASQUERADE
-curl -si "http://${EXTERNAL_IP}:5240/MAAS" | head -3
-
-set +x
-
-echo "╔══════════════════════════════════════════════════╗"
-echo "║              MAAS UI ACCESS INFO                 ║"
-echo "╠══════════════════════════════════════════════════╣"
-echo "║  URL:      http://${EXTERNAL_IP}:5240/MAAS/      ║"
-echo "║  Login:    admin                                 ║"
-echo "║  Password: password123                           ║"
-echo "╚══════════════════════════════════════════════════╝"
-
+EXTERNAL_IP=$(get_external_ip)
 
 # Wait for the deployment to complete (with retries to tolerate self-heal restarts)
 for attempt in 1 2 3 4 5; do
@@ -215,6 +244,39 @@ kubectl logs -n "${NAMESPACE}" \
   -l "application=maas,component=import-resources" \
   --prefix --tail=-1
 echo "======================================================"
+
+# Start port-forward to the upgraded pod
+for attempt in 1 2 3; do
+  pkill -f "kubectl port-forward.*svc/maas-region" 2>/dev/null || true
+  fuser -k 5240/tcp 2>/dev/null || true
+  sleep 2
+  kubectl port-forward -n "${NAMESPACE}" svc/maas-region 5240:83 --address=0.0.0.0 </dev/null &
+  MAAS_PORT_FORWARD_PID=$!
+  sleep 2
+  if kill -0 "${MAAS_PORT_FORWARD_PID}" 2>/dev/null; then
+    disown "${MAAS_PORT_FORWARD_PID}"
+    break
+  fi
+  echo "Port-forward attempt ${attempt} failed, freeing port 5240 and retrying..."
+  fuser -k 5240/tcp 2>/dev/null || true
+  sleep 2
+done
+
+for attempt in 1 2 3; do
+  curl -so /dev/null "http://localhost:5240/MAAS"
+  sleep 2
+done
+curl -siv "http://localhost:5240/MAAS" | head -10
+
+set +x
+echo "╔══════════════════════════════════════════════════╗"
+echo "║              MAAS UI ACCESS INFO                 ║"
+echo "╠══════════════════════════════════════════════════╣"
+echo "║  URL:      http://${EXTERNAL_IP}:5240/MAAS/      ║"
+echo "║  Login:    admin                                 ║"
+echo "║  Password: password123                           ║"
+echo "╚══════════════════════════════════════════════════╝"
+set -x
 
 echo "Sleeping for 120 seconds .............."
 sleep 120
