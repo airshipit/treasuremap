@@ -202,12 +202,14 @@
 
     - name: Set make build params
       set_fact:
-        _build_params: >-
-          {{ ({'DISTRO': distro} if use_distro_param | default(true) | bool else {})
-             | combine(extra_make_params | default({})) }}
+        _build_params: "{{ ({'DISTRO': distro} if (use_distro_param | default(true) | bool) else {}) | combine(extra_make_params | default({})) }}"
+
+    - name: Debug make build params
+      debug:
+        var: _build_params
 
     - name: Make images (verbose shell run for full debug output)
-      shell: "make {{ make_verbose_target | default(make_target | default('images')) }}"
+      shell: "make {{ _build_params.items() | map('join', '=') | join(' ') }} {{ make_verbose_target | default(make_target | default('images')) }}"
       args:
         chdir: "{{ _make_chdir }}"
         executable: /bin/bash

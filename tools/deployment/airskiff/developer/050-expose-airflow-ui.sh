@@ -37,11 +37,15 @@ get_external_ip() {
 }
 
 # Wait until airflow-int service exists and has a ClusterIP
+END=$(($(date +%s) + 600))
 until kubectl get svc -n "${NAMESPACE}" airflow-int &>/dev/null; do
+  [ "$(date +%s)" -gt "${END}" ] && { echo "Timed out waiting for airflow-int service to be created"; exit 1; }
   echo "Waiting for airflow-int service to be created..."
   sleep 10
 done
+END=$(($(date +%s) + 120))
 until [[ -n "$(kubectl get svc -n "${NAMESPACE}" airflow-int -o jsonpath='{.spec.clusterIP}' 2>/dev/null)" ]]; do
+  [ "$(date +%s)" -gt "${END}" ] && { echo "Timed out waiting for airflow-int service to get a ClusterIP"; exit 1; }
   echo "Waiting for airflow-int service to get a ClusterIP..."
   sleep 5
 done
@@ -70,7 +74,9 @@ for attempt in 1 2 3; do
 done
 
 # Wait for port-forward to be ready
+END=$(($(date +%s) + 180))
 until curl -so /dev/null "http://localhost:${AIRFLOW_UI_EXTERNAL_PORT}/"; do
+  [ "$(date +%s)" -gt "${END}" ] && { echo "Timed out waiting for airflow port-forward to become ready"; exit 1; }
   sleep 2
 done
 

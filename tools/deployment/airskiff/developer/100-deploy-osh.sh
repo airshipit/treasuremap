@@ -45,7 +45,9 @@ if ! curl -so /dev/null --max-time 3 "http://localhost:${AIRFLOW_UI_EXTERNAL_POR
   disown $!
 fi
 
+END=$(($(date +%s) + 180))
 until curl -so /dev/null "http://localhost:${AIRFLOW_UI_EXTERNAL_PORT}/"; do
+  [ "$(date +%s)" -gt "${END}" ] && { echo "Timed out waiting for airflow port-forward to become ready"; exit 1; }
   sleep 2
 done
 
