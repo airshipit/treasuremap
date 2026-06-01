@@ -329,8 +329,8 @@
       site: airskiff
       helm_version: "4.1.1"
       HELM_ARTIFACT_URL: https://get.helm.sh/helm-v4.1.1-linux-amd64.tar.gz
-      HTK_COMMIT: d89bc42b57f8c2898520181550b5019dcf31c06f
-      OSH_COMMIT: d89bc42b57f8c2898520181550b5019dcf31c06f
+      HTK_COMMIT: 94ead9359a388331e71b13d83f0d14a71fa3f3ce
+      OSH_COMMIT: 94ead9359a388331e71b13d83f0d14a71fa3f3ce
       USE_ARMADA_GO: false
       ENABLE_SLEEP: false
       overlay_network_setup: true
