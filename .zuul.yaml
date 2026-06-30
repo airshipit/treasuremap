@@ -11,8 +11,8 @@
 # limitations under the License.
 
 - project:
-    templates:
-      - docs-on-readthedocs
+    # templates:
+    #   - docs-on-readthedocs
     vars:
       rtd_webhook_id: '47687'
       rtd_project_name: 'airship-treasuremap'
@@ -45,8 +45,8 @@
 - nodeset:
     name: treasuremap-single-node
     nodes:
-      - name: ubuntu-bionic
-        label: ubuntu-bionic
+      - name: ubuntu-jammy
+        label: ubuntu-jammy
 
 - job:
     name: treasuremap-site-lint
