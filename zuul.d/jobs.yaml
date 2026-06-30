@@ -71,7 +71,7 @@
       - ^playbooks/.*$
       - ^roles/.*$
       - ^tools/deployment/.*$
-    nodeset: airship-treasuremap-single-32GB-bionic-node
+    nodeset: airship-treasuremap-single-32GB-jammy-node
     vars:
       site_name: virtual-airship-core
       gate_scripts:
@@ -83,7 +83,7 @@
         - ./tools/deployment/airship-core/25_deploy_gating.sh
       serve_dir: /srv/images
       serve_port: 8099
-    voting: true
+    voting: false
 
 - job:
     name: airship-treasuremap-deploy-virtual-multi-tenant

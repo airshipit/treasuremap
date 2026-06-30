@@ -10,22 +10,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 - nodeset:
-    name: airship-treasuremap-single-node
+    name: airship-treasuremap-full-4-nodes-jammy-cluster
     nodes:
       - name: primary
-        label: ubuntu-bionic
-- nodeset:
-    name: airship-treasuremap-full-4-nodes-bionic-cluster
-    nodes:
-      - name: primary
-        label: ubuntu-bionic-32GB
+        label: ubuntu-jammy-32GB
       - name: compute-1
-        label: ubuntu-bionic-expanded
+        label: ubuntu-jammy
       - name: compute-2
-        label: ubuntu-bionic-expanded
+        label: ubuntu-jammy
       - name: compute-3
-        label: ubuntu-bionic-expanded
+        label: ubuntu-jammy
     groups:
       - name: compute
         nodes:
@@ -33,12 +29,12 @@
           - compute-2
           - compute-3
 - nodeset:
-    name: airship-treasuremap-single-16GB-bionic-node
+    name: airship-treasuremap-single-16GB-jammy-node
     nodes:
       - name: primary
-        label: ubuntu-bionic-expanded
+        label: ubuntu-jammy
 - nodeset:
-    name: airship-treasuremap-single-32GB-bionic-node
+    name: airship-treasuremap-single-32GB-jammy-node
     nodes:
       - name: primary
-        label: ubuntu-bionic-32GB
+        label: ubuntu-jammy-32GB
