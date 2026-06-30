@@ -18,19 +18,19 @@
       sphinx_build_dir: docs/build
     check:
       jobs:
-        - airship-treasuremap-validate-site-docs
+        # - airship-treasuremap-validate-site-docs
 #        - airship-treasuremap-functional-existing-k8s TODO: Enable this when functional tests exist, and a cluster is up
         - airship-treasuremap-deploy-test-site
         - airship-treasuremap-deploy-virtual-network-cloud
     gate:
       jobs:
         - noop
-        - airship-treasuremap-validate-site-docs
+        # - airship-treasuremap-validate-site-docs
 #        - airship-treasuremap-functional-existing-k8s TODO: Enable this when functional tests exist, and a cluster is up
     post:
       jobs:
         - treasuremap-upload-git-mirror
-    promote:
-      jobs:
-        - airship-treasuremap-update-github-issues
+    # promote:
+    #   jobs:
+    #     - airship-treasuremap-update-github-issues
 

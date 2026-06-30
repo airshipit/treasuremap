@@ -10,14 +10,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- job:
-    name: airship-treasuremap-update-github-issues
-    description: Updates and/or closes related issues on Github on merge
-    run: playbooks/airship-treasuremap-update-github-issues.yaml
-    nodeset: airship-treasuremap-single-node
-    secrets:
-      - name: github_credentials
-        secret: airship_treasuremap_airshipit_github_token
+# - job:
+#     name: airship-treasuremap-update-github-issues
+#     description: Updates and/or closes related issues on Github on merge
+#     run: playbooks/airship-treasuremap-update-github-issues.yaml
+#     nodeset: airship-treasuremap-single-node
+#     secrets:
+#       - name: github_credentials
+#         secret: airship_treasuremap_airshipit_github_token
 
 - job:
     name: airship-treasuremap-validate-site-docs
@@ -64,7 +64,7 @@
       - playbooks/airship-treasuremap-build-gate.yaml
     post-run: playbooks/airship-collect-logs.yaml
     run: playbooks/airship-treasuremap-gate-runner.yaml
-    nodeset: airship-treasuremap-single-32GB-bionic-node
+    nodeset: airship-treasuremap-single-32GB-jammy-node
     vars:
       site_name: test-site
       gate_scripts:
