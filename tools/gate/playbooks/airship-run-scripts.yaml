@@ -42,7 +42,6 @@
             repo: "{{ zj_zuul_artifact.metadata.repository }}"
             override_paths:
               - ../../openstack/openstack-helm*/*/values*
-              - ../../openstack/openstack-helm/tools/deployment/
 
         - name: Diff
           shell: |
