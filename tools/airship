@@ -248,10 +248,14 @@ armada-operator() {
     -v "$(pwd)"/airskiff.yaml:/airskiff.yaml \
     --env-file $ENV_FILE \
     $IMAGE_ARMADA_GO $@
+  local rc=$?
 
   docker logs armada-operator
 
   docker rm --force armada-operator || true
+
+  # Propagate the apply result, so a timed out deployment fails the caller
+  return ${rc}
 }
 
 

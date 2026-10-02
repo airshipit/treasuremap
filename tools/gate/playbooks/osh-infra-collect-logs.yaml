@@ -22,6 +22,48 @@
   tags:
     - gather-host-logs
 
+# Collected into the objects directory, which the describe-kubernetes-objects
+# role below pulls to the executor.
+- hosts: primary
+  vars:
+    logs_dir: "/tmp/logs"
+  tasks:
+    - name: Create directory for cluster events
+      file:
+        path: "{{ logs_dir }}/objects"
+        state: directory
+
+    # Events of pods that have since been deleted, e.g. an image pull
+    # failure of a replaced job pod, only survive here.
+    - name: Gather cluster events
+      shell: |-
+        kubectl get events -A -o wide --sort-by=.lastTimestamp \
+          > "{{ logs_dir }}/objects/events.txt"
+      args:
+        executable: /bin/bash
+      ignore_errors: true
+
+    # Laid out like the objects of the describe-kubernetes-objects role:
+    # objects/namespaced/<namespace>/armadacharts/<name>.{yaml,txt}
+    - name: Gather ArmadaCharts managed by armada-operator
+      shell: |-
+        set -e
+        DIR="{{ logs_dir }}/objects/namespaced"
+        mkdir -p "${DIR}"
+        kubectl get armadacharts -A -o wide > "${DIR}/armadacharts.txt"
+        kubectl get armadacharts -A \
+          -o jsonpath='{range .items[*]}{.metadata.namespace} {.metadata.name}{"\n"}{end}' |
+        while read -r NAMESPACE NAME; do
+          mkdir -p "${DIR}/${NAMESPACE}/armadacharts"
+          kubectl get -n "${NAMESPACE}" armadachart "${NAME}" -o yaml \
+            > "${DIR}/${NAMESPACE}/armadacharts/${NAME}.yaml"
+          kubectl describe -n "${NAMESPACE}" armadachart "${NAME}" \
+            > "${DIR}/${NAMESPACE}/armadacharts/${NAME}.txt"
+        done
+      args:
+        executable: /bin/bash
+      ignore_errors: true
+
 - hosts: primary
   vars_files:
     - vars.yaml

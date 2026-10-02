@@ -158,7 +158,7 @@ if kubectl get pod clcp-maas-api-test -n ucp 2>/dev/null; then
   kubectl delete pod clcp-maas-api-test -n ucp
 fi
 
-# Get current chart values and merge with jammy image configuration (previous release)
+# Get current chart values and merge with noble image configuration
 CURRENT_VALUES=$(kubectl get armadachart "${RELEASE}" -n "${NAMESPACE}" -o jsonpath='{.data.values}')
 
 CHART_VALUES=$(echo "${CURRENT_VALUES}" | jq '. * {
@@ -166,14 +166,14 @@ CHART_VALUES=$(echo "${CURRENT_VALUES}" | jq '. * {
     "maas": {
       "images": {
         "default_os": "ubuntu",
-        "default_image": "jammy",
-        "default_kernel": "ga-22.04"
+        "default_image": "noble",
+        "default_kernel": "ga-24.04"
       }
     }
   },
   "images": {
     "tags": {
-      "maas_cache": "quay.io/airshipit/sstream-cache-jammy:latest"
+      "maas_cache": "quay.io/airshipit/sstream-cache-noble:latest"
     }
   }
 }')
