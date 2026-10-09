@@ -75,11 +75,9 @@
     - describe-kubernetes-objects
     - gather-pod-logs
     - gather-prom-metrics
-    - gather-selenium-data
   tags:
     - helm-release-status
     - describe-kubernetes-objects
     - gather-pod-logs
     - gather-prom-metrics
-    - gather-selenium-data
 ...

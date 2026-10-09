@@ -38,3 +38,13 @@ ucp_airflow_core_fernet_key.yaml
 
 # rendered manifests
 airskiff.yaml
+
+# airliner site PKI is generated (tools/deployment/airliner/010-generate-secrets.sh)
+site/airliner/secrets/certificates/
+site/airliner/secrets/keypairs/
+airliner.yaml
+
+# jumbojet site PKI is generated (tools/deployment/airliner/010-generate-secrets.sh)
+site/jumbojet/secrets/certificates/
+site/jumbojet/secrets/keypairs/
+jumbojet.yaml

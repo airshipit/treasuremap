@@ -1,0 +1,55 @@
+---
+# Calico deployed by the Tigera operator (airship/promenade charts/tigera-operator)
+# on day 2, before the kubeadm chart: see the kubeadm-cluster manifest.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-tigera-operator
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.tigera_operator
+      dest:
+        path: .source
+    # Images (Calico images are chosen by the operator for its version)
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.tigera_operator
+      dest:
+        path: .values.images.tags
+    # Network
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.pod_cidr
+      dest:
+        path: .values.networking.podSubnet
+data:
+  chart_name: tigera-operator
+  release: tigera-operator
+  namespace: tigera-operator
+  wait:
+    timeout: 600
+    labels:
+      release_group: airship-tigera-operator
+  upgrade:
+    no_hooks: true
+  dependencies: []
+  values:
+    networking:
+      # Nodes are connected by a vxlan overlay network: plain routing and
+      # an MTU below the overlay one
+      mtu: 1400
+      encapsulation: None
+      natOutgoing: Enabled
+      # The node IP is defined by the site and lives on a dummy interface
+      nodeAddressAutodetectionV4:
+        kubernetes: NodeInternalIP
+...
