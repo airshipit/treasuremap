@@ -18,6 +18,8 @@
 #   2. the rest of control plane nodes one by one: kubeadm join (etcd members
 #      are added one at a time)
 #   3. workers: kubelet joins with the delivered credentials
+# Everything runs in the treasuremap checkout: jobs of other projects
+# inheriting the treasuremap jobs set zuul_treasuremap_relative_path.
 ---
 - hosts: all
   any_errors_fatal: true
@@ -27,7 +29,7 @@
         set -xe;
         ./tools/deployment/airliner/005-checkout-promenade-ref.sh {{ promenade_ref | default('') }}
       args:
-        chdir: "{{ zuul.project.src_dir }}"
+        chdir: "{{ zuul.project.src_dir }}/{{ zuul_treasuremap_relative_path | default('') }}"
 
 - hosts: primary
   any_errors_fatal: true
@@ -40,13 +42,13 @@
         ./tools/deployment/airliner/010-generate-secrets.sh
         ./tools/deployment/airliner/020-render-site.sh
       args:
-        chdir: "{{ zuul.project.src_dir }}"
+        chdir: "{{ zuul.project.src_dir }}/{{ zuul_treasuremap_relative_path | default('') }}"
 
     # Rendered documents contain private keys: they are passed through the
     # executor work directory, not the logs.
     - name: Fetch rendered site documents
       fetch:
-        src: "{{ zuul.project.src_dir }}/{{ site }}.yaml"
+        src: "{{ zuul.project.src_dir }}/{{ zuul_treasuremap_relative_path | default('') }}/{{ site }}.yaml"
         dest: "{{ zuul.executor.work_root }}/{{ site }}.yaml"
         flat: true
 
@@ -56,7 +58,7 @@
     - name: Distribute rendered site documents
       copy:
         src: "{{ zuul.executor.work_root }}/{{ site }}.yaml"
-        dest: "{{ zuul.project.src_dir }}/{{ site }}.yaml"
+        dest: "{{ zuul.project.src_dir }}/{{ zuul_treasuremap_relative_path | default('') }}/{{ site }}.yaml"
         mode: "0600"
 
 - hosts: all
@@ -69,14 +71,14 @@
         set -xe;
         ./tools/deployment/airliner/030-install-k8s-binaries.sh
       args:
-        chdir: "{{ zuul.project.src_dir }}"
+        chdir: "{{ zuul.project.src_dir }}/{{ zuul_treasuremap_relative_path | default('') }}"
 
     - name: Bootstrap the first control plane node
       shell: |
         set -xe;
         ./tools/deployment/airliner/040-kubeadm-bootstrap.sh init
       args:
-        chdir: "{{ zuul.project.src_dir }}"
+        chdir: "{{ zuul.project.src_dir }}/{{ zuul_treasuremap_relative_path | default('') }}"
 
 - hosts: all
   serial: 1
@@ -89,7 +91,7 @@
         set -xe;
         ./tools/deployment/airliner/040-kubeadm-bootstrap.sh control-plane
       args:
-        chdir: "{{ zuul.project.src_dir }}"
+        chdir: "{{ zuul.project.src_dir }}/{{ zuul_treasuremap_relative_path | default('') }}"
 
 - hosts: all
   any_errors_fatal: true
@@ -101,5 +103,5 @@
         set -xe;
         ./tools/deployment/airliner/040-kubeadm-bootstrap.sh worker
       args:
-        chdir: "{{ zuul.project.src_dir }}"
+        chdir: "{{ zuul.project.src_dir }}/{{ zuul_treasuremap_relative_path | default('') }}"
 ...

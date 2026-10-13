@@ -23,4 +23,6 @@
         url = https://opendev.org/airship/treasuremap.git
         EOF
       args:
-        chdir: "{{ zuul.project.src_dir }}"
+        # treasuremap checkout (jobs of other projects inheriting treasuremap
+        # jobs set zuul_treasuremap_relative_path)
+        chdir: "{{ zuul.project.src_dir }}/{{ zuul_treasuremap_relative_path | default('') }}"

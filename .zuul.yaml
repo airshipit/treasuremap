@@ -558,9 +558,12 @@
     vars:
       site: airliner
       helm_version: "4.1.1"
+      # promenade ref the kubeadm chart is taken from; jobs of airship/promenade
+      # inheriting this one set it to "" to test the promenade change itself
+      promenade_ref: master
       gate_scripts_relative_path: .
       gate_scripts:
-        - ./tools/deployment/airliner/005-checkout-promenade-ref.sh master
+        - ./tools/deployment/airliner/005-checkout-promenade-ref.sh {{ promenade_ref }}
         - ./tools/deployment/airliner/010-generate-secrets.sh
         - ./tools/deployment/airliner/020-render-site.sh
         - ./tools/deployment/airliner/030-install-k8s-binaries.sh
@@ -605,7 +608,6 @@
       - tools/gate/playbooks/airship-run-scripts.yaml
     vars:
       site: jumbojet
-      promenade_ref: master
       # Node IPs of the jumbojet site on the vxlan overlay network. The
       # primary node must be the first control plane node of the site.
       overlay_network_setup: true
