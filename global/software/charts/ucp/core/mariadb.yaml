@@ -70,6 +70,9 @@ data:
             release_group: airship-ucp-mariadb
   values:
     labels:
+      db_controller:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
       server:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled

@@ -1,0 +1,431 @@
+---
+# Ceph deployed by Rook: the volumes of the Airship components (StorageClass
+# "general", the default one the charts request). The values are based on
+# the deploy-ceph role of openstack-helm.
+#
+# The genesis Ceph: deployed by the bootstrap Armada on the genesis node
+# only (a mon, a mgr, an OSD, pools without replicas). The Ceph daemons run
+# on the nodes labeled ceph-mon=enabled (mons, mgrs) and ceph-osd=enabled
+# (OSDs). The site types scale it out to the nodes labeled later
+# (kubeadm-rook-ceph-cluster-scaled of the full-site manifest).
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-rook-ceph
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.rook_ceph
+      dest:
+        path: .source
+data:
+  chart_name: rook-ceph
+  release: rook-ceph
+  namespace: rook-ceph
+  wait:
+    timeout: 900
+    labels:
+      app: rook-ceph-operator
+  upgrade:
+    no_hooks: false
+  dependencies: []
+  values:
+    image:
+      repository: rook/ceph
+      tag: v1.20.6
+      pullPolicy: IfNotPresent
+    crds:
+      enabled: true
+    currentNamespaceOnly: false
+    logLevel: INFO
+    rbacEnable: true
+    pspEnable: false
+    allowLoopDevices: true
+    csi:
+      enableRbdDriver: true
+      enableCephfsDriver: false
+      enableGrpcMetrics: false
+      enableCSIHostNetwork: true
+      enablePluginSelinuxHostMount: false
+      enableCSIEncryption: false
+      pluginPriorityClassName: system-node-critical
+      provisionerPriorityClassName: system-cluster-critical
+      rbdFSGroupPolicy: "File"
+      enableOMAPGenerator: false
+      enableMetadata: false
+      provisionerReplicas: 1
+      clusterName: ceph
+      logLevel: 0
+      grpcTimeoutInSeconds: 150
+      allowUnsupportedVersion: false
+      enableLiveness: false
+      forceCephFSKernelClient: true
+      imagePullPolicy: IfNotPresent
+      csiAddons:
+        enabled: false
+      nfs:
+        enabled: false
+      topology:
+        enabled: false
+      readAffinity:
+        enabled: false
+      cephFSAttachRequired: true
+      rbdAttachRequired: true
+      nfsAttachRequired: true
+    enableDiscoveryDaemon: false
+    cephCommandsTimeoutSeconds: "15"
+    disableAdmissionController: true
+    hostpathRequiresPrivileged: false
+    disableDeviceHotplug: false
+    enableOBCWatchOperatorNamespace: true
+---
+# The Driver resource the ceph-csi operator (deployed by the rook-ceph chart)
+# turns into the RBD node and controller plugins: Rook 1.20 doesn't create it.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-ceph-csi-drivers
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.ceph_csi_drivers
+      dest:
+        path: .source
+data:
+  chart_name: ceph-csi-drivers
+  release: ceph-csi-drivers
+  namespace: rook-ceph
+  wait:
+    timeout: 300
+  upgrade:
+    no_hooks: false
+  dependencies: []
+  values:
+    # Rook creates and reconciles them from the CephCluster
+    cephConnections: []
+    clientProfiles: []
+    operatorConfig:
+      create: false
+    drivers:
+      rbd:
+        # the provisioner of the storage classes of the cluster chart
+        name: rook-ceph.rbd.csi.ceph.com
+        enabled: true
+        imageSet:
+          name: rook-csi-operator-image-set-configmap
+      cephfs:
+        enabled: false
+      nfs:
+        enabled: false
+      nvmeof:
+        enabled: false
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-rook-ceph-cluster
+  labels:
+    name: kubeadm-rook-ceph-cluster-global
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.rook_ceph_cluster
+      dest:
+        path: .source
+data:
+  chart_name: rook-ceph-cluster
+  release: rook-ceph-cluster
+  namespace: ceph
+  # The CephCluster is reconciled by the Rook operator after the chart is
+  # deployed: the volumes of the next charts are bound once Ceph is up, the
+  # charts wait for their pods.
+  wait:
+    timeout: 300
+  upgrade:
+    no_hooks: false
+  dependencies: []
+  values:
+    operatorNamespace: rook-ceph
+    clusterName: ceph
+    configOverride: |
+      [global]
+      mon_allow_pool_delete = true
+      auth_allow_insecure_global_id_reclaim = false
+    toolbox:
+      enabled: true
+      resources:
+        limits:
+          cpu: "100m"
+          memory: "64Mi"
+        requests:
+          cpu: "100m"
+          memory: "64Mi"
+    monitoring:
+      enabled: false
+      metricsDisabled: true
+      createPrometheusRules: false
+    pspEnable: false
+    cephClusterSpec:
+      cephVersion:
+        image: quay.io/ceph/ceph:v20.2.4
+        allowUnsupported: false
+      dataDirHostPath: /var/lib/rook
+      skipUpgradeChecks: true
+      continueUpgradeAfterChecksEvenIfNotHealthy: false
+      waitTimeoutForHealthyOSDInMinutes: 10
+      mon:
+        count: 1
+        allowMultiplePerNode: false
+      mgr:
+        count: 1
+        allowMultiplePerNode: false
+        modules:
+          - name: pg_autoscaler
+            enabled: true
+          - name: dashboard
+            enabled: false
+      dashboard:
+        enabled: false
+      network:
+        connections:
+          encryption:
+            enabled: false
+          compression:
+            enabled: false
+          requireMsgr2: false
+        provider: host
+      crashCollector:
+        disable: true
+      logCollector:
+        enabled: false
+      cleanupPolicy:
+        confirmation: ""
+        allowUninstallWithVolumes: false
+      monitoring:
+        enabled: false
+        metricsDisabled: true
+      removeOSDsIfOutAndSafeToRemove: false
+      priorityClassNames:
+        mon: system-node-critical
+        osd: system-node-critical
+        mgr: system-cluster-critical
+      # NEWSITE-CHANGEME: the requests of the gates. The genesis node runs
+      # the control plane, Ceph and the Airship components: the defaults of
+      # the chart (a CPU per mon and OSD, 4Gi per OSD) don't fit the gate
+      # nodes. The OSD memory target is derived from its memory limit.
+      resources:
+        mgr:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            memory: 1Gi
+        mon:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            memory: 1Gi
+        osd:
+          requests:
+            cpu: 100m
+            memory: 1Gi
+          limits:
+            memory: 2Gi
+        prepareosd:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        mgr-sidecar:
+          requests:
+            cpu: 50m
+            memory: 40Mi
+          limits:
+            memory: 100Mi
+      placement:
+        mon:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: ceph-mon
+                      operator: In
+                      values:
+                        - enabled
+        mgr:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: ceph-mon
+                      operator: In
+                      values:
+                        - enabled
+        osd:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: ceph-osd
+                      operator: In
+                      values:
+                        - enabled
+        prepareosd:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: ceph-osd
+                      operator: In
+                      values:
+                        - enabled
+      # The OSD devices of the nodes the OSDs are placed on
+      storage:
+        useAllNodes: true
+        useAllDevices: false
+        devices:
+          # NEWSITE-CHANGEME: the OSD disks of the site. The gates use a loop
+          # device, see tools/gate/playbooks/airliner-ceph-disks.yaml
+          - name: /dev/loop100
+      disruptionManagement:
+        managePodBudgets: true
+        osdMaintenanceTimeout: 30
+        pgHealthCheckTimeout: 0
+      healthCheck:
+        daemonHealth:
+          mon:
+            disabled: false
+            interval: 45s
+          osd:
+            disabled: false
+            interval: 60s
+          status:
+            disabled: false
+            interval: 60s
+        livenessProbe:
+          mon:
+            disabled: false
+          mgr:
+            disabled: false
+          osd:
+            disabled: false
+    ingress:
+      dashboard: {}
+    # A single OSD: no replicas
+    cephBlockPools:
+      - name: builtin-mgr
+        namespace: ceph
+        spec:
+          name: .mgr
+          failureDomain: host
+          replicated:
+            size: 1
+            requireSafeReplicaSize: false
+        storageClass:
+          enabled: false
+      - name: rbd
+        namespace: ceph
+        spec:
+          failureDomain: host
+          replicated:
+            size: 1
+            requireSafeReplicaSize: false
+        storageClass:
+          enabled: true
+          name: general
+          isDefault: true
+          reclaimPolicy: Delete
+          allowVolumeExpansion: true
+          volumeBindingMode: Immediate
+          mountOptions: []
+          allowedTopologies: []
+          parameters:
+            imageFormat: "2"
+            imageFeatures: layering
+            csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+            csi.storage.k8s.io/provisioner-secret-namespace: ceph
+            csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
+            csi.storage.k8s.io/controller-expand-secret-namespace: ceph
+            csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+            csi.storage.k8s.io/node-stage-secret-namespace: ceph
+            csi.storage.k8s.io/fstype: ext4
+    cephFileSystems: []
+    cephBlockPoolsVolumeSnapshotClass:
+      enabled: false
+    cephObjectStores: []
+---
+# Waits until the Ceph cluster and its block pools are ready (a job of the
+# chart, ./tools/deployment/airliner/charts/ceph-ready): the volumes of the
+# charts deployed after it are provisioned at once. A volume requested
+# earlier fails while Rook sets Ceph up, and the CSI provisioner retries it
+# with a growing back-off.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-ceph-ready
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.ceph_ready
+      dest:
+        path: .source
+data:
+  chart_name: ceph-ready
+  release: ceph-ready
+  namespace: ceph
+  wait:
+    timeout: 1800
+    labels:
+      application: ceph-ready
+    resources:
+      - type: job
+  upgrade:
+    no_hooks: false
+    pre:
+      delete:
+        - type: job
+          labels:
+            application: ceph-ready
+  dependencies: []
+  values:
+    cluster: ceph
+    pools:
+      - rbd
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-storage
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+data:
+  description: Ceph (Rook) for the volumes of the Airship components
+  sequenced: true
+  chart_group:
+    - kubeadm-rook-ceph
+    - kubeadm-ceph-csi-drivers
+    - kubeadm-rook-ceph-cluster
+    - kubeadm-ceph-ready
+...

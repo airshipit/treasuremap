@@ -1,0 +1,36 @@
+---
+# Keystone scaled out (the same release as ucp-keystone)
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-keystone-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-keystone-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    pod:
+      replicas:
+        api: 2
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-keystone-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+  storagePolicy: cleartext
+data:
+  description: Keystone scaled out
+  sequenced: true
+  chart_group:
+    - ucp-keystone-memcached
+    - ucp-keystone-scaled
+...

@@ -211,6 +211,9 @@ data:
       replicas:
         api: 2
     labels:
+      test:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
       api:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled

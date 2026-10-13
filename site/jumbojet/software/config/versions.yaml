@@ -18,26 +18,54 @@ metadata:
 data:
   charts:
     kubernetes:
-      # NOTE: on day 0 the chart is rendered from a local promenade checkout,
-      # these locations are used by Armada on day 2 (charts of the promenade
-      # checkout are served by ./tools/deployment/airliner/050-armada-apply.sh)
+      # NOTE: on day 0 the chart is rendered from a local promenade checkout.
+      # The charts deployed by Armada are served by the artifact repository of
+      # the site (the bootstrap nginx, a static pod of the first control plane
+      # node), see ./tools/deployment/airliner/050-armada-apply.sh
       kubeadm:
-        location: http://control-plane.minikube.internal:8282/kubeadm.tgz
+        location: http://artifacts.airship.internal:8282/kubeadm.tgz
         subpath: kubeadm
         type: tar
       tigera_operator:
-        location: http://control-plane.minikube.internal:8282/tigera-operator.tgz
+        location: http://artifacts.airship.internal:8282/tigera-operator.tgz
         subpath: tigera-operator
+        type: tar
+    ucp:
+      mariadb:
+        location: http://artifacts.airship.internal:8282/mariadb.tgz
+        subpath: mariadb
+        type: tar
+      postgresql:
+        location: http://artifacts.airship.internal:8282/postgresql.tgz
+        subpath: postgresql
+        type: tar
+      rabbitmq:
+        location: http://artifacts.airship.internal:8282/rabbitmq.tgz
+        subpath: rabbitmq
+        type: tar
+      memcached:
+        location: http://artifacts.airship.internal:8282/memcached.tgz
+        subpath: memcached
+        type: tar
+      keystone:
+        location: http://artifacts.airship.internal:8282/keystone.tgz
+        subpath: keystone
+        type: tar
+      barbican:
+        location: http://artifacts.airship.internal:8282/barbican.tgz
+        subpath: barbican
+        type: tar
+      deckhand:
+        location: http://artifacts.airship.internal:8282/deckhand.tgz
+        subpath: deckhand
+        type: tar
+      armada:
+        location: http://artifacts.airship.internal:8282/armada.tgz
+        subpath: armada
         type: tar
   images:
     kubernetes:
       kubeadm:
-        # kubeadm, kubelet and kubectl of the anchor image must be of the
-        # Kubernetes version below: the anchor checks it and syncs them to
-        # the nodes. Pinned to the image built with v1.36.3 binaries: the
-        # cluster is upgraded to v1.37.0 at the end of the gate, see
-        # ./tools/deployment/airliner/090-kubeadm-upgrade.sh
-        anchor: quay.io/airshipit/porthole-kubeadm-utility:d132078763816d5538cf3d7627f6becc14d54cdf-ubuntu_noble
         dep_check: quay.io/airshipit/kubernetes-entrypoint:latest-ubuntu_noble
         haproxy: docker.io/library/haproxy:2.9.7
         containerd_pause: registry.k8s.io/pause:3.10
@@ -46,7 +74,9 @@ data:
         dep_check: quay.io/airshipit/kubernetes-entrypoint:latest-ubuntu_noble
   kubernetes:
     # Version of Kubernetes control plane and node binaries (kubeadm,
-    # kubelet, kubectl) used to bootstrap the cluster. Must match the
-    # binaries of the kubeadm anchor image.
+    # kubelet, kubectl): the kubeadm chart installs the binaries of this
+    # version on the nodes (bootstrap script) and keeps them in sync (anchor).
+    # The cluster is upgraded to v1.37.0 at the end of the gate, see
+    # ./tools/deployment/airliner/090-kubeadm-upgrade.sh
     version: v1.36.3
 ...

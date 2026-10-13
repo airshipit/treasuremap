@@ -156,6 +156,15 @@ data:
       create: []
   values:
     conf:
+      barbican:
+        DEFAULT:
+          # Deckhand stores the encrypted documents in Barbican: a document
+          # substituted with secrets is encrypted as a whole (e.g. a chart
+          # with the PKI of the site, tens of KiB), the defaults (20000 and
+          # 25000 bytes) reject it ("Malformed JSON"). Strings: Helm renders
+          # big numbers of the values in the exponent notation (2.097152e+06)
+          max_allowed_secret_in_bytes: "1048576"
+          max_allowed_request_size_in_bytes: "2097152"
       logging:
         loggers:
           keys:

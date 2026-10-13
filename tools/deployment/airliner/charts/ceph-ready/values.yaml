@@ -1,0 +1,26 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+images:
+  # waits for the custom resources (DEPENDENCY_CUSTOM_RESOURCE)
+  entrypoint: quay.io/airshipit/kubernetes-entrypoint:latest-ubuntu_noble
+  pull_policy: IfNotPresent
+
+# The CephCluster (in the namespace of the release) and its block pools
+cluster: ceph
+pools:
+  - rbd
+
+# a job runs until the resources are ready
+active_deadline_seconds: 3600
+...

@@ -1,0 +1,26 @@
+---
+# MariaDB scaled out (the same release as ucp-mariadb): a Galera member per
+# node labeled ucp-control-plane=enabled.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-mariadb-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-mariadb-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  wait:
+    timeout: 1800
+  test:
+    timeout: 600
+  values:
+    pod:
+      replicas:
+        server: 3
+...

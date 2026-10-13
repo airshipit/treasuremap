@@ -48,3 +48,8 @@ airliner.yaml
 site/jumbojet/secrets/certificates/
 site/jumbojet/secrets/keypairs/
 jumbojet.yaml
+
+# images to build, written by tools/deployment/airliner/020-render-site.sh
+build-images
+# documents of a site collected by the gate (secrets)
+/.collect-*/

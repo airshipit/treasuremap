@@ -10,14 +10,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Day 0 of a multinode site: build the Kubernetes cluster with the kubeadm
-# chart on all nodes. Site documents are rendered on the primary node (it must
-# be the first control plane node of the site) and distributed to the rest of
-# the nodes, then every node runs the bootstrap script phase by phase:
-#   1. the first control plane node: kubeadm init
-#   2. the rest of control plane nodes one by one: kubeadm join (etcd members
-#      are added one at a time)
-#   3. workers: kubelet joins with the delivered credentials
+# Deployment of a multinode site with the kubeadm chart. Site documents are
+# rendered on the primary node (it must be the genesis node: the first
+# control plane node of the site) and distributed to the rest of the nodes,
+# then:
+#   1. the genesis node: kubeadm init (the genesis kubeadm chart document)
+#   2. the genesis scripts on the genesis node (genesis_scripts job
+#      variable): the bootstrap Armada deploys the genesis of the site, the
+#      cluster is handed over to the Armada of the site, the documents of
+#      the site are uploaded to Deckhand
+#   3. the rest of control plane nodes one by one: kubeadm join (etcd members
+#      are added one at a time) with the scaled kubeadm chart document
+#   4. workers: kubelet joins with the delivered credentials
+# The full site is deployed by the gate scripts then.
 # Everything runs in the treasuremap checkout: jobs of other projects
 # inheriting the treasuremap jobs set zuul_treasuremap_relative_path.
 ---
@@ -35,6 +40,7 @@
   any_errors_fatal: true
   environment:
     PL_SITE: "{{ site }}"
+    BUILD_IMAGES: "{{ build_images | default('') }}"
   tasks:
     - name: Generate secrets and render site documents
       shell: |
@@ -79,6 +85,16 @@
         ./tools/deployment/airliner/040-kubeadm-bootstrap.sh init
       args:
         chdir: "{{ zuul.project.src_dir }}/{{ zuul_treasuremap_relative_path | default('') }}"
+
+- hosts: primary
+  any_errors_fatal: true
+  tasks:
+    - name: Run genesis scripts
+      include_role:
+        name: "{{ ([item] | flatten | length == 1) | ternary('airship-run-script', 'airship-run-script-set') }}"
+      vars:
+        workload: "{{ [item] | flatten }}"
+      loop: "{{ genesis_scripts | default([]) }}"
 
 - hosts: all
   serial: 1

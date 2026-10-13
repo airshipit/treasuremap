@@ -1,0 +1,29 @@
+---
+# RabbitMQ scaled out (the same release as ucp-rabbitmq): a cluster member
+# per node labeled ucp-control-plane=enabled.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-rabbitmq-scaled
+  layeringDefinition:
+    abstract: false
+    layer: type
+    parentSelector:
+      name: ucp-rabbitmq-global
+    actions:
+      - method: replace
+        path: .test
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  # the members start one by one
+  wait:
+    timeout: 1800
+  test:
+    enabled: false
+  values:
+    pod:
+      replicas:
+        server: 3
+...

@@ -18,13 +18,28 @@
 : "${NAMESPACE:="kube-system"}"
 # Armada release of the kubeadm chart: <release_prefix>-<release>
 : "${RELEASE:="airship-kubeadm"}"
+: "${BOOTSTRAP_DIR:="/var/lib/armada-bootstrap"}"
 
-NODES=$(./tools/deployment/airliner/get-site-nodes.py "${RENDERED}" all)
+# The kubeadm chart document of the cluster: the genesis one (kubeadm, the
+# genesis node only) until the cluster is handed over to the Armada of the
+# site (054-armada-handover.sh), the scaled one (kubeadm-scaled, all nodes
+# of the site) after that if the site has it. The day 2 changes are made in
+# it.
+if [[ -z "${KUBEADM_DOCUMENT:-}" ]]; then
+  KUBEADM_DOCUMENT=kubeadm
+  if sudo test -f "${BOOTSTRAP_DIR}/armada-api" && \
+      ./tools/deployment/airliner/get-document-data.py "${RENDERED}" \
+        armada/Chart/v1 kubeadm-scaled release > /dev/null 2>&1; then
+    KUBEADM_DOCUMENT=kubeadm-scaled
+  fi
+fi
+
+NODES=$(./tools/deployment/airliner/get-site-nodes.py "${RENDERED}" all "${KUBEADM_DOCUMENT}")
 ANCHOR_PODS="release_group=${RELEASE},application=kubernetes"
 
 # Data of the kubeadm chart document: kubeadm_data <documents> [<path>]
 kubeadm_data() {
-  ./tools/deployment/airliner/get-document-data.py "$1" armada/Chart/v1 kubeadm "${2:-}"
+  ./tools/deployment/airliner/get-document-data.py "$1" armada/Chart/v1 "${KUBEADM_DOCUMENT}" "${2:-}"
 }
 
 # Run a command on a host of the site: chroot to the host root filesystem

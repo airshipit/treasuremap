@@ -18,7 +18,10 @@ metadata:
         path: .
   storagePolicy: cleartext
 data:
-  timeout: 1800
+  # the volume of the server may be provisioned long after the chart is
+  # deployed (Ceph of the genesis is being set up)
+  wait:
+    timeout: 1800
   test:
     enabled: false
   values:

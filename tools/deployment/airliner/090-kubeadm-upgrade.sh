@@ -12,15 +12,12 @@
 # limitations under the License.
 
 # Kubernetes upgrade: deploy the kubeadm chart with a newer Kubernetes
-# version and the anchor image with binaries of this version. The anchor
-# syncs the binaries to the nodes, upgrades the control plane (kubeadm
-# upgrade node) and restarts kubelets.
+# version. The anchor installs the binaries of this version on the nodes,
+# upgrades the control plane (kubeadm upgrade node) and restarts kubelets.
 
 set -ex
 
 : "${KUBERNETES_UPGRADE_VERSION:="v1.37.0"}"
-# porthole kubeadm-utility image built with v1.37.0 binaries
-: "${KUBERNETES_UPGRADE_ANCHOR_IMAGE:="quay.io/airshipit/porthole-kubeadm-utility:f059ba0f3e4cc9f33c0ce20c08f521519549e206-ubuntu_noble"}"
 
 # shellcheck source=tools/deployment/airliner/common.sh
 source ./tools/deployment/airliner/common.sh
@@ -28,10 +25,13 @@ source ./tools/deployment/airliner/common.sh
 kubectl version
 kubectl get nodes -o wide
 
-./tools/deployment/airliner/set-document-data.py "${RENDERED}" armada/Chart/v1 kubeadm \
-  "values.cluster_config.kubernetesVersion=${KUBERNETES_UPGRADE_VERSION}" \
-  "values.images.tags.anchor=${KUBERNETES_UPGRADE_ANCHOR_IMAGE}" \
+# The versions of the site are substituted to the kubeadm chart
+./tools/deployment/airliner/set-document-data.py "${PL_SITE}" pegleg/SoftwareVersions/v1 software-versions \
+  "kubernetes.version=${KUBERNETES_UPGRADE_VERSION}"
+./tools/deployment/airliner/set-document-data.py "${PL_SITE}" armada/Chart/v1 "${KUBEADM_DOCUMENT}" \
   "values.kubelet.restart=true"
+./tools/deployment/airliner/020-render-site.sh
+test "$(kubeadm_data "${RENDERED}" values.cluster_config.kubernetesVersion)" == "${KUBERNETES_UPGRADE_VERSION}"
 ./tools/deployment/airliner/050-armada-apply.sh
 
 kubectl version

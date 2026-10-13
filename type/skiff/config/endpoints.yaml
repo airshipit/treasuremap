@@ -98,8 +98,10 @@ data:
         public: barbican
       host_fqdn_override:
         default: null
+      # the clients add the API version: the catalog has the root of the
+      # service (http://barbican-api:9311/v1/v1/secrets otherwise)
       path:
-        default: /v1
+        default: /
       scheme:
         default: "http"
       port:

@@ -39,6 +39,26 @@ data:
         location: http://control-plane.minikube.internal:8282/proxy.tgz
         subpath: proxy
         type: tar
+      # Ceph (Rook): the volumes of the Airship components of the kubeadm
+      # chart based sites
+      rook_ceph:
+        location: https://charts.rook.io/release/rook-ceph-v1.20.6.tgz
+        subpath: rook-ceph
+        type: tar
+      ceph_csi_drivers:
+        location: https://github.com/ceph/ceph-csi-operator/releases/download/v1.0.4/ceph-csi-drivers-1.0.4.tgz
+        subpath: ceph-csi-drivers
+        type: tar
+      rook_ceph_cluster:
+        location: https://charts.rook.io/release/rook-ceph-cluster-v1.20.6.tgz
+        subpath: rook-ceph-cluster
+        type: tar
+      # built from ./tools/deployment/airliner/charts/ceph-ready, served by the
+      # artifact repository of the site (050-armada-apply.sh)
+      ceph_ready:
+        location: http://artifacts.airship.internal:8282/ceph-ready.tgz
+        subpath: ceph-ready
+        type: tar
       scheduler:
         location: http://control-plane.minikube.internal:8282/scheduler.tgz
         subpath: scheduler

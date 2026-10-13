@@ -60,47 +60,62 @@ export CLONE_OSH
 
 cd "${INSTALL_PATH}"
 
+# Clone a project unless it is checked out already: Zuul checks out the
+# projects of the changes the tested one depends on (Depends-On), they are
+# tested as they are.
+clone() {
+    local dir
+    dir=$(basename "$1" .git)
+    if [[ -d "${dir}" ]]; then
+        echo "${dir} is checked out already, using it"
+        return 0
+    fi
+    git clone "$1"
+}
+
 # Clone Airship projects
 if [[ ${CLONE_ARMADA} = true ]] ; then
-    git clone https://opendev.org/airship/armada.git
+    clone https://opendev.org/airship/armada.git
 fi
 if [[ ${CLONE_ARMADA_GO} = true ]] ; then
-    git clone https://opendev.org/airship/armada-go.git
+    clone https://opendev.org/airship/armada-go.git
 fi
 if [[ ${CLONE_ARMADA_OPERATOR} = true ]] ; then
-    git clone https://opendev.org/airship/armada-operator.git
+    clone https://opendev.org/airship/armada-operator.git
 fi
 if [[ ${CLONE_DECKHAND} = true ]] ; then
-    git clone https://opendev.org/airship/deckhand.git
+    clone https://opendev.org/airship/deckhand.git
 fi
 if [[ ${CLONE_SHIPYARD} = true ]] ; then
-    git clone https://opendev.org/airship/shipyard.git
+    clone https://opendev.org/airship/shipyard.git
 fi
 if [[ ${CLONE_PROMENADE} = true ]] ; then
-    git clone https://opendev.org/airship/promenade.git
+    clone https://opendev.org/airship/promenade.git
 fi
 if [[ ${CLONE_PEGLEG} = true ]] ; then
-    git clone https://opendev.org/airship/pegleg.git
+    clone https://opendev.org/airship/pegleg.git
 fi
 if [[ ${CLONE_PORTHOLE} = true ]] ; then
-    git clone https://opendev.org/airship/porthole.git
+    clone https://opendev.org/airship/porthole.git
 fi
 if [[ ${CLONE_KUBERNETES_ENTRYPOINT} = true ]] ; then
-    git clone https://opendev.org/airship/kubernetes-entrypoint.git
+    clone https://opendev.org/airship/kubernetes-entrypoint.git
 fi
 if [[ ${CLONE_MAAS} = true ]] ; then
-    git clone "https://review.opendev.org/airship/maas.git"
+    clone "https://review.opendev.org/airship/maas.git"
 fi
 if [[ ${CLONE_DRYDOCK} = true ]] ; then
-    git clone "https://review.opendev.org/airship/drydock.git"
+    clone "https://review.opendev.org/airship/drydock.git"
 fi
 
 # Clone dependencies
 if [[ ${CLONE_OSH} = true ]] ; then
-    git clone "https://opendev.org/openstack/openstack-helm.git"
-    pushd openstack-helm
-    git checkout "${OSH_COMMIT}"
-    popd
+    if [[ ! -d openstack-helm ]]; then
+        clone "https://opendev.org/openstack/openstack-helm.git"
+        pushd openstack-helm
+        git checkout "${OSH_COMMIT}"
+        popd
+    fi
 fi
 
 ls -la

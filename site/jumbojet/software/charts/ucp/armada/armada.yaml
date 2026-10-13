@@ -1,0 +1,101 @@
+---
+# Armada of the site: the API (armada-go) the day 2 changes are applied with,
+# the operator reconciling the ArmadaChart resources (the cluster is handed
+# over to it from the bootstrap one). The genesis: a single API replica (the
+# one of the type). The ucp-armada document of the type replaces the global
+# one already, so this one is its child (the same release) rather than a
+# replacement.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-ucp-armada
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-armada-type
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.armada-operator.api
+      dest:
+        path: .values.images.tags.api
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.ucp.armada-operator.operator
+      dest:
+        path: .values.images.tags.operator
+data:
+  values:
+    conf:
+      armada:
+        DEFAULT:
+          enable_operator: true
+---
+# Armada scaled out (the same release): two API replicas on different nodes,
+# the anchor drains the nodes one by one.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-ucp-armada-scaled
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-armada-type
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+  substitutions:
+    # the images of the genesis (not changed by this document)
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm-ucp-armada
+        path: .values.images.tags
+      dest:
+        path: .values.images.tags
+data:
+  values:
+    pod:
+      replicas:
+        api: 2
+    conf:
+      armada:
+        DEFAULT:
+          enable_operator: true
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-ucp-armada
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  description: Armada
+  sequenced: true
+  chart_group:
+    - kubeadm-ucp-armada
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-ucp-armada-scaled
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  description: Armada scaled out
+  sequenced: true
+  chart_group:
+    - kubeadm-ucp-armada-scaled
+...

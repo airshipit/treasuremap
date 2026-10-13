@@ -15,7 +15,10 @@
 #
 # The values of the kubeadm chart document of the rendered site are used to
 # render the chart with `helm template`, the bootstrap script is extracted
-# from the kubeadm-service-bootstrap Secret and executed on the node.
+# from the kubeadm-service-bootstrap Secret and executed on the node. The
+# genesis node is bootstrapped with the genesis document (kubeadm), the rest
+# of the nodes join the cluster with the scaled one (kubeadm-scaled) of a
+# multinode site.
 #
 # The node is the site node which IP is configured on this machine. Its
 # bootstrap phase is defined by the site:
@@ -41,8 +44,6 @@ if [[ ! -d "${KUBEADM_CHART}" ]]; then
   git clone https://opendev.org/airship/promenade.git "${INSTALL_PATH}/promenade"
 fi
 
-GET_DATA="./tools/deployment/airliner/get-document-data.py ${RENDERED} armada/Chart/v1 kubeadm"
-
 # Node name and IP are defined by the site, certificates are issued for them
 LOCAL_NODE=$(./tools/deployment/airliner/get-site-nodes.py "${RENDERED}" local)
 read -r NODE_NAME NODE_IP _ NODE_PHASE <<< "${LOCAL_NODE}"
@@ -50,6 +51,13 @@ if [[ -n "${PHASE}" && "${PHASE}" != "${NODE_PHASE}" ]]; then
   echo "${NODE_NAME} is bootstrapped in the ${NODE_PHASE} phase, skipping"
   exit 0
 fi
+
+KUBEADM_DOCUMENT=kubeadm
+if [[ "${NODE_PHASE}" != init ]] && ./tools/deployment/airliner/get-document-data.py \
+    "${RENDERED}" armada/Chart/v1 kubeadm-scaled release > /dev/null 2>&1; then
+  KUBEADM_DOCUMENT=kubeadm-scaled
+fi
+GET_DATA="./tools/deployment/airliner/get-document-data.py ${RENDERED} armada/Chart/v1 ${KUBEADM_DOCUMENT}"
 
 NODE_ROLE=master
 case "${NODE_PHASE}" in

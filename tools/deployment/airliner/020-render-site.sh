@@ -16,6 +16,22 @@ set -ex
 : "${PEGLEG:="./tools/airship pegleg"}"
 : "${PL_SITE:="airliner"}"
 : "${RENDERED:="${PL_SITE}.yaml"}"
+# Images to build from the checkouts of their projects (e.g. "armada-go
+# deckhand"): jobs of these projects test their changes. The images are
+# pushed to the image registry of the artifact repository of the site by
+# 050-armada-apply.sh, the documents are rendered with them.
+: "${BUILD_IMAGES:=""}"
+: "${ARTIFACTS_REGISTRY:="artifacts.airship.internal:5000"}"
+
+if [[ -n "${BUILD_IMAGES}" ]]; then
+  # shellcheck disable=SC2086
+  for image in ${BUILD_IMAGES}; do
+    sed -i "s#quay.io/airshipit/${image}:#${ARTIFACTS_REGISTRY}/airshipit/${image}:#g" \
+      global/software/config/versions.yaml site/*/software/config/versions.yaml
+  done
+  # for the build (050-armada-apply.sh) and the next renders
+  echo "${BUILD_IMAGES}" > build-images
+fi
 
 # Lint documents
 sudo ${PEGLEG} site -r . lint "${PL_SITE}" -x P001 -x P009

@@ -1,0 +1,71 @@
+---
+# The site deployed by the Armada of the site (Armada API, the documents are
+# uploaded to Deckhand) after the genesis (kubeadm-cluster manifest) when the
+# rest of the nodes have joined the cluster: the cluster and the components
+# are scaled out to the nodes, see
+# ./tools/deployment/airliner/056-armada-full-site.sh. The day 2 changes are
+# applied with it too.
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-full-site
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  release_prefix: airship
+  chart_groups:
+    - kubeadm-container-networking
+    - kubeadm-cluster-scaled
+    - kubeadm-storage-scaled
+    - kubeadm-ucp-core-scaled
+    - ucp-keystone-scaled
+    - ucp-deckhand-scaled
+    - kubeadm-ucp-armada-scaled
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-cluster-scaled
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  description: Kubernetes cluster configuration (kubeadm chart), all nodes
+  sequenced: true
+  chart_group:
+    - kubeadm-scaled
+---
+# ucp-core without the ingress: the components are used in-cluster only
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-ucp-core
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  description: Databases and messaging of the Airship components
+  chart_group:
+    - ucp-mariadb
+    - ucp-postgresql
+    - ucp-rabbitmq
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-ucp-core-scaled
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  description: Databases and messaging of the Airship components scaled out
+  chart_group:
+    - ucp-mariadb-scaled
+    - ucp-postgresql
+    - ucp-rabbitmq-scaled
+...

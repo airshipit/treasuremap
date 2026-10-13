@@ -23,8 +23,9 @@ set -ex
 # 1372 + 28 bytes of headers fits the smallest pod MTU used by the gates
 : "${SMOKE_TEST_PING_SIZE:="1372"}"
 
-GET_DATA="./tools/deployment/airliner/get-document-data.py ${RENDERED} armada/Chart/v1 kubeadm"
-NODES=$(./tools/deployment/airliner/get-site-nodes.py "${RENDERED}" all)
+# shellcheck source=tools/deployment/airliner/common.sh
+source ./tools/deployment/airliner/common.sh
+GET_DATA="kubeadm_data ${RENDERED}"
 
 kubectl get nodes -o wide
 # All nodes of the site are registered with the site IPs and ready

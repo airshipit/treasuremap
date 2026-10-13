@@ -82,12 +82,16 @@ canary_pods() {
 }
 CANARY_PODS=$(canary_pods)
 
-# The configuration is kept in the rendered documents: the next steps deploy
-# it with their own changes.
-./tools/deployment/airliner/set-document-data.py "${RENDERED}" armada/Chart/v1 kubeadm \
-  "values.network.kubernetes.service_node_port_range=${NODE_PORT_RANGE}" \
+# The configuration is changed in the documents of the site (the network of
+# the cluster is substituted from the common addresses), the site is rendered
+# again: the next steps deploy it with their own changes.
+./tools/deployment/airliner/set-document-data.py "${PL_SITE}" pegleg/CommonAddresses/v1 common-addresses \
+  "kubernetes.service_node_port_range=${NODE_PORT_RANGE}"
+./tools/deployment/airliner/set-document-data.py "${PL_SITE}" armada/Chart/v1 "${KUBEADM_DOCUMENT}" \
   "values.kubelet.restart=${KUBELET_RESTART}" \
   "values.kubelet.containerLogMaxFiles=${CONTAINER_LOG_MAX_FILES}"
+./tools/deployment/airliner/020-render-site.sh
+test "$(kubeadm_data "${RENDERED}" values.network.kubernetes.service_node_port_range)" == "${NODE_PORT_RANGE}"
 ./tools/deployment/airliner/050-armada-apply.sh
 
 # The control plane runs with the new configuration

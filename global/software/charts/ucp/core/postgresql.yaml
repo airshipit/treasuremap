@@ -107,6 +107,12 @@ data:
     development:
       enabled: false
     labels:
+      job:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+      prometheus_postgresql_exporter:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
       server:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled

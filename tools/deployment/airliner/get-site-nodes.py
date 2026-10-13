@@ -10,9 +10,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Print nodes of the kubeadm chart document of rendered site documents.
+"""Print nodes of a kubeadm chart document of rendered site documents.
 
-Usage: get-site-nodes.py <rendered.yaml> all|local
+Usage: get-site-nodes.py <rendered.yaml> all|local [<document>]
 
 Prints "<name> <ip> <role> <phase>" lines, where phase is the bootstrap
 phase of the node: "init" for the first control plane node,
@@ -21,6 +21,11 @@ phase of the node: "init" for the first control plane node,
 "all" prints all nodes. "local" prints the node which IP is configured on
 this machine; a single node site prints its node even if its IP is not
 configured yet (the bootstrap script brings it up).
+
+<document> is the name of the kubeadm chart document: the genesis one
+(kubeadm) has the genesis node only, the scaled one (kubeadm-scaled) of a
+multinode site has all nodes of the site. All nodes of the site by default:
+the scaled document if the site has it, the genesis one otherwise.
 """
 
 import subprocess
@@ -29,15 +34,15 @@ import sys
 import yaml
 
 
-def site_nodes(rendered):
+def site_nodes(rendered, document=None):
     with open(rendered) as f:
-        for doc in yaml.safe_load_all(f):
-            if doc and doc.get('schema') == 'armada/Chart/v1' and \
-                    doc.get('metadata', {}).get('name') == 'kubeadm':
-                nodes = doc['data']['values']['nodes']
-                break
-        else:
-            sys.exit('Document armada/Chart/v1 kubeadm is not found')
+        charts = {doc['metadata']['name']: doc for doc in yaml.safe_load_all(f)
+                  if doc and doc.get('schema') == 'armada/Chart/v1'}
+    if document is None:
+        document = 'kubeadm-scaled' if 'kubeadm-scaled' in charts else 'kubeadm'
+    if document not in charts:
+        sys.exit('Document armada/Chart/v1 %s is not found' % document)
+    nodes = charts[document]['data']['values']['nodes']
 
     init_done = False
     for node in nodes:
@@ -57,9 +62,9 @@ def local_ips():
 
 
 def main(argv):
-    if len(argv) != 3 or argv[2] not in ('all', 'local'):
+    if len(argv) not in (3, 4) or argv[2] not in ('all', 'local'):
         sys.exit(__doc__)
-    nodes = site_nodes(argv[1])
+    nodes = site_nodes(argv[1], argv[3] if len(argv) == 4 else None)
     if argv[2] == 'local':
         ips = local_ips()
         nodes = [n for n in nodes if n['ip'] in ips] or \

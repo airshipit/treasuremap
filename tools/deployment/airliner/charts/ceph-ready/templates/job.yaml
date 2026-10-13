@@ -1,0 +1,42 @@
+{{- $resources := list (dict "apiVersion" "ceph.rook.io/v1" "kind" "CephCluster" "namespace" .Release.Namespace "name" .Values.cluster "fields" (list (dict "key" "status.phase" "value" "Ready"))) -}}
+{{- range $pool := .Values.pools }}
+{{- $resources = append $resources (dict "apiVersion" "ceph.rook.io/v1" "kind" "CephBlockPool" "namespace" $.Release.Namespace "name" $pool "fields" (list (dict "key" "status.phase" "value" "Ready"))) }}
+{{- end }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    application: ceph-ready
+    release_group: {{ .Release.Name }}
+spec:
+  backoffLimit: 6
+  activeDeadlineSeconds: {{ .Values.active_deadline_seconds }}
+  template:
+    metadata:
+      labels:
+        application: ceph-ready
+        release_group: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ .Release.Name }}
+      restartPolicy: OnFailure
+      containers:
+        - name: ceph-ready
+          image: {{ .Values.images.entrypoint }}
+          imagePullPolicy: {{ .Values.images.pull_policy }}
+          command:
+            - kubernetes-entrypoint
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: DEPENDENCY_CUSTOM_RESOURCE
+              value: {{ toJson $resources | quote }}
+...

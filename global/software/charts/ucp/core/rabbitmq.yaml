@@ -79,6 +79,15 @@ data:
             release_group: airship-ucp-rabbitmq
   values:
     labels:
+      jobs:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+      test:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
+      topology_controller:
+        node_selector_key: ucp-control-plane
+        node_selector_value: enabled
       server:
         node_selector_key: ucp-control-plane
         node_selector_value: enabled
