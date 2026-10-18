@@ -299,8 +299,9 @@ data:
         role: control-plane
 
     kubelet:
-      # Single node cluster: the anchor must not restart kubelet, it drains
+      # Single node cluster: the anchor must not drain kubelet, it drains
       # the node first and there is no other node for the workloads.
+      drain: false
       restart: false
       # used by the kubelet configuration below, changed by the gate to check
       # that the anchor applies kubelet configuration changes
