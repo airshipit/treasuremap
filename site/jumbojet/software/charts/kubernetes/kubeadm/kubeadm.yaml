@@ -344,8 +344,13 @@ data:
   # every node (anchor pods become ready after that)
   wait:
     timeout: 3600
+    resources:
+      - type: daemonset
+      - type: pod
     labels:
       release_group: airship-kubeadm
+    native:
+      enabled: false
   upgrade:
     no_hooks: false
   dependencies: []

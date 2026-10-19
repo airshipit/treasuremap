@@ -283,8 +283,4 @@ kubectl -n calico-system rollout status daemonset/calico-node --timeout=600s
 kubectl -n calico-system rollout status deployment/calico-kube-controllers --timeout=600s
 kubectl wait --for=condition=Ready nodes --all --timeout=300s
 
-# Armada doesn't wait for the anchor to apply the configuration on every
-# node (node by node, it takes long after the release is deployed): wait for
-# it here.
-wait_anchor_applied "${DOCUMENTS}"
 check_cluster_healthy

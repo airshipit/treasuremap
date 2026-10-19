@@ -35,10 +35,18 @@ data:
   chart_name: tigera-operator
   release: tigera-operator
   namespace: tigera-operator
+  # Calico has to be up before the kubeadm chart: the nodes are not ready
+  # without CNI and the anchor pods are not scheduled on them. Wait for the
+  # Installation (created by the chart, cluster scoped, ready when Calico is
+  # rolled out on every node), not only for the operator pod.
   wait:
     timeout: 600
-    labels:
-      release_group: airship-tigera-operator
+    resources:
+      - type: pod
+        labels:
+          release_group: airship-tigera-operator
+      - type: installation
+        namespace: ""
   upgrade:
     no_hooks: true
   dependencies: []
