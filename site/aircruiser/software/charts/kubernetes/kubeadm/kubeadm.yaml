@@ -1,0 +1,543 @@
+---
+# Kubeadm chart (airship/promenade charts/kubeadm) of the aircruiser site:
+# 3 control plane nodes with stacked etcd and 2 workers, the configuration
+# of the cluster is defined by kubeadm-global. The certificates are issued
+# by the PKI catalog of the site (site/aircruiser/pki/pki-catalog.yaml).
+#
+# The genesis: the genesis node (the first control plane node) only. On day
+# 0 the values of this document are used to render the bootstrap script
+# (kubeadm-service-bootstrap Secret) which runs kubeadm init on it, then the
+# bootstrap Armada deploys the chart with the kubeadm-cluster manifest, the
+# anchor daemonsets take over the node configuration, see
+#   ./tools/deployment/aircat/040-kubeadm-bootstrap.sh
+#   ./tools/gate/playbooks/aircat-multinode-deploy.yaml
+#   ./tools/deployment/aircat/050-armada-apply.sh
+# The rest of the nodes join the cluster with kubeadm-scaled (below).
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: kubeadm-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.kubernetes.kubeadm
+      dest:
+        path: .source
+
+    # Images
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .images.kubernetes.kubeadm
+      dest:
+        path: .values.images.tags
+
+    # Kubernetes version
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .kubernetes.version
+      dest:
+        path: .values.cluster_config.kubernetesVersion
+
+    # Network
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .dns.cluster_domain
+      dest:
+        path: .values.network.dns.cluster_domain
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .dns.service_ip
+      dest:
+        path: .values.network.dns.service_ip
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.pod_cidr
+      dest:
+        path: .values.network.kubernetes.pod_cidr
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.service_cidr
+      dest:
+        path: .values.network.kubernetes.service_cidr
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.service_node_port_range
+      dest:
+        path: .values.network.kubernetes.service_node_port_range
+
+    # Kubernetes CA
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: kubeadm-kubernetes
+        path: .
+      dest:
+        path: .values.certs.ca.crt
+    - src:
+        schema: deckhand/CertificateAuthorityKey/v1
+        name: kubeadm-kubernetes
+        path: .
+      dest:
+        path: .values.certs.ca.key
+
+    # Kubernetes apiserver
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-apiserver
+        path: .
+      dest:
+        path: .values.certs.apiserver.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-apiserver
+        path: .
+      dest:
+        path: .values.certs.apiserver.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-apiserver-kubelet-client
+        path: .
+      dest:
+        path: .values.certs.apiserver_kubelet_client.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-apiserver-kubelet-client
+        path: .
+      dest:
+        path: .values.certs.apiserver_kubelet_client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-apiserver-etcd
+        path: .
+      dest:
+        path: .values.certs.apiserver_etcd_client.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-apiserver-etcd
+        path: .
+      dest:
+        path: .values.certs.apiserver_etcd_client.key
+
+    # Kubernetes controller-manager and scheduler
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-controller-manager
+        path: .
+      dest:
+        path: .values.certs.controller_manager.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-controller-manager
+        path: .
+      dest:
+        path: .values.certs.controller_manager.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-scheduler
+        path: .
+      dest:
+        path: .values.certs.scheduler.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-scheduler
+        path: .
+      dest:
+        path: .values.certs.scheduler.key
+
+    # Cluster administrator.
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-admin
+        path: .
+      dest:
+        path: .values.certs.admin.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-admin
+        path: .
+      dest:
+        path: .values.certs.admin.key
+
+    # Front proxy
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: kubeadm-front-proxy
+        path: .
+      dest:
+        path: .values.certs.front_proxy_ca.crt
+    - src:
+        schema: deckhand/CertificateAuthorityKey/v1
+        name: kubeadm-front-proxy
+        path: .
+      dest:
+        path: .values.certs.front_proxy_ca.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-front-proxy-client
+        path: .
+      dest:
+        path: .values.certs.front_proxy_client.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-front-proxy-client
+        path: .
+      dest:
+        path: .values.certs.front_proxy_client.key
+
+    # Etcd
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: kubeadm-etcd
+        path: .
+      dest:
+        path: .values.certs.etcd_ca.crt
+    - src:
+        schema: deckhand/CertificateAuthority/v1
+        name: kubeadm-etcd-peer
+        path: .
+      dest:
+        path: .values.certs.etcd_ca_peer.crt
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-etcd-healthcheck-client
+        path: .
+      dest:
+        path: .values.certs.etcd_healthcheck_client.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-etcd-healthcheck-client
+        path: .
+      dest:
+        path: .values.certs.etcd_healthcheck_client.key
+
+    # Service account signing key
+    - src:
+        schema: deckhand/PrivateKey/v1
+        name: kubeadm-service-account
+        path: .
+      dest:
+        path: .values.certs.sa.key
+    - src:
+        schema: deckhand/PublicKey/v1
+        name: kubeadm-service-account
+        path: .
+      dest:
+        path: .values.certs.sa.pub
+
+    # Per node certificates: aircruiser-control-1
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-etcd-aircruiser-control-1
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-1.etcd_server.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-etcd-aircruiser-control-1
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-1.etcd_server.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-etcd-aircruiser-control-1-peer
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-1.etcd_peer.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-etcd-aircruiser-control-1-peer
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-1.etcd_peer.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-kubelet-aircruiser-control-1
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-1.kubelet.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-kubelet-aircruiser-control-1
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-1.kubelet.key
+data:
+  values:
+    # Nodes of the cluster. Not used by the chart itself (but haproxy
+    # backends): gate scripts pass them to the bootstrap script as NODE_NAME
+    # and NODE_IP. The first control plane node runs kubeadm init.
+    nodes:
+      - name: aircruiser-control-1
+        ip: 10.248.0.11
+        role: control-plane
+    kubelet:
+      # A single node: the anchor must not restart kubelet, it drains the
+      # node first and there is no other node for the workloads.
+      restart: false
+---
+# The genesis scaled out to all nodes of the site (the same release): the
+# rest of the nodes join the cluster with the values of this document (see
+# ./tools/gate/playbooks/aircat-multinode-deploy.yaml), the Armada of the
+# site deploys it with the kubeadm-full-site manifest, see
+#   ./tools/deployment/aircat/056-armada-full-site.sh
+# The configuration of the cluster is the one of the genesis.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-scaled
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: kubeadm-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+  substitutions:
+    # The configuration of the genesis: chart source, images, Kubernetes
+    # version, network and certificates (the ones of the genesis node too).
+    # Deckhand substitutes the data of the source itself, not a copy: the
+    # certificates are substituted one by one, the ones of the nodes are
+    # added below without changing the genesis.
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .source
+      dest:
+        path: .source
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.images
+      dest:
+        path: .values.images
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.cluster_config
+      dest:
+        path: .values.cluster_config
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.network
+      dest:
+        path: .values.network
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.ca
+      dest:
+        path: .values.certs.ca
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.sa
+      dest:
+        path: .values.certs.sa
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.apiserver
+      dest:
+        path: .values.certs.apiserver
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.apiserver_kubelet_client
+      dest:
+        path: .values.certs.apiserver_kubelet_client
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.apiserver_etcd_client
+      dest:
+        path: .values.certs.apiserver_etcd_client
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.controller_manager
+      dest:
+        path: .values.certs.controller_manager
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.scheduler
+      dest:
+        path: .values.certs.scheduler
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.admin
+      dest:
+        path: .values.certs.admin
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.front_proxy_ca
+      dest:
+        path: .values.certs.front_proxy_ca
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.front_proxy_client
+      dest:
+        path: .values.certs.front_proxy_client
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.etcd_ca
+      dest:
+        path: .values.certs.etcd_ca
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.etcd_ca_peer
+      dest:
+        path: .values.certs.etcd_ca_peer
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.etcd_healthcheck_client
+      dest:
+        path: .values.certs.etcd_healthcheck_client
+    - src:
+        schema: armada/Chart/v1
+        name: kubeadm
+        path: .values.certs.nodes.aircruiser-control-1
+      dest:
+        path: .values.certs.nodes.aircruiser-control-1
+
+    # Per node etcd certificates: aircruiser-control-2
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-etcd-aircruiser-control-2
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-2.etcd_server.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-etcd-aircruiser-control-2
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-2.etcd_server.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-etcd-aircruiser-control-2-peer
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-2.etcd_peer.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-etcd-aircruiser-control-2-peer
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-2.etcd_peer.key
+    # Per node etcd certificates: aircruiser-control-3
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-etcd-aircruiser-control-3
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-3.etcd_server.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-etcd-aircruiser-control-3
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-3.etcd_server.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubeadm-etcd-aircruiser-control-3-peer
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-3.etcd_peer.crt
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubeadm-etcd-aircruiser-control-3-peer
+        path: .
+      dest:
+        path: .values.certs.nodes.aircruiser-control-3.etcd_peer.key
+
+    # Per node kubelet certificates: collected from all kubeadm-kubelet-<node>
+    # documents of the PKI catalog, so nodes can be added without changing
+    # this document. The name regex is searched (not anchored by Deckhand),
+    # hence the anchors: kubeadm-apiserver-kubelet-client must not match.
+    - src:
+        schema: deckhand/Certificate/v1
+        name_is_regex: true
+        name: ^kubeadm-kubelet-(.+)$
+        path: .
+      dest:
+        path: ".values.certs.nodes.\\1.kubelet.crt"
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name_is_regex: true
+        name: ^kubeadm-kubelet-(.+)$
+        path: .
+      dest:
+        path: ".values.certs.nodes.\\1.kubelet.key"
+data:
+  chart_name: kubeadm
+  release: kubeadm
+  namespace: kube-system
+  # The release is ready when the anchor has applied the configuration on
+  # every node (anchor pods become ready after that)
+  wait:
+    timeout: 3600
+    resources:
+      - type: daemonset
+      - type: pod
+    labels:
+      release_group: airship-kubeadm
+    native:
+      enabled: false
+  upgrade:
+    no_hooks: false
+  dependencies: []
+  values:
+    # Nodes of the site. Certificates of the PKI catalog are issued for these
+    # names and IPs. Not used by the chart itself: gate scripts pass them to
+    # the bootstrap script as NODE_NAME and NODE_IP. The first control plane
+    # node runs kubeadm init.
+    nodes:
+      - name: aircruiser-control-1
+        ip: 10.248.0.11
+        role: control-plane
+      - name: aircruiser-control-2
+        ip: 10.248.0.12
+        role: control-plane
+      - name: aircruiser-control-3
+        ip: 10.248.0.13
+        role: control-plane
+      - name: aircruiser-worker-1
+        ip: 10.248.0.21
+        role: worker
+      - name: aircruiser-worker-2
+        ip: 10.248.0.22
+        role: worker
+    kubelet:
+      # Scaling out doesn't change the kubelet configuration (the nodes have
+      # joined with it): the anchor must not drain the nodes and move the
+      # workloads (the volumes of the Airship components) while Ceph is
+      # scaled out. The Kubernetes upgrade enables it (090 gate script).
+      restart: false
+

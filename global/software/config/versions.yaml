@@ -53,7 +53,7 @@ data:
         location: https://charts.rook.io/release/rook-ceph-cluster-v1.20.6.tgz
         subpath: rook-ceph-cluster
         type: tar
-      # built from ./tools/deployment/airliner/charts/ceph-ready, served by the
+      # built from ./tools/deployment/aircat/charts/ceph-ready, served by the
       # artifact repository of the site (050-armada-apply.sh)
       ceph_ready:
         location: http://artifacts.airship.internal:8282/ceph-ready.tgz

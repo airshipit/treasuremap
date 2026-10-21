@@ -74,7 +74,7 @@ data:
     bundle:
       tpl:
         # Anchor pods are used to run commands on the hosts (chroot /host),
-        # see host_exec in ./tools/deployment/airliner/common.sh
+        # see host_exec in ./tools/deployment/aircat/common.sh
         "templates/_daemonset-masters.yaml.patch": |
           spec:
             template:

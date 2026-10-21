@@ -300,7 +300,7 @@ data:
         useAllDevices: false
         devices:
           # NEWSITE-CHANGEME: the OSD disks of the site. The gates use a loop
-          # device, see tools/gate/playbooks/airliner-ceph-disks.yaml
+          # device, see tools/gate/playbooks/aircat-ceph-disks.yaml
           - name: /dev/loop100
       disruptionManagement:
         managePodBudgets: true
@@ -370,7 +370,7 @@ data:
     cephObjectStores: []
 ---
 # Waits until the Ceph cluster and its block pools are ready (a job of the
-# chart, ./tools/deployment/airliner/charts/ceph-ready): the volumes of the
+# chart, ./tools/deployment/aircat/charts/ceph-ready): the volumes of the
 # charts deployed after it are provisioned at once. A volume requested
 # earlier fails while Rook sets Ceph up, and the CSI provisioner retries it
 # with a growing back-off.

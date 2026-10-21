@@ -1,0 +1,54 @@
+---
+# The genesis of the site deployed by the bootstrap Armada (static pods of
+# the first control plane node, the genesis one) on the cluster built on
+# day 0 with the kubeadm chart: Calico (Tigera operator), the kubeadm chart
+# with the same values as on day 0, the genesis Ceph and the Airship
+# components the site is deployed with then (full-site manifest), see
+# ./tools/deployment/aircat/050-armada-apply.sh
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-cluster
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  release_prefix: airship
+  chart_groups:
+    - kubeadm-container-networking
+    - kubeadm-cluster
+    - kubeadm-storage
+    - kubeadm-ucp-core
+    - ucp-keystone
+    - ucp-deckhand
+    - kubeadm-ucp-armada
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-container-networking
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  description: Container networking via Calico (Tigera operator)
+  sequenced: true
+  chart_group:
+    - kubeadm-tigera-operator
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubeadm-cluster
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  description: Kubernetes cluster configuration (kubeadm chart)
+  sequenced: true
+  chart_group:
+    - kubeadm
+...

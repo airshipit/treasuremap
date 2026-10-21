@@ -39,17 +39,17 @@ ucp_airflow_core_fernet_key.yaml
 # rendered manifests
 airskiff.yaml
 
-# airliner site PKI is generated (tools/deployment/airliner/010-generate-secrets.sh)
-site/airliner/secrets/certificates/
-site/airliner/secrets/keypairs/
-airliner.yaml
+# aircat site PKI is generated (tools/deployment/aircat/010-generate-secrets.sh)
+site/aircat/secrets/certificates/
+site/aircat/secrets/keypairs/
+aircat.yaml
 
-# jumbojet site PKI is generated (tools/deployment/airliner/010-generate-secrets.sh)
-site/jumbojet/secrets/certificates/
-site/jumbojet/secrets/keypairs/
-jumbojet.yaml
+# aircruiser site PKI is generated (tools/deployment/aircat/010-generate-secrets.sh)
+site/aircruiser/secrets/certificates/
+site/aircruiser/secrets/keypairs/
+aircruiser.yaml
 
-# images to build, written by tools/deployment/airliner/020-render-site.sh
+# images to build, written by tools/deployment/aircat/020-render-site.sh
 build-images
 # documents of a site collected by the gate (secrets)
 /.collect-*/
