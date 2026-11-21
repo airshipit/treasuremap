@@ -15,7 +15,7 @@
 #
 # The values of the kubeadm chart document of the rendered site are used to
 # render the chart with `helm template`, the bootstrap script is extracted
-# from the kubeadm-service-bootstrap Secret and executed on the node. The
+# from the kubeadm-service-phase-runner Secret and executed on the node. The
 # genesis node is bootstrapped with the genesis document (kubeadm), the rest
 # of the nodes join the cluster with the scaled one (kubeadm-scaled) of a
 # multinode site.
@@ -117,9 +117,9 @@ fi
 
 ${HELM} template kubeadm "${KUBEADM_CHART}" \
   -f "${WORK_DIR}/values.yaml" \
-  --set manifests.secret_bootstrap=true \
-  --set bootstrap.string_data=true \
-  --set bootstrap.nodename="${NODE_NAME}" \
+  --set manifests.secret_phase_runner=true \
+  --set phase_runner.string_data=true \
+  --set phase_runner.nodename="${NODE_NAME}" \
   "${HELM_EXTRA_ARGS[@]}" > "${WORK_DIR}/kubeadm.yaml"
 
 python3 - "${WORK_DIR}/kubeadm.yaml" "${WORK_DIR}/bootstrap.sh" << 'EOF'
@@ -130,17 +130,17 @@ import yaml
 with open(sys.argv[1]) as f:
     for doc in yaml.safe_load_all(f):
         if doc and doc.get('kind') == 'Secret' and \
-                doc['metadata']['name'] == 'kubeadm-service-bootstrap':
+                doc['metadata']['name'] == 'kubeadm-service-phase-runner':
             with open(sys.argv[2], 'w') as out:
                 out.write(doc['stringData']['script'])
             break
     else:
-        sys.exit('Secret kubeadm-service-bootstrap is not found')
+        sys.exit('Secret kubeadm-service-phase-runner is not found')
 EOF
 
 # shellcheck disable=SC2086
 if ! sudo env NODE_NAME="${NODE_NAME}" NODE_IP="${NODE_IP}" NODE_ROLE="${NODE_ROLE}" \
-    bash "${WORK_DIR}/bootstrap.sh" -- ${KUBEADM_ARGS}; then
+    bash "${WORK_DIR}/bootstrap.sh" -- kubeadm_run ${KUBEADM_ARGS}; then
   print_diagnostics
   exit 1
 fi

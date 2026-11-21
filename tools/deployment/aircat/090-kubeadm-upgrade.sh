@@ -29,7 +29,7 @@ kubectl get nodes -o wide
 ./tools/deployment/aircat/set-document-data.py "${PL_SITE}" pegleg/SoftwareVersions/v1 software-versions \
   "kubernetes.version=${KUBERNETES_UPGRADE_VERSION}"
 ./tools/deployment/aircat/set-document-data.py "${PL_SITE}" armada/Chart/v1 "${KUBEADM_DOCUMENT}" \
-  "values.kubelet.restart=true"
+  "values.anchor.reconcile.kubelet_restart=true"
 ./tools/deployment/aircat/020-render-site.sh
 test "$(kubeadm_data "${RENDERED}" values.cluster_config.kubernetesVersion)" == "${KUBERNETES_UPGRADE_VERSION}"
 ./tools/deployment/aircat/050-armada-apply.sh

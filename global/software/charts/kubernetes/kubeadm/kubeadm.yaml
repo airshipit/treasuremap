@@ -37,10 +37,12 @@ data:
     no_hooks: false
   dependencies: []
   values:
+    anchor:
+      reconcile:
+        # The anchor applies kubelet configuration changes: it drains the
+        # node and restarts kubelet (there are other nodes for the workloads)
+        kubelet_restart: true
     kubelet:
-      # The anchor applies kubelet configuration changes: it drains the node
-      # and restarts kubelet (there are other nodes for the workloads)
-      restart: true
       # used by the kubelet configuration below, changed by the gate to check
       # that the anchor applies kubelet configuration changes
       containerLogMaxFiles: 2
@@ -54,7 +56,7 @@ data:
 
     vip:
       # haproxy frontend and backends: "<bind>|<apiserver>,<apiserver>,..."
-      init: >-
+      init_val: >-
         *:6553|{{- $backends := list -}}
         {{- range .Values.nodes -}}
         {{- if eq .role "control-plane" -}}
@@ -64,12 +66,12 @@ data:
         {{- join "," $backends -}}
 
     kubeadm:
-      fs:
-        "ClusterConfiguration": "templates/phases/snippets/kubeadm/ClusterConfiguration"
-        "init_config.yaml": "templates/phases/snippets/kubeadm/init_config.yaml"
-        "join_config.yaml": "templates/phases/snippets/kubeadm/join_config.yaml"
+      templates:
+        "ClusterConfiguration": "templates/phases/modules/kubeadm/ClusterConfiguration"
+        "init_config.yaml": "templates/phases/modules/kubeadm/init_config.yaml"
+        "join_config.yaml": "templates/phases/modules/kubeadm/join_config.yaml"
         # used by the anchor (day 2): kubeadm upgrade node
-        "upgrade_config.yaml": "templates/phases/snippets/kubeadm/upgrade_config.yaml"
+        "upgrade_config.yaml": "templates/phases/modules/kubeadm/upgrade_config.yaml"
 
     bundle:
       tpl:
@@ -95,7 +97,7 @@ data:
                 hostIPC: true
                 hostNetwork: true
                 hostPID: true
-        "templates/phases/snippets/kubeadm/ClusterConfiguration": |
+        "templates/phases/modules/kubeadm/ClusterConfiguration": |
           apiVersion: kubeadm.k8s.io/v1beta4
           kind: ClusterConfiguration
           kubernetesVersion: {{ .Values.cluster_config.kubernetesVersion }}
@@ -134,7 +136,7 @@ data:
                 # peer certificates are issued by a dedicated CA
                 - name: peer-trusted-ca-file
                   value: /etc/kubernetes/pki/etcd/ca-peer.crt
-        "templates/phases/snippets/kubeadm/init_config.yaml": |
+        "templates/phases/modules/kubeadm/init_config.yaml": |
           apiVersion: kubeadm.k8s.io/v1beta4
           kind: InitConfiguration
           localAPIEndpoint:
@@ -166,7 +168,7 @@ data:
             # wait-control-plane starts with bootstrapping the admin client
             # which polls the apiserver before waiting for the control plane
             kubernetesAPICall: 3m0s
-        "templates/phases/snippets/kubeadm/join_config.yaml": |
+        "templates/phases/modules/kubeadm/join_config.yaml": |
           apiVersion: kubeadm.k8s.io/v1beta4
           kind: JoinConfiguration
           caCertPath: /etc/kubernetes/pki/ca.crt
@@ -200,7 +202,7 @@ data:
             kubeletHealthCheck: 5m0s
             kubernetesAPICall: 3m0s
             discovery: 5m0s
-        "templates/phases/snippets/kubeadm/upgrade_config.yaml": |
+        "templates/phases/modules/kubeadm/upgrade_config.yaml": |
           apiVersion: kubeadm.k8s.io/v1beta4
           kind: UpgradeConfiguration
           node:
@@ -225,7 +227,7 @@ data:
             controlPlaneComponentHealthCheck: 5m0s
             kubeletHealthCheck: 5m0s
             kubernetesAPICall: 3m0s
-        "templates/phases/snippets/kubelet/_kubelet-config.yaml": |
+        "templates/phases/modules/kubelet/_kubelet-config.yaml": |
           apiVersion: kubelet.config.k8s.io/v1beta1
           kind: KubeletConfiguration
           authentication:

@@ -16,11 +16,12 @@
 #
 # Usage: 080-kubeadm-day2-reconfigure.sh eviction|no-eviction
 #   eviction    - the kubelet configuration is changed too: the anchor drains
-#                 every node and restarts kubelet (kubelet.restart=true),
+#                 every node and restarts kubelet
+#                 (anchor.reconcile.kubelet_restart=true),
 #                 workloads are evicted
-#   no-eviction - kubelet.restart=false: the anchor applies the control plane
-#                 configuration (kubeadm upgrade node) only, workloads keep
-#                 running
+#   no-eviction - anchor.reconcile.kubelet_restart=false: the anchor applies
+#                 the control plane configuration (kubeadm upgrade node) only,
+#                 workloads keep running
 
 set -ex
 
@@ -88,7 +89,7 @@ CANARY_PODS=$(canary_pods)
 ./tools/deployment/aircat/set-document-data.py "${PL_SITE}" pegleg/CommonAddresses/v1 common-addresses \
   "kubernetes.service_node_port_range=${NODE_PORT_RANGE}"
 ./tools/deployment/aircat/set-document-data.py "${PL_SITE}" armada/Chart/v1 "${KUBEADM_DOCUMENT}" \
-  "values.kubelet.restart=${KUBELET_RESTART}" \
+  "values.anchor.reconcile.kubelet_restart=${KUBELET_RESTART}" \
   "values.kubelet.containerLogMaxFiles=${CONTAINER_LOG_MAX_FILES}"
 ./tools/deployment/aircat/020-render-site.sh
 test "$(kubeadm_data "${RENDERED}" values.network.kubernetes.service_node_port_range)" == "${NODE_PORT_RANGE}"

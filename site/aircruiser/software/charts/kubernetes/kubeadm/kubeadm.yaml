@@ -6,7 +6,7 @@
 #
 # The genesis: the genesis node (the first control plane node) only. On day
 # 0 the values of this document are used to render the bootstrap script
-# (kubeadm-service-bootstrap Secret) which runs kubeadm init on it, then the
+# (kubeadm-service-phase-runner Secret) which runs kubeadm init on it, then the
 # bootstrap Armada deploys the chart with the kubeadm-cluster manifest, the
 # anchor daemonsets take over the node configuration, see
 #   ./tools/deployment/aircat/040-kubeadm-bootstrap.sh
@@ -287,10 +287,11 @@ data:
       - name: aircruiser-control-1
         ip: 10.248.0.11
         role: control-plane
-    kubelet:
-      # A single node: the anchor must not restart kubelet, it drains the
-      # node first and there is no other node for the workloads.
-      restart: false
+    anchor:
+      reconcile:
+        # A single node: the anchor must not restart kubelet, it drains the
+        # node first and there is no other node for the workloads.
+        kubelet_restart: false
 ---
 # The genesis scaled out to all nodes of the site (the same release): the
 # rest of the nodes join the cluster with the values of this document (see
@@ -534,10 +535,11 @@ data:
       - name: aircruiser-worker-2
         ip: 10.248.0.22
         role: worker
-    kubelet:
-      # Scaling out doesn't change the kubelet configuration (the nodes have
-      # joined with it): the anchor must not drain the nodes and move the
-      # workloads (the volumes of the Airship components) while Ceph is
-      # scaled out. The Kubernetes upgrade enables it (090 gate script).
-      restart: false
+    anchor:
+      reconcile:
+        # Scaling out doesn't change the kubelet configuration (the nodes
+        # have joined with it): the anchor must not drain the nodes and move
+        # the workloads (the volumes of the Airship components) while Ceph is
+        # scaled out. The Kubernetes upgrade enables it (090 gate script).
+        kubelet_restart: false
 

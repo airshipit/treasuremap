@@ -2,7 +2,7 @@
 # Kubeadm chart (airship/promenade charts/kubeadm).
 #
 # On day 0 the values of this document are used to render the bootstrap
-# script (kubeadm-service-bootstrap Secret) which builds the Kubernetes
+# script (kubeadm-service-phase-runner Secret) which builds the Kubernetes
 # cluster on a bare node, see
 #   ./tools/deployment/aircat/040-kubeadm-bootstrap.sh
 # On day 2 the chart is deployed into the cluster by Armada (armada-operator)
@@ -303,11 +303,13 @@ data:
         ip: 172.24.255.10
         role: control-plane
 
+    anchor:
+      reconcile:
+        # Single node cluster: the anchor must not drain kubelet, it drains
+        # the node first and there is no other node for the workloads.
+        kubelet_drain: false
+        kubelet_restart: false
     kubelet:
-      # Single node cluster: the anchor must not drain kubelet, it drains
-      # the node first and there is no other node for the workloads.
-      drain: false
-      restart: false
       # used by the kubelet configuration below, changed by the gate to check
       # that the anchor applies kubelet configuration changes
       containerLogMaxFiles: 2
@@ -317,15 +319,15 @@ data:
       controlPlaneEndpoint: 127.0.0.1:6443
 
     kubeadm:
-      fs:
-        "ClusterConfiguration": "templates/phases/snippets/kubeadm/ClusterConfiguration"
-        "init_config.yaml": "templates/phases/snippets/kubeadm/init_config.yaml"
+      templates:
+        "ClusterConfiguration": "templates/phases/modules/kubeadm/ClusterConfiguration"
+        "init_config.yaml": "templates/phases/modules/kubeadm/init_config.yaml"
         # used by the anchor (day 2): kubeadm upgrade node
-        "upgrade_config.yaml": "templates/phases/snippets/kubeadm/upgrade_config.yaml"
+        "upgrade_config.yaml": "templates/phases/modules/kubeadm/upgrade_config.yaml"
 
     bundle:
       tpl:
-        "templates/phases/snippets/kubeadm/ClusterConfiguration": |
+        "templates/phases/modules/kubeadm/ClusterConfiguration": |
           apiVersion: kubeadm.k8s.io/v1beta4
           kind: ClusterConfiguration
           kubernetesVersion: {{ .Values.cluster_config.kubernetesVersion }}
@@ -364,7 +366,7 @@ data:
                 # peer certificates are issued by a dedicated CA
                 - name: peer-trusted-ca-file
                   value: /etc/kubernetes/pki/etcd/ca-peer.crt
-        "templates/phases/snippets/kubeadm/init_config.yaml": |
+        "templates/phases/modules/kubeadm/init_config.yaml": |
           apiVersion: kubeadm.k8s.io/v1beta4
           kind: InitConfiguration
           localAPIEndpoint:
@@ -396,7 +398,7 @@ data:
             # wait-control-plane starts with bootstrapping the admin client
             # which polls the apiserver before waiting for the control plane
             kubernetesAPICall: 3m0s
-        "templates/phases/snippets/kubeadm/upgrade_config.yaml": |
+        "templates/phases/modules/kubeadm/upgrade_config.yaml": |
           apiVersion: kubeadm.k8s.io/v1beta4
           kind: UpgradeConfiguration
           node:
@@ -419,7 +421,7 @@ data:
             controlPlaneComponentHealthCheck: 5m0s
             kubeletHealthCheck: 5m0s
             kubernetesAPICall: 3m0s
-        "templates/phases/snippets/kubelet/_kubelet-config.yaml": |
+        "templates/phases/modules/kubelet/_kubelet-config.yaml": |
           apiVersion: kubelet.config.k8s.io/v1beta1
           kind: KubeletConfiguration
           authentication:

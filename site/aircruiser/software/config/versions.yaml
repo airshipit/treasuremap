@@ -72,6 +72,15 @@ data:
       tigera_operator:
         tigera_operator: quay.io/tigera/operator:v1.36.5
         dep_check: quay.io/airshipit/kubernetes-entrypoint:latest-ubuntu_noble
+    ucp:
+      keystone:
+        keystone_db_sync: quay.io/airshipit/keystone:2025.2-ubuntu_noble
+        keystone_fernet_setup: quay.io/airshipit/keystone:2025.2-ubuntu_noble
+        keystone_fernet_rotate: quay.io/airshipit/keystone:2025.2-ubuntu_noble
+        keystone_credential_setup: quay.io/airshipit/keystone:2025.2-ubuntu_noble
+        keystone_credential_rotate: quay.io/airshipit/keystone:2025.2-ubuntu_noble
+        keystone_api: quay.io/airshipit/keystone:2025.2-ubuntu_noble
+        keystone_domain_manage: quay.io/airshipit/keystone:2025.2-ubuntu_noble
   kubernetes:
     # Version of Kubernetes control plane and node binaries (kubeadm,
     # kubelet, kubectl): the kubeadm chart installs the binaries of this

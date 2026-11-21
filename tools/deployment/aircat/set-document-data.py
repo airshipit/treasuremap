@@ -22,8 +22,8 @@ by Deckhand (the documents of the site are uploaded to it as they are, see
 by Armada on day 2, the site is rendered again then (020-render-site.sh).
 
 <path> is a dot separated list of keys inside the document data,
-e.g. "values.kubelet.restart". <value> is parsed as YAML, missing keys
-are created.
+e.g. "values.anchor.reconcile.kubelet_restart". <value> is parsed as YAML,
+missing keys are created.
 """
 
 import glob
